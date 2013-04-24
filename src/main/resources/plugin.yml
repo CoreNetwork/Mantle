@@ -1,0 +1,13 @@
+name: MCNSAFlatcore
+main: com.mcnsa.flatcore.MCNSAFlatcore
+version: 1.0.1
+author: matejdro
+depend: [GriefPrevention]
+commands:
+    flatcore:
+        description: Weekly challenges.
+permissions:
+    flatcore.command.flatcore:
+        default: op
+    flatcore.mod:
+        default: op
