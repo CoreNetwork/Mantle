@@ -10,3 +10,7 @@ bin/
 .classpath
 .project
 /target
+
+*.jar
+*.war
+*.ear
