@@ -16,7 +16,6 @@ import org.bukkit.FireworkEffect.Builder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.TravelAgent;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -33,6 +32,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -157,17 +158,18 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event)
 	{
+		final Block block = event.getBlock();
 		//Do not drop more netherwart
-		if (event.getBlock().getType() == Material.NETHER_WARTS)
+		if (block.getType() == Material.NETHER_WARTS)
 		{
 			event.setCancelled(true);
-			event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.NETHER_STALK, 1));
-			event.getBlock().setType(Material.AIR);
+			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.NETHER_STALK, 1));
+			block.setType(Material.AIR);
 			return;
 		}
 
 		//Restockable chest
-		RestockableChest chest = RestockableChest.getChest(event.getBlock());
+		RestockableChest chest = RestockableChest.getChest(block);
 		if (chest != null)
 		{
 			chest.delete();
@@ -177,16 +179,16 @@ public class FlatcoreListener implements Listener {
 		}
 
 		//Do not drop colored sign
-		if (event.getBlock().getState() instanceof Sign)
+		if (block.getState() instanceof Sign)
 		{
-			Sign sign = (Sign) event.getBlock().getState();
+			Sign sign = (Sign) block.getState();
 
 			String colorSymbol = "\u00A7";
 			for (String line : sign.getLines())
 			{
 				if (line.contains(colorSymbol))
 				{
-					event.getBlock().setType(Material.AIR);
+					block.setType(Material.AIR);
 					event.setCancelled(true);
 					return;
 				}
@@ -194,34 +196,87 @@ public class FlatcoreListener implements Listener {
 		} 
 
 		//Netherrack turns into fire
-		if (event.getBlock().getType() == Material.NETHERRACK)
+		if (block.getType() == Material.NETHERRACK)
 		{
 			int chance = Settings.getInt(Setting.NETHERRACK_FIRE_CHANCE);
 			if (MCNSAFlatcore.random.nextInt(100) < chance)
 			{
 				event.setCancelled(true);
-				event.getBlock().setType(Material.FIRE);
+				block.setType(Material.FIRE);
 				return;
 			}
 		}
-		
+
 		//Spread fire below if broken
-		Block upperBlock = event.getBlock().getRelative(BlockFace.UP);
+		Block upperBlock = block.getRelative(BlockFace.UP);
 		if (upperBlock.getType() == Material.FIRE)
 		{
-			Block lowerBlock = event.getBlock().getRelative(BlockFace.DOWN);
+			Block lowerBlock = block.getRelative(BlockFace.DOWN);
 			if (lowerBlock != null && lowerBlock.getType().isSolid())
 			{
 				//Place fire after 1 tick
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
 					@Override
 					public void run() {
-						event.getBlock().setType(Material.FIRE);
+						block.setType(Material.FIRE);
 					}
 				});
 			}
-			
+
 		}
+
+		if (onBlockDestroyed(block))
+		{
+			event.setCancelled(true);
+			return;
+		}
+		onBlockDestroyed(block.getRelative(BlockFace.UP));
+
+	}
+
+	//Virtal event that combines multiple events. 
+	//Triggers when non-solid block (like crops) is about to be destroyed
+	public boolean onBlockDestroyed(Block block)
+	{
+		if (block == null)
+			return false;
+		
+		//Don't drop seeds if not fully grown
+		if ((block.getType() == Material.PUMPKIN_STEM || block.getType() == Material.MELON_STEM || block.getType() == Material.CROPS || block.getType() == Material.POTATO || block.getType() == Material.CARROT) && block.getData() < 7)
+		{
+			block.setType(Material.AIR);
+			return true;
+		}
+
+		//When fully grown potato is broken, drop 0-2 normal potatoes and 1-2 poisonous ones.
+		if (block.getType() == Material.POTATO)
+		{
+			block.setType(Material.AIR);
+
+
+			int amount = MCNSAFlatcore.random.nextInt(3);
+			if (amount > 0)
+				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.POTATO_ITEM, amount));
+
+			amount = MCNSAFlatcore.random.nextInt(2) + 1;
+			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.POISONOUS_POTATO, amount));
+
+			return true;
+		}
+
+		//Carrots should drop 1-2.
+		if (block.getType() == Material.CARROT)
+		{
+			block.setType(Material.AIR);
+
+			int amount = MCNSAFlatcore.random.nextInt(3);
+			if (amount > 0)
+				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.CARROT_ITEM, amount));
+
+			return true;
+		}
+		
+		return false;
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -312,7 +367,7 @@ public class FlatcoreListener implements Listener {
 	public void onEntityDeath(EntityDeathEvent event)
 	{
 		final LivingEntity entity = event.getEntity();
-		
+
 		//Mobs with name or silverfishes should not drop anything
 		if (entity.getCustomName() != null || entity.getType() == EntityType.SILVERFISH)
 		{
@@ -340,12 +395,12 @@ public class FlatcoreListener implements Listener {
 			{
 				//Play effect
 				Builder builder = FireworkEffect.builder();
-				
+
 				Util.showFirework(entity.getLocation(), builder.trail(false).withColor(Color.BLACK).build());	
 				entity.getWorld().playSound(entity.getLocation(), Sound.ZOMBIE_UNFECT, 1, 1);
-				
+
 				//Spawn new zombie
-				
+
 				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
 
 					@Override
@@ -354,14 +409,14 @@ public class FlatcoreListener implements Listener {
 						newZombie.setHealth(newZombie.getMaxHealth() / 2);
 						newZombie.setMetadata("Respawned", new FixedMetadataValue(MCNSAFlatcore.instance, true));
 					}
-					
+
 				}, 10);
-				
-				
+
+
 				return;
 			}
 		}
-		
+
 		//Do not drop ghast tear if killed by bow
 		if (event.getEntityType() == EntityType.GHAST && event.getEntity().getLastDamageCause().getCause() == DamageCause.PROJECTILE)
 		{
@@ -486,7 +541,7 @@ public class FlatcoreListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityPortal(EntityPortalEvent event)
 	{
@@ -495,4 +550,28 @@ public class FlatcoreListener implements Listener {
 
 	}
 	
+	@EventHandler(ignoreCancelled = true)
+	public void onPistonExtend(BlockPistonExtendEvent event)
+	{
+		Block firstBlock = event.getBlock().getRelative(event.getDirection());
+		onBlockDestroyed(firstBlock);
+		onBlockDestroyed(firstBlock.getRelative(BlockFace.UP));
+
+		for (Block b : event.getBlocks())
+		{
+			onBlockDestroyed(b);
+			onBlockDestroyed(b.getRelative(BlockFace.UP));
+		}
+			
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onPistonRetract(BlockPistonRetractEvent event)
+	{
+		if (event.isSticky())
+		{
+			onBlockDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP));
+
+		}
+	}
 }
