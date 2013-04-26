@@ -159,7 +159,7 @@ public class RestockableChest {
 				
 				if (chest.chestBlock.getType() == Material.TRAPPED_CHEST && chest.inventoryCache.size() == 0)
 				{
-					chest.chestBlock.getRelative(0, -2, 0).setType(Material.DIRT);
+					chest.chestBlock.getRelative(0, -2, 0).setType(Material.AIR);
 				}
 			}
 			
