@@ -461,12 +461,17 @@ public class FlatcoreListener implements Listener {
 			int maxX;
 			int minZ;
 			int maxZ;
+			int minY;
+			int maxY;
 			if (event.getBlocks().get(0).getWorld().getEnvironment() == Environment.NETHER)
 			{
 				minX = Settings.getInt(Setting.NETHER_MIN_X);
 				maxX = Settings.getInt(Setting.NETHER_MAX_X);
 				minZ = Settings.getInt(Setting.NETHER_MIN_Z);
 				maxZ = Settings.getInt(Setting.NETHER_MAX_Z);
+				minY = Settings.getInt(Setting.NETHER_PORTAL_MIN_Y);
+				maxY = Settings.getInt(Setting.NETHER_PORTAL_MAX_Y);
+
 			}
 			else
 			{
@@ -474,12 +479,14 @@ public class FlatcoreListener implements Listener {
 				maxX = Settings.getInt(Setting.MAP_MAX_X);
 				minZ = Settings.getInt(Setting.MAP_MIN_Z);
 				maxZ = Settings.getInt(Setting.MAP_MAX_Z);
+				minY = Settings.getInt(Setting.MAP_PORTAL_MIN_Y);
+				maxY = Settings.getInt(Setting.MAP_PORTAL_MAX_Y);
 			}
 
 
 			for (Block b : event.getBlocks())
 			{
-				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ || b.getY() < 2 || b.getY() > 120)
+				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ || b.getY() < minY || b.getY() > maxY)
 				{
 					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), Settings.getString(Setting.SIGN_PORTAL_OUT_OF_BOUNDARIES));
 

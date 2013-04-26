@@ -10,10 +10,15 @@ public enum Setting {
 	MAP_MIN_Z("Map.MinZ", -10000),
 	MAP_MAX_X("Map.MaxX", 10000),
 	MAP_MAX_Z("Map.MaxZ", 10000),
+	MAP_PORTAL_MIN_Y("Map.PortalMinY", 10),
+	MAP_PORTAL_MAX_Y("Map.PortalMaxY", 100),
 	NETHER_MAX_X("Map.NetherMaxX", 625),
 	NETHER_MIN_X("Map.NetherMinX", -625),
 	NETHER_MAX_Z("Map.NetherMaxZ", 625),
 	NETHER_MIN_Z("Map.NetherMinZ", -625),
+	NETHER_PORTAL_MIN_Y("Nether.PortalMinY", 10),
+	NETHER_PORTAL_MAX_Y("Nether.PortalMaxY", 100),
+
 	
 	VILLAGE_GRID_SPACE("Village.Spacing", 500),
 	VILLAGE_RANDOM_OFFSET("Village.RandomOffset", 150),
