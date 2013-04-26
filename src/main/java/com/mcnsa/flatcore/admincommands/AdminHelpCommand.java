@@ -28,7 +28,7 @@ public class AdminHelpCommand extends BaseAdminCommand {
 
 		for (Entry<String, BaseAdminCommand> e : MCNSAFlatcore.adminCommands.entrySet())
 		{
-			komandes.add(Settings.getCommandDescription(e.getKey(), "cha", e.getValue().desc));
+			komandes.add(Settings.getCommandDescription(e.getKey(), "flatcore", e.getValue().desc));
 		}  		
 		String[] komande = komandes.toArray(new String[0]);
 		Arrays.sort(komande);
