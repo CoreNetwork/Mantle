@@ -139,7 +139,9 @@ public class RestockableChest {
 			
 			if (chestBlock.getType() == Material.TRAPPED_CHEST)
 			{
-				chestBlock.getRelative(0, -2, 0).setType(Material.REDSTONE_BLOCK);
+				Block redstoneBlock = chestBlock.getRelative(0, -2, 0);
+				if (redstoneBlock != null && redstoneBlock.getType() == Material.AIR)
+					redstoneBlock.setType(Material.REDSTONE_BLOCK);
 			}
 			
 			return true;
@@ -159,7 +161,9 @@ public class RestockableChest {
 				
 				if (chest.chestBlock.getType() == Material.TRAPPED_CHEST && chest.inventoryCache.size() == 0)
 				{
-					chest.chestBlock.getRelative(0, -2, 0).setType(Material.AIR);
+					Block redstoneBlock = chest.chestBlock.getRelative(0, -2, 0);
+					if (redstoneBlock != null && redstoneBlock.getType() == Material.REDSTONE_BLOCK)
+						redstoneBlock.setType(Material.AIR);
 				}
 			}
 			
