@@ -16,6 +16,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.gadberry.utility.expression.ArgumentCastException;
+import com.gadberry.utility.expression.Expression;
+import com.gadberry.utility.expression.InvalidExpressionException;
+
 public class NodeParser {
 	private static List<ItemStack> result;
 	private static ItemStack curItemStack;
@@ -298,26 +302,79 @@ public class NodeParser {
 			return;
 		}
 
-		final Integer duration = (Integer) node.get("duration");
-		if (duration == null)
+		
+		Object durationNode = node.get("duration");
+		int duration = 0;
+		if (durationNode == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
 			return;
 		}
-
-		final Integer amplifier = (Integer) node.get("amplifier");
-		if (amplifier == null)
+		else if (durationNode instanceof Integer)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is missing!");
+			duration = ((Integer) durationNode).intValue();
+		}
+		else if (durationNode instanceof String)
+		{
+			String expression = (String) durationNode;
+			expression = expression.replace("damage", Integer.toString(event.getDamage()));
+						
+			try {
+				duration = Expression.evaluate(expression).toInteger();
+			} catch (ArgumentCastException e) {
+				e.printStackTrace();
+			} catch (InvalidExpressionException e) {
+				FCLog.warning("Invalid Damage modifiers config! Effect duration expression is invalid!");
+				return;
+			}
+		}
+		else
+		{
+			FCLog.warning("Invalid Damage modifiers config! Effect duration is invalid!");
 			return;
 		}
+		
+
+		Object amplifierNode = node.get("amplifier");
+		int amplifier = 0;
+		if (amplifierNode == null)
+		{
+			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
+			return;
+		}
+		else if (amplifierNode instanceof Integer)
+		{
+			amplifier = ((Integer) amplifierNode).intValue();
+		}
+		else if (amplifierNode instanceof String)
+		{
+			String expression = (String) amplifierNode;
+			expression = expression.replace("damage", Integer.toString(event.getDamage()));
+						
+			try {
+				amplifier = Expression.evaluate(expression).toInteger();
+			} catch (ArgumentCastException e) {
+				e.printStackTrace();
+			} catch (InvalidExpressionException e) {
+				FCLog.warning("Invalid Damage modifiers config! Effect amplifier expression is invalid!");
+				return;
+			}			
+		}
+		else
+		{
+			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is invalid!");
+			return;
+		}
+		
+		final int fAmplifier = amplifier;
+		final int fDuration = duration;
 
 		final Boolean ambient = (Boolean) node.get("ambient");
 
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
 			@Override
 			public void run() {
-				((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.getById(id), duration, amplifier, ambient == null ? false : ambient));
+				((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.getById(id), fDuration, fAmplifier, ambient == null ? false : ambient));
 			}
 		});
 
