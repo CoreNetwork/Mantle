@@ -45,6 +45,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
@@ -537,16 +538,20 @@ public class FlatcoreListener implements Listener {
 		//Controlled nether portals
 		if (event.getCause() == TeleportCause.NETHER_PORTAL)
 		{
-			PortalUtil.processTeleport(event.getPlayer());
-			event.setCancelled(true);
+			Location destination = PortalUtil.processTeleport(event.getPlayer());
+			event.setTo(destination);
+			event.getPortalTravelAgent().setCanCreatePortal(false);
+			event.getPortalTravelAgent().setSearchRadius(0);
 		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityPortal(EntityPortalEvent event)
 	{
-		PortalUtil.processTeleport(event.getEntity());
-		event.setCancelled(true);
+		Location destination = PortalUtil.processTeleport(event.getEntity());
+		event.setTo(destination);
+		event.getPortalTravelAgent().setCanCreatePortal(false);
+		event.getPortalTravelAgent().setSearchRadius(0);
 
 	}
 	
@@ -571,7 +576,6 @@ public class FlatcoreListener implements Listener {
 		if (event.isSticky())
 		{
 			onBlockDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP));
-
 		}
-	}
+	}	
 }

@@ -9,19 +9,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
-public class PortalUtil {
-	public static void processTeleport(final Entity entity)
+public class PortalUtil {	
+	public static Location processTeleport(final Entity entity)
 	{
 		final Location destination = getOtherSide(entity.getLocation());
 		if (destination.getBlock().getType() != Material.PORTAL)
 			buildPortal(destination);
 
-		entity.teleport(destination);
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
-			public void run() {
-				entity.teleport(destination);
-			}
-		});
+		return destination;		
 	}
 
 	public static Location getOtherSide(Location currentSide)
@@ -62,24 +57,28 @@ public class PortalUtil {
 
 		Location destination = new Location(destWorld, Math.floor(currentSide.getBlockX() * modifier), currentSide.getBlockY(), Math.floor(currentSide.getBlockZ() * modifier));
 
+		//Find possible existing portal
+		Location existing = getExistingPortal(destination);
+		if (existing != null)
+			return existing;
+
+		//Increase height if original dest is inside java
 		Block destBlock = destination.getBlock();
 		if (destBlock.getType() == Material.LAVA || destBlock.getType() == Material.STATIONARY_LAVA)
 		{
-			destination.setY(40);
+			destBlock = destination.getWorld().getBlockAt(destination.getBlockX(), 40, destination.getBlockZ());
 		}
 
-		for (BlockFace face : new BlockFace[] {BlockFace.SELF, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+		//Try to get to the ground
+		if (destEnvironment == Environment.NORMAL)
 		{
-			Block relativeBlock = destBlock.getRelative((int) (face.getModX() * modifier), 0, (int) (face.getModZ() * modifier));
+			Block belowBlock = destBlock.getRelative(BlockFace.DOWN, 2);
 
-			Location existing = getExistingPortal(relativeBlock.getLocation());
-			if (existing != null)
-				return existing;
-		}
-
-		while (destBlock.getRelative(BlockFace.DOWN, 2).getType() == Material.AIR)
-		{
-			destBlock = destBlock.getRelative(BlockFace.DOWN, 2);
+			while (belowBlock != null && belowBlock.getType() == Material.AIR)
+			{
+				destBlock = destBlock.getRelative(BlockFace.DOWN);
+				belowBlock = destBlock.getRelative(BlockFace.DOWN, 2);
+			}
 		}
 
 		return destBlock.getLocation();
@@ -98,7 +97,6 @@ public class PortalUtil {
 
 		while (true)
 		{
-
 			switch (dir)
 			{
 			case 0:
@@ -114,8 +112,6 @@ public class PortalUtil {
 				x--;
 				break;
 			}
-
-			//System.out.println(x + " " + y);
 
 			if (Math.abs(x - startX) >= trenutniMax && dir % 2 == 1)
 			{
@@ -154,17 +150,15 @@ public class PortalUtil {
 						Block below = block.getRelative(BlockFace.DOWN);
 						if (below != null && below.getType() == Material.PORTAL)
 						{
-
 							return below.getLocation();
 						}
 						return block.getLocation();
 					}
 				}			
-
 			}
 		}
 
-		return curLocation;
+		return null;
 	}
 
 	public static void buildPortal(Location location)
