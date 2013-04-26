@@ -10,13 +10,15 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
 public class PortalUtil {
+	private static final int SEARCH_RADIUS = 30;
+
 
 	public static void processTeleport(final Entity entity)
 	{
 		final Location destination = getOtherSide(entity.getLocation());
 		if (destination.getBlock().getType() != Material.PORTAL)
 			buildPortal(destination);
-		
+
 		entity.teleport(destination);
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
 			public void run() {
@@ -24,7 +26,7 @@ public class PortalUtil {
 			}
 		});
 	}
-	
+
 	public static Location getOtherSide(Location currentSide)
 	{
 		//Always pick northest or westest portal block
@@ -37,7 +39,7 @@ public class PortalUtil {
 			block = block.getRelative(BlockFace.NORTH);
 
 		currentSide = block.getLocation();
-		
+
 		double modifier;
 		Environment destEnvironment;
 		if (currentSide.getWorld().getEnvironment() == Environment.NETHER)
@@ -50,7 +52,7 @@ public class PortalUtil {
 			modifier = 0.125;
 			destEnvironment = Environment.NETHER;
 		}
-		
+
 		World destWorld = null;
 		for (World world : Bukkit.getServer().getWorlds())
 		{
@@ -60,127 +62,126 @@ public class PortalUtil {
 				break;
 			}
 		}
-		
+
 		Location destination = new Location(destWorld, Math.floor(currentSide.getBlockX() * modifier), currentSide.getBlockY(), Math.floor(currentSide.getBlockZ() * modifier));
-		
+
 		Block destBlock = destination.getBlock();
 		if (destBlock.getType() == Material.LAVA || destBlock.getType() == Material.STATIONARY_LAVA)
 		{
 			destination.setY(40);
 		}
-		
+
 		for (BlockFace face : new BlockFace[] {BlockFace.SELF, BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 		{
 			Block relativeBlock = destBlock.getRelative((int) (face.getModX() * modifier), 0, (int) (face.getModZ() * modifier));
-			
+
 			Location existing = getExistingPortal(relativeBlock.getLocation());
 			if (existing != null)
 				return existing;
 		}
-		
+
 		while (destBlock.getRelative(BlockFace.DOWN, 2).getType() == Material.AIR)
 		{
 			destBlock = destBlock.getRelative(BlockFace.DOWN, 2);
 		}
-		
+
 		return destBlock.getLocation();
 	}
-	
+
 	private static Location getExistingPortal(Location curLocation)
 	{
-		int x = curLocation.getBlockX();
-		int y = curLocation.getBlockY();
-		int z = curLocation.getBlockZ();
-		
-		int minX = curLocation.getBlockX() - 10;
-		int maxX = curLocation.getBlockX() + 10;
-		int minZ = curLocation.getBlockZ() - 10;
-		int maxZ = curLocation.getBlockZ() + 10;
-		
-		boolean xDir = false;
-		boolean yDir = false;
-		boolean zDir = false;
-		
+		int x = 0;
+		int y = 0;
+		int smer = 0;
+		int trenutniMax = 1;
+
+		int startX = 0;
+		int startY = 0;
+
 		while (true)
 		{
-			
-			yDir = false;
-			y = curLocation.getBlockY();
-			
-			while (true)
+
+			switch (smer)
 			{
-				zDir = false;
-				z = curLocation.getBlockZ();
-				
-				while (true)
-				{
-					Block block = curLocation.getWorld().getBlockAt(x, y, z);
-					if (block != null)
-					{
-						if (block.getType() == Material.PORTAL)
-						{
-							Block below = block.getRelative(BlockFace.DOWN);
-							if (below != null && below.getType() == Material.PORTAL)
-							{
-								return below.getLocation();
-							}
-							
-							return block.getLocation();
-						}
-					}
-					
-					
-					if (zDir) z++; else z--;
-					if (z > maxZ)
-					{
-						z = curLocation.getBlockZ();
-						zDir = false;
-					}
-					else if (z < minZ)
-					{
-						break;
-					}
-				}
-				
-				if (yDir) y++; else y--;
-				if (y > 256)
-				{
-					y = curLocation.getBlockY();
-					yDir = false;
-				}
-				else if (y < 1)
-				{
-					break;
-				}
+			case 0:
+				y--;
+				break;
+			case 1:
+				x++;
+				break;
+			case 2:
+				y++;
+				break;
+			case 3:
+				x--;
+				break;
 			}
-			
-			if (xDir) x++; else x--;
-			if (x > maxX)
+
+			//System.out.println(x + " " + y);
+
+			if (Math.abs(x - startX) >= trenutniMax && smer % 2 == 1)
 			{
-				x = curLocation.getBlockX();
-				xDir = false;
+				trenutniMax++;
+				smer++;
+				if (smer > 3)
+				{
+					smer = 0;
+				}
+
+				startY = y;					
 			}
-			else if (x < minX)
+			else if (Math.abs(y - startY)  >= trenutniMax && smer % 2 == 0)
+			{
+				smer++;
+				if (smer > 3)
+				{
+					smer = 0;
+				}
+
+				startX = x;
+
+			}
+
+			if (Math.abs(x) + 1 >= SEARCH_RADIUS || Math.abs(y) + 1 >= SEARCH_RADIUS)
 			{
 				break;
 			}
+
+			for (int h = 1; h < 256; h++)
+			{
+				Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
+				if (block != null)
+				{
+					if (block.getType() == Material.PORTAL)
+					{
+						Block below = block.getRelative(BlockFace.DOWN);
+						if (below != null && below.getType() == Material.PORTAL)
+						{
+							return below.getLocation();
+						}
+
+						return block.getLocation();
+					}
+				}			
+
+			}
 		}
-		
+
 		return curLocation;
 	}
-	
+
 	public static void buildPortal(Location location)
 	{
 		Block baseBlock = location.getBlock();
-		
-		
+
+
 		//Build top and bottom frame
 		for (int x = -1; x < 3; x++)
 		{
 			baseBlock.getRelative(x, -1, 0).setType(Material.OBSIDIAN);
 			baseBlock.getRelative(x, 3, 0).setType(Material.OBSIDIAN);
 		}
-		
+
 		//Build side frame
 		for (int y = -1; y < 3; y++)
 		{
@@ -188,8 +189,8 @@ public class PortalUtil {
 			baseBlock.getRelative(2, y, 0).setType(Material.OBSIDIAN);
 
 		}
-		
-		
+
+
 		//Place portals and clear space
 		for (int x = 0; x < 2; x++)
 		{
@@ -200,7 +201,7 @@ public class PortalUtil {
 				baseBlock.getRelative(x, y, 0).setTypeId(Material.PORTAL.getId(), false);
 			}
 		}
-		
+
 		if (!baseBlock.getRelative(0, -2, 0).getType().isSolid())
 		{
 			//Overhang
@@ -211,8 +212,8 @@ public class PortalUtil {
 
 			}
 		}
-		
-				
+
+
 	}
 
 }
