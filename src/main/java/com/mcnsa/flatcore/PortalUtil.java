@@ -10,9 +10,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
 public class PortalUtil {
-	private static final int SEARCH_RADIUS = 30;
-
-
 	public static void processTeleport(final Entity entity)
 	{
 		final Location destination = getOtherSide(entity.getLocation());
@@ -90,6 +87,7 @@ public class PortalUtil {
 
 	private static Location getExistingPortal(Location curLocation)
 	{
+		int radius = curLocation.getWorld().getEnvironment() == Environment.NETHER ? 5 : 20;
 		int x = 0;
 		int y = 0;
 		int dir = 0;
@@ -139,10 +137,9 @@ public class PortalUtil {
 				}
 
 				startX = x;
-
 			}
 
-			if (Math.abs(x) + 1 >= SEARCH_RADIUS || Math.abs(y) + 1 >= SEARCH_RADIUS)
+			if (Math.abs(x) + 1 >= radius || Math.abs(y) + 1 >= radius)
 			{
 				break;
 			}
@@ -157,9 +154,9 @@ public class PortalUtil {
 						Block below = block.getRelative(BlockFace.DOWN);
 						if (below != null && below.getType() == Material.PORTAL)
 						{
+
 							return below.getLocation();
 						}
-
 						return block.getLocation();
 					}
 				}			
