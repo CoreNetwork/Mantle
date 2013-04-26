@@ -92,7 +92,7 @@ public class PortalUtil {
 	{
 		int x = 0;
 		int y = 0;
-		int smer = 0;
+		int dir = 0;
 		int trenutniMax = 1;
 
 		int startX = 0;
@@ -101,7 +101,7 @@ public class PortalUtil {
 		while (true)
 		{
 
-			switch (smer)
+			switch (dir)
 			{
 			case 0:
 				y--;
@@ -119,23 +119,23 @@ public class PortalUtil {
 
 			//System.out.println(x + " " + y);
 
-			if (Math.abs(x - startX) >= trenutniMax && smer % 2 == 1)
+			if (Math.abs(x - startX) >= trenutniMax && dir % 2 == 1)
 			{
 				trenutniMax++;
-				smer++;
-				if (smer > 3)
+				dir++;
+				if (dir > 3)
 				{
-					smer = 0;
+					dir = 0;
 				}
 
 				startY = y;					
 			}
-			else if (Math.abs(y - startY)  >= trenutniMax && smer % 2 == 0)
+			else if (Math.abs(y - startY)  >= trenutniMax && dir % 2 == 0)
 			{
-				smer++;
-				if (smer > 3)
+				dir++;
+				if (dir > 3)
 				{
-					smer = 0;
+					dir = 0;
 				}
 
 				startX = x;
