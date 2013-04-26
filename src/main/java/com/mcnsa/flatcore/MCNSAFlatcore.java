@@ -15,7 +15,7 @@ import com.mcnsa.flatcore.admincommands.BaseAdminCommand;
 import com.mcnsa.flatcore.admincommands.CreateChestCommand;
 import com.mcnsa.flatcore.admincommands.InitVillagesCommand;
 import com.mcnsa.flatcore.admincommands.RestockAllCommand;
-import com.mcnsa.flatcore.admincommands.TestCommand;
+import com.mcnsa.flatcore.admincommands.ReloadCommand;
 
 public class MCNSAFlatcore extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -54,7 +54,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 		adminCommands.put("createchest", new CreateChestCommand());
 		adminCommands.put("restockall", new RestockAllCommand());
 		
-		adminCommands.put("test", new TestCommand());
+		adminCommands.put("reload", new ReloadCommand());
 		
 		VillageChecker.schedule();
 
