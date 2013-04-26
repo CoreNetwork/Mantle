@@ -22,36 +22,36 @@ public class NodeParser {
 	private static Random random = new Random();
 
 	private static EntityDamageEvent event;
-	
+
 	private static double chanceMultiplier;
 	private static double chanceAdder;
-	
+
 	public static void parseDamageEvent(EntityDamageEvent event)
 	{
 		NodeParser.event = event;
 		NodeParser.chanceMultiplier = 1;
 		NodeParser.chanceAdder = 0;
-				
+
 		List<?> node = (List<?>) IO.config.getList("DamageModifiers." + event.getCause().toString());
 		if (node == null)
 			return;
-				
+
 		parseNodeList(node);
 	}
-	
+
 	public static List<ItemStack> parseTable(String name, double chanceMultiplier, double chanceAdder)
 	{
 		List<?> node = (List<?>) IO.config.getList("LootTables." + name + ".Items");
 		result = new ArrayList<ItemStack>();
 		NodeParser.chanceMultiplier = chanceMultiplier;
 		NodeParser.chanceAdder = chanceAdder;
-		
+
 		if (node == null)
 		{
 			FCLog.warning("Invalid Loot tables config! Loot table " + name +" does not exists!");
 			return result;			
 		}
-		
+
 		parseNodeList(node);
 
 		return result;
@@ -69,7 +69,7 @@ public class NodeParser {
 			parseNodeObject(type, firstEntry.getValue());
 		}
 	}
-	
+
 	private static void parseNodeObject(String type, Object node)
 	{
 		if (node instanceof List)
@@ -120,16 +120,16 @@ public class NodeParser {
 						weights[i] = Integer.parseInt(textSplit[i + 1]);
 					}
 				}
-				
+
 			}
 		}
-		
+
 
 		int weightsSum = 0;
 		for (int i = 0; i < childCount; i++)
 			weightsSum += weights[i];
 
-		
+
 		for (int a = 0; a < count; a++)
 		{
 			List<Integer> pickedItems = new ArrayList<Integer>();
@@ -151,9 +151,9 @@ public class NodeParser {
 					}
 				}
 				while (pickedItems.contains(selection));
-				
+
 				pickedItems.add(selection);
-				
+
 				int counter = -1;
 				for (int i = 0; i < node.size(); i++)
 				{
@@ -162,7 +162,7 @@ public class NodeParser {
 						counter++;
 					else
 						continue;
-					
+
 					if (counter == selection)
 					{
 						LinkedHashMap<?,?> hashMap = (LinkedHashMap<?,?>) o;
@@ -244,45 +244,45 @@ public class NodeParser {
 	private static void parseSetDamage(LinkedHashMap<?,?> node)
 	{
 		Number amount = (Number) node.get("amount");
-		
+
 		if (amount == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Set amount is missing!");
 			return;
 
 		}
-		
+
 		event.setDamage(amount.intValue());
 	}
-	
+
 	private static void parseAddDamage(LinkedHashMap<?,?> node)
 	{
 		Number amount = (Number) node.get("amount");
-		
+
 		if (amount == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Add amount is missing!");
 			return;
 
 		}
-		
+
 		event.setDamage(event.getDamage() + amount.intValue());
 	}
 
-	
+
 	private static void parseMultiplyDamage(LinkedHashMap<?,?> node)
 	{
 		Number amount = (Number) node.get("amount");
-		
+
 		if (amount == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Multiply amount is missing!");
 			return;
 		}
-		
+
 		event.setDamage((int) (event.getDamage() * amount.doubleValue()));
 	}
-	
+
 	private static void parseAddPotionEffect(LinkedHashMap<?,?> node)
 	{
 		//Protect admins against evil features
@@ -290,37 +290,37 @@ public class NodeParser {
 		{
 			return;
 		}
-		
+
 		final Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Effect id is missing!");
 			return;
 		}
-		
+
 		final Integer duration = (Integer) node.get("duration");
 		if (duration == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
 			return;
 		}
-		
+
 		final Integer amplifier = (Integer) node.get("amplifier");
 		if (amplifier == null)
 		{
 			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is missing!");
 			return;
 		}
-		
+
 		final Boolean ambient = (Boolean) node.get("ambient");
-		
+
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
 			@Override
 			public void run() {
 				((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.getById(id), duration, amplifier, ambient == null ? false : ambient));
 			}
 		});
-		
+
 	}
 
 	private static int getNumberOfRolls(Object node, boolean lowLevel)
@@ -363,10 +363,10 @@ public class NodeParser {
 			chance += chanceAdder;
 			chance *= chanceMultiplier;
 		}
-		
+
 		if (chance < 0.01)
 			return 0;
-		
+
 		int num = 0;
 		for (int i = 0; i < rolls; i++)
 		{

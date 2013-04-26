@@ -246,7 +246,7 @@ public class FlatcoreListener implements Listener {
 	{
 		if (block == null)
 			return false;
-		
+
 		//Don't drop seeds if not fully grown
 		if ((block.getType() == Material.PUMPKIN_STEM || block.getType() == Material.MELON_STEM || block.getType() == Material.CROPS || block.getType() == Material.POTATO || block.getType() == Material.CARROT) && block.getData() < 7)
 		{
@@ -281,7 +281,7 @@ public class FlatcoreListener implements Listener {
 
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -566,7 +566,7 @@ public class FlatcoreListener implements Listener {
 		event.getPortalTravelAgent().setSearchRadius(0);
 
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onPistonExtend(BlockPistonExtendEvent event)
 	{
@@ -579,7 +579,7 @@ public class FlatcoreListener implements Listener {
 			onBlockDestroyed(b);
 			onBlockDestroyed(b.getRelative(BlockFace.UP));
 		}
-			
+
 	}
 
 	@EventHandler(ignoreCancelled = true)
