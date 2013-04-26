@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -196,34 +197,38 @@ public class FlatcoreListener implements Listener {
 			}
 		} 
 
-		//Netherrack turns into fire
-		if (block.getType() == Material.NETHERRACK)
+		//Protect admins against evil features
+		if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
 		{
-			int chance = Settings.getInt(Setting.NETHERRACK_FIRE_CHANCE);
-			if (MCNSAFlatcore.random.nextInt(100) < chance)
+			//Netherrack turns into fire
+			if (block.getType() == Material.NETHERRACK)
 			{
-				event.setCancelled(true);
-				block.setType(Material.FIRE);
-				return;
-			}
-		}
-
-		//Spread fire below if broken
-		Block upperBlock = block.getRelative(BlockFace.UP);
-		if (upperBlock.getType() == Material.FIRE)
-		{
-			Block lowerBlock = block.getRelative(BlockFace.DOWN);
-			if (lowerBlock != null && lowerBlock.getType().isSolid())
-			{
-				//Place fire after 1 tick
-				Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
-					@Override
-					public void run() {
-						block.setType(Material.FIRE);
-					}
-				});
+				int chance = Settings.getInt(Setting.NETHERRACK_FIRE_CHANCE);
+				if (MCNSAFlatcore.random.nextInt(100) < chance)
+				{
+					event.setCancelled(true);
+					block.setType(Material.FIRE);
+					return;
+				}
 			}
 
+			//Spread fire below if broken
+			Block upperBlock = block.getRelative(BlockFace.UP);
+			if (upperBlock.getType() == Material.FIRE)
+			{
+				Block lowerBlock = block.getRelative(BlockFace.DOWN);
+				if (lowerBlock != null && lowerBlock.getType().isSolid())
+				{
+					//Place fire after 1 tick
+					Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
+						@Override
+						public void run() {
+							block.setType(Material.FIRE);
+						}
+					});
+				}
+
+			}
 		}
 
 		if (onBlockDestroyed(block))

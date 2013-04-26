@@ -7,8 +7,10 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -283,6 +285,12 @@ public class NodeParser {
 	
 	private static void parseAddPotionEffect(LinkedHashMap<?,?> node)
 	{
+		//Protect admins against evil features
+		if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getGameMode() == GameMode.CREATIVE)
+		{
+			return;
+		}
+		
 		final Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
