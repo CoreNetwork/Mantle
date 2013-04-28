@@ -38,16 +38,18 @@ public class VillageChecker implements Runnable {
 					final int type = set.getInt("type");
 					final int villageX = set.getInt("centerX");
 					final int villageZ = set.getInt("centerZ");
+					final int xSize = set.getInt("SizeX") / 2;
+					final int zSize = set.getInt("SizeZ") / 2;
 					int lastRestore = set.getInt("lastRestore");
 
 					FCLog.info("Checking village around " + villageX + " " + villageZ);
 
-					if (isPlayerInside(villageX, villageZ))
+					if (isPlayerInside(villageX, villageZ, xSize, zSize))
 					{
 						FCLog.info("Will not restore - player inside.");
 						fasterNextTry = true;
 					}
-					else if (!GriefPreventionHandler.containsClaim(villageX, villageZ))
+					else if (!GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize))
 					{
 						lastRestore = now;
 
@@ -98,19 +100,19 @@ public class VillageChecker implements Runnable {
 		}
 	}
 
-	private static boolean isPlayerInside(int centerX, int centerZ)
+	private static boolean isPlayerInside(int centerX, int centerZ, int xSize, int zSize)
 	{
-		int radius = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_RADIUS);
-
-		int minX = centerX - radius;
-		int maxX = centerX + radius;
-		int minZ = centerZ - radius;
-		int maxZ = centerZ + radius;
-
+		int padding = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_PADDING);
+		
+		int minX = centerX - (xSize + padding);
+		int maxX = centerX + (xSize + padding);
+		int minZ = centerZ - (zSize + padding);
+		int maxZ = centerZ + (zSize + padding);
+		
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
 		{
 			Location loc = player.getLocation();
-			if (player.getGameMode() != GameMode.CREATIVE && ((loc.getBlockX() >= minX && loc.getBlockX() <= maxX) || (loc.getBlockZ() >= minZ && loc.getBlockZ() < maxZ)))
+			if (player.getGameMode() != GameMode.CREATIVE && ((loc.getBlockX() >= minX && loc.getBlockX() <= maxX) && (loc.getBlockZ() >= minZ && loc.getBlockZ() < maxZ)))
 			{
 				return true;
 			}

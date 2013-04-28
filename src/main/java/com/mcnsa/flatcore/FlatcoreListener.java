@@ -40,13 +40,14 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
@@ -544,6 +545,29 @@ public class FlatcoreListener implements Listener {
 		}
 	}	
 
+	@EventHandler(ignoreCancelled = true)
+	public void onEntityTarget(EntityTargetEvent event)
+	{
+//		if (event.getEntityType() != EntityType.PIG_ZOMBIE)
+//			return;
+		
+		//FCLog.info(event.getReason().toString());
+		//Restrict pigmen range
+		if (event.getReason() == TargetReason.PIG_ZOMBIE_TARGET)
+		{
+			Location targetLocation = event.getTarget().getLocation();
+			Location pigmanLocation = event.getEntity().getLocation();
+			
+			int distance = (int) Math.round(pigmanLocation.distance(targetLocation));
+			
+			if (distance > Settings.getInt(Setting.PIGMAN_ANGER_RANGE))
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
+	}
+	
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerPortal(PlayerPortalEvent event)
 	{

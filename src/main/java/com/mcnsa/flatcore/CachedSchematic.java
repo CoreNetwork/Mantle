@@ -32,8 +32,8 @@ import com.sk89q.worldedit.schematic.SchematicFormat;
 public class CachedSchematic {
 	private LocalSession localSession;
 	private EditSession editSession;
-	private int xSize;
-	private int zSize;
+	public int xSize;
+	public int zSize;
 	private Random random;
 	private List<ChestInfo> chests;
 	

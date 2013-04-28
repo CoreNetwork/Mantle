@@ -12,11 +12,15 @@ public enum Setting {
 	MAP_MAX_Z("Map.MaxZ", 10000),
 	MAP_PORTAL_MIN_Y("Map.PortalMinY", 10),
 	MAP_PORTAL_MAX_Y("Map.PortalMaxY", 100),
+	MAP_MOVE_PORTALS_WITH_LOWER_Y("Map.MovePortalsWithLowerY", 20),
+	MAP_MOVE_PORTALS_WITH_HIGHER_Y("Map.MovePortalsWithHigherY", 300),
 	NETHER_MAX_X("Map.NetherMaxX", 625),
 	NETHER_MIN_X("Map.NetherMinX", -625),
 	NETHER_MAX_Z("Map.NetherMaxZ", 625),
 	NETHER_MIN_Z("Map.NetherMinZ", -625),
 	NETHER_PORTAL_MIN_Y("Nether.PortalMinY", 10),
+	NETHER_MOVE_PORTALS_WITH_LOWER_Y("Nether.MovePortalsWithLowerY", 20),
+	NETHER_MOVE_PORTALS_WITH_HIGHER_Y("Nether.MovePortalsWithHigherY", 120),
 	NETHER_PORTAL_MAX_Y("Nether.PortalMaxY", 100),
 
 	
@@ -45,7 +49,7 @@ public enum Setting {
 	NUMBER_OF_OUTPOSTS("Outpost.NumberOfSchematics", 2),
 	OUTPOST_PROTECITON_RADIUS("Outpost.ProtectionRadius", 50),
 	
-	RESORATION_VILLAGE_CHECK_RADIUS("Restoration.VillageCheckRadius", 50),
+	RESORATION_VILLAGE_CHECK_PADDING("Restoration.VillageCheckPadding", 10),
 	RESTORATION_VILLAGE_CHECK_PERIOD("Restoration.VillageCheckPeriod", 1800),
 	RESTORATION_WARN_PERCENTAGE("Restoration.WarnPercentage", 60),
 
@@ -54,6 +58,8 @@ public enum Setting {
 	NETHERRACK_FIRE_CHANCE("HardMode.NetherrackFireChance", 20),
 	PLAYER_PUNCH_FIRE_DURATION("HardMode.PlayerPunchFireDuration", 35),
 	ZOMBIE_RESPAWN_CHANCE("HardMode.ZombieRespawnChance", 20),
+	PIGMAN_ANGER_RANGE("HardMode.PigmanAngerRange", 1),
+	
 	
 	MESSAGE_DELETE_DB_TO_IMPORT("Messages.DeleteDBToImport", "Villages are already created! Delete data.db file to reset plugin."),
 	MESSAGE_NO_PERMISSION("Messages.NoPermission", "No permission!"),

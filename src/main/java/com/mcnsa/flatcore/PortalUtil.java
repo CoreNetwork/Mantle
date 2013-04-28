@@ -34,17 +34,23 @@ public class PortalUtil {
 
 		double modifier;
 		Environment destEnvironment;
+		int maxY = 0;
+		int minY = 0;
 		if (currentSide.getWorld().getEnvironment() == Environment.NETHER)
 		{
 			modifier = 8;
 			destEnvironment = Environment.NORMAL;
+			maxY = Settings.getInt(Setting.MAP_MOVE_PORTALS_WITH_HIGHER_Y);
+			minY = Settings.getInt(Setting.MAP_MOVE_PORTALS_WITH_LOWER_Y);
 		}
 		else
 		{
 			modifier = 0.125;
 			destEnvironment = Environment.NETHER;
+			maxY = Settings.getInt(Setting.NETHER_MOVE_PORTALS_WITH_HIGHER_Y);
+			minY = Settings.getInt(Setting.NETHER_MOVE_PORTALS_WITH_LOWER_Y);
 		}
-
+		
 		World destWorld = null;
 		for (World world : Bukkit.getServer().getWorlds())
 		{
@@ -56,6 +62,11 @@ public class PortalUtil {
 		}
 
 		Location destination = new Location(destWorld, Math.floor(currentSide.getBlockX() * modifier), currentSide.getBlockY(), Math.floor(currentSide.getBlockZ() * modifier));
+
+		if (destination.getY() > maxY)
+			destination.setY(maxY);
+		else if (destination.getY() < minY)
+			destination.setY(minY);
 
 		//Find possible existing portal
 		Location existing = getExistingPortal(destination);
@@ -86,6 +97,20 @@ public class PortalUtil {
 
 	private static Location getExistingPortal(Location curLocation)
 	{
+		int minY;
+		int maxY;
+		if (curLocation.getWorld().getEnvironment() == Environment.NETHER)
+		{
+			minY = Settings.getInt(Setting.NETHER_PORTAL_MIN_Y);
+			maxY = Settings.getInt(Setting.NETHER_PORTAL_MAX_Y);
+
+		}
+		else
+		{
+			minY = Settings.getInt(Setting.MAP_PORTAL_MIN_Y);
+			maxY = Settings.getInt(Setting.MAP_PORTAL_MAX_Y);
+		}
+		
 		int radius = curLocation.getWorld().getEnvironment() == Environment.NETHER ? 5 : 20;
 		int x = 0;
 		int y = 0;
@@ -140,7 +165,7 @@ public class PortalUtil {
 				break;
 			}
 
-			for (int h = 1; h < 256; h++)
+			for (int h = minY; h < maxY; h++)
 			{
 				Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
 				if (block != null)

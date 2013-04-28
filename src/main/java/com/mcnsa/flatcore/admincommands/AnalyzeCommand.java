@@ -37,7 +37,7 @@ public class AnalyzeCommand extends BaseAdminCommand {
 				
 				try
 				{
-					PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CenterX,CenterZ FROM villages");
+					PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CenterX,CenterZ,SizeX,SizeZ FROM villages");
 					ResultSet set = statement.executeQuery();
 					
 					while (set.next())
@@ -46,9 +46,10 @@ public class AnalyzeCommand extends BaseAdminCommand {
 
 						final int villageX = set.getInt("centerX");
 						final int villageZ = set.getInt("centerZ");
+						final int xSize = set.getInt("SizeX") / 2;
+						final int zSize = set.getInt("SizeZ") / 2;
 						
-						
-						if (GriefPreventionHandler.containsClaim(villageX, villageZ))
+						if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize))
 						{
 							claimed++;
 						}		

@@ -44,19 +44,20 @@ public class InitVillagesCommand extends BaseAdminCommand {
 			FCLog.info("Initializing village generation...");
 			
 			statement.close();
-			statement = IO.getConnection().prepareStatement("INSERT INTO villages (Type, CenterX, CenterZ) VALUES (?,?,?)");
+			statement = IO.getConnection().prepareStatement("INSERT INTO villages (Type, CenterX, CenterZ, SizeX, SizeZ) VALUES (?,?,?,?,?)");
 
 			int num = Settings.getInt(Setting.NUMBER_OF_VILLAGES);
 			CachedSchematic[] villages = new CachedSchematic[num];
 			for (int i = 0; i < num; i++)
-			{
-				FCLog.info("Loading schematic for village #" + (i + 1) + " ...");
-				
-				String villageIdString = i >= 10 ? Integer.toString(i + 1) : ("0" + (i + 1));
+			{				
+				String villageIdString = i >= 9 ? Integer.toString(i + 1) : ("0" + (i + 1));
 				String fileName = "village-" + villageIdString + ".schematic";
 				
 				villages[i] = new CachedSchematic(fileName);
 				villages[i].findVillagers();
+				
+				FCLog.info("Loading schematic for village #" + (i + 1) + " (Size: " + villages[i].xSize + " " + villages[i].zSize + ") ...");
+
 			}
 				
 
@@ -87,6 +88,8 @@ public class InitVillagesCommand extends BaseAdminCommand {
 					statement.setInt(1, villageId);
 					statement.setInt(2, center.getBlockX());
 					statement.setInt(3, center.getBlockZ());
+					statement.setInt(4, villages[villageId].xSize);
+					statement.setInt(5, villages[villageId].zSize);
 					statement.addBatch();
 					
 					done++;

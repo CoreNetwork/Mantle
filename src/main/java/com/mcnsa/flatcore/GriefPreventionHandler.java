@@ -64,14 +64,14 @@ public class GriefPreventionHandler {
 		chestClaim.setPermission("public", ClaimPermission.Inventory);
 	}
 	
-	public static boolean containsClaim(int x, int z)
-	{
-		int radius = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_RADIUS);
+	public static boolean containsClaim(int x, int z, int xSize, int zSize)
+	{		
+		int padding = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_PADDING);
 		
-		int villageMinX = x - radius;
-		int villageMaxX = x + radius;
-		int villageMinZ = z - radius;
-		int villageMaxZ = x + radius;		
+		int villageMinX = x - (xSize + padding);
+		int villageMaxX = x + (xSize + padding);
+		int villageMinZ = z - (zSize + padding);
+		int villageMaxZ = x + (zSize + padding);		
 		
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
