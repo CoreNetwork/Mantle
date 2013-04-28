@@ -12,6 +12,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 
@@ -37,7 +39,7 @@ public class CachedSchematic {
 	private Random random;
 	private List<ChestInfo> chests;
 	
-	private static List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
+	private List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
 	
 	public CachedSchematic(String name)
 	{
@@ -199,6 +201,7 @@ public class CachedSchematic {
 								villager.id = type;
 								villager.amount = amount;
 								villager.loc = new Location(Bukkit.getWorlds().get(0), x, y, z);	
+																
 								villagers.add(villager);
 							}
 							
@@ -234,6 +237,38 @@ public class CachedSchematic {
 			}
 
 		}
+	}
+	
+	public void clearVillagers(Location center)
+	{
+		Chunk centerChunk = center.getChunk();
+		int centerX = centerChunk.getX();
+		int centerZ = centerChunk.getZ();
+		int sizeChunksX = (int) Math.ceil(xSize / 16.0 / 2);
+		int sizeChunksZ = (int) Math.ceil(zSize / 16.0 / 2);
+		
+		int minX = centerX - sizeChunksX;
+		int minZ = centerZ - sizeChunksZ;
+		int maxX = centerX + sizeChunksX;
+		int maxZ = centerZ + sizeChunksZ;
+		
+		for (int x = minX; x <= maxX; x++)
+		{
+			for (int z = minZ; z <= maxZ; z++)
+			{
+				Chunk chunk = center.getWorld().getChunkAt(x,z);
+				
+				if (!chunk.isLoaded())
+					chunk.load();
+				
+				for (Entity e : chunk.getEntities())
+				{
+					if (e.getType() == EntityType.VILLAGER)
+						e.remove();
+				}
+			}
+		}
+
 	}
 	
 	public Location getCenter(Location corner)

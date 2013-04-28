@@ -67,7 +67,10 @@ public class VillageChecker implements Runnable {
 
 							@Override
 							public void run() {
-								village.place(villageX, y, villageZ, 0);
+								Location center = village.place(villageX, y, villageZ, 0);
+								village.clearVillagers(center);
+								village.spawnVillagers(center);
+								
 								FCLog.info("Village restored.");
 
 							}
@@ -82,7 +85,7 @@ public class VillageChecker implements Runnable {
 
 					statement.close();
 					statement = IO.getConnection().prepareStatement("UPDATE Villages SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
-					statement.setInt(1, fasterNextTry ? (601200 + now) : now);
+					statement.setInt(1, 0);//fasterNextTry ? (601200 + now) : now);
 					statement.setInt(2, lastRestore);
 					statement.setInt(3, id);
 					statement.executeUpdate();

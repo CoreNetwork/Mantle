@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
 
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -231,8 +233,7 @@ public class InitVillagesCommand extends BaseAdminCommand {
 			}
 			
 			System.gc();
-			
-			
+						
 			FCLog.info("DONE");
 			
 			Util.Message(Settings.getString(Setting.MESSAGE_GENERATION_COMPLETED), sender);

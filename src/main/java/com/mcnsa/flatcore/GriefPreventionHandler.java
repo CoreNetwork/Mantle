@@ -32,7 +32,10 @@ public class GriefPreventionHandler {
 		}
 		Claim bigClaim = bigClaimResult.claim;
 		bigClaim.setPermission("public", ClaimPermission.Inventory);
-
+		
+		FCLog.info("Creating claim " + bigClaim.getID());
+		
+		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
 	}
 	
 	public static void secureCampfire(Location center)
@@ -52,6 +55,7 @@ public class GriefPreventionHandler {
 			return;
 		}
 		Claim bigClaim = bigClaimResult.claim;
+		bigClaim.setPermission("public", ClaimPermission.Access);
 		
 		CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(center.getWorld(), center.getBlockX(), center.getBlockX(), center.getBlockY(), center.getBlockY(), center.getBlockZ(), center.getBlockZ(), "", bigClaim, null, false);
 		if (chestClaimResult.succeeded != Result.Success)
@@ -62,6 +66,9 @@ public class GriefPreventionHandler {
 		
 		Claim chestClaim = chestClaimResult.claim;
 		chestClaim.setPermission("public", ClaimPermission.Inventory);
+		
+		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
+		GriefPrevention.instance.dataStore.saveClaim(chestClaim);
 	}
 	
 	public static boolean containsClaim(int x, int z, int xSize, int zSize)

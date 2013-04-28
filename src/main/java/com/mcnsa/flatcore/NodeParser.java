@@ -419,6 +419,9 @@ public class NodeParser {
 		{
 			chance += chanceAdder;
 			chance *= chanceMultiplier;
+			
+			FCLog.info("Applying multiplier " + chanceMultiplier);
+			FCLog.info("Applying adder " + chanceAdder);
 		}
 
 		if (chance < 0.01)

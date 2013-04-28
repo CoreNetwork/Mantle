@@ -223,12 +223,12 @@ public class RestockableChest {
 
 	public Inventory restock(Player player, int restocks, boolean finiteChest)
 	{		
-		double multiplyChance = Math.pow(IO.config.getDouble("LootTable." + lootTable + ".MultiplyChances", 1), restocks);
-		double addChance = IO.config.getDouble("LootTable." + lootTable + ".AddChances", 0) * restocks;
+		double multiplyChance = Math.pow(IO.config.getDouble("LootTables." + lootTable + ".MultiplyChances", 1), restocks);
+		double addChance = IO.config.getDouble("LootTables." + lootTable + ".AddChances", 0) * restocks;
 		restocks++;
 		
 		String numberDisplay = "";
-		int maxNumber = IO.config.getInt("LootTable." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
+		int maxNumber = IO.config.getInt("LootTables." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 		if (restocks <= maxNumber)
 			numberDisplay = Integer.toString(restocks);
 		else
