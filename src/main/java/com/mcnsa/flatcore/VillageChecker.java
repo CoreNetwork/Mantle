@@ -53,7 +53,7 @@ public class VillageChecker implements Runnable {
 					{
 						lastRestore = now;
 
-						String villageIdString = type >= 10 ? Integer.toString(type + 1) : ("0" + (type + 1));
+						String villageIdString = type >= 9 ? Integer.toString(type + 1) : ("0" + (type + 1));
 						String fileName = "village-" + villageIdString + ".schematic";
 
 						final CachedSchematic village = new CachedSchematic(fileName);
