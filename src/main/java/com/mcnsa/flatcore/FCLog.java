@@ -5,16 +5,16 @@ import org.bukkit.Bukkit;
 public class FCLog {
 	public static void info(String text)
 	{
-		Bukkit.getLogger().info("[FlatcorePlugin] " + text);
+		Bukkit.getLogger().info("[MCNSAFlatcore] " + text);
 	}
 	
 	public static void warning(String text)
 	{
-		Bukkit.getLogger().warning("[FlatcorePlugin] " + text);
+		Bukkit.getLogger().warning("[MCNSAFlatcore] " + text);
 	}
 	
 	public static void severe(String text)
 	{
-		Bukkit.getLogger().severe("[FlatcorePlugin] " + text);
+		Bukkit.getLogger().severe("[MCNSAFlatcore] " + text);
 	}
 }

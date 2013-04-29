@@ -7,7 +7,7 @@ commands:
     flatcore:
         description: Weekly challenges.
 permissions:
-    flatcore.command.flatcore:
+    mcnsaflatcore.command.flatcore:
         default: op
-    flatcore.mod:
+    mcnsaflatcore.mod:
         default: op
