@@ -378,6 +378,8 @@ public class FlatcoreListener implements Listener {
 		//Mobs with name or silverfishes should not drop anything
 		if (entity.getCustomName() != null || entity.getType() == EntityType.SILVERFISH)
 		{
+			event.getDrops().clear();
+			event.setDroppedExp(0);
 			entity.remove();
 			return;
 		}
