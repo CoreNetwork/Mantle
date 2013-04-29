@@ -75,10 +75,10 @@ public class GriefPreventionHandler {
 	{		
 		int padding = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_PADDING);
 		
-		int villageMinX = x - (xSize + padding);
-		int villageMaxX = x + (xSize + padding);
-		int villageMinZ = z - (zSize + padding);
-		int villageMaxZ = x + (zSize + padding);		
+		int villageMinX = x - padding;
+		int villageMaxX = x + xSize + padding;
+		int villageMinZ = z - padding;
+		int villageMaxZ = x + zSize + padding;		
 		
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)

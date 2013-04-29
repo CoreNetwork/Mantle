@@ -76,8 +76,11 @@ public enum Setting {
 	MESSAGE_LOGIN_WARN("Messages.LoginWarn", "Warning! <Claimed> of <Total> villages (<Percentage>%) are already claimed!"),
 	MESSAGE_CAN_MAKE_PORTAL("Messages.CanMakePortal", "&aYou can make a Nether portal here if you’d like"),
 	MESSAGE_CANT_MAKE_PORTAL("Messages.CantMakePortal", "&cYou cannot make a Nether portal here because it would overlap a claim in <OtherDimension>."),
-	MESSAGE_CONFIGURATION_RELOADED("MessageS.ConfigurationReloaded", "Configuration reloaded successfully!"),
-	
+	MESSAGE_CONFIGURATION_RELOADED("Messages.ConfigurationReloaded", "Configuration reloaded successfully!"),
+	MESSAGE_DELETE_NEARBY_VILLAGE("Messages.DeleteNearbyVillage", "You have chosen to delete village #<ID> (Center is <Distance> blocks away). Enter command again to confirm."),
+	MESSAGE_NO_VILLAGES("Messages.NoVillages", "You have no villages on this server!"),
+	MESSAGE_VILLAGE_DELETED("Messages.VillageDeleted", "Village deleted."),
+
 	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
 	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");
 	

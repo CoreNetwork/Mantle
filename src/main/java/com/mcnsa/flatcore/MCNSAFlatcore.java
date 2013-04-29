@@ -9,16 +9,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.gadberry.utility.expression.ArgumentCastException;
-import com.gadberry.utility.expression.Expression;
-import com.gadberry.utility.expression.InvalidExpressionException;
 import com.mcnsa.flatcore.admincommands.AdminHelpCommand;
 import com.mcnsa.flatcore.admincommands.AnalyzeCommand;
 import com.mcnsa.flatcore.admincommands.BaseAdminCommand;
 import com.mcnsa.flatcore.admincommands.CreateChestCommand;
+import com.mcnsa.flatcore.admincommands.DeleteVillageCommand;
 import com.mcnsa.flatcore.admincommands.InitVillagesCommand;
-import com.mcnsa.flatcore.admincommands.RestockAllCommand;
 import com.mcnsa.flatcore.admincommands.ReloadCommand;
+import com.mcnsa.flatcore.admincommands.RestockAllCommand;
 
 public class MCNSAFlatcore extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -39,8 +37,6 @@ public class MCNSAFlatcore extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-
-		
 		instance = this;
 		listener = new FlatcoreListener();
 		random = new Random();
@@ -55,7 +51,8 @@ public class MCNSAFlatcore extends JavaPlugin {
 		
 		adminCommands.put("init", new InitVillagesCommand());
 		adminCommands.put("analyze", new AnalyzeCommand());
-		
+		adminCommands.put("deletevillage", new DeleteVillageCommand());
+
 		adminCommands.put("createchest", new CreateChestCommand());
 		adminCommands.put("restockall", new RestockAllCommand());
 		

@@ -290,7 +290,7 @@ public class NodeParser {
 	private static void parseAddPotionEffect(LinkedHashMap<?,?> node)
 	{
 		//Protect admins against evil features
-		if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getGameMode() == GameMode.CREATIVE)
+		if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getGameMode() == GameMode.CREATIVE )
 		{
 			return;
 		}

@@ -38,8 +38,8 @@ public class VillageChecker implements Runnable {
 					final int type = set.getInt("type");
 					final int villageX = set.getInt("centerX");
 					final int villageZ = set.getInt("centerZ");
-					final int xSize = set.getInt("SizeX") / 2;
-					final int zSize = set.getInt("SizeZ") / 2;
+					final int xSize = set.getInt("SizeX");
+					final int zSize = set.getInt("SizeZ");
 					int lastRestore = set.getInt("lastRestore");
 
 					FCLog.info("Checking village around " + villageX + " " + villageZ);
@@ -85,7 +85,7 @@ public class VillageChecker implements Runnable {
 
 					statement.close();
 					statement = IO.getConnection().prepareStatement("UPDATE Villages SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
-					statement.setInt(1, 0);//fasterNextTry ? (601200 + now) : now);
+					statement.setInt(1, fasterNextTry ? (601200 + now) : now);
 					statement.setInt(2, lastRestore);
 					statement.setInt(3, id);
 					statement.executeUpdate();
@@ -107,10 +107,10 @@ public class VillageChecker implements Runnable {
 	{
 		int padding = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_PADDING);
 		
-		int minX = centerX - (xSize + padding);
-		int maxX = centerX + (xSize + padding);
-		int minZ = centerZ - (zSize + padding);
-		int maxZ = centerZ + (zSize + padding);
+		int minX = centerX - padding;
+		int maxX = centerX + xSize + padding;
+		int minZ = centerZ - padding;
+		int maxZ = centerZ + zSize + padding;
 		
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
 		{

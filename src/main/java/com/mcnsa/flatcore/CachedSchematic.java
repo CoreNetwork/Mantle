@@ -244,11 +244,11 @@ public class CachedSchematic {
 		Chunk centerChunk = center.getChunk();
 		int centerX = centerChunk.getX();
 		int centerZ = centerChunk.getZ();
-		int sizeChunksX = (int) Math.ceil(xSize / 16.0 / 2);
-		int sizeChunksZ = (int) Math.ceil(zSize / 16.0 / 2);
+		int sizeChunksX = (int) Math.ceil(xSize / 16.0);
+		int sizeChunksZ = (int) Math.ceil(zSize / 16.0);
 		
-		int minX = centerX - sizeChunksX;
-		int minZ = centerZ - sizeChunksZ;
+		int minX = centerX;
+		int minZ = centerZ;
 		int maxX = centerX + sizeChunksX;
 		int maxZ = centerZ + sizeChunksZ;
 		

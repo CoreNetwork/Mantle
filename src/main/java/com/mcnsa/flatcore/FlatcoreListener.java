@@ -198,8 +198,8 @@ public class FlatcoreListener implements Listener {
 			}
 		} 
 
-		//Protect admins against evil features
-		if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
+		//Protect admins against evil features and don't execute evil features in end
+		if (event.getPlayer().getGameMode() != GameMode.CREATIVE && event.getPlayer().getWorld().getEnvironment() != Environment.THE_END)
 		{
 			//Netherrack turns into fire
 			if (block.getType() == Material.NETHERRACK)
@@ -289,8 +289,16 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockPlace(BlockPlaceEvent event)
 	{
-		BlockState previousBlock = event.getBlockReplacedState();
+		//Do not apply anything to End
+		if (event.getBlock().getWorld().getEnvironment() == Environment.THE_END)
+			return;
+		
+		//Protect admins against evil features
+		if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
+			return;
 
+
+		BlockState previousBlock = event.getBlockReplacedState();
 
 		//Spread fire if you replace it with block
 		if (previousBlock.getType() == Material.FIRE)
@@ -361,9 +369,11 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
-
+		//Do not apply anything to End
+		if (event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
+			return;
+		
 		//Environmental damage
-
 		if (!(event.getEntity() instanceof Player))
 			return;
 
