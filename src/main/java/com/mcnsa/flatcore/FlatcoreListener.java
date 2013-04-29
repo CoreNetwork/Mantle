@@ -276,7 +276,7 @@ public class FlatcoreListener implements Listener {
 		{
 			block.setType(Material.AIR);
 
-			int amount = MCNSAFlatcore.random.nextInt(3);
+			int amount = MCNSAFlatcore.random.nextInt(2) + 1;
 			if (amount > 0)
 				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.CARROT_ITEM, amount));
 
