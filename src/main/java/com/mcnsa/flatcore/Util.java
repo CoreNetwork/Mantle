@@ -2,7 +2,7 @@ package com.mcnsa.flatcore;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import net.minecraft.server.v1_5_R2.ChunkProviderHell;
+import net.minecraft.server.v1_5_R3.ChunkProviderHell;
 
 import org.bukkit.Bukkit;
 import org.bukkit.FireworkEffect;
@@ -14,9 +14,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_5_R2.entity.CraftFirework;
-import org.bukkit.craftbukkit.v1_5_R2.generator.NormalChunkGenerator;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.entity.CraftFirework;
+import org.bukkit.craftbukkit.v1_5_R3.generator.NormalChunkGenerator;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -91,7 +91,7 @@ public class Util {
 	
 	public static void Message(String message, CommandSender sender)
 	{
-		message = message.replaceAll("\\&([0-9abcdef])", "ยง$1");
+		message = message.replaceAll("\\&([0-9abcdef])", "ง$1");
 
 		String color = "f";
 		final int maxLength = 59; //Max length of chat text message
@@ -101,15 +101,15 @@ public class Util {
 		String[] words = message.split(" ");
 		int lineNumber = 0;
 		for (int i = 0; i < words.length; i++) {
-			if (chat.get(lineNumber).replaceAll("\\ยง([0-9abcdef])", "").length() + words[i].replaceAll("\\ยง([0-9abcdef])", "").length() < maxLength && !words[i].equals(newLine)) {
-				chat.set(lineNumber, chat.get(lineNumber) + (chat.get(lineNumber).length() > 0 ? " " : "ยง" + color ) + words[i]);
+			if (chat.get(lineNumber).replaceAll("\\ง([0-9abcdef])", "").length() + words[i].replaceAll("\\ง([0-9abcdef])", "").length() < maxLength && !words[i].equals(newLine)) {
+				chat.set(lineNumber, chat.get(lineNumber) + (chat.get(lineNumber).length() > 0 ? " " : "ง" + color ) + words[i]);
 
-				if (words[i].contains("ยง")) color = Character.toString(words[i].charAt(words[i].lastIndexOf("ยง") + 1));
+				if (words[i].contains("ง")) color = Character.toString(words[i].charAt(words[i].lastIndexOf("ง") + 1));
 			}
 			else {
 				lineNumber++;
 				if (!words[i].equals(newLine)) {
-					chat.add(lineNumber,  "ยง" + color + words[i]);
+					chat.add(lineNumber,  "ง" + color + words[i]);
 				}
 				else
 					chat.add(lineNumber, "");
@@ -152,8 +152,8 @@ public class Util {
 		meta.setPower(0);
 		firework.setFireworkMeta(meta);
 		
-		net.minecraft.server.v1_5_R2.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
-		net.minecraft.server.v1_5_R2.World world = ((CraftWorld) location.getWorld()).getHandle();
+		net.minecraft.server.v1_5_R3.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
+		net.minecraft.server.v1_5_R3.World world = ((CraftWorld) location.getWorld()).getHandle();
 		
 		world.broadcastEntityEffect(nmsFirework, (byte) 17);
 		

@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_5_R2.TileEntityChest;
+import net.minecraft.server.v1_5_R3.TileEntityChest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.craftbukkit.v1_5_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
