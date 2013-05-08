@@ -22,6 +22,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
 public class Util {
+	public static final String colorCharacter = "\u00A7";
+	
+	
 	public static void placeSign(Block block, String message)
 	{
 		block.setType(Material.SIGN_POST);
@@ -34,7 +37,7 @@ public class Util {
 	
 	public static void populateSign(String message, Sign sign)
 	{
-		message = message.replaceAll("\\&([0-9abcdef])", "ยง$1");
+		message = message.replaceAll("\\&([0-9abcdef])", colorCharacter + "$1");
 		String[] lines = message.split("\\[NEWLINE\\]");
 
 		int max = Math.min(4, lines.length);
@@ -91,7 +94,7 @@ public class Util {
 	
 	public static void Message(String message, CommandSender sender)
 	{
-		message = message.replaceAll("\\&([0-9abcdef])", "ง$1");
+		message = message.replaceAll("\\&([0-9abcdef])", colorCharacter + "$1");
 
 		String color = "f";
 		final int maxLength = 59; //Max length of chat text message
@@ -101,15 +104,15 @@ public class Util {
 		String[] words = message.split(" ");
 		int lineNumber = 0;
 		for (int i = 0; i < words.length; i++) {
-			if (chat.get(lineNumber).replaceAll("\\ง([0-9abcdef])", "").length() + words[i].replaceAll("\\ง([0-9abcdef])", "").length() < maxLength && !words[i].equals(newLine)) {
-				chat.set(lineNumber, chat.get(lineNumber) + (chat.get(lineNumber).length() > 0 ? " " : "ง" + color ) + words[i]);
+			if (chat.get(lineNumber).replaceAll("\\" + colorCharacter + "([0-9abcdef])", "").length() + words[i].replaceAll("\\" + colorCharacter + "([0-9abcdef])", "").length() < maxLength && !words[i].equals(newLine)) {
+				chat.set(lineNumber, chat.get(lineNumber) + (chat.get(lineNumber).length() > 0 ? " " : colorCharacter + color ) + words[i]);
 
-				if (words[i].contains("ง")) color = Character.toString(words[i].charAt(words[i].lastIndexOf("ง") + 1));
+				if (words[i].contains(colorCharacter)) color = Character.toString(words[i].charAt(words[i].lastIndexOf(colorCharacter) + 1));
 			}
 			else {
 				lineNumber++;
 				if (!words[i].equals(newLine)) {
-					chat.add(lineNumber,  "ง" + color + words[i]);
+					chat.add(lineNumber, colorCharacter + color + words[i]);
 				}
 				else
 					chat.add(lineNumber, "");
