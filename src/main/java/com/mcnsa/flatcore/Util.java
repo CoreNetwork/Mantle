@@ -23,18 +23,45 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 public class Util {
 	public static final String colorCharacter = "\u00A7";
-	
-	
+
+
 	public static void placeSign(Block block, String message)
 	{
-		block.setType(Material.SIGN_POST);
-		
-		
+		Block belowBlock = block.getRelative(BlockFace.DOWN);
+		if (belowBlock != null && belowBlock.getType().isSolid())
+		{
+			block.setType(Material.SIGN_POST);
+		}
+		else
+		{
+			block.setType(Material.WALL_SIGN);
+			
+		}
+			
 		Sign sign = (Sign) block.getState();
+		if (block.getType() == Material.WALL_SIGN)
+		{
+			//Rotate sign so it will be on wall
+			org.bukkit.material.Sign data = (org.bukkit.material.Sign) sign.getData();
+			for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+			{
+				Block nextBlock = block.getRelative(face);
+				if (nextBlock != null && nextBlock.getType().isSolid())
+				{
+					data.setFacingDirection(face.getOppositeFace());
+					sign.setData(data);
+					
+					break;
+				}
+			}
+		}
+
 		populateSign(message, sign);
+
+
 		sign.update();
 	}
-	
+
 	public static void populateSign(String message, Sign sign)
 	{
 		message = message.replaceAll("\\&([0-9abcdef])", colorCharacter + "$1");
@@ -46,52 +73,52 @@ public class Util {
 			sign.setLine(i, lines[i]);
 		}
 	}
-	
+
 	public static Block findBestSignLocation(ArrayList<Block> blocks)
 	{
 		for (Block b : blocks)
 		{
 			if (!b.isEmpty())
 				continue;
-			
+
 			Block upperBlock = b.getRelative(BlockFace.UP);
 			Block lowerBlock = b.getRelative(BlockFace.DOWN);
-						
-			if (upperBlock != null && upperBlock.isEmpty() && lowerBlock != null && lowerBlock.getType().isSolid())
+
+			if (upperBlock != null && upperBlock.isEmpty())
 				return b;
 		}
-		
+
 		for (Block b : blocks)
 		{
 			if (!b.isEmpty())
 				continue;
 
 			Block upperBlock = b.getRelative(BlockFace.UP);
-			
+
 			if (upperBlock != null && upperBlock.isEmpty())
 				return b;
 		}
-		
+
 		for (Block b : blocks)
 		{
 			if (!b.isEmpty())
 				continue;
-			
+
 			Block lowerBlock = b.getRelative(BlockFace.DOWN);
-			
+
 			if (lowerBlock != null && lowerBlock.getType().isSolid())
 				return b;
 		}
-		
+
 		for (Block b : blocks)
 		{
 			if (b.isEmpty())
 				return b;			
 		}
-		
+
 		return blocks.get(0);
 	}
-	
+
 	public static void Message(String message, CommandSender sender)
 	{
 		message = message.replaceAll("\\&([0-9abcdef])", colorCharacter + "$1");
@@ -144,22 +171,22 @@ public class Util {
 				Util.Message(message, p);
 		}
 	}
-	
+
 	public static void showFirework(Location location, FireworkEffect effect)
 	{
 		Firework firework = location.getWorld().spawn(location, Firework.class);
-		
+
 		FireworkMeta meta = firework.getFireworkMeta();
 		meta.clearEffects();
 		meta.addEffect(effect);
 		meta.setPower(0);
 		firework.setFireworkMeta(meta);
-		
+
 		net.minecraft.server.v1_5_R3.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
 		net.minecraft.server.v1_5_R3.World world = ((CraftWorld) location.getWorld()).getHandle();
-		
+
 		world.broadcastEntityEffect(nmsFirework, (byte) 17);
-		
+
 		firework.remove();
 	}
 
@@ -186,18 +213,18 @@ public class Util {
 	public static boolean isNetherFortress(Location location)
 	{
 		World world = location.getWorld();
-		
+
 		if (world.getEnvironment() != Environment.NETHER)
 			return false;
-		
+
 		NormalChunkGenerator generator = (NormalChunkGenerator) ((CraftWorld) world).getHandle().chunkProviderServer.chunkProvider;
-				
+
 		Field f;
 		try {
 			f = generator.getClass().getSuperclass().getDeclaredField("provider");
 			f.setAccessible(true);
 			ChunkProviderHell provider = (ChunkProviderHell) f.get(generator);
-			
+
 			return provider.c.a(location.getBlockX(), location.getBlockY(), location.getBlockZ());
 
 		} catch (NoSuchFieldException e) {
@@ -213,7 +240,7 @@ public class Util {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return false;
 
 	}
