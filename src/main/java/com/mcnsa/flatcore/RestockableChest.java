@@ -124,6 +124,10 @@ public class RestockableChest {
 	{
 		if (!perPlayer) player = null;
 		
+		RestockableChest chest = openedInventories.get(player);
+		if (chest != null)
+			return true;
+		
 		if (player == null) 
 		{
 			tryRestock(player);
