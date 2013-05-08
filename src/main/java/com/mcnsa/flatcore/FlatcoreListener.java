@@ -32,6 +32,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
@@ -390,7 +391,7 @@ public class FlatcoreListener implements Listener {
 		{
 			event.getDrops().clear();
 			event.setDroppedExp(0);
-			entity.remove();
+			entity.getEquipment().clear();
 			return;
 		}
 
@@ -403,7 +404,9 @@ public class FlatcoreListener implements Listener {
 		//Respawned mobs not dropping anything
 		if (entity.getMetadata("Respawned").size() > 0)
 		{
-			entity.remove();
+			event.getDrops().clear();
+			event.setDroppedExp(0);
+			entity.getEquipment().clear();
 		}
 
 		//Respawn zombie
@@ -625,5 +628,5 @@ public class FlatcoreListener implements Listener {
 		{
 			onBlockDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP));
 		}
-	}	
+	}		
 }
