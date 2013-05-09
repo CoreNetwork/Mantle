@@ -650,8 +650,6 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityInteract(EntityInteractEvent event)
 	{
-		FCLog.info("EntityInteract " + event.getBlock());
-		
 		if (onCropDestroyed(event.getBlock(), false))
 		{
 			event.setCancelled(true);
