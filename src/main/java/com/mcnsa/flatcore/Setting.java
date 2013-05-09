@@ -60,6 +60,7 @@ public enum Setting {
 	ZOMBIE_RESPAWN_CHANCE("HardMode.ZombieRespawnChance", 20),
 	PIGMAN_ANGER_RANGE("HardMode.PigmanAngerRange", 1),
 	
+	DEBUG("Debug", false),
 	
 	MESSAGE_DELETE_DB_TO_IMPORT("Messages.DeleteDBToImport", "Villages are already created! Delete data.db file to reset plugin."),
 	MESSAGE_NO_PERMISSION("Messages.NoPermission", "No permission!"),

@@ -522,6 +522,10 @@ public class FlatcoreListener implements Listener {
 				{
 					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), Settings.getString(Setting.SIGN_PORTAL_OUT_OF_BOUNDARIES));
 
+					FCLog.debug("Portal out of bounds ! " + b);
+					FCLog.debug("limits: " + minX + " " + maxX + " " + minZ + " " + maxZ + " " + minY + " " + maxY);
+					FCLog.debug("conditionals: " + (b.getX() < minX) + " " + (b.getX() > maxX) + " " + (b.getZ() < minZ) + " " + (b.getZ() > maxZ) + " " + (b.getY() < minY) + " " + (b.getY() > maxY));
+					
 					event.setCancelled(true);
 					return;
 				}
