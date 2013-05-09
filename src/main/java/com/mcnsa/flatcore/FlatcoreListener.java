@@ -32,7 +32,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
@@ -40,6 +40,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
@@ -163,14 +164,6 @@ public class FlatcoreListener implements Listener {
 	public void onBlockBreak(final BlockBreakEvent event)
 	{
 		final Block block = event.getBlock();
-		//Do not drop more netherwart
-		if (block.getType() == Material.NETHER_WARTS)
-		{
-			event.setCancelled(true);
-			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.NETHER_STALK, 1));
-			block.setType(Material.AIR);
-			return;
-		}
 
 		//Restockable chest
 		RestockableChest chest = RestockableChest.getChest(block);
@@ -233,18 +226,18 @@ public class FlatcoreListener implements Listener {
 			}
 		}
 
-		if (onBlockDestroyed(block))
+		if (onCropDestroyed(block, false))
 		{
 			event.setCancelled(true);
 			return;
 		}
-		onBlockDestroyed(block.getRelative(BlockFace.UP));
+		onCropDestroyed(block.getRelative(BlockFace.UP), false);
 
 	}
 
 	//Virtal event that combines multiple events. 
 	//Triggers when non-solid block (like crops) is about to be destroyed
-	public boolean onBlockDestroyed(Block block)
+	public boolean onCropDestroyed(Block block, boolean dark)
 	{
 		if (block == null)
 			return false;
@@ -281,6 +274,14 @@ public class FlatcoreListener implements Listener {
 			if (amount > 0)
 				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.CARROT_ITEM, amount));
 
+			return true;
+		}
+		
+		//Do not drop more netherwart
+		if (!dark && block.getType() == Material.NETHER_WARTS)
+		{
+			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.NETHER_STALK, 1));
+			block.setType(Material.AIR);
 			return true;
 		}
 
@@ -469,6 +470,16 @@ public class FlatcoreListener implements Listener {
 				}
 			}
 		} 
+		
+		if (event.getBlock().getLightLevel() < 10)
+		{
+			if (onCropDestroyed(event.getBlock(), true))
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -610,13 +621,13 @@ public class FlatcoreListener implements Listener {
 	public void onPistonExtend(BlockPistonExtendEvent event)
 	{
 		Block firstBlock = event.getBlock().getRelative(event.getDirection());
-		onBlockDestroyed(firstBlock);
-		onBlockDestroyed(firstBlock.getRelative(BlockFace.UP));
+		onCropDestroyed(firstBlock, false);
+		onCropDestroyed(firstBlock.getRelative(BlockFace.UP), false);
 
 		for (Block b : event.getBlocks())
 		{
-			onBlockDestroyed(b);
-			onBlockDestroyed(b.getRelative(BlockFace.UP));
+			onCropDestroyed(b, false);
+			onCropDestroyed(b.getRelative(BlockFace.UP), false);
 		}
 
 	}
@@ -626,7 +637,33 @@ public class FlatcoreListener implements Listener {
 	{
 		if (event.isSticky())
 		{
-			onBlockDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP));
+			onCropDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP), false);
 		}
-	}		
+	}	
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onLiquidMove(BlockFromToEvent event)
+	{
+		onCropDestroyed(event.getToBlock(), false);
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onEntityInteract(EntityInteractEvent event)
+	{
+		FCLog.info("EntityInteract " + event.getBlock());
+		
+		if (onCropDestroyed(event.getBlock(), false))
+		{
+			event.setCancelled(true);
+			return;
+		}
+		
+		Block aboveBlock = event.getBlock().getRelative(BlockFace.UP);
+		if (aboveBlock != null && onCropDestroyed(aboveBlock, false))
+		{
+			event.setCancelled(true);
+			return;
+		}
+		
+	}
 }
