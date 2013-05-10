@@ -280,12 +280,27 @@ public class CachedSchematic {
 		return corner;
 	}
 	
+	public Location placeAtCorner(int x, int y, int z)
+	{
+		Location placement = new Location(Bukkit.getWorlds().get(0), x, y, z);
+		place(placement);
+		return placement;
+	}
+	
 	public Location place(int x, int y, int z, int randomOff)
 	{
 		int randX = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 		int randZ = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 
 		Location placement = new Location(Bukkit.getWorlds().get(0), x - xSize / 2 + randX, y, z - zSize / 2 + randZ);
+
+		place(placement);
+		
+		return placement;
+	}
+	
+	private void place(Location placement)
+	{
 		
 		Vector middle = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
 		
@@ -318,9 +333,6 @@ public class CachedSchematic {
 			e.printStackTrace();
 		}
 		editSession.flushQueue();
-
-		
-		return placement;
 	}
 	
 	private static class VillagerInfo

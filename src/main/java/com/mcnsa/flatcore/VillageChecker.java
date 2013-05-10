@@ -67,7 +67,7 @@ public class VillageChecker implements Runnable {
 
 							@Override
 							public void run() {
-								Location center = village.place(villageX, y, villageZ, 0);
+								Location center = village.placeAtCorner(villageX, y, villageZ);
 								village.clearVillagers(center);
 								village.spawnVillagers(center);
 								
