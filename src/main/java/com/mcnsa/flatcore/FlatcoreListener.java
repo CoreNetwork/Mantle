@@ -471,14 +471,14 @@ public class FlatcoreListener implements Listener {
 			}
 		} 
 		
-		if (event.getBlock().getLightLevel() < 9)
-		{
-			if (onCropDestroyed(event.getBlock(), true))
-			{
-				event.setCancelled(true);
-				return;
-			}
-		}
+//		if (event.getBlock().getLightLevel() < 9)
+//		{
+//			if (onCropDestroyed(event.getBlock(), true))
+//			{
+//				event.setCancelled(true);
+//				return;
+//			}
+//		}
 		
 	}
 
