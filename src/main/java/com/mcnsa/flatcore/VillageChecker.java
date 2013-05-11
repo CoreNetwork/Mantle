@@ -14,7 +14,8 @@ public class VillageChecker implements Runnable {
 	public static void schedule()
 	{
 		int period = Settings.getInt(Setting.RESTORATION_VILLAGE_CHECK_PERIOD) * 20;
-		Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(MCNSAFlatcore.instance, new VillageChecker(), 20, period);
+		if (period > 0)
+			Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(MCNSAFlatcore.instance, new VillageChecker(), 20, period);
 	}
 
 	@Override
