@@ -78,7 +78,7 @@ public class GriefPreventionHandler {
 		int villageMinX = x - padding;
 		int villageMaxX = x + xSize + padding;
 		int villageMinZ = z - padding;
-		int villageMaxZ = x + zSize + padding;		
+		int villageMaxZ = z + zSize + padding;		
 		
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
