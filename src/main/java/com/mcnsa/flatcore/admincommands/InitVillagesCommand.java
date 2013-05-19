@@ -62,10 +62,10 @@ public class InitVillagesCommand extends BaseAdminCommand {
 			}
 				
 
-			int minX = Settings.getInt(Setting.MAP_MIN_X);
-			int minZ = Settings.getInt(Setting.MAP_MIN_Z);
-			int maxX = Settings.getInt(Setting.MAP_MAX_X);
-			int maxZ = Settings.getInt(Setting.MAP_MAX_Z);
+			int minX = Settings.getInt(Setting.GENERATION_MIN_X);
+			int minZ = Settings.getInt(Setting.GENERATION_MIN_Z);
+			int maxX = Settings.getInt(Setting.GENERATION_MAX_X);
+			int maxZ = Settings.getInt(Setting.GENERATION_MAX_Z);
 			int step = Settings.getInt(Setting.VILLAGE_GRID_SPACE);
 			int offX = Settings.getInt(Setting.VILLAGE_OFFSET_X);
 			int offZ = Settings.getInt(Setting.VILLAGE_OFFSET_Z);

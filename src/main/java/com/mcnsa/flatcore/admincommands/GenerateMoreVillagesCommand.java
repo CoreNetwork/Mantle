@@ -31,7 +31,7 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 
 
 	public Boolean run(CommandSender sender, String[] args) {
-		if (args.length < 0 || !Util.isInteger(args[0]))
+		if (args.length < 1 || !Util.isInteger(args[0]))
 		{
 			sender.sendMessage("Enter number of villages!");
 			return true;
@@ -67,15 +67,10 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 			e.printStackTrace();
 		}
 				
-//		int minX = Settings.getInt(Setting.MAP_MIN_X);
-//		int minZ = Settings.getInt(Setting.MAP_MIN_Z);
-//		int maxX = Settings.getInt(Setting.MAP_MAX_X);
-//		int maxZ = Settings.getInt(Setting.MAP_MAX_Z);
-
-		int minX = -4900;
-		int minZ = -4900;
-		int maxX = 4900;
-		int maxZ = 4900;
+		int minX = Settings.getInt(Setting.GENERATION_MIN_X);
+		int minZ = Settings.getInt(Setting.GENERATION_MIN_Z);
+		int maxX = Settings.getInt(Setting.GENERATION_MAX_X);
+		int maxZ = Settings.getInt(Setting.GENERATION_MAX_Z);
 		
 		FCLog.info("Initializing village generation...");
 		
@@ -116,9 +111,9 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 				int realDistance = (int) Math.sqrt(bestDistance);
 				int type = MCNSAFlatcore.random.nextInt(numTypes);
 
-				if (GriefPreventionHandler.containsClaim(bestLocation.getBlockX() - villages[type].xSize / 2, bestLocation.getBlockZ() - villages[type].zSize / 2, villages[type].xSize, villages[type].zSize, false))
+				if (GriefPreventionHandler.containsClaim(bestLocation.getBlockX() - villages[type].xSize / 2, bestLocation.getBlockZ() - villages[type].zSize / 2, villages[type].xSize, villages[type].zSize, false) || isVillageHere(bestLocation.getBlockX(), bestLocation.getBlockZ()))
 				{
-					FCLog.severe("Village at " + bestLocation.getBlockX() + " " + bestLocation.getBlockZ() + " (" + realDistance + " blocks away from civilization) would overlap claim!");
+					FCLog.severe("Village at " + bestLocation.getBlockX() + " " + bestLocation.getBlockZ() + " (" + realDistance + " blocks away from civilization) would overlap existing structure!");
 					FCLog.severe("Something went terribly wrong. Either map is overcrowded or plugin is bugged. Aborting generation.");
 					break;
 				}
@@ -183,4 +178,39 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
 	
+	private static boolean isVillageHere(int x, int z)
+	{
+		boolean villageExists = false;
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT SizeX,SizeZ,((centerX - ? + sizeX / 2) * (centerX - ? + sizeX / 2) + (centerZ - ? + sizeZ / 2) * (centerZ - ? + sizeZ / 2)) as dist FROM villages ORDER BY dist ASC LIMIT 1");
+			statement.setInt(1, x);
+			statement.setInt(2, x);
+			statement.setInt(3, z);
+			statement.setInt(4, z);
+
+			ResultSet set = statement.executeQuery();
+			if (set.next())
+			{
+				int distanceSquared = set.getInt("dist");
+				int distance = (int) Math.sqrt(distanceSquared);
+				
+				int sizeX = set.getInt("SizeX");
+				int sizeZ = set.getInt("SizeZ");
+						
+				if (distance < sizeX || distance < sizeZ)
+				{
+					villageExists = true;
+				}
+			}
+			
+			statement.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return villageExists;
+	}
 }
