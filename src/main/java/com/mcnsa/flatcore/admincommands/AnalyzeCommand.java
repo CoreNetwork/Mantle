@@ -42,14 +42,12 @@ public class AnalyzeCommand extends BaseAdminCommand {
 					
 					while (set.next())
 					{
-
-
 						final int villageX = set.getInt("centerX");
 						final int villageZ = set.getInt("centerZ");
-						final int xSize = set.getInt("SizeX") / 2;
-						final int zSize = set.getInt("SizeZ") / 2;
-						
-						if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize))
+						final int xSize = set.getInt("SizeX");
+						final int zSize = set.getInt("SizeZ");
+												
+						if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, false))
 						{
 							claimed++;
 						}		

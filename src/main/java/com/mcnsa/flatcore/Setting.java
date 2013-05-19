@@ -81,6 +81,9 @@ public enum Setting {
 	MESSAGE_DELETE_NEARBY_VILLAGE("Messages.DeleteNearbyVillage", "You have chosen to delete village #<ID> (Center is <Distance> blocks away). Enter command again to confirm."),
 	MESSAGE_NO_VILLAGES("Messages.NoVillages", "You have no villages on this server!"),
 	MESSAGE_VILLAGE_DELETED("Messages.VillageDeleted", "Village deleted."),
+	MESSAGE_TELEPORTED("Messages.Teleported", "Teleported."),
+	MESSAGE_FOUND_ADMIN_VILLAGE("Messages.FoundAdminVillage", "Found village with admin claim at <X> <Z>! Type command again to teleport."),
+	MESSAGE_NO_ADMIN_VILLAGE("Messages.NoAdminVillage", "Congratulations! You have no villages with admin claims!"),
 
 	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
 	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");
