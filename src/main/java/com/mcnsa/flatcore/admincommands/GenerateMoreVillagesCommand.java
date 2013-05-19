@@ -116,6 +116,13 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 				int realDistance = (int) Math.sqrt(bestDistance);
 				int type = MCNSAFlatcore.random.nextInt(numTypes);
 
+				if (GriefPreventionHandler.containsClaim(bestLocation.getBlockX() - villages[type].xSize / 2, bestLocation.getBlockZ() - villages[type].zSize / 2, villages[type].xSize, villages[type].zSize, false))
+				{
+					FCLog.severe("Village at " + bestLocation.getBlockX() + " " + bestLocation.getBlockZ() + " (" + realDistance + " blocks away from civilization) would overlap claim!");
+					FCLog.severe("Something went terribly wrong. Either map is overcrowded or plugin is bugged. Aborting generation.");
+					break;
+				}
+				
 				int progress = (int) (vNum * 100.0 / numberOfVillages);
 				
 				Location spawnLocation;
