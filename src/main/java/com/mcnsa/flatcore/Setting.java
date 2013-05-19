@@ -84,6 +84,8 @@ public enum Setting {
 	MESSAGE_TELEPORTED("Messages.Teleported", "Teleported."),
 	MESSAGE_FOUND_ADMIN_VILLAGE("Messages.FoundAdminVillage", "Found village with admin claim at <X> <Z>! Type command again to teleport."),
 	MESSAGE_NO_ADMIN_VILLAGE("Messages.NoAdminVillage", "Congratulations! You have no villages with admin claims!"),
+	MESSAGE_VILLAGE_WILL_NOT_BE_RESTORED("Messages.VillageWillNotBeRestored", "Village #<ID> (Center is <Distance> blocks away) will not be restored (claim is in the way)."),
+	MESSAGE_VILLAGE_WILL_BE_RESTORED("Messages.VillageWillBeRestored", "Village #<ID> (Center is <Distance> blocks away) will BE restored."),
 
 	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
 	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");

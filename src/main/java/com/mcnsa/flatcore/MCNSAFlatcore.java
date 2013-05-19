@@ -18,6 +18,7 @@ import com.mcnsa.flatcore.admincommands.FindAdminVillageCommand;
 import com.mcnsa.flatcore.admincommands.InitVillagesCommand;
 import com.mcnsa.flatcore.admincommands.ReloadCommand;
 import com.mcnsa.flatcore.admincommands.RestockAllCommand;
+import com.mcnsa.flatcore.admincommands.TestVillageCommand;
 
 public class MCNSAFlatcore extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -54,6 +55,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 		adminCommands.put("analyze", new AnalyzeCommand());
 		adminCommands.put("deletevillage", new DeleteVillageCommand());
 		adminCommands.put("findadminclaims", new FindAdminVillageCommand());
+		adminCommands.put("testvillage", new TestVillageCommand());
 
 		adminCommands.put("createchest", new CreateChestCommand());
 		adminCommands.put("restockall", new RestockAllCommand());
