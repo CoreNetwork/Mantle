@@ -57,7 +57,7 @@ public class FindAdminVillageCommand extends BaseAdminCommand {
 							final int xSize = set.getInt("SizeX");
 							final int zSize = set.getInt("SizeZ");
 							
-							if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, false))
+							if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, true))
 							{
 								Location location = new Location(overworld, villageX + xSize / 2, 15, villageZ + zSize / 2);
 								if (pickedVillage.containsValue(location))
