@@ -1,6 +1,6 @@
 name: MCNSAFlatcore
 main: com.mcnsa.flatcore.MCNSAFlatcore
-version: 1.0.2
+version: 1.1.0
 author: matejdro
 depend: [GriefPrevention]
 commands:

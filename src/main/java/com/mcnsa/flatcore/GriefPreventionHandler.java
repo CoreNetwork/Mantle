@@ -1,5 +1,8 @@
 package com.mcnsa.flatcore;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.ClaimArray;
 import me.ryanhamshire.GriefPrevention.ClaimPermission;
@@ -7,7 +10,6 @@ import me.ryanhamshire.GriefPrevention.CreateClaimResult;
 import me.ryanhamshire.GriefPrevention.CreateClaimResult.Result;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
@@ -106,4 +108,28 @@ public class GriefPreventionHandler {
 
 		return false;		
 	}	
+	
+	public static LinkedList<Location> getAllClaims()
+	{
+		LinkedList<Location> list = new LinkedList<Location>();
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		for (int i = 0; i < ca.size(); i++)
+		{
+			Claim claim = ca.get(i);
+
+			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
+			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
+			int claimSizeX = Math.abs(claim.getLesserBoundaryCorner().getBlockX() - claim.getGreaterBoundaryCorner().getBlockX());
+			int claimSizeZ = Math.abs(claim.getLesserBoundaryCorner().getBlockZ() - claim.getGreaterBoundaryCorner().getBlockZ());
+
+			int claimCenterX = claimMinX + claimSizeX / 2;
+			int claimCenterZ = claimMinZ + claimSizeZ / 2;
+			
+			Location center = new Location(claim.getLesserBoundaryCorner().getWorld(), claimCenterX, 0, claimCenterZ);
+			
+			list.addLast(center);
+		}
+		
+		return list;
+	}
 }

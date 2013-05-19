@@ -59,7 +59,6 @@ public class InitVillagesCommand extends BaseAdminCommand {
 				villages[i].findVillagers();
 				
 				FCLog.info("Loading schematic for village #" + (i + 1) + " (Size: " + villages[i].xSize + " " + villages[i].zSize + ") ...");
-
 			}
 				
 
