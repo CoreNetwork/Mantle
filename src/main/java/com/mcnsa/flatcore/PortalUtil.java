@@ -228,7 +228,23 @@ public class PortalUtil {
 
 			}
 		}
+		
+		//Clear out nearby lava
+		
+		for (int x = -2; x < 4; x++)
+		{
+			for (int y = 0; y < 5; y++)
+			{
+				for (int z = -2; z < 3; z++)
+				{
+					Block block = baseBlock.getRelative(x, y, z);
+					
+					if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA)
+						block.setType(Material.AIR);
 
+				}
+			}
+		}
 
 	}
 
