@@ -1,7 +1,9 @@
 package com.mcnsa.flatcore;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.ClaimArray;
@@ -109,9 +111,9 @@ public class GriefPreventionHandler {
 		return false;		
 	}	
 	
-	public static LinkedList<Location> getAllClaims()
+	public static Deque<Location> getAllClaims()
 	{
-		LinkedList<Location> list = new LinkedList<Location>();
+		ArrayDeque<Location> list = new ArrayDeque<Location>();
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
 		{
@@ -131,5 +133,69 @@ public class GriefPreventionHandler {
 		}
 		
 		return list;
+	}
+	
+	public static Deque<Location> getPlayerClaims(String player, boolean inverse)
+	{
+		ArrayDeque<Location> list = new ArrayDeque<Location>();
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		for (int i = 0; i < ca.size(); i++)
+		{
+			Claim claim = ca.get(i);
+
+			if (inverse == claim.getOwnerName().equals(player))
+					continue;
+			
+			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
+			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
+			int claimSizeX = Math.abs(claim.getLesserBoundaryCorner().getBlockX() - claim.getGreaterBoundaryCorner().getBlockX());
+			int claimSizeZ = Math.abs(claim.getLesserBoundaryCorner().getBlockZ() - claim.getGreaterBoundaryCorner().getBlockZ());
+
+			int claimCenterX = claimMinX + claimSizeX / 2;
+			int claimCenterZ = claimMinZ + claimSizeZ / 2;
+			
+			Location center = new Location(claim.getLesserBoundaryCorner().getWorld(), claimCenterX, 0, claimCenterZ);
+			
+			list.addLast(center);
+		}
+		
+		return list;
+	}
+	
+	public static Location findBiggestClaim(String player)
+	{
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		
+		Claim biggest = null;
+		int biggestSize = 0;
+		for (int i = 0; i < ca.size(); i++)
+		{
+			Claim claim = ca.get(i);
+			
+			if (!claim.getOwnerName().equals(player))
+					continue;
+			
+			if (biggestSize >= claim.getArea())
+				continue;
+			
+			biggest = claim;
+			biggestSize = claim.getArea();
+			
+		}
+				
+		if (biggest == null)
+			return null;
+		
+		int claimMinX = Math.min(biggest.getLesserBoundaryCorner().getBlockX(), biggest.getGreaterBoundaryCorner().getBlockX());
+		int claimMinZ = Math.min(biggest.getLesserBoundaryCorner().getBlockZ(), biggest.getGreaterBoundaryCorner().getBlockZ());
+		int claimSizeX = Math.abs(biggest.getLesserBoundaryCorner().getBlockX() - biggest.getGreaterBoundaryCorner().getBlockX());
+		int claimSizeZ = Math.abs(biggest.getLesserBoundaryCorner().getBlockZ() - biggest.getGreaterBoundaryCorner().getBlockZ());
+
+		int claimCenterX = claimMinX + claimSizeX / 2;
+		int claimCenterZ = claimMinZ + claimSizeZ / 2;
+		
+		Location center = new Location(biggest.getLesserBoundaryCorner().getWorld(), claimCenterX, 0, claimCenterZ);
+		
+		return center;
 	}
 }

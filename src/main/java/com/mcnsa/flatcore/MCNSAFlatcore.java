@@ -9,17 +9,20 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mcnsa.flatcore.admincommands.AdminHelpCommand;
-import com.mcnsa.flatcore.admincommands.AnalyzeCommand;
-import com.mcnsa.flatcore.admincommands.BaseAdminCommand;
-import com.mcnsa.flatcore.admincommands.CreateChestCommand;
-import com.mcnsa.flatcore.admincommands.DeleteVillageCommand;
-import com.mcnsa.flatcore.admincommands.FindAdminVillageCommand;
-import com.mcnsa.flatcore.admincommands.GenerateMoreVillagesCommand;
-import com.mcnsa.flatcore.admincommands.InitVillagesCommand;
-import com.mcnsa.flatcore.admincommands.ReloadCommand;
-import com.mcnsa.flatcore.admincommands.RestockAllCommand;
-import com.mcnsa.flatcore.admincommands.TestVillageCommand;
+import com.mcnsa.flatcore.flatcorecommands.AdminHelpCommand;
+import com.mcnsa.flatcore.flatcorecommands.AnalyzeCommand;
+import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
+import com.mcnsa.flatcore.flatcorecommands.CreateChestCommand;
+import com.mcnsa.flatcore.flatcorecommands.DeleteVillageCommand;
+import com.mcnsa.flatcore.flatcorecommands.FindAdminVillageCommand;
+import com.mcnsa.flatcore.flatcorecommands.GenerateMoreVillagesCommand;
+import com.mcnsa.flatcore.flatcorecommands.InitVillagesCommand;
+import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
+import com.mcnsa.flatcore.flatcorecommands.RestockAllCommand;
+import com.mcnsa.flatcore.flatcorecommands.TestVillageCommand;
+import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
+import com.mcnsa.flatcore.rspawncommands.RSpawnCommand;
+import com.mcnsa.flatcore.rspawncommands.ToggleCommand;
 
 public class MCNSAFlatcore extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -31,6 +34,8 @@ public class MCNSAFlatcore extends JavaPlugin {
 	public static Plugin permissions = null;
 
 	public static HashMap<String, BaseAdminCommand> adminCommands = new HashMap<String, BaseAdminCommand>();
+	public static HashMap<String, BaseRSpawnCommand> rspawnCommands = new HashMap<String, BaseRSpawnCommand>();
+
 	public static Random random;
 	
 	@Override
@@ -64,6 +69,10 @@ public class MCNSAFlatcore extends JavaPlugin {
 		
 		adminCommands.put("reload", new ReloadCommand());
 		
+		
+		rspawnCommands.put("rspawn", new RSpawnCommand());
+		rspawnCommands.put("toggle", new ToggleCommand());
+
 		VillageChecker.schedule();
 
 		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");
@@ -73,14 +82,32 @@ public class MCNSAFlatcore extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if (args.length < 1 || Util.isInteger(args[0]))
-			return adminCommands.get("help").execute(sender, args);
+		if (command.getName().equals("flatcore"))
+		{
+			if (args.length < 1 || Util.isInteger(args[0]))
+				return adminCommands.get("help").execute(sender, args);
 
-		BaseAdminCommand cmd = adminCommands.get(args[0]);
-		if (cmd != null)
-			return cmd.execute(sender, args);
+			BaseAdminCommand cmd = adminCommands.get(args[0]);
+			if (cmd != null)
+				return cmd.execute(sender, args);
+			else
+				return adminCommands.get("help").execute(sender, args);
+		}
+		else if (command.getName().equals("togglespawn"))
+		{
+			return rspawnCommands.get("toggle").execute(sender, args);
+		}
 		else
-			return adminCommands.get("help").execute(sender, args);
+		{
+			if (args.length < 1 || Util.isInteger(args[0]))
+				return rspawnCommands.get("rspawn").execute(sender, args);
+
+			BaseRSpawnCommand cmd = rspawnCommands.get(args[0]);
+			if (cmd != null)
+				return cmd.execute(sender, args);
+			else
+				return false;
+		}
 	}
 
 }

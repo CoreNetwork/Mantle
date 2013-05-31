@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore.admincommands;
+package com.mcnsa.flatcore.flatcorecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

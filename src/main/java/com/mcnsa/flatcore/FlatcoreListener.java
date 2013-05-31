@@ -55,7 +55,7 @@ import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
-import com.mcnsa.flatcore.admincommands.CreateChestCommand;
+import com.mcnsa.flatcore.flatcorecommands.CreateChestCommand;
 
 public class FlatcoreListener implements Listener {
 	private HashMap<Block, FlintSteelData> flintSteelUsage = new HashMap<Block, FlintSteelData>();

@@ -26,7 +26,8 @@ public enum Setting {
 	NETHER_MOVE_PORTALS_WITH_LOWER_Y("Nether.MovePortalsWithLowerY", 20),
 	NETHER_MOVE_PORTALS_WITH_HIGHER_Y("Nether.MovePortalsWithHigherY", 120),
 	NETHER_PORTAL_MAX_Y("Nether.PortalMaxY", 100),
-
+	
+	TELEPORT_Y("TeleportY", 14),
 	
 	VILLAGE_GRID_SPACE("Village.Spacing", 500),
 	VILLAGE_RANDOM_OFFSET("Village.RandomOffset", 150),
@@ -90,7 +91,9 @@ public enum Setting {
 	MESSAGE_NO_ADMIN_VILLAGE("Messages.NoAdminVillage", "Congratulations! You have no villages with admin claims!"),
 	MESSAGE_VILLAGE_WILL_NOT_BE_RESTORED("Messages.VillageWillNotBeRestored", "Village #<ID> (Center is <Distance> blocks away) will not be restored (claim is in the way)."),
 	MESSAGE_VILLAGE_WILL_BE_RESTORED("Messages.VillageWillBeRestored", "Village #<ID> (Center is <Distance> blocks away) will BE restored."),
-
+	MESSAGE_SPAWN_IGNORED("Messages.SpawnIgnored", "Your home is now ignored when spawning"),
+	MESSAGE_SPAWN_UNIGNORED("Message.SpawnUnignored", "Your home is now unignored when spawning"),
+	
 	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
 	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");
 	

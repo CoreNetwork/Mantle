@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.server.v1_5_R3.ChunkProviderHell;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -243,5 +244,21 @@ public class Util {
 
 		return false;
 
+	}
+	
+	public static void safeTeleport(final Player player, final Location location)
+	{
+		Chunk c = location.getChunk();
+		if (!c.isLoaded())
+			location.getChunk().load();
+		player.teleport(location);
+		
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
+			@Override
+			public void run() {
+				player.teleport(location);
+				
+			}
+		}, 10);
 	}
 }

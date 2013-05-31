@@ -1,13 +1,22 @@
 name: MCNSAFlatcore
 main: com.mcnsa.flatcore.MCNSAFlatcore
-version: 1.1.0
+version: 1.2.0
 author: matejdro
 depend: [GriefPrevention]
 commands:
     flatcore:
         description: Weekly challenges.
+    rspawn:
+        description: rspawn
+    togglespawn:
+        description: togglespawn
+    
 permissions:
     mcnsaflatcore.command.flatcore:
         default: op
     mcnsaflatcore.mod:
         default: op
+    mcnsaflatcore.donorgrass:
+        default: false
+    mcnsaflatcore.donorsky:
+        default: false

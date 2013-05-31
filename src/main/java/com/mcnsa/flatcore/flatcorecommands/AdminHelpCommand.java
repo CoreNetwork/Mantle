@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore.admincommands;
+package com.mcnsa.flatcore.flatcorecommands;
 
 import java.util.ArrayList;
 import java.util.Arrays;

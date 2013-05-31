@@ -1,10 +1,11 @@
-package com.mcnsa.flatcore.admincommands;
+package com.mcnsa.flatcore.flatcorecommands;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Deque;
 import java.util.Iterator;
-import java.util.LinkedList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -44,28 +45,9 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 		World overworld = Bukkit.getServer().getWorlds().get(0);
 		long start = System.currentTimeMillis();
 		
-		LinkedList<Location> checkedLocations = GriefPreventionHandler.getAllClaims();
+		Deque<Location> checkedLocations = GriefPreventionHandler.getAllClaims();
 		
-		try
-		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CenterX, CenterZ FROM villages");
-
-			ResultSet set = statement.executeQuery();
-			while (set.next())
-			{
-				final int villageX = set.getInt("centerX");
-				final int villageZ = set.getInt("centerZ");
-							
-				Location center = new Location(overworld, villageX, 0, villageZ);
-				checkedLocations.addLast(center);
-			}
-			
-			statement.close();
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		getAllVillages(checkedLocations);
 				
 		int minX = Settings.getInt(Setting.GENERATION_MIN_X);
 		int minZ = Settings.getInt(Setting.GENERATION_MIN_Z);
@@ -157,7 +139,7 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 		return true;
 	}
 	
-	private static int getSmallestDistance(LinkedList<Location> checkLocations, Location point)
+	public static int getSmallestDistance(Deque<Location> checkLocations, Location point)
 	{
 		int smallestDist = Integer.MAX_VALUE;
 		
@@ -173,7 +155,7 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 		return smallestDist;
 	}
 	
-	private static int distance(Location a, Location b)
+	public static int distance(Location a, Location b)
 	{
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
@@ -212,5 +194,31 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 		}
 		
 		return villageExists;
+	}
+	
+	public static void getAllVillages(Collection<Location> list)
+	{
+		World overworld = Bukkit.getServer().getWorlds().get(0);
+
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CenterX, CenterZ FROM villages");
+
+			ResultSet set = statement.executeQuery();
+			while (set.next())
+			{
+				final int villageX = set.getInt("centerX");
+				final int villageZ = set.getInt("centerZ");
+							
+				Location center = new Location(overworld, villageX, 0, villageZ);
+				list.add(center);
+			}
+			
+			statement.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }

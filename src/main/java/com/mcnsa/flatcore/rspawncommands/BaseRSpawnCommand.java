@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore.admincommands;
+package com.mcnsa.flatcore.rspawncommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -7,9 +7,10 @@ import com.mcnsa.flatcore.Setting;
 import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 
-public abstract class BaseAdminCommand {
+public abstract class BaseRSpawnCommand {
 	public Boolean needPlayer;
 	public String desc;
+	public String permission;
 
 	public abstract Boolean run(CommandSender sender, String[] args);
 	
@@ -30,7 +31,7 @@ public abstract class BaseAdminCommand {
 		Util.Message("Sorry, but you need to execute this command as player.", sender);
 			return false;
 		}
-		if (sender instanceof Player && !((Player)sender).hasPermission("mcnsaflatcore.command.cha")) 
+		if (sender instanceof Player && !((Player)sender).hasPermission("mcnsaflatcore.command.rspawn." + permission)) 
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
 			return false;
