@@ -248,34 +248,6 @@ public class FlatcoreListener implements Listener {
 			block.setType(Material.AIR);
 			return true;
 		}
-
-		//When fully grown potato is broken, drop 0-2 normal potatoes and 1-2 poisonous ones.
-		if (block.getType() == Material.POTATO)
-		{
-			block.setType(Material.AIR);
-
-
-			int amount = MCNSAFlatcore.random.nextInt(3);
-			if (amount > 0)
-				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.POTATO_ITEM, amount));
-
-			amount = MCNSAFlatcore.random.nextInt(2) + 1;
-			block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.POISONOUS_POTATO, amount));
-
-			return true;
-		}
-
-		//Carrots should drop 1-2.
-		if (block.getType() == Material.CARROT)
-		{
-			block.setType(Material.AIR);
-
-			int amount = MCNSAFlatcore.random.nextInt(2) + 1;
-			if (amount > 0)
-				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.CARROT_ITEM, amount));
-
-			return true;
-		}
 		
 		//Do not drop more netherwart
 		if (!dark && block.getType() == Material.NETHER_WARTS)
