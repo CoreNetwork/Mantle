@@ -97,20 +97,27 @@ public class FlatcoreListener implements Listener {
 		//Investigation tool for portals
 		if (hand != null && hand.getTypeId() == Settings.getInt(Setting.INVESTIGATION_TOOL))
 		{
-			Location destination = PortalUtil.getOtherSide(clicked.getLocation());
-			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
-
-			if (claim != null && claim.allowBuild(player) != null)
+			Location source = player.getLocation();
+			Claim sourceClaim = GriefPrevention.instance.dataStore.getClaimAt(source, true, null);
+			if (sourceClaim == null || sourceClaim.allowBuild(player) == null)
 			{
-				String message = Settings.getString(Setting.MESSAGE_CANT_MAKE_PORTAL);
-				message = message.replace("<OtherDimension>", clicked.getWorld().getEnvironment() == Environment.NORMAL ? "Nether" : "Overworld");
+				Location destination = PortalUtil.getOtherSide(clicked.getLocation());
+				Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
 
-				Util.Message(message, player);
+				if (claim != null && claim.allowBuild(player) != null)
+				{
+					String message = Settings.getString(Setting.MESSAGE_CANT_MAKE_PORTAL);
+					message = message.replace("<OtherDimension>", clicked.getWorld().getEnvironment() == Environment.NORMAL ? "Nether" : "Overworld");
+
+					Util.Message(message, player);
+				}
+				else
+				{
+					Util.Message(Settings.getString(Setting.MESSAGE_CAN_MAKE_PORTAL), player);
+				}
 			}
-			else
-			{
-				Util.Message(Settings.getString(Setting.MESSAGE_CAN_MAKE_PORTAL), player);
-			}
+			
+			
 		}
 
 		if (event.isCancelled())
