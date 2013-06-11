@@ -1,5 +1,8 @@
 package com.mcnsa.flatcore;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.bukkit.Material;
 
 
@@ -27,8 +30,11 @@ public enum Setting {
 	NETHER_MOVE_PORTALS_WITH_HIGHER_Y("Nether.MovePortalsWithHigherY", 120),
 	NETHER_PORTAL_MAX_Y("Nether.PortalMaxY", 100),
 	
-	TELEPORT_Y("TeleportY", 14),
-	
+	TELEPORT_Y("Respawn.TeleportY", 14),
+	SPAWN_PROTECTION_LENGTH("Respawn.SpawnProtectionLength", 120),
+	SPAWN_PROTECTION_NOTIFICATIONS("Respawn.SpawnProtectionNotifications", Arrays.asList(new Integer[] {90, 60, 30, 10})),
+	MOB_REMOVAL_RADIUS_SQUARED("Respawn.MobRemovalRadiusSquared", 625),
+
 	VILLAGE_GRID_SPACE("Village.Spacing", 500),
 	VILLAGE_RANDOM_OFFSET("Village.RandomOffset", 150),
 	NUMBER_OF_VILLAGES("Village.NumberOfSchematics", 6),
@@ -93,6 +99,13 @@ public enum Setting {
 	MESSAGE_VILLAGE_WILL_BE_RESTORED("Messages.VillageWillBeRestored", "Village #<ID> (Center is <Distance> blocks away) will BE restored."),
 	MESSAGE_SPAWN_IGNORED("Messages.SpawnIgnored", "Your home is now ignored when spawning"),
 	MESSAGE_SPAWN_UNIGNORED("Message.SpawnUnignored", "Your home is now unignored when spawning"),
+	MESSAGE_SPAWN_PROTECTION_START("Message.SpawnProtectionStart", "You are invincible for <Time> seconds!"),
+	MESSAGE_SPAWN_PROTECTION_NOTIFICATION("Message.SpawnProtectionNotification", "Invicibility will expire in <Time> seconds."),
+	MESSAGE_SPAWN_PROTECTION_END_CLAIMS("Message.SpawnProtectionEndClaims", "&eYou are no longer invincible! Find food and weapons before you try to reach your &6/base"),
+	MESSAGE_SPAWN_PROTECTION_END_NO_CLAIMS("Message.SpawnProtectionEndNoClaims", "&eYou are no longer invincible! Find food or shelter."),
+	MESSAGE_SPAWN_UNPROTECT_NOT_PROTECTED("Message.UnprotectNotProtected", "&eYou are already not protected."),
+	MESSAGE_SPAWN_PROTECTION_DONT_ABUSE("Message.SpawnProtectionDontAbuse", "Do not abuse spawn protection! Use /unprotect to disable it to start killing mobs."),
+
 	
 	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
 	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");

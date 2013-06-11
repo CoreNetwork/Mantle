@@ -37,6 +37,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -44,6 +45,7 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -56,6 +58,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.mcnsa.flatcore.flatcorecommands.CreateChestCommand;
+import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
 public class FlatcoreListener implements Listener {
 	private HashMap<Block, FlintSteelData> flintSteelUsage = new HashMap<Block, FlintSteelData>();
@@ -116,8 +119,8 @@ public class FlatcoreListener implements Listener {
 					Util.Message(Settings.getString(Setting.MESSAGE_CAN_MAKE_PORTAL), player);
 				}
 			}
-			
-			
+
+
 		}
 
 		if (event.isCancelled())
@@ -255,7 +258,7 @@ public class FlatcoreListener implements Listener {
 			block.setType(Material.AIR);
 			return true;
 		}
-		
+
 		//Do not drop more netherwart
 		if (!dark && block.getType() == Material.NETHER_WARTS)
 		{
@@ -273,7 +276,7 @@ public class FlatcoreListener implements Listener {
 		//Do not apply anything to End
 		if (event.getBlock().getWorld().getEnvironment() == Environment.THE_END)
 			return;
-		
+
 		//Protect admins against evil features
 		if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
 			return;
@@ -350,13 +353,42 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
-		//Do not apply anything to End
-		if (event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
+		//Do not apply anything to End or void
+		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
 			return;
-		
+
+		//Check for spawn protection abuse
+		if (event instanceof EntityDamageByEntityEvent)
+		{
+			EntityDamageByEntityEvent newEvent = (EntityDamageByEntityEvent) event;
+			if (newEvent.getDamager() instanceof Player)
+			{
+				Player damager = (Player) newEvent.getDamager();
+				if (ProtectCommand.protectedPlayers.containsKey(damager.getName()))
+				{
+					event.setCancelled(true);
+					if (!(event.getEntity() instanceof Player))
+						event.getEntity().remove();
+
+					Util.Message(Settings.getString(Setting.MESSAGE_SPAWN_PROTECTION_DONT_ABUSE), damager);
+
+					return;
+				}
+
+			}
+		}
+
 		//Environmental damage
 		if (!(event.getEntity() instanceof Player))
 			return;
+
+		//Check for spawn protection
+		Player player = (Player) event.getEntity();
+		if (ProtectCommand.protectedPlayers.containsKey(player.getName()))
+		{
+			event.setCancelled(true);
+			return;
+		}
 
 		NodeParser.parseDamageEvent(event);
 	}
@@ -449,16 +481,16 @@ public class FlatcoreListener implements Listener {
 				}
 			}
 		} 
-		
-//		if (event.getBlock().getLightLevel() < 9)
-//		{
-//			if (onCropDestroyed(event.getBlock(), true))
-//			{
-//				event.setCancelled(true);
-//				return;
-//			}
-//		}
-		
+
+		//		if (event.getBlock().getLightLevel() < 9)
+		//		{
+		//			if (onCropDestroyed(event.getBlock(), true))
+		//			{
+		//				event.setCancelled(true);
+		//				return;
+		//			}
+		//		}
+
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -504,7 +536,7 @@ public class FlatcoreListener implements Listener {
 					FCLog.debug("Portal out of bounds ! " + b);
 					FCLog.debug("limits: " + minX + " " + maxX + " " + minZ + " " + maxZ + " " + minY + " " + maxY);
 					FCLog.debug("conditionals: " + (b.getX() < minX) + " " + (b.getX() > maxX) + " " + (b.getZ() < minZ) + " " + (b.getZ() > maxZ) + " " + (b.getY() < minY) + " " + (b.getY() > maxY));
-					
+
 					event.setCancelled(true);
 					return;
 				}
@@ -557,18 +589,30 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityTarget(EntityTargetEvent event)
 	{
-//		if (event.getEntityType() != EntityType.PIG_ZOMBIE)
-//			return;
-		
+		//		if (event.getEntityType() != EntityType.PIG_ZOMBIE)
+		//			return;
+
+		if (event.getTarget() instanceof Player)
+		{
+			//Check for spawn protection
+			Player player = (Player) event.getTarget();
+			if (ProtectCommand.protectedPlayers.containsKey(player.getName()))
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
+
+
 		//FCLog.info(event.getReason().toString());
 		//Restrict pigmen range
 		if (event.getReason() == TargetReason.PIG_ZOMBIE_TARGET)
 		{
 			Location targetLocation = event.getTarget().getLocation();
 			Location pigmanLocation = event.getEntity().getLocation();
-			
+
 			int distance = (int) Math.round(pigmanLocation.distance(targetLocation));
-			
+
 			if (distance > Settings.getInt(Setting.PIGMAN_ANGER_RANGE))
 			{
 				event.setCancelled(true);
@@ -576,7 +620,7 @@ public class FlatcoreListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerPortal(PlayerPortalEvent event)
 	{
@@ -623,13 +667,13 @@ public class FlatcoreListener implements Listener {
 			onCropDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP), false);
 		}
 	}	
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onLiquidMove(BlockFromToEvent event)
 	{
 		onCropDestroyed(event.getToBlock(), false);
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityInteract(EntityInteractEvent event)
 	{
@@ -638,13 +682,26 @@ public class FlatcoreListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
-		
+
 		Block aboveBlock = event.getBlock().getRelative(BlockFace.UP);
 		if (aboveBlock != null && onCropDestroyed(aboveBlock, false))
 		{
 			event.setCancelled(true);
 			return;
 		}
-		
+
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onFoodchange(FoodLevelChangeEvent event)
+	{
+		//Check for spawn protection
+		Player player = (Player) event.getEntity();
+		if (ProtectCommand.protectedPlayers.containsKey(player.getName()))
+		{
+			event.setCancelled(true);
+			return;
+		}
+
 	}
 }

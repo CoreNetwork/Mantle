@@ -9,7 +9,6 @@ import com.mcnsa.flatcore.Util;
 
 public abstract class BaseRSpawnCommand {
 	public Boolean needPlayer;
-	public String desc;
 	public String permission;
 
 	public abstract Boolean run(CommandSender sender, String[] args);

@@ -147,17 +147,12 @@ public class GenerateMoreVillagesCommand extends BaseAdminCommand {
 		while (i.hasNext())
 		{
 			Location check = i.next();
-			int dist = distance(check, point);
+			int dist = Util.flatDistance(check, point);
 			if (dist < smallestDist)
 				smallestDist = dist;
 		}
 		
 		return smallestDist;
-	}
-	
-	public static int distance(Location a, Location b)
-	{
-		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
 	
 	private static boolean isVillageHere(int x, int z)

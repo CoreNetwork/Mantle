@@ -22,7 +22,6 @@ import com.mcnsa.flatcore.flatcorecommands.GenerateMoreVillagesCommand;
 public class RSpawnCommand extends BaseRSpawnCommand {	
 	public RSpawnCommand()
 	{
-		desc = "Random teleport";
 		needPlayer = true;
 		permission = "rspawn";
 	}

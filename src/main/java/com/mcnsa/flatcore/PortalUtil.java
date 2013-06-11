@@ -86,7 +86,7 @@ public class PortalUtil {
 			Block belowBlock = destBlock.getRelative(BlockFace.DOWN, 2);
 
 			int startingY = belowBlock.getY();
-			while (belowBlock != null && belowBlock.getType() == Material.AIR && belowBlock.getY() < startingY)
+			while (belowBlock != null && belowBlock.getType() == Material.AIR && belowBlock.getY() <= startingY)
 			{
 				destBlock = destBlock.getRelative(BlockFace.DOWN);
 				belowBlock = destBlock.getRelative(BlockFace.DOWN, 2);

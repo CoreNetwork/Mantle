@@ -21,8 +21,11 @@ import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
 import com.mcnsa.flatcore.flatcorecommands.RestockAllCommand;
 import com.mcnsa.flatcore.flatcorecommands.TestVillageCommand;
 import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
+import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
+import com.mcnsa.flatcore.rspawncommands.ProtectCommand.ProtectTimer;
 import com.mcnsa.flatcore.rspawncommands.RSpawnCommand;
 import com.mcnsa.flatcore.rspawncommands.ToggleCommand;
+import com.mcnsa.flatcore.rspawncommands.UnprotectCommand;
 
 public class MCNSAFlatcore extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -72,9 +75,12 @@ public class MCNSAFlatcore extends JavaPlugin {
 		
 		rspawnCommands.put("rspawn", new RSpawnCommand());
 		rspawnCommands.put("toggle", new ToggleCommand());
+		rspawnCommands.put("protect", new ProtectCommand());
+		rspawnCommands.put("unprotect", new UnprotectCommand());
 
 		VillageChecker.schedule();
-
+		getServer().getScheduler().runTaskTimer(this, new ProtectTimer(), 20, 20);
+		
 		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");
 	}
 
@@ -96,6 +102,10 @@ public class MCNSAFlatcore extends JavaPlugin {
 		else if (command.getName().equals("togglespawn"))
 		{
 			return rspawnCommands.get("toggle").execute(sender, args);
+		}
+		else if (command.getName().equals("unprotect"))
+		{
+			return rspawnCommands.get("unprotect").execute(sender, args);
 		}
 		else
 		{

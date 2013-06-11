@@ -10,6 +10,8 @@ commands:
         description: rspawn
     togglespawn:
         description: togglespawn
+    unprotect:
+        description: unprotect
     
 permissions:
     mcnsaflatcore.command.flatcore:

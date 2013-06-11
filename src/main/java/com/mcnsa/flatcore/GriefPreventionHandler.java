@@ -162,6 +162,20 @@ public class GriefPreventionHandler {
 		return list;
 	}
 	
+	public static boolean playerHasClaim(String player)
+	{
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		for (int i = 0; i < ca.size(); i++)
+		{
+			Claim claim = ca.get(i);
+
+			if (claim.getOwnerName().equals(player))
+					return true;			
+		}
+		
+		return false;
+	}
+	
 	public static Location findBiggestClaim(String player)
 	{
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();

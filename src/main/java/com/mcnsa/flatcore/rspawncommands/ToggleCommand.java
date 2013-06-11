@@ -14,7 +14,6 @@ public class ToggleCommand extends BaseRSpawnCommand {
 	
 	public ToggleCommand()
 	{
-		desc = "Random teleport";
 		needPlayer = true;
 		permission = "toggle";
 	}
