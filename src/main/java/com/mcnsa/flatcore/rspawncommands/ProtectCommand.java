@@ -9,8 +9,10 @@ import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Slime;
 
 import com.mcnsa.flatcore.GriefPreventionHandler;
 import com.mcnsa.flatcore.Setting;
@@ -49,16 +51,18 @@ public class ProtectCommand extends BaseRSpawnCommand {
 			//Mob removal
 			int removalRadiusSquared = Settings.getInt(Setting.MOB_REMOVAL_RADIUS_SQUARED);
 			
-			Collection<Monster> monsters = player.getWorld().getEntitiesByClass(Monster.class);
-			Iterator<Monster> iterator = monsters.iterator();
-			while (iterator.hasNext())
+			Collection<LivingEntity> monsters = player.getWorld().getEntitiesByClass(LivingEntity.class);
+			for (LivingEntity entity : monsters)
 			{
-				Monster monster = iterator.next();
-				int distance = Util.flatDistance(player.getLocation(), monster.getLocation());
-				if (distance < removalRadiusSquared)
+				if (entity instanceof Monster || entity instanceof Slime)
 				{
-					monster.remove();
+					int distance = Util.flatDistance(player.getLocation(), entity.getLocation());
+					if (distance < removalRadiusSquared)
+					{
+						entity.remove();
+					}
 				}
+				
 			}
 			
 			//Announcing to player
