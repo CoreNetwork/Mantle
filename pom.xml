@@ -51,61 +51,6 @@
 
 	<dependencies>
 
-		<dependency>
-
-			<groupId>org.bukkit</groupId>
-
-			<artifactId>bukkit</artifactId>
-
-			<version>1.4.6-R0.1</version>
-
-			<scope>system</scope>
-
-			<systemPath>${basedir}/lib/craftbukkit-1.0.0-SNAPSHOT.jar</systemPath>
-
-		</dependency>
-
-		<dependency>
-
-			<groupId>ru.tehkode</groupId>
-
-			<artifactId>PermissionsEx</artifactId>
-
-			<version>1.19.4</version>
-
-			<scope>system</scope>
-
-			<systemPath>${basedir}/lib/PermissionsEx.jar</systemPath>
-
-		</dependency>
-
-		<dependency>
-
-			<groupId>com.sk89q.worldedit</groupId>
-
-			<artifactId>WorldEdit</artifactId>
-
-			<version>5.5.1</version>
-
-			<scope>system</scope>
-
-			<systemPath>${basedir}/lib/WorldEdit.jar</systemPath>
-
-		</dependency>
-
-		<dependency>
-
-			<groupId>com.sk89q.worldguard</groupId>
-
-			<artifactId>WorldGuard</artifactId>
-
-			<version>5.7.1</version>
-
-			<scope>system</scope>
-
-			<systemPath>${basedir}/lib/WorldGuard.jar</systemPath>
-
-		</dependency>
 
 	</dependencies>
 
