@@ -74,7 +74,7 @@ public class ProtectCommand extends BaseRSpawnCommand {
 		return true;
 	}	
 	
-	public static void endProtection(Player player)
+	public static void endProtectionMessage(Player player)
 	{
 		String message;
 		if (GriefPreventionHandler.playerHasClaim(player.getName()))
@@ -104,7 +104,7 @@ public class ProtectCommand extends BaseRSpawnCommand {
 				if (timeLeft <= 0)
 				{
 					i.remove();
-					endProtection(player);
+					endProtectionMessage(player);
 				}
 				else
 				{
