@@ -65,6 +65,14 @@
       <scope>system</scope>
       <systemPath>${basedir}/lib/GriefPrevention.jar</systemPath>
     </dependency>
+    
+    <dependency>
+      <groupId>com.gadberry</groupId>
+      <artifactId>JExel</artifactId>
+      <version>1.0.0-BETA-13</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/JExel-1_0_0-beta_13.jar</systemPath>
+    </dependency>
 
   </dependencies>
 
