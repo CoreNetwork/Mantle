@@ -621,7 +621,7 @@ public class FlatcoreListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
 	public void onPlayerPortal(PlayerPortalEvent event)
 	{
 		//Controlled nether portals
@@ -634,7 +634,7 @@ public class FlatcoreListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
 	public void onEntityPortal(EntityPortalEvent event)
 	{
 		Location destination = PortalUtil.processTeleport(event.getEntity());
