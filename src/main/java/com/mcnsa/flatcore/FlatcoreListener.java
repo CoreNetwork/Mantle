@@ -367,8 +367,6 @@ public class FlatcoreListener implements Listener {
 				if (ProtectCommand.protectedPlayers.containsKey(damager.getName()))
 				{
 					event.setCancelled(true);
-					if (!(event.getEntity() instanceof Player))
-						event.getEntity().remove();
 
 					Util.Message(Settings.getString(Setting.MESSAGE_SPAWN_PROTECTION_DONT_ABUSE), damager);
 
