@@ -26,7 +26,6 @@ public class VillageChecker implements Runnable {
 		{
 			tries++;
 			
-			boolean fasterNextTry = false;
 			final int now = (int) (System.currentTimeMillis() / 1000);
 
 			try
@@ -50,7 +49,6 @@ public class VillageChecker implements Runnable {
 					if (isPlayerInside(villageX, villageZ, xSize, zSize))
 					{
 						FCLog.info("Will not restore - player inside.");
-						fasterNextTry = true;
 					}
 					else if (!GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, false))
 					{
@@ -88,7 +86,7 @@ public class VillageChecker implements Runnable {
 
 					statement.close();
 					statement = IO.getConnection().prepareStatement("UPDATE Villages SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
-					statement.setInt(1, fasterNextTry ? (now - 601200) : now);
+					statement.setInt(1, now);
 					statement.setInt(2, lastRestore);
 					statement.setInt(3, id);
 					statement.executeUpdate();
