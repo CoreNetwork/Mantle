@@ -47,6 +47,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -58,6 +59,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
 import com.mcnsa.flatcore.flatcorecommands.CreateChestCommand;
+import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
 public class FlatcoreListener implements Listener {
@@ -701,5 +703,12 @@ public class FlatcoreListener implements Listener {
 			return;
 		}
 
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onPlayerDropItem(PlayerDropItemEvent event)
+	{
+		if (NoDropCommand.blockedPlayers.contains(event.getPlayer().getName()))
+			event.setCancelled(true);
 	}
 }

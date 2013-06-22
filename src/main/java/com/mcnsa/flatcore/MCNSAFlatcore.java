@@ -21,6 +21,7 @@ import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
 import com.mcnsa.flatcore.flatcorecommands.RestockAllCommand;
 import com.mcnsa.flatcore.flatcorecommands.TestVillageCommand;
 import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
+import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand.ProtectTimer;
 import com.mcnsa.flatcore.rspawncommands.RSpawnCommand;
@@ -77,6 +78,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 		rspawnCommands.put("toggle", new ToggleCommand());
 		rspawnCommands.put("protect", new ProtectCommand());
 		rspawnCommands.put("unprotect", new UnprotectCommand());
+		rspawnCommands.put("nodrop", new NoDropCommand());
 
 		VillageChecker.schedule();
 		getServer().getScheduler().runTaskTimer(this, new ProtectTimer(), 20, 20);
