@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Class-Path: ../mysql-connector-java-bin.jar ../lib/sqlite.jar ../lib/JExel-1_0_0-beta_13.jar ../plugins/MCNSAFlatcore/JExel-1_0_0-beta_13.jar
+Class-Path: ../lib/sqlite.jar ../lib/JExel-1_0_0-beta_13.jar ../plugins/MCNSAFlatcore/JExel-1_0_0-beta_13.jar
