@@ -18,6 +18,7 @@ public class CheckpointHelpCommand extends BaseCheckpointCommand {
 	
 	public CheckpointHelpCommand()
 	{
+		permission = "help";
 		desc = "List all possible commands";
 		needPlayer = false;
 	}

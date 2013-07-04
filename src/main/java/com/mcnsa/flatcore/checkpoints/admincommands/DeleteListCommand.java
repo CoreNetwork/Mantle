@@ -1,10 +1,8 @@
 package com.mcnsa.flatcore.checkpoints.admincommands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
@@ -14,7 +12,7 @@ public class DeleteListCommand extends BaseCheckpointCommand {
 	public DeleteListCommand()
 	{
 		desc = "Delete list of checkpoints";
-		permission = "deleteList";
+		permission = "deleteist";
 		needPlayer = true;
 	}
 
