@@ -12,6 +12,9 @@ commands:
         description: togglespawn
     unprotect:
         description: unprotect
+    chp:
+    checkpoint:
+    
     
 permissions:
     mcnsaflatcore.command.flatcore:

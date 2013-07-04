@@ -45,6 +45,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		IO.freeConnection();
+		FlatcoreModule.unloadAll();
 	}
 
 	@Override
@@ -82,6 +83,8 @@ public class MCNSAFlatcore extends JavaPlugin {
 
 		VillageChecker.schedule();
 		getServer().getScheduler().runTaskTimer(this, new ProtectTimer(), 20, 20);
+		
+		FlatcoreModule.loadModules();
 		
 		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");
 	}

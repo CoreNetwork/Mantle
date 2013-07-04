@@ -121,36 +121,30 @@ public class Util {
 
 	public static void Message(String message, CommandSender sender)
 	{
-		message = message.replaceAll("\\&([0-9abcdef])", ChatColor.COLOR_CHAR + "$1");
+		message = message.replaceAll("\\&([0-9abcdefklmnor])", ChatColor.COLOR_CHAR + "$1");
 
-		String color = "f";
-		final int maxLength = 59; //Max length of chat text message
-		final String newLine = "[NEWLINE]";
-		ArrayList<String> chat = new ArrayList<String>();
-		chat.add(0, "");
-		String[] words = message.split(" ");
-		int lineNumber = 0;
-		for (int i = 0; i < words.length; i++) {
-			if (chat.get(lineNumber).replaceAll("\\" + ChatColor.COLOR_CHAR + "([0-9abcdef])", "").length() + words[i].replaceAll("\\" + ChatColor.COLOR_CHAR + "([0-9abcdef])", "").length() < maxLength && !words[i].equals(newLine)) {
-				chat.set(lineNumber, chat.get(lineNumber) + (chat.get(lineNumber).length() > 0 ? " " : ChatColor.COLOR_CHAR + color ) + words[i]);
+		final String newLine = "\\[NEWLINE\\]";
+		String[] lines = message.split(newLine);
 
-				if (words[i].indexOf(ChatColor.COLOR_CHAR) != -1) color = Character.toString(words[i].charAt(words[i].lastIndexOf(ChatColor.COLOR_CHAR) + 1));
-			}
-			else {
-				lineNumber++;
-				if (!words[i].equals(newLine)) {
-					chat.add(lineNumber, ChatColor.COLOR_CHAR + color + words[i]);
-				}
-				else
-					chat.add(lineNumber, "");
-			}
-		}
-		for (int i = 0; i < chat.size(); i++) {
-			{
-				sender.sendMessage(chat.get(i));
-			}
+		for (int i = 0; i < lines.length; i++) {
+			lines[i] = lines[i].trim();
+			
+			if (i == 0)
+				continue;
 
-		}
+			int lastColorChar = lines[i - 1].lastIndexOf(ChatColor.COLOR_CHAR);
+			if (lastColorChar == -1 || lastColorChar >= lines[i - 1].length() - 1)
+				continue;
+
+			char lastColor = lines[i - 1].charAt(lastColorChar + 1);
+			lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);	
+			System.out.println(lines[i]);
+		}		
+		
+		for (int i = 0; i < lines.length; i++)
+			sender.sendMessage(lines[i]);
+
+
 	}
 
 	public static void Broadcast(String message, String exclusion)
@@ -264,5 +258,29 @@ public class Util {
 	public static int flatDistance(Location a, Location b)
 	{
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
+	}
+	
+	public static Location unserializeLocation(String text)
+	{
+		String[] split = text.split(";");
+	
+		World world = Bukkit.getWorld(split[0]);
+		double x = Double.parseDouble(split[1]);
+		double y = Double.parseDouble(split[2]);
+		double z = Double.parseDouble(split[3]);
+		float pitch = Float.parseFloat(split[4]);
+		float yaw = Float.parseFloat(split[5]);
+		
+		return new Location(world, x, y, z, yaw, pitch);
+	}
+	
+	public static String serializeLocation(Location location)
+	{
+		String locString = location.getWorld().getName().concat(";");
+		locString = locString.concat(Double.toString(location.getX())).concat(";").concat(Double.toString(location.getY())).concat(";").concat(Double.toString(location.getZ())).concat(";");
+		locString = locString.concat(Float.toString(location.getPitch())).concat(";").concat(Float.toString(location.getYaw()));
+		
+		return locString;
+
 	}
 }
