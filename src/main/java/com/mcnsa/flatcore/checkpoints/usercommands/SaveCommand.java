@@ -2,6 +2,7 @@ package com.mcnsa.flatcore.checkpoints.usercommands;
 
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -14,19 +15,26 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 	public SaveCommand()
 	{
 		permission = "save";
-		needPlayer = true;
+		needPlayer = false;
 	}
 
 
 	public void run(final CommandSender sender, String[] args) {
-		if (args.length < 2 || !Util.isInteger(args[1]))
+		if (args.length < 3 || !Util.isInteger(args[2]))
 		{
-			Util.Message("Usage: /chp save <list name> <checkpoint position>", sender);
+			Util.Message("Usage: /chp save <player name> <list name> <checkpoint position>", sender);
 			return;
 		}
 		
-		String checkpointList = args[0];
-		int position = Integer.parseInt(args[1]);
+		String playerName = args[0];
+		String checkpointList = args[1];
+		int position = Integer.parseInt(args[2]);
+		
+		Player player = Bukkit.getServer().getPlayerExact(playerName);
+		if (player == null)
+		{
+			return; //Don't save anything if player is not online
+		}
 		
 		String node = "checkpoints."  + checkpointList.toLowerCase();
 		
@@ -36,7 +44,7 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 			String message = CheckpointsSettings.MESSAGE_LIST_NOT_EXIST.string();
 			message = message.replace("<List>", checkpointList);
 			
-			Util.Message(message, sender);
+			Util.Message(message, player);
 			return;
 
 		}
@@ -47,11 +55,10 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 			message = message.replace("<Position>", Integer.toString(position));
 			message = message.replace("<List>", checkpointList);
 			
-			Util.Message(message, sender);
+			Util.Message(message, player);
 			return;
 		}
 
-		Player player = (Player) sender;
 		
 		SavedCheckpoint lastCheckpoint = CheckpointsModule.savedCheckpoints.get(player.getName());
 		if (lastCheckpoint != null && lastCheckpoint.list == checkpointList && lastCheckpoint.position < position)
@@ -61,7 +68,7 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 			message = message.replace("<Position>", Integer.toString(position));
 			message = message.replace("<List>", checkpointList);
 			
-			Util.Message(message, sender);
+			Util.Message(message, player);
 			return;
 		}
 		
@@ -78,7 +85,7 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 		message = message.replace("<Position>", Integer.toString(position));
 		message = message.replace("<List>", checkpointList);
 		
-		Util.Message(message, sender);
+		Util.Message(message, player);
 		
 		return;
 	}	
