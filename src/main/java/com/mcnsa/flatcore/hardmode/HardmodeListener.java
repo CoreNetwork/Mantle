@@ -1,7 +1,5 @@
 package com.mcnsa.flatcore.hardmode;
 
-import org.bukkit.Bukkit;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -13,8 +11,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import com.mcnsa.flatcore.MCNSAFlatcore;
 
 public class HardmodeListener implements Listener {
-
-	public Enderman lastEnderman;
 	
 	
 	@EventHandler()
@@ -40,9 +36,9 @@ public class HardmodeListener implements Listener {
 					double randomChance = HardmodeSettings.ENDERMAN_TELEPORT_CHANCE.doubleNumber();
 					if (MCNSAFlatcore.random.nextDouble() < randomChance)
 					{
-						lastEnderman = (Enderman) victim;
 						event.setCancelled(true);
 						EndermanTeleport.teleportPlayer((Player) damager, (Enderman) victim);
+						return;
 					}
 				}
 				
