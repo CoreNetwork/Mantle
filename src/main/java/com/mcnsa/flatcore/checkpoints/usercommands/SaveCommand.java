@@ -61,7 +61,7 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 
 		
 		SavedCheckpoint lastCheckpoint = CheckpointsModule.savedCheckpoints.get(player.getName());
-		if (lastCheckpoint != null && lastCheckpoint.list == checkpointList && lastCheckpoint.position < position)
+		if (lastCheckpoint != null && lastCheckpoint.list.equals(checkpointList) && lastCheckpoint.position < position)
 		{
 			String message = CheckpointsSettings.MESSAGE_CHECKPOINT_NO_BACKWARDS.string();
 			message = message.replace("<Player>", player.getName());
