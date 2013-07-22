@@ -11,12 +11,15 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
+import com.mcnsa.flatcore.hardmode.HardmodeModule;
 
 public abstract class FlatcoreModule implements CommandExecutor {
 	private String moduleName;
 
 	private String configName;
 	private String[] commands;
+
+	public boolean active = false;
 
 	public YamlConfiguration config;
 
@@ -38,7 +41,15 @@ public abstract class FlatcoreModule implements CommandExecutor {
 		{
 			loadConfig();
 
-			boolean enabled = config.getBoolean("enabled", true);
+			Boolean enabled = (Boolean) config.get("enabled");
+			if (enabled == null)
+			{
+				config.set("enabled", true);
+				saveConfig();
+				
+				enabled = true;
+			}
+			
 			if (!enabled)
 			{
 				FCLog.info("Module disabled. Skipping.");
@@ -61,8 +72,8 @@ public abstract class FlatcoreModule implements CommandExecutor {
 	public void loadConfig()
 	{
 		File configFile = new File(MCNSAFlatcore.instance.getDataFolder(), configName.concat(".yml"));
-		
-		
+
+
 		config = new YamlConfiguration();
 
 		if (configFile.exists())
@@ -90,6 +101,9 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 	public void saveConfig()
 	{
+		if (config == null)
+			return;
+		
 		try
 		{
 			File configFile = new File(MCNSAFlatcore.instance.getDataFolder(), configName.concat(".yml"));
@@ -113,6 +127,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 		{
 			module.saveConfig();
 			module.unloadModule();
+			module.active = false;
 		}
 	}
 
@@ -123,9 +138,21 @@ public abstract class FlatcoreModule implements CommandExecutor {
 		//Checkpoints
 		module = new CheckpointsModule();
 		if (module.loadModuleInternal())
+		{
+			module.active = true;
 			modules.add(module);
+		}
+
+		//Hard mode
+		//Checkpoints
+		module = new HardmodeModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
 	}
-	
+
 	public static void reloadConfigs()
 	{
 		for (FlatcoreModule module : modules)

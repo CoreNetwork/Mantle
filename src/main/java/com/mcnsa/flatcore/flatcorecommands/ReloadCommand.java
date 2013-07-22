@@ -1,7 +1,6 @@
 package com.mcnsa.flatcore.flatcorecommands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.FlatcoreModule;
 import com.mcnsa.flatcore.IO;
@@ -13,7 +12,7 @@ public class ReloadCommand extends BaseAdminCommand {
 	public ReloadCommand()
 	{
 		desc = "Reload config";
-		needPlayer = true;
+		needPlayer = false;
 	}
 
 
