@@ -30,17 +30,23 @@ public class NodeParser {
 	private static double chanceMultiplier;
 	private static double chanceAdder;
 
-	public static void parseDamageEvent(EntityDamageEvent event)
+	public static void parseDamageEvent(EntityDamageEvent event, String eventName)
 	{
+		
 		NodeParser.event = event;
 		NodeParser.chanceMultiplier = 1;
 		NodeParser.chanceAdder = 0;
 
-		List<?> node = (List<?>) IO.config.getList("DamageModifiers." + event.getCause().toString());
+		List<?> node = (List<?>) IO.config.getList("DamageModifiers." + eventName);
 		if (node == null)
 			return;
 
 		parseNodeList(node);
+	}
+	
+	public static void parseDamageEvent(EntityDamageEvent event)
+	{
+		parseDamageEvent(event, event.getCause().toString());
 	}
 
 	public static List<ItemStack> parseTable(String name, double chanceMultiplier, double chanceAdder)

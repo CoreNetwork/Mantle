@@ -2,6 +2,7 @@ package com.mcnsa.flatcore.hardmode;
 
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,6 +39,9 @@ public class HardmodeListener implements Listener {
 					{
 						event.setCancelled(true);
 						EndermanTeleport.teleportPlayer((Player) damager, (Enderman) victim);
+						
+						HardmodeModule.applyDamageNode((LivingEntity) damager, HardmodeSettings.ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT.string()); 
+						
 						return;
 					}
 				}

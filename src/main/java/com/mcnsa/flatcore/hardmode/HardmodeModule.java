@@ -3,9 +3,14 @@ package com.mcnsa.flatcore.hardmode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.mcnsa.flatcore.FlatcoreModule;
 import com.mcnsa.flatcore.MCNSAFlatcore;
+import com.mcnsa.flatcore.NodeParser;
 
 public class HardmodeModule extends FlatcoreModule {
 	public static HardmodeModule instance;
@@ -34,6 +39,17 @@ public class HardmodeModule extends FlatcoreModule {
 		Bukkit.getServer().getPluginManager().registerEvents(new HardmodeListener(), MCNSAFlatcore.instance);
 		
 		return true;
+	}
+	
+	public static void applyDamageNode(LivingEntity entity, String node)
+	{
+		if (instance == null || !instance.active)
+			return;
+		
+		EntityDamageEvent customDamage = new EntityDamageEvent(entity, DamageCause.CUSTOM, 0);
+		NodeParser.parseDamageEvent(customDamage, node);
+		entity.damage(customDamage.getDamage());
+
 	}
 
 	@Override
