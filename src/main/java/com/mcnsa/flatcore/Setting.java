@@ -66,9 +66,6 @@ public enum Setting {
 
 	INVESTIGATION_TOOL("InvestigationTool", Material.STICK.getId()),
 	
-	NETHERRACK_FIRE_CHANCE("HardMode.NetherrackFireChance", 20),
-	PLAYER_PUNCH_FIRE_DURATION("HardMode.PlayerPunchFireDuration", 35),
-	ZOMBIE_RESPAWN_CHANCE("HardMode.ZombieRespawnChance", 20),
 	PIGMAN_ANGER_RANGE("HardMode.PigmanAngerRange", 1),
 	
 	DEBUG("Debug", false),

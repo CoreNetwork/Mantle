@@ -121,7 +121,7 @@ public class HardmodeListener implements Listener {
 		//Respawn zombie
 		if (entity.getType() == EntityType.ZOMBIE && entity.getFireTicks() == -1)
 		{
-			int chance = Settings.getInt(Setting.ZOMBIE_RESPAWN_CHANCE);
+			int chance = HardmodeSettings.ZOMBIE_RESPAWN_CHANCE.integer();
 			if (MCNSAFlatcore.random.nextInt(100) < chance)
 			{
 				//Play effect
@@ -217,7 +217,7 @@ public class HardmodeListener implements Listener {
 			//Netherrack turns into fire
 			if (block.getType() == Material.NETHERRACK)
 			{
-				int chance = Settings.getInt(Setting.NETHERRACK_FIRE_CHANCE);
+				int chance = HardmodeSettings.NETHERRACK_FIRE_CHANCE.integer();
 				if (MCNSAFlatcore.random.nextInt(100) < chance)
 				{
 					event.setCancelled(true);
@@ -301,7 +301,7 @@ public class HardmodeListener implements Listener {
 			Block target = player.getTargetBlock(transparentBlocks, 7);			
 			if (target != null && target.getType() == Material.FIRE)
 			{
-				int duration = Settings.getInt(Setting.PLAYER_PUNCH_FIRE_DURATION);
+				int duration = HardmodeSettings.PLAYER_PUNCH_FIRE_DURATION.integer();
 				player.setFireTicks(duration);
 				player.sendBlockChange(target.getLocation(), Material.FIRE.getId(), (byte) 0);
 				event.setCancelled(true);
