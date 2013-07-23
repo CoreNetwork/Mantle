@@ -11,7 +11,7 @@ import com.mcnsa.flatcore.Util;
 
 public class CheckpointsListener implements Listener {
 
-	@EventHandler()
+	@EventHandler(ignoreCancelled = true)
 	public void onPlayerMove(PlayerMoveEvent event)
 	{
 		if ((event.getFrom().getBlockX() != event.getTo().getBlockX() || 
@@ -23,7 +23,7 @@ public class CheckpointsListener implements Listener {
 		}
 	}
 
-	@EventHandler()
+	@EventHandler(ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		if (event.getEntity() instanceof Player && CheckpointsModule.scheduledTeleports.containsKey(((Player) event.getEntity()).getName()))

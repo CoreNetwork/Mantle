@@ -13,7 +13,7 @@ import com.mcnsa.flatcore.MCNSAFlatcore;
 public class HardmodeListener implements Listener {
 	
 	
-	@EventHandler()
+	@EventHandler(ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		
