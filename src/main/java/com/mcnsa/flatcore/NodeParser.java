@@ -6,8 +6,12 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import net.minecraft.server.v1_5_R3.NBTTagCompound;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,6 +23,7 @@ import org.bukkit.potion.PotionEffectType;
 import com.gadberry.utility.expression.ArgumentCastException;
 import com.gadberry.utility.expression.Expression;
 import com.gadberry.utility.expression.InvalidExpressionException;
+import com.matejdro.bukkit.mcnsa.nanobot.commands.LoadCommand;
 
 public class NodeParser {
 	private static List<ItemStack> result;
@@ -227,9 +232,22 @@ public class NodeParser {
 		ItemStack stack = new ItemStack(id, amount, damage.shortValue());
 		curItemStack = stack;
 
+		
+		LinkedHashMap<?,?> yamlNbtTag = (LinkedHashMap<?,?>) node.get("nbt");
+		if (yamlNbtTag != null)
+		{
+			NBTTagCompound newTag = LoadCommand.load(yamlNbtTag);
+			
+			net.minecraft.server.v1_5_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
+			nmsStack.tag = newTag;
+			curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
+		}
+		
 		List<?> enchants = (List<?>) node.get("enchants");
 		if (enchants != null)
 			parseNodeList(enchants);
+		
+		
 
 		result.add(curItemStack);
 	}

@@ -2,7 +2,7 @@ name: MCNSAFlatcore
 main: com.mcnsa.flatcore.MCNSAFlatcore
 version: 1.2.0
 author: matejdro
-depend: [GriefPrevention]
+depend: [GriefPrevention, MCNSANanobot]
 commands:
     flatcore:
         description: Weekly challenges.
