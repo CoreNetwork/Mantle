@@ -11,6 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
+import com.mcnsa.flatcore.generation.GenerationModule;
 import com.mcnsa.flatcore.hardmode.HardmodeModule;
 
 public abstract class FlatcoreModule implements CommandExecutor {
@@ -46,10 +47,10 @@ public abstract class FlatcoreModule implements CommandExecutor {
 			{
 				config.set("enabled", true);
 				saveConfig();
-				
+
 				enabled = true;
 			}
-			
+
 			if (!enabled)
 			{
 				FCLog.info("Module disabled. Skipping.");
@@ -103,7 +104,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 	{
 		if (config == null)
 			return;
-		
+
 		try
 		{
 			File configFile = new File(MCNSAFlatcore.instance.getDataFolder(), configName.concat(".yml"));
@@ -144,8 +145,15 @@ public abstract class FlatcoreModule implements CommandExecutor {
 		}
 
 		//Hard mode
-		//Checkpoints
 		module = new HardmodeModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
+
+		//Generation
+		module = new GenerationModule();
 		if (module.loadModuleInternal())
 		{
 			module.active = true;
