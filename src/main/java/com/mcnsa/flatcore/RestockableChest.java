@@ -238,7 +238,7 @@ public class RestockableChest {
 		else
 			numberDisplay = maxNumber + "+";
 		
-		List<ItemStack> items = NodeParser.parseTable(lootTable, multiplyChance, addChance);
+		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance);
 		Inventory inventory;
 		if (player == null)
 			inventory = chest.getInventory();

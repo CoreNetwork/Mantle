@@ -25,54 +25,23 @@ import com.gadberry.utility.expression.Expression;
 import com.gadberry.utility.expression.InvalidExpressionException;
 import com.matejdro.bukkit.mcnsa.nanobot.commands.LoadCommand;
 
-public class NodeParser {
-	private static List<ItemStack> result;
-	private static ItemStack curItemStack;
-	private static Random random = new Random();
+public abstract class NodeParser {
+	private double chanceMultiplier;
+	private double chanceAdder;
 
-	private static EntityDamageEvent event;
-
-	private static double chanceMultiplier;
-	private static double chanceAdder;
-
-	public static void parseDamageEvent(EntityDamageEvent event, String eventName)
+	public NodeParser()
 	{
-		
-		NodeParser.event = event;
-		NodeParser.chanceMultiplier = 1;
-		NodeParser.chanceAdder = 0;
-
-		List<?> node = (List<?>) IO.config.getList("DamageModifiers." + eventName);
-		if (node == null)
-			return;
-
-		parseNodeList(node);
+		chanceMultiplier = 1;
+		chanceAdder = 0;
 	}
 	
-	public static void parseDamageEvent(EntityDamageEvent event)
+	public NodeParser(double chanceMultiplier, double chanceAdder)
 	{
-		parseDamageEvent(event, event.getCause().toString());
+		this.chanceMultiplier = chanceMultiplier;
+		this.chanceAdder = chanceAdder;
 	}
 
-	public static List<ItemStack> parseTable(String name, double chanceMultiplier, double chanceAdder)
-	{
-		List<?> node = (List<?>) IO.config.getList("LootTables." + name + ".Items");
-		result = new ArrayList<ItemStack>();
-		NodeParser.chanceMultiplier = chanceMultiplier;
-		NodeParser.chanceAdder = chanceAdder;
-
-		if (node == null)
-		{
-			FCLog.warning("Invalid Loot tables config! Loot table " + name +" does not exists!");
-			return result;			
-		}
-
-		parseNodeList(node);
-
-		return result;
-	}
-
-	private static void parseNodeList(List<?> node)
+	protected void parseNodeList(List<?> node)
 	{
 		for (Object setObject : node)
 		{
@@ -85,7 +54,7 @@ public class NodeParser {
 		}
 	}
 
-	private static void parseNodeObject(String type, Object node)
+	protected void parseNodeObject(String type, Object node)
 	{
 		if (node instanceof List)
 		{
@@ -95,11 +64,17 @@ public class NodeParser {
 				parseNodeList((List<?>) node);
 		}
 		else if (node instanceof LinkedHashMap)
-			parseNode(type, (LinkedHashMap<?,?>) node);
+		{
+			int count = getNumberOfRolls(node, true);
+			for (int i = 0; i < count; i++)
+			{
+				parseNode(type, (LinkedHashMap<?,?>) node);
+			}
+		}
 
 	}
 
-	private static void parsePickList(String params, List<?> node)
+	protected void parsePickList(String params, List<?> node)
 	{
 		int count = getNumberOfRolls(node, false);
 
@@ -153,7 +128,7 @@ public class NodeParser {
 				int selection = 0;
 				do
 				{
-					int pickedNumber = random.nextInt(weightsSum);
+					int pickedNumber = MCNSAFlatcore.random.nextInt(weightsSum);
 					int sum = 0;
 					for (int i = 0; i < childCount; i++)
 					{
@@ -192,219 +167,9 @@ public class NodeParser {
 		}
 	}
 
-	private static void parseNode(String type, LinkedHashMap<?,?> node)
-	{
-		int count = getNumberOfRolls(node, true);
-		for (int i = 0; i < count; i++)
-		{
-			if (type.equalsIgnoreCase("item"))
-				parseItem(node);
-			else if (type.equalsIgnoreCase("enchant"))
-				parseEnchant(node);
-			else if (type.equalsIgnoreCase("setdamage"))
-				parseSetDamage(node);
-			else if (type.equalsIgnoreCase("adddamage"))
-				parseAddDamage(node);
-			else if (type.equalsIgnoreCase("multiplydamage"))
-				parseMultiplyDamage(node);
-			else if (type.equalsIgnoreCase("addpotioneffect"))
-				parseAddPotionEffect(node);
+	protected abstract void parseNode(String type, LinkedHashMap<?,?> node);
 
-		}
-
-	}
-
-	private static void parseItem(LinkedHashMap<?,?> node)
-	{
-		Integer id = (Integer) node.get("id");
-		if (id == null)
-		{
-			FCLog.warning("Invalid Loot tables config! Item ID is missing!");
-			return;
-		}
-
-		Integer amount = (Integer) node.get("amount");
-		if (amount == null) amount = 1;
-
-		Integer damage = (Integer) node.get("damage");
-		if (damage == null) damage = 0;
-
-		ItemStack stack = new ItemStack(id, amount, damage.shortValue());
-		curItemStack = stack;
-
-		
-		LinkedHashMap<?,?> yamlNbtTag = (LinkedHashMap<?,?>) node.get("nbt");
-		if (yamlNbtTag != null)
-		{
-			NBTTagCompound newTag = LoadCommand.load(yamlNbtTag);
-			
-			net.minecraft.server.v1_5_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
-			nmsStack.tag = newTag;
-			curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
-		}
-		
-		List<?> enchants = (List<?>) node.get("enchants");
-		if (enchants != null)
-			parseNodeList(enchants);
-		
-		
-
-		result.add(curItemStack);
-	}
-
-	private static void parseEnchant(LinkedHashMap<?,?> node)
-	{
-		Integer id = (Integer) node.get("id");
-		if (id == null)
-		{
-			FCLog.warning("Invalid Loot tables config! Enchant ID is missing!");
-			return;
-		}
-
-		Integer level = (Integer) node.get("level");
-		if (level == null) level = 1;
-
-		int curLevel = curItemStack.getEnchantmentLevel(Enchantment.getById(id));
-
-		curItemStack.addUnsafeEnchantment(Enchantment.getById(id), level + curLevel);
-	}
-
-	private static void parseSetDamage(LinkedHashMap<?,?> node)
-	{
-		Number amount = (Number) node.get("amount");
-
-		if (amount == null)
-		{
-			FCLog.warning("Invalid Damage modifiers config! Set amount is missing!");
-			return;
-
-		}
-
-		event.setDamage(amount.intValue());
-	}
-
-	private static void parseAddDamage(LinkedHashMap<?,?> node)
-	{
-		Number amount = (Number) node.get("amount");
-
-		if (amount == null)
-		{
-			FCLog.warning("Invalid Damage modifiers config! Add amount is missing!");
-			return;
-
-		}
-
-		event.setDamage(event.getDamage() + amount.intValue());
-	}
-
-
-	private static void parseMultiplyDamage(LinkedHashMap<?,?> node)
-	{
-		Number amount = (Number) node.get("amount");
-
-		if (amount == null)
-		{
-			FCLog.warning("Invalid Damage modifiers config! Multiply amount is missing!");
-			return;
-		}
-
-		event.setDamage((int) (event.getDamage() * amount.doubleValue()));
-	}
-
-	private static void parseAddPotionEffect(LinkedHashMap<?,?> node)
-	{
-		//Protect admins against evil features
-		if (event.getEntity() instanceof Player && ((Player) event.getEntity()).getGameMode() == GameMode.CREATIVE )
-		{
-			return;
-		}
-
-		final Integer id = (Integer) node.get("id");
-		if (id == null)
-		{
-			FCLog.warning("Invalid Damage modifiers config! Effect id is missing!");
-			return;
-		}
-
-		
-		Object durationNode = node.get("duration");
-		int duration = 0;
-		if (durationNode == null)
-		{
-			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
-			return;
-		}
-		else if (durationNode instanceof Integer)
-		{
-			duration = ((Integer) durationNode).intValue();
-		}
-		else if (durationNode instanceof String)
-		{
-			String expression = (String) durationNode;
-			expression = expression.replace("damage", Integer.toString(event.getDamage()));
-						
-			try {
-				duration = Expression.evaluate(expression).toInteger();
-			} catch (ArgumentCastException e) {
-				e.printStackTrace();
-			} catch (InvalidExpressionException e) {
-				FCLog.warning("Invalid Damage modifiers config! Effect duration expression is invalid!");
-				return;
-			}
-		}
-		else
-		{
-			FCLog.warning("Invalid Damage modifiers config! Effect duration is invalid!");
-			return;
-		}
-		
-
-		Object amplifierNode = node.get("amplifier");
-		int amplifier = 0;
-		if (amplifierNode == null)
-		{
-			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
-			return;
-		}
-		else if (amplifierNode instanceof Integer)
-		{
-			amplifier = ((Integer) amplifierNode).intValue();
-		}
-		else if (amplifierNode instanceof String)
-		{
-			String expression = (String) amplifierNode;
-			expression = expression.replace("damage", Integer.toString(event.getDamage()));
-						
-			try {
-				amplifier = Expression.evaluate(expression).toInteger();
-			} catch (ArgumentCastException e) {
-				e.printStackTrace();
-			} catch (InvalidExpressionException e) {
-				FCLog.warning("Invalid Damage modifiers config! Effect amplifier expression is invalid!");
-				return;
-			}			
-		}
-		else
-		{
-			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is invalid!");
-			return;
-		}
-		
-		final int fAmplifier = amplifier;
-		final int fDuration = duration;
-
-		final Boolean ambient = (Boolean) node.get("ambient");
-
-		Bukkit.getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
-			@Override
-			public void run() {
-				((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.getById(id), fDuration, fAmplifier, ambient == null ? false : ambient));
-			}
-		});
-
-	}
-
-	private static int getNumberOfRolls(Object node, boolean lowLevel)
+	protected int getNumberOfRolls(Object node, boolean lowLevel)
 	{
 		int rolls = 1;
 		double chance = 1;
@@ -454,7 +219,7 @@ public class NodeParser {
 			num += Math.floor(chance / 1.0);
 			double newChance = chance % 1;
 
-			double rand = random.nextDouble();
+			double rand = MCNSAFlatcore.random.nextDouble();
 			if (rand < newChance)
 				num++;
 		}

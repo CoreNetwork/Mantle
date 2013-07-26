@@ -101,7 +101,7 @@ public class HardmodeListener implements Listener {
 				return;
 			}
 
-			NodeParser.parseDamageEvent(event);
+			DamageNodeParser.parseDamageEvent(event);
 		}
 	}
 
