@@ -1,5 +1,7 @@
 package com.mcnsa.flatcore.generation;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.mcnsa.flatcore.CachedSchematic;
@@ -7,6 +9,8 @@ import com.mcnsa.flatcore.FCLog;
 
 
 public class StructureData {
+	private Map<String, CachedSchematic> schematicsMap = new HashMap<String, CachedSchematic>();
+	
 	private Map<?,?> configNode;
 	private String name;
 	
@@ -14,6 +18,29 @@ public class StructureData {
 	{
 		this.name = name;
 		this.configNode = configNode;
+		
+		List<String> schematics = (List<String>) configNode.get("Schematics");
+		if (schematics == null)
+		{
+			FCLog.severe("Structure " + name + " is missing Schematics!");
+		}
+		
+		for (String schematic : schematics)
+		{
+			if (schematic.startsWith("weights"))
+				continue;
+		
+			FCLog.info("Loading schematic " + schematic + " for structure " + name + "...");
+			
+			CachedSchematic cs = new CachedSchematic(schematic);
+			
+			if (shouldSpawnVillagers())
+				cs.findVillagers();
+			if (shouldCreateRestockableChests())
+				cs.findChests();
+			
+			schematicsMap.put(schematic, cs);
+		}
 	}
 	
 	public String getName()
@@ -64,9 +91,14 @@ public class StructureData {
 	
 	public CachedSchematic getSchematic()
 	{
-		//TODO
+		List<?> schematics = (List<?>) configNode.get("Schematics");
+		if (schematics == null)
+		{
+			FCLog.severe("Structure " + name + " is missing Schematics!");
+		}
 		
-		return null;
+		String pickedSchematic = SchematicNodeParser.pickSchematic(schematics);
+		return schematicsMap.get(pickedSchematic);
 	}
 	
 	public int getPasteHeight()

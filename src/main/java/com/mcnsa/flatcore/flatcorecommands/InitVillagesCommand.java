@@ -120,7 +120,7 @@ public class InitVillagesCommand extends BaseAdminCommand {
 				String fileName = "campfire" + (i + 1) + "-safe.schematic";
 				
 				normalCampfires[i] = new CachedSchematic(fileName);
-				normalCampfires[i].findChest();
+				normalCampfires[i].findChests();
 			}
 			
 			CachedSchematic[] trappedCampfires = new CachedSchematic[trappedNum];
@@ -131,7 +131,7 @@ public class InitVillagesCommand extends BaseAdminCommand {
 				String fileName = "campfire" + (i + 1) + "-trapped.schematic";
 				
 				trappedCampfires[i] = new CachedSchematic(fileName);
-				trappedCampfires[i].findChest();
+				trappedCampfires[i].findChests();
 			}
 				
 
@@ -192,7 +192,7 @@ public class InitVillagesCommand extends BaseAdminCommand {
 				String fileName = "outpost" + (i + 1) + ".schematic";
 				
 				outposts[i] = new CachedSchematic(fileName);
-				outposts[i].findChest();
+				outposts[i].findChests();
 			}
 				
 

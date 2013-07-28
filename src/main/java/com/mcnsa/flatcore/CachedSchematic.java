@@ -43,7 +43,11 @@ public class CachedSchematic {
 	
 	public CachedSchematic(String name)
 	{
-    	File schematic = new File(MCNSAFlatcore.instance.getDataFolder(), name);
+    	File schematic = new File(new File(MCNSAFlatcore.instance.getDataFolder(), "schematics"), name);
+    	
+    	if (!schematic.exists())
+    		FCLog.severe("Schematic " + schematic.getAbsolutePath() + " does not exist!");
+    	
 		World firstWorld = Bukkit.getWorlds().get(0);
     	
     	WorldEditPlugin worldEdit = (WorldEditPlugin) MCNSAFlatcore.instance.getServer().getPluginManager().getPlugin("WorldEdit");
@@ -63,7 +67,7 @@ public class CachedSchematic {
 		random = new Random();
 	}
 	
-	public void findChest()
+	public void findChests()
 	{
 		chests = new ArrayList<ChestInfo>();
 		try
