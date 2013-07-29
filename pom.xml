@@ -4,7 +4,7 @@
   
   <groupId>MCNSAFlatcore</groupId>
   <artifactId>MCNSAFlatcore</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <packaging>jar</packaging>
   <name>MCNSAFlatcore</name>
   <url>https://github.com/MCNSA/MCNSAFlatcore</url>
@@ -55,22 +55,22 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.5.2-R0.2-SNAPSHOT</version>
+      <version>1.6.2-R0.1-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>${basedir}/lib/craftbukkit-1.5.2-R0.2-SNAPSHOT.jar</systemPath>
+      <systemPath>${basedir}/lib/craftbukkit-1.6.2-R0.1-SNAPSHOT.jar</systemPath>
     </dependency>
     
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
-      <version>5.5.3</version>
+      <version>5.5.8</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>me.ryanhamshire</groupId>
       <artifactId>GriefPrevention</artifactId>
-      <version>7.7</version>
+      <version>7.8</version>
       <scope>system</scope>
       <systemPath>${basedir}/lib/GriefPrevention.jar</systemPath>
     </dependency>
