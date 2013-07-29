@@ -180,7 +180,7 @@ public class FlatcoreListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
-	{
+	{		
 		if (event.getPlayer().hasPermission("mcnsaflatcore.mod"))
 		{
 			try
