@@ -5,13 +5,13 @@ author: matejdro
 depend: [GriefPrevention, MCNSANanobot]
 commands:
     flatcore:
-        description: Weekly challenges.
+        description: Main command
     rspawn:
-        description: rspawn
+        description: Spawn randomly in the world
     togglespawn:
-        description: togglespawn
+        description: Disable spawning closer to biggest claim
     unprotect:
-        description: unprotect
+        description: Disable invincibility upon spawn
     chp:
     checkpoint:
     
