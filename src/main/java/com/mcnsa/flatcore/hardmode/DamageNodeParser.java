@@ -72,7 +72,7 @@ public class DamageNodeParser extends NodeParser {
 
 		}
 
-		event.setDamage(amount.intValue());
+		event.setDamage(amount.doubleValue());
 	}
 
 	private void parseAddDamage(LinkedHashMap<?,?> node)
@@ -86,7 +86,7 @@ public class DamageNodeParser extends NodeParser {
 
 		}
 
-		event.setDamage(event.getDamage() + amount.intValue());
+		event.setDamage(event.getDamage() + amount.doubleValue());
 	}
 
 
@@ -133,7 +133,7 @@ public class DamageNodeParser extends NodeParser {
 		else if (durationNode instanceof String)
 		{
 			String expression = (String) durationNode;
-			expression = expression.replace("damage", Integer.toString(event.getDamage()));
+			expression = expression.replace("damage", Double.toString(event.getDamage()));
 
 			try {
 				duration = Expression.evaluate(expression).toInteger();
@@ -165,7 +165,7 @@ public class DamageNodeParser extends NodeParser {
 		else if (amplifierNode instanceof String)
 		{
 			String expression = (String) amplifierNode;
-			expression = expression.replace("damage", Integer.toString(event.getDamage()));
+			expression = expression.replace("damage", Double.toString(event.getDamage()));
 
 			try {
 				amplifier = Expression.evaluate(expression).toInteger();

@@ -4,26 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Random;
-
-import net.minecraft.server.v1_5_R3.NBTTagCompound;
-
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
-import com.gadberry.utility.expression.ArgumentCastException;
-import com.gadberry.utility.expression.Expression;
-import com.gadberry.utility.expression.InvalidExpressionException;
-import com.matejdro.bukkit.mcnsa.nanobot.commands.LoadCommand;
 
 public abstract class NodeParser {
 	private double chanceMultiplier;
