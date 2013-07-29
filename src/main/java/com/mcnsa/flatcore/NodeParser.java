@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import net.minecraft.server.v1_5_R3.NBTTagCompound;
+import net.minecraft.server.v1_6_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -238,7 +238,7 @@ public class NodeParser {
 		{
 			NBTTagCompound newTag = LoadCommand.load(yamlNbtTag);
 			
-			net.minecraft.server.v1_5_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
+			net.minecraft.server.v1_6_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
 			nmsStack.tag = newTag;
 			curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
 		}
