@@ -28,7 +28,7 @@ public class GriefPreventionHandler {
 		int x2 = center.getBlockX() + radius;
 		int z2 = center.getBlockZ() + radius;
 
-		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false);
+		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
 		if (bigClaimResult.succeeded != Result.Success)
 		{
 			FCLog.severe("Creation of GriefPrevention claim around outpost at " + center.getBlockX() + " " + center.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
@@ -52,7 +52,7 @@ public class GriefPreventionHandler {
 		int x2 = center.getBlockX() + radius;
 		int z2 = center.getBlockZ() + radius;
 
-		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false);
+		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
 		if (bigClaimResult.succeeded != Result.Success)
 		{
 			FCLog.severe("Creation of GriefPrevention claim around chest at " + center.getBlockX() + " " + center.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
@@ -61,7 +61,7 @@ public class GriefPreventionHandler {
 		Claim bigClaim = bigClaimResult.claim;
 		bigClaim.setPermission("public", ClaimPermission.Access);
 
-		CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(center.getWorld(), center.getBlockX(), center.getBlockX(), center.getBlockY(), center.getBlockY(), center.getBlockZ(), center.getBlockZ(), "", bigClaim, null, false);
+		CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(center.getWorld(), center.getBlockX(), center.getBlockX(), center.getBlockY(), center.getBlockY(), center.getBlockZ(), center.getBlockZ(), "", bigClaim, null, false, null);
 		if (chestClaimResult.succeeded != Result.Success)
 		{
 			FCLog.severe("Creation of GriefPrevention claim for chest at " + center.getBlockX() + " " + center.getBlockZ() + " failed! Please review that location manually (" + chestClaimResult.succeeded.toString() + ")");
