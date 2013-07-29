@@ -39,8 +39,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.mcnsa.flatcore.MCNSAFlatcore;
 import com.mcnsa.flatcore.NodeParser;
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
@@ -137,6 +135,9 @@ public class HardmodeListener implements Listener {
 					@Override
 					public void run() {
 						Zombie newZombie = entity.getWorld().spawn(entity.getLocation(), Zombie.class);
+						double maxHealth = (Double) newZombie.getMaxHealth();
+						
+						
 						newZombie.setHealth(newZombie.getMaxHealth() / 2);
 						newZombie.setMetadata("Respawned", new FixedMetadataValue(MCNSAFlatcore.instance, true));
 					}

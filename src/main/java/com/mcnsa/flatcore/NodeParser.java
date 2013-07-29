@@ -10,7 +10,6 @@ import net.minecraft.server.v1_6_R2.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
@@ -341,7 +340,7 @@ public class NodeParser {
 		else if (durationNode instanceof String)
 		{
 			String expression = (String) durationNode;
-			expression = expression.replace("damage", Integer.toString(event.getDamage()));
+			expression = expression.replace("damage", Double.toString(event.getDamage()));
 						
 			try {
 				duration = Expression.evaluate(expression).toInteger();
@@ -373,7 +372,7 @@ public class NodeParser {
 		else if (amplifierNode instanceof String)
 		{
 			String expression = (String) amplifierNode;
-			expression = expression.replace("damage", Integer.toString(event.getDamage()));
+			expression = expression.replace("damage", Double.toString(event.getDamage()));
 						
 			try {
 				amplifier = Expression.evaluate(expression).toInteger();
