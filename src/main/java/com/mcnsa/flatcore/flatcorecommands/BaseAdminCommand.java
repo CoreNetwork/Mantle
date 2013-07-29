@@ -30,7 +30,7 @@ public abstract class BaseAdminCommand {
 		Util.Message("Sorry, but you need to execute this command as player.", sender);
 			return false;
 		}
-		if (sender instanceof Player && !((Player)sender).hasPermission("mcnsaflatcore.command.cha")) 
+		if (sender instanceof Player && !Util.hasPermission(sender,"mcnsaflatcore.command.cha")) 
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
 			return false;

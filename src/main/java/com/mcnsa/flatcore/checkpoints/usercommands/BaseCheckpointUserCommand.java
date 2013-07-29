@@ -30,7 +30,7 @@ public abstract class BaseCheckpointUserCommand {
 		Util.Message("Sorry, but you need to execute this command as player.", sender);
 			return true;
 		}
-		if (sender instanceof Player && !((Player)sender).hasPermission("mcnsaflatcore.command.checkpoint." + permission)) 
+		if (sender instanceof Player && !Util.hasPermission(sender, "mcnsaflatcore.command.checkpoint." + permission)) 
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
 			return true;

@@ -55,9 +55,9 @@ public class RSpawnCommand extends BaseRSpawnCommand {
 	
 	public boolean throwDice(Player player)
 	{
-		if (player.hasPermission("mcnsaflatcore.donorsky"))
+		if (Util.hasPermission(player,"mcnsaflatcore.donorsky"))
 			return true;
-		else if (player.hasPermission("mcnsaflatcore.donorgrass"))
+		else if (Util.hasPermission(player,"mcnsaflatcore.donorgrass"))
 			return MCNSAFlatcore.random.nextInt(100) < 66;
 		else
 			return MCNSAFlatcore.random.nextInt(100) < 33;

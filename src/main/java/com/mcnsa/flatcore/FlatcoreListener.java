@@ -181,7 +181,7 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{		
-		if (event.getPlayer().hasPermission("mcnsaflatcore.mod"))
+		if (Util.hasPermission(event.getPlayer(), "mcnsaflatcore.mod"))
 		{
 			try
 			{

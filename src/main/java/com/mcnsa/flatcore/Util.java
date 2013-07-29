@@ -161,7 +161,7 @@ public class Util {
 	{
 		for (Player p : Bukkit.getOnlinePlayers())
 		{
-			if (p.hasPermission(permission))
+			if (Util.hasPermission(p,permission))
 				Util.Message(message, p);
 		}
 	}
@@ -281,6 +281,26 @@ public class Util {
 		locString = locString.concat(Float.toString(location.getPitch())).concat(";").concat(Float.toString(location.getYaw()));
 		
 		return locString;
-
 	}
+	
+	public static boolean hasPermission(CommandSender player, String permission)
+    {
+    	while (true)
+    	{
+    		if (player.hasPermission(permission))
+    			return true;
+    		
+    		if (permission.length() < 2)
+    			return false;
+    		
+    		if (permission.endsWith("*"))
+    			permission = permission.substring(0, permission.length() - 2);
+    		
+    		int lastIndex = permission.lastIndexOf(".");
+    		if (lastIndex < 0)
+    			return false;
+    		
+    		permission = permission.substring(0, lastIndex).concat(".*");  
+    	}
+    }
 }

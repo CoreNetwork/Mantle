@@ -30,7 +30,7 @@ public abstract class BaseRSpawnCommand {
 		Util.Message("Sorry, but you need to execute this command as player.", sender);
 			return false;
 		}
-		if (sender instanceof Player && !((Player)sender).hasPermission("mcnsaflatcore.command.rspawn." + permission)) 
+		if (sender instanceof Player && !Util.hasPermission(sender, "mcnsaflatcore.command.rspawn." + permission)) 
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
 			return false;
