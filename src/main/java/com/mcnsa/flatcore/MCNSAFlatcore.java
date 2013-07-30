@@ -19,6 +19,7 @@ import com.mcnsa.flatcore.flatcorecommands.GenerateMoreVillagesCommand;
 import com.mcnsa.flatcore.flatcorecommands.InitVillagesCommand;
 import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
 import com.mcnsa.flatcore.flatcorecommands.RestockAllCommand;
+import com.mcnsa.flatcore.flatcorecommands.SpawnHorsesCommand;
 import com.mcnsa.flatcore.flatcorecommands.TestVillageCommand;
 import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
 import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
@@ -68,6 +69,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 		adminCommands.put("findadminclaims", new FindAdminVillageCommand());
 		adminCommands.put("testvillage", new TestVillageCommand());
 		adminCommands.put("generatemorevillages", new GenerateMoreVillagesCommand());
+		adminCommands.put("spawnhorses", new SpawnHorsesCommand());
 
 		adminCommands.put("createchest", new CreateChestCommand());
 		adminCommands.put("restockall", new RestockAllCommand());
