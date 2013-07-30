@@ -16,6 +16,7 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Style;
 
 import com.mcnsa.flatcore.FCLog;
+import com.mcnsa.flatcore.GriefPreventionHandler;
 import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.MCNSAFlatcore;
 import com.mcnsa.flatcore.Setting;
@@ -47,7 +48,14 @@ public class SpawnHorsesCommand extends BaseAdminCommand {
 				final int xSize = set.getInt("SizeX");
 				final int zSize = set.getInt("SizeZ");
 				FCLog.info("Spawning horses near village at " + villageX + " " + villageZ);
-				int horses = MCNSAFlatcore.random.nextInt(3) + 1;
+				
+				if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, false))
+				{
+					FCLog.info("Claimed village. Skipping...");
+					continue;
+				}
+				
+				int horses = MCNSAFlatcore.random.nextInt(3);
 				FCLog.info("Amount of horses picked: " + horses);
 				
 				
