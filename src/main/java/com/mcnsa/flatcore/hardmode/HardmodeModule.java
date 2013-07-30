@@ -46,7 +46,7 @@ public class HardmodeModule extends FlatcoreModule {
 			return;
 		
 		EntityDamageEvent customDamage = new EntityDamageEvent(entity, DamageCause.CUSTOM, 0);
-		NodeParser.parseDamageEvent(customDamage, node);
+		DamageNodeParser.parseDamageEvent(customDamage, node);
 		entity.damage(customDamage.getDamage());
 
 	}
