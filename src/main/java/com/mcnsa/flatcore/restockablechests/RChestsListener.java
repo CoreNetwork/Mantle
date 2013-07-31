@@ -23,17 +23,18 @@ public class RChestsListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
-		Block clicked = event.getClickedBlock();
-		Player player = event.getPlayer();
-		ItemStack hand = event.getPlayer().getItemInHand();
-
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
 
-		if (clicked.getType() == Material.CHEST || clicked.getType() == Material.TRAPPED_CHEST)
+		Block clicked = event.getClickedBlock();
+		Player player = event.getPlayer();
+		ItemStack hand = player.getItemInHand();
+
+
+		if (Util.isInventoryContainer(clicked.getTypeId()))
 		{
 
-			if (player.getItemInHand() == null || player.getItemInHand().getTypeId() == 0)
+			if (hand == null || hand.getTypeId() == 0)
 			{
 				if (CreateChestCommand.playerHitChestArm(player, clicked))
 				{

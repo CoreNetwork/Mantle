@@ -35,9 +35,9 @@ public class Util {
 		else
 		{
 			block.setType(Material.WALL_SIGN);
-			
+
 		}
-			
+
 		Sign sign = (Sign) block.getState();
 		if (block.getType() == Material.WALL_SIGN)
 		{
@@ -50,7 +50,7 @@ public class Util {
 				{
 					data.setFacingDirection(face.getOppositeFace());
 					sign.setData(data);
-					
+
 					break;
 				}
 			}
@@ -128,7 +128,7 @@ public class Util {
 
 		for (int i = 0; i < lines.length; i++) {
 			lines[i] = lines[i].trim();
-			
+
 			if (i == 0)
 				continue;
 
@@ -140,7 +140,7 @@ public class Util {
 			lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);	
 			System.out.println(lines[i]);
 		}		
-		
+
 		for (int i = 0; i < lines.length; i++)
 			sender.sendMessage(lines[i]);
 
@@ -238,19 +238,19 @@ public class Util {
 		return false;
 
 	}
-	
+
 	public static void safeTeleport(final Player player, final Location location)
 	{
 		Chunk c = location.getChunk();
 		if (!c.isLoaded())
 			location.getChunk().load();
 		player.teleport(location);
-		
+
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MCNSAFlatcore.instance, new Runnable() {
 			@Override
 			public void run() {
 				player.teleport(location);
-				
+
 			}
 		}, 10);
 	}
@@ -259,53 +259,73 @@ public class Util {
 	{
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
-	
+
 	public static Location unserializeLocation(String text)
 	{
 		String[] split = text.split(";");
-	
+
 		World world = Bukkit.getWorld(split[0]);
 		double x = Double.parseDouble(split[1]);
 		double y = Double.parseDouble(split[2]);
 		double z = Double.parseDouble(split[3]);
 		float pitch = Float.parseFloat(split[4]);
 		float yaw = Float.parseFloat(split[5]);
-		
+
 		return new Location(world, x, y, z, yaw, pitch);
 	}
-	
+
 	public static String serializeLocation(Location location)
 	{
 		String locString = location.getWorld().getName().concat(";");
 		locString = locString.concat(Double.toString(location.getX())).concat(";").concat(Double.toString(location.getY())).concat(";").concat(Double.toString(location.getZ())).concat(";");
 		locString = locString.concat(Float.toString(location.getPitch())).concat(";").concat(Float.toString(location.getYaw()));
-		
+
 		return locString;
 	}
-	
+
 	public static boolean hasPermission(CommandSender player, String permission)
-    {
-    	while (true)
-    	{
-    		if (player.hasPermission(permission))
-    			return true;
-    		
-    		if (permission.length() < 2)
-    			return false;
-    		
-    		if (permission.endsWith("*"))
-    			permission = permission.substring(0, permission.length() - 2);
-    		
-    		int lastIndex = permission.lastIndexOf(".");
-    		if (lastIndex < 0)
-    			return false;
-    		
-    		permission = permission.substring(0, lastIndex).concat(".*");  
-    	}
-    }
-	
+	{
+		while (true)
+		{
+			if (player.hasPermission(permission))
+				return true;
+
+			if (permission.length() < 2)
+				return false;
+
+			if (permission.endsWith("*"))
+				permission = permission.substring(0, permission.length() - 2);
+
+			int lastIndex = permission.lastIndexOf(".");
+			if (lastIndex < 0)
+				return false;
+
+			permission = permission.substring(0, lastIndex).concat(".*");  
+		}
+	}
+
 	public static boolean isInventoryContainer(int id)
 	{
 		return id == Material.CHEST.getId() || id == Material.TRAPPED_CHEST.getId() || id == Material.DISPENSER.getId() || id == Material.FURNACE.getId() || id == Material.DROPPER.getId() || id == Material.BREWING_STAND.getId() || id == Material.HOPPER.getId();
+	}
+
+	// Material name snippet by TechGuard
+	public static String getMaterialName(Material material) {
+		String name = material.toString();
+		name = name.replaceAll("_", " ");
+		if (name.contains(" ")) {
+			String[] split = name.split(" ");
+			for (int i = 0; i < split.length; i++) {
+				split[i] = split[i].substring(0, 1).toUpperCase() + split[i].substring(1).toLowerCase();
+			}
+			name = "";
+			for (String s : split) {
+				name += " " + s;
+			}
+			name = name.substring(1);
+		} else {
+			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
+		}
+		return name;
 	}
 }

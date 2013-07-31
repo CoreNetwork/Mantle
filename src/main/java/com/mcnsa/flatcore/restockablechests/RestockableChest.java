@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore.restockablechests;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,14 +15,17 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryCustom;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,13 +33,14 @@ import com.mcnsa.flatcore.FCLog;
 import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.LootTableNodeParser;
 import com.mcnsa.flatcore.MCNSAFlatcore;
+import com.mcnsa.flatcore.Util;
 
 public class RestockableChest {
 	private static HashMap<Player, RestockableChest> openedInventories = new HashMap<Player, RestockableChest>();
 	private HashMap<Player, Inventory> inventoryCache = new HashMap<Player, Inventory>();
 	private static HashMap<Block, Integer> openedNumber = new HashMap<Block, Integer>();
 	private Block chestBlock;
-	private Chest chest;
+	private InventoryHolder inventoryHolder;
 	private int id;
 	private int interval;
 	private boolean perPlayer;
@@ -48,7 +53,7 @@ public class RestockableChest {
 
 	public static RestockableChest getChest(Block chest)
 	{
-		if (chest.getType() != Material.CHEST && chest.getType() != Material.TRAPPED_CHEST)
+		if (!Util.isInventoryContainer(chest.getTypeId()))
 			return null;
 
 		try
@@ -72,7 +77,7 @@ public class RestockableChest {
 			rChest.perPlayer = set.getInt("perPlayer") == 1;
 			rChest.lootTable = set.getString("LootTable");
 			rChest.chestBlock = chest;
-			rChest.chest = (Chest) chest.getState();
+			rChest.inventoryHolder = (InventoryHolder) chest.getState();
 			statement.close();
 			return rChest;
 		} catch (SQLException e) {
@@ -165,7 +170,7 @@ public class RestockableChest {
 			openedNumber.put(chestBlock, currentAmountOfOpened);
 
 			//Chest animation
-			if (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST)
+			if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
 			{
 				FCLog.info("Creating packet");
 				Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
@@ -245,7 +250,7 @@ public class RestockableChest {
 
 
 		if (player == null)
-			return chest.getInventory();
+			return inventoryHolder.getInventory();
 		else
 			return getInventoryFromDB(player);
 	}
@@ -303,9 +308,16 @@ public class RestockableChest {
 		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance);
 		Inventory inventory;
 		if (player == null)
-			inventory = chest.getInventory();
+			inventory = inventoryHolder.getInventory();
 		else
-			inventory = Bukkit.createInventory(chest, chest.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
+		{
+			inventory = new CraftInventoryCustom(inventoryHolder, inventoryHolder.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
+		
+			InventoryType type = getInventoryType();
+			if (type != InventoryType.CHEST)
+				fixInventoryType(inventory, type);
+		}
+		
 		inventory.clear();
 
 		for (ItemStack i : items)
@@ -382,8 +394,11 @@ public class RestockableChest {
 			else
 				numberDisplay = maxNumber + "+";
 
-			Inventory inventory = Bukkit.createInventory(chest, chest.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
+			Inventory inventory = new CraftInventoryCustom(inventoryHolder, inventoryHolder.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
 
+			InventoryType type = getInventoryType();
+			if (type != InventoryType.CHEST)
+				fixInventoryType(inventory, type);
 
 			statement = IO.getConnection().prepareStatement("SELECT * FROM chestInventory WHERE ID = ? AND Player = ?");
 			statement.setInt(1, id);
@@ -479,10 +494,70 @@ public class RestockableChest {
 
 	private String getCustomName()
 	{
-		if (chestBlock.getType() != Material.CHEST && chestBlock.getType() != Material.TRAPPED_CHEST)
+		if (!Util.isInventoryContainer(chestBlock.getTypeId()))
 			return "";
 
-		TileEntityChest tileEntity = (TileEntityChest) ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
-		return tileEntity.c() ? tileEntity.getName() : "Chest";
+		if (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST)
+		{
+			TileEntityChest tileEntity = (TileEntityChest) ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
+			return tileEntity.c() ? tileEntity.getName() : "Chest";
+
+		}
+		else
+			return Util.getMaterialName(chestBlock.getType());
+	}
+	
+	private InventoryType getInventoryType()
+	{
+		
+		switch (chestBlock.getType())
+		{
+		case BEACON:
+			return InventoryType.BEACON;
+		case BREWING_STAND:
+			return InventoryType.BREWING;
+		case DISPENSER:
+			return InventoryType.DISPENSER;
+		case DROPPER:
+			return InventoryType.DROPPER;
+		case FURNACE:
+			return InventoryType.FURNACE;
+		case HOPPER:
+			return InventoryType.HOPPER;
+		}
+		
+		return InventoryType.CHEST;
+	}
+	
+	private static void fixInventoryType(Inventory inventory, InventoryType type)
+	{
+		CraftInventory   customInv = (CraftInventory)  inventory;
+
+		Field field;
+		try {
+			field = CraftInventory.class.getDeclaredField("inventory");
+			field.setAccessible(true);
+			
+			Object internalInv = field.get(customInv);
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryCustom$MinecraftInventory");
+			
+			field = internalInvClass.getDeclaredField("type");
+			field.setAccessible(true);
+			
+			field.set(internalInv, type);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 }
