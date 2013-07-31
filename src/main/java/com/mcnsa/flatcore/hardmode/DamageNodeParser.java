@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -22,30 +23,32 @@ import com.mcnsa.flatcore.NodeParser;
 public class DamageNodeParser extends NodeParser {
 	private EntityDamageEvent event;
 	private String eventName;
-
-	private DamageNodeParser(EntityDamageEvent event, String eventName)
+	YamlConfiguration config;
+	
+	private DamageNodeParser(EntityDamageEvent event, String eventName, YamlConfiguration config)
 	{
 		this.eventName = eventName;
 		this.event = event;
+		this.config = config;
 	}
 
 	private void parse()
 	{
-		List<?> node = (List<?>) IO.config.getList("DamageModifiers." + eventName);
+		List<?> node = (List<?>) config.getList("DamageModifiers." + eventName);
 		if (node == null)
 			return;
 
 		parseNodeList(node);
 	}
 
-	public static void parseDamageEvent(EntityDamageEvent event, String eventName)
+	public static void parseDamageEvent(EntityDamageEvent event, String eventName, YamlConfiguration config)
 	{
-		new DamageNodeParser(event, eventName).parse();
+		new DamageNodeParser(event, eventName, config).parse();
 	}	
 
-	public static void parseDamageEvent(EntityDamageEvent event)
+	public static void parseDamageEvent(EntityDamageEvent event, YamlConfiguration config)
 	{
-		parseDamageEvent(event, event.getCause().toString());
+		parseDamageEvent(event, event.getCause().toString(), config);
 	}
 
 	@Override

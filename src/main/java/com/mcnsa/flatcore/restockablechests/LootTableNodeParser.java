@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore;
+package com.mcnsa.flatcore.restockablechests;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -6,27 +6,33 @@ import java.util.List;
 
 import net.minecraft.server.v1_6_R2.NBTTagCompound;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import com.matejdro.bukkit.mcnsa.nanobot.commands.LoadCommand;
+import com.mcnsa.flatcore.FCLog;
+import com.mcnsa.flatcore.IO;
+import com.mcnsa.flatcore.NodeParser;
 
 public class LootTableNodeParser extends NodeParser {
 	private String tableName;
 
 	private static List<ItemStack> result;
 	private static ItemStack curItemStack;
+	private YamlConfiguration config;
 
-	private LootTableNodeParser(String name, double chanceMultiplier, double chanceAdder)
+	private LootTableNodeParser(String name, double chanceMultiplier, double chanceAdder, YamlConfiguration config)
 	{
 		super(chanceMultiplier, chanceAdder);
 		this.tableName = name;
+		this.config = config;
 	}
 
 	private List<ItemStack> parse()
 	{
-		List<?> node = (List<?>) IO.config.getList("LootTables." + tableName + ".Items");
+		List<?> node = (List<?>) config.getList("LootTables." + tableName + ".Items");
 		result = new ArrayList<ItemStack>();
 
 		if (node == null)
@@ -40,9 +46,9 @@ public class LootTableNodeParser extends NodeParser {
 		return result;
 	}
 
-	public static List<ItemStack> parseTable(String name, double chanceMultiplier, double chanceAdder)
+	public static List<ItemStack> parseTable(String name, double chanceMultiplier, double chanceAdder, YamlConfiguration config)
 	{
-		return new LootTableNodeParser(name, chanceMultiplier, chanceAdder).parse();
+		return new LootTableNodeParser(name, chanceMultiplier, chanceAdder, config).parse();
 	}
 
 

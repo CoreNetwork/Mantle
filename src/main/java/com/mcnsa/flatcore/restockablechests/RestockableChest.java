@@ -31,7 +31,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.mcnsa.flatcore.FCLog;
 import com.mcnsa.flatcore.IO;
-import com.mcnsa.flatcore.LootTableNodeParser;
 import com.mcnsa.flatcore.MCNSAFlatcore;
 import com.mcnsa.flatcore.Util;
 
@@ -305,7 +304,7 @@ public class RestockableChest {
 		else
 			numberDisplay = maxNumber + "+";
 
-		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance);
+		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance, RChestsModule.instance.config);
 		Inventory inventory;
 		if (player == null)
 			inventory = inventoryHolder.getInventory();
