@@ -171,7 +171,6 @@ public class RestockableChest {
 			//Chest animation
 			if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
 			{
-				FCLog.info("Creating packet");
 				Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
 
 				List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
@@ -180,8 +179,6 @@ public class RestockableChest {
 				{
 					if (e.getType() != EntityType.PLAYER)
 						continue;
-
-					FCLog.info("Sending packet");
 					
 					((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
 				}
