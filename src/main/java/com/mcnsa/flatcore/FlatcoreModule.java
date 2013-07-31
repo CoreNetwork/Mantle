@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
 import com.mcnsa.flatcore.generation.GenerationModule;
 import com.mcnsa.flatcore.hardmode.HardmodeModule;
+import com.mcnsa.flatcore.restockablechests.RChestsModule;
 
 public abstract class FlatcoreModule implements CommandExecutor {
 	private String moduleName;
@@ -159,6 +160,15 @@ public abstract class FlatcoreModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}
+		
+		//Restockable chests
+		module = new RChestsModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
+
 	}
 
 	public static void reloadConfigs()

@@ -7,14 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import net.minecraft.server.v1_6_R2.Packet54PlayNoteBlock;
 import net.minecraft.server.v1_6_R2.TileEntityChest;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -28,24 +33,24 @@ import com.mcnsa.flatcore.MCNSAFlatcore;
 public class RestockableChest {
 	private static HashMap<Player, RestockableChest> openedInventories = new HashMap<Player, RestockableChest>();
 	private HashMap<Player, Inventory> inventoryCache = new HashMap<Player, Inventory>();
-	
+	private static HashMap<Block, Integer> openedNumber = new HashMap<Block, Integer>();
 	private Block chestBlock;
 	private Chest chest;
 	private int id;
 	private int interval;
 	private boolean perPlayer;
 	private String lootTable;
-	
+
 	private RestockableChest()
 	{
-		
+
 	}
-	
+
 	public static RestockableChest getChest(Block chest)
 	{
 		if (chest.getType() != Material.CHEST && chest.getType() != Material.TRAPPED_CHEST)
 			return null;
-		
+
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
@@ -54,14 +59,14 @@ public class RestockableChest {
 			statement.setInt(3, chest.getY());
 			statement.setInt(4, chest.getZ());
 			ResultSet set = statement.executeQuery();
-			
+
 			if (!set.next())
 			{
 				return null;
 			}
-			
+
 			RestockableChest rChest = new RestockableChest();
-			
+
 			rChest.id = set.getInt("ID");
 			rChest.interval = set.getInt("Interval");
 			rChest.perPlayer = set.getInt("perPlayer") == 1;
@@ -74,10 +79,10 @@ public class RestockableChest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
 	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer)
 	{
 		try
@@ -90,7 +95,7 @@ public class RestockableChest {
 			statement.setInt(5, chest.getX());
 			statement.setInt(6, chest.getY());
 			statement.setInt(7, chest.getZ());
-			
+
 			statement.executeUpdate();
 			IO.getConnection().commit();
 			statement.close();
@@ -98,7 +103,7 @@ public class RestockableChest {
 		catch (SQLException e) {
 		}
 	}
-	
+
 	public void delete()
 	{
 		try
@@ -107,7 +112,7 @@ public class RestockableChest {
 			statement.setInt(1, id);
 			statement.executeUpdate();
 			statement.close();
-			
+
 			statement = IO.getConnection().prepareStatement("DELETE FROM chestInventory WHERE ID = ?");
 			statement.setInt(1, id);
 			statement.executeUpdate();
@@ -117,22 +122,22 @@ public class RestockableChest {
 			statement.setInt(1, id);
 			statement.executeUpdate();
 			statement.close();
-			
+
 			IO.getConnection().commit();
 
 		}
 		catch (SQLException e) {
 		}
 	}
-	
+
 	public boolean open(Player player)
 	{
 		if (!perPlayer) player = null;
-		
+
 		RestockableChest chest = openedInventories.get(player);
 		if (chest != null)
 			return true;
-		
+
 		if (player == null) 
 		{
 			tryRestock(player);
@@ -145,18 +150,45 @@ public class RestockableChest {
 			inventoryCache.put(player, view.getTopInventory());
 			openedInventories.put(player, this);
 			storeInventoryToDB(player, null);
-			
+
 			if (chestBlock.getType() == Material.TRAPPED_CHEST)
 			{
 				Block redstoneBlock = chestBlock.getRelative(0, -2, 0);
 				if (redstoneBlock != null && redstoneBlock.getType() == Material.AIR)
 					redstoneBlock.setType(Material.REDSTONE_BLOCK);
 			}
-			
+
+			Integer currentAmountOfOpened = openedNumber.get(chestBlock);
+			if (currentAmountOfOpened == null)
+				currentAmountOfOpened = 0;
+			currentAmountOfOpened++;
+			openedNumber.put(chestBlock, currentAmountOfOpened);
+
+			//Chest animation
+			if (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST)
+			{
+				FCLog.info("Creating packet");
+				Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
+
+				List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+				nearbyEntities.add(player);
+				for (Entity e : nearbyEntities)
+				{
+					if (e.getType() != EntityType.PLAYER)
+						continue;
+
+					FCLog.info("Sending packet");
+					
+					((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
+				}
+				
+				chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
+			}
+
 			return true;
 		}
 	}
-	
+
 	public static void inventoryClosed(Player player)
 	{
 		RestockableChest chest = openedInventories.get(player);
@@ -167,32 +199,57 @@ public class RestockableChest {
 			{
 				chest.storeInventoryToDB(player, inventory);
 				chest.inventoryCache.remove(player);
-				
+
 				if (chest.chestBlock.getType() == Material.TRAPPED_CHEST && chest.inventoryCache.size() == 0)
 				{
 					Block redstoneBlock = chest.chestBlock.getRelative(0, -2, 0);
 					if (redstoneBlock != null && redstoneBlock.getType() == Material.REDSTONE_BLOCK)
 						redstoneBlock.setType(Material.AIR);
 				}
+
+				Integer currentAmountOfOpened = openedNumber.get(chest.chestBlock);
+				if (currentAmountOfOpened == null)
+					currentAmountOfOpened = 1;
+				currentAmountOfOpened--;
+				openedNumber.put(chest.chestBlock, currentAmountOfOpened);
+
+				//Chest animation
+				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
+				{
+					Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), chest.chestBlock.getTypeId(), 1, 0);
+
+					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+					nearbyEntities.add(player);
+					for (Entity e : nearbyEntities)
+					{
+						if (e.getType() != EntityType.PLAYER)
+							continue;
+
+						((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
+					}
+					
+					chest.chestBlock.getWorld().playSound(chest.chestBlock.getLocation(), Sound.CHEST_CLOSE, 1f, 1f);
+				}
+
 			}
-			
+
 			openedInventories.remove(player);
 		}
 	}
-	
+
 	public Inventory getInventory(Player player)
 	{
 		Inventory inv = tryRestock(player);
 		if (inv != null)
 			return inv;
-		
-		
+
+
 		if (player == null)
 			return chest.getInventory();
 		else
 			return getInventoryFromDB(player);
 	}
-	
+
 	public Inventory tryRestock(Player player)
 	{		
 		try
@@ -201,10 +258,10 @@ public class RestockableChest {
 			statement.setInt(1, id);
 			statement.setString(2, player == null ? "[CHEST]" : player.getName());
 			ResultSet set = statement.executeQuery();
-			
+
 			int lastAccess;
 			int restocks = 0;
-			
+
 			if (!set.next())
 			{
 				lastAccess = 0;
@@ -215,18 +272,18 @@ public class RestockableChest {
 				lastAccess = set.getInt("LastAccess");
 				restocks = set.getInt("Restocks");
 			}
-			
-			
+
+
 			statement.close();
 
 			if (lastAccess >= 0 && System.currentTimeMillis() / 1000 - lastAccess > interval * 3600)
 				return restock(player, restocks, interval < 0);
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
@@ -235,14 +292,14 @@ public class RestockableChest {
 		double multiplyChance = Math.pow(IO.config.getDouble("LootTables." + lootTable + ".MultiplyChances", 1), restocks);
 		double addChance = IO.config.getDouble("LootTables." + lootTable + ".AddChances", 0) * restocks;
 		restocks++;
-		
+
 		String numberDisplay = "";
 		int maxNumber = IO.config.getInt("LootTables." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 		if (restocks <= maxNumber)
 			numberDisplay = Integer.toString(restocks);
 		else
 			numberDisplay = maxNumber + "+";
-		
+
 		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance);
 		Inventory inventory;
 		if (player == null)
@@ -250,7 +307,7 @@ public class RestockableChest {
 		else
 			inventory = Bukkit.createInventory(chest, chest.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
 		inventory.clear();
-				
+
 		for (ItemStack i : items)
 		{
 			int counter = 0;
@@ -262,7 +319,7 @@ public class RestockableChest {
 					inventory.setItem(spot, i);
 					break;
 				}
-				
+
 				counter++;
 				if (counter > 100)
 				{
@@ -271,8 +328,8 @@ public class RestockableChest {
 				}
 			}
 		}
-			
-		
+
+
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM playerChests WHERE ID = ? AND Player = ?");
@@ -280,7 +337,7 @@ public class RestockableChest {
 			statement.setString(2, player == null ? "[CHEST]" : player.getName());
 			statement.executeUpdate();
 			statement.close();
-			
+
 			statement = IO.getConnection().prepareStatement("INSERT INTO playerChests (ID,Player, LastAccess, Restocks) VALUES (?,?,?,?)");
 			statement.setInt(1, id);
 			statement.setString(2, player == null ? "[CHEST]" : player.getName());
@@ -288,30 +345,30 @@ public class RestockableChest {
 			statement.setInt(4, restocks);
 			statement.executeUpdate();
 			statement.close();
-			
+
 			IO.getConnection().commit();
 
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-				
+
 		return inventory;
 	}
-	
+
 	private Inventory getInventoryFromDB(Player player)
 	{
-		
-		
+
+
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT Restocks FROM playerChests WHERE ID = ? AND Player = ? LIMIT 1");
 			statement.setInt(1, id);
 			statement.setString(2, player == null ? "[CHEST]" : player.getName());
 			ResultSet set = statement.executeQuery();
-			
+
 			int restocks = 0;
-			
+
 			if (!set.next())
 				restocks = 0;
 			else
@@ -324,15 +381,15 @@ public class RestockableChest {
 				numberDisplay = Integer.toString(restocks);
 			else
 				numberDisplay = maxNumber + "+";
-			
+
 			Inventory inventory = Bukkit.createInventory(chest, chest.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
-			
-			
+
+
 			statement = IO.getConnection().prepareStatement("SELECT * FROM chestInventory WHERE ID = ? AND Player = ?");
 			statement.setInt(1, id);
 			statement.setString(2, player.getName());
 			set = statement.executeQuery();
-			
+
 			while (set.next())
 			{
 				int slot = set.getInt("Slot");
@@ -340,38 +397,38 @@ public class RestockableChest {
 				int damage = set.getInt("damage");
 				int amount = set.getInt("amount");
 				String enchants[] = set.getString("enchants").split(",");
-								
+
 				ItemStack stack = new ItemStack(id, amount, (short) damage);
-				
+
 				for (String enchant : enchants)
 				{
 					if (!enchant.contains(":"))
 						continue;
-					
+
 					String[] enchantS = enchant.split(":");
 					int eID = Integer.parseInt(enchantS[0]);
 					int eLevel = Integer.parseInt(enchantS[1]);
-					
+
 					stack.addUnsafeEnchantment(Enchantment.getById(eID), eLevel);
 				}
-				
+
 				inventory.setItem(slot, stack);
 			}
-			
+
 			statement.close();
-			
+
 			return inventory;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+
 		return null;
 	}
-	
+
 	private void storeInventoryToDB(Player player, Inventory inventory)
 	{
-		
+
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM chestInventory WHERE ID = ? AND Player = ?");
@@ -379,39 +436,39 @@ public class RestockableChest {
 			statement.setString(2, player.getName());
 			statement.executeUpdate();
 			statement.close();
-			
+
 			if (inventory == null)
 			{
 				IO.getConnection().commit();
 				return;
 			}
-			
+
 			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, Player, Slot, ItemID, Damage, Amount, Enchants) VALUES (?,?,?,?,?,?,?)");
-			
+
 			int size = inventory.getSize();
 			for (int i = 0; i < size; i++)
 			{
 				ItemStack stack = inventory.getItem(i);
 				if (stack == null || stack.getTypeId() == 0)
 					continue;
-				
+
 				statement.setInt(1, id);
 				statement.setString(2, player.getName());
 				statement.setInt(3, i);
 				statement.setInt(4, stack.getTypeId());
 				statement.setInt(5, stack.getDurability());
 				statement.setInt(6, stack.getAmount());
-				
+
 				String enchants = "";
 				for (Entry<Enchantment, Integer> e : stack.getEnchantments().entrySet())
 				{
 					enchants += e.getKey().getId() + ":" + e.getValue() + ",";
 				}
-				
+
 				statement.setString(7, enchants);
 				statement.addBatch();
 			}
-			
+
 			statement.executeBatch();
 			IO.getConnection().commit();
 			statement.close();
@@ -419,12 +476,12 @@ public class RestockableChest {
 		catch (SQLException e) {
 		}
 	}
-	
+
 	private String getCustomName()
 	{
 		if (chestBlock.getType() != Material.CHEST && chestBlock.getType() != Material.TRAPPED_CHEST)
 			return "";
-		
+
 		TileEntityChest tileEntity = (TileEntityChest) ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
 		return tileEntity.c() ? tileEntity.getName() : "Chest";
 	}
