@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore.flatcorecommands;
+package com.mcnsa.flatcore.restockablechests.commands;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -9,6 +9,7 @@ import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.Setting;
 import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
+import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
 
 public class RestockAllCommand extends BaseAdminCommand {	
 	public RestockAllCommand()

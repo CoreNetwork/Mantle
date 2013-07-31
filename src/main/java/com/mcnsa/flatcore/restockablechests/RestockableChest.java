@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore;
+package com.mcnsa.flatcore.restockablechests;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,6 +19,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+
+import com.mcnsa.flatcore.FCLog;
+import com.mcnsa.flatcore.IO;
+import com.mcnsa.flatcore.LootTableNodeParser;
+import com.mcnsa.flatcore.MCNSAFlatcore;
 
 public class RestockableChest {
 	private static HashMap<Player, RestockableChest> openedInventories = new HashMap<Player, RestockableChest>();

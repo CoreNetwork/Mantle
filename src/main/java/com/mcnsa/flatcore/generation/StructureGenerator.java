@@ -24,8 +24,8 @@ import com.mcnsa.flatcore.FCLog;
 import com.mcnsa.flatcore.GriefPreventionHandler;
 import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.MCNSAFlatcore;
-import com.mcnsa.flatcore.RestockableChest;
 import com.mcnsa.flatcore.generation.StructureData.Protection;
+import com.mcnsa.flatcore.restockablechests.RestockableChest;
 
 public class StructureGenerator {
 	public static void generateAllWorlds()

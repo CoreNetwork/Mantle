@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore.flatcorecommands;
+package com.mcnsa.flatcore.restockablechests.commands;
 
 import java.util.HashMap;
 
@@ -7,10 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.IO;
-import com.mcnsa.flatcore.RestockableChest;
 import com.mcnsa.flatcore.Setting;
 import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
+import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
+import com.mcnsa.flatcore.restockablechests.RestockableChest;
 
 public class CreateChestCommand extends BaseAdminCommand {
 	private static HashMap<Player, PlayerData> selectionPlayers = new HashMap<Player, PlayerData>();

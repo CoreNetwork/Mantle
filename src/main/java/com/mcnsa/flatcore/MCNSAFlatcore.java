@@ -12,12 +12,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.mcnsa.flatcore.flatcorecommands.AdminHelpCommand;
 import com.mcnsa.flatcore.flatcorecommands.AnalyzeCommand;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
-import com.mcnsa.flatcore.flatcorecommands.CreateChestCommand;
 import com.mcnsa.flatcore.flatcorecommands.DeleteVillageCommand;
 import com.mcnsa.flatcore.flatcorecommands.FindAdminVillageCommand;
 import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
-import com.mcnsa.flatcore.flatcorecommands.RestockAllCommand;
 import com.mcnsa.flatcore.flatcorecommands.TestVillageCommand;
+import com.mcnsa.flatcore.restockablechests.commands.CreateChestCommand;
+import com.mcnsa.flatcore.restockablechests.commands.RestockAllCommand;
 import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
 import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
@@ -64,9 +64,6 @@ public class MCNSAFlatcore extends JavaPlugin {
 		adminCommands.put("deletevillage", new DeleteVillageCommand());
 		adminCommands.put("findadminclaims", new FindAdminVillageCommand());
 		adminCommands.put("testvillage", new TestVillageCommand());
-
-		adminCommands.put("createchest", new CreateChestCommand());
-		adminCommands.put("restockall", new RestockAllCommand());
 		
 		adminCommands.put("reload", new ReloadCommand());
 		

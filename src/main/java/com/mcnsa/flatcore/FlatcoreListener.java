@@ -46,7 +46,8 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 
-import com.mcnsa.flatcore.flatcorecommands.CreateChestCommand;
+import com.mcnsa.flatcore.restockablechests.RestockableChest;
+import com.mcnsa.flatcore.restockablechests.commands.CreateChestCommand;
 import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
@@ -107,46 +108,12 @@ public class FlatcoreListener implements Listener {
 
 			flintSteelUsage.put(clicked, data);
 		}
-
-		//Restockable chests
-		if (clicked.getType() == Material.CHEST || clicked.getType() == Material.TRAPPED_CHEST)
-		{
-
-			if (player.getItemInHand() == null || player.getItemInHand().getTypeId() == 0)
-			{
-				if (CreateChestCommand.playerHitChestArm(player, clicked))
-				{
-					event.setCancelled(true);
-					return;
-				}
-			}
-
-			RestockableChest chest = RestockableChest.getChest(clicked);
-			if (chest != null)
-			{
-				if (chest.open(player))
-				{
-					event.setCancelled(true);
-				}
-			}
-		}
-
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event)
 	{
 		final Block block = event.getBlock();
-
-		//Restockable chest
-		RestockableChest chest = RestockableChest.getChest(block);
-		if (chest != null)
-		{
-			chest.delete();
-
-			Util.Message(Settings.getString(Setting.MESSAGE_CHEST_DELETED), event.getPlayer());
-			return;
-		}
 
 		//Do not drop colored sign
 		if (block.getState() instanceof Sign)
@@ -166,17 +133,6 @@ public class FlatcoreListener implements Listener {
 		} 
 	}
 
-	@EventHandler
-	public void onInventoryClose(InventoryCloseEvent event)
-	{
-		RestockableChest.inventoryClosed((Player) event.getPlayer());
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerQuit(PlayerQuitEvent event)
-	{
-		RestockableChest.inventoryClosed((Player) event.getPlayer());
-	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
