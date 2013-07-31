@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.configuration.MemorySection;
+
 import com.mcnsa.flatcore.CachedSchematic;
 import com.mcnsa.flatcore.FCLog;
 
@@ -11,10 +13,10 @@ import com.mcnsa.flatcore.FCLog;
 public class StructureData {
 	private Map<String, CachedSchematic> schematicsMap = new HashMap<String, CachedSchematic>();
 	
-	private Map<?,?> configNode;
+	private MemorySection configNode;
 	private String name;
 	
-	public StructureData(String name, Map<?,?> configNode)
+	public StructureData(String name, MemorySection configNode)
 	{
 		this.name = name;
 		this.configNode = configNode;
@@ -81,7 +83,7 @@ public class StructureData {
 	
 	public boolean shouldCreateRestockableChests()
 	{
-		Boolean result = (Boolean) configNode.get("CreateRestockableChests ");
+		Boolean result = (Boolean) configNode.get("CreateRestockableChests");
 		if (result == null)
 		{
 			return false;
@@ -111,7 +113,7 @@ public class StructureData {
 	
 	public Protection getProtectionData()
 	{
-		Map<?,?> protectionNode = (Map<?, ?>) configNode.get("Protection");
+		MemorySection protectionNode = (MemorySection) configNode.get("Protection");
 		if (protectionNode == null)
 			return null;
 		
@@ -125,11 +127,14 @@ public class StructureData {
 		if (protection.createChestSubclaims == null)
 			protection.createChestSubclaims = false;
 
+		protection.claimPermission = (Integer) protectionNode.get("ClaimPermission");
+		
 		return protection;
 	}
 	
 	public static class Protection
 	{
+		Integer claimPermission;
 		Integer padding;
 		Boolean createChestSubclaims;
 		

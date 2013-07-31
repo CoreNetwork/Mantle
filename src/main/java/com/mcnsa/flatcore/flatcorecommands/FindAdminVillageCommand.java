@@ -32,7 +32,7 @@ public class FindAdminVillageCommand extends BaseAdminCommand {
 		Location previousDecision = pickedVillage.get(((Player) sender).getName());
 		
 		final Player player = (Player) sender;
-		
+
 		if (previousDecision == null)
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_ANALYZING), sender);
@@ -45,19 +45,19 @@ public class FindAdminVillageCommand extends BaseAdminCommand {
 
 					try
 					{
-						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CenterX,CenterZ,SizeX,SizeZ FROM villages");
+						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ FROM villages");
 						ResultSet set = statement.executeQuery();
 						
 						while (set.next())
 						{
 
 
-							final int villageX = set.getInt("centerX");
-							final int villageZ = set.getInt("centerZ");
+							final int villageX = set.getInt("CornerX");
+							final int villageZ = set.getInt("CornerZ");
 							final int xSize = set.getInt("SizeX");
 							final int zSize = set.getInt("SizeZ");
 							
-							if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, true))
+							if (GriefPreventionHandler.containsClaim(overworld, villageX, villageZ, xSize, zSize, true))
 							{
 								Location location = new Location(overworld, villageX + xSize / 2, 15, villageZ + zSize / 2);
 								if (pickedVillage.containsValue(location))

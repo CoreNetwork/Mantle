@@ -78,7 +78,7 @@ public class DeleteVillageCommand extends BaseAdminCommand {
 		int z = location.getBlockZ();
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, ((centerX - ? + sizeX / 2) * (centerX - ? + sizeX / 2) + (centerZ - ? + sizeZ / 2) * (centerZ - ? + sizeZ / 2)) as dist FROM villages ORDER BY dist ASC LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, ((CornerX - ? + sizeX / 2) * (CornerX - ? + sizeX / 2) + (CornerZ - ? + sizeZ / 2) * (CornerZ - ? + sizeZ / 2)) as dist FROM villages ORDER BY dist ASC LIMIT 1");
 			statement.setInt(1, x);
 			statement.setInt(2, x);
 			statement.setInt(3, z);

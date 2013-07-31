@@ -17,6 +17,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 
+import com.mcnsa.flatcore.generation.VillagerSpawner;
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldedit.DoubleArrayList;
 import com.sk89q.worldedit.EditSession;
@@ -36,6 +37,7 @@ public class CachedSchematic {
 	private EditSession editSession;
 	public int xSize;
 	public int zSize;
+	public String name;
 	private Random random;
 	private List<ChestInfo> chests;
 	
@@ -43,7 +45,8 @@ public class CachedSchematic {
 	
 	public CachedSchematic(String name)
 	{
-    	File schematic = new File(new File(MCNSAFlatcore.instance.getDataFolder(), "schematics"), name);
+		this.name = name;
+    	File schematic = new File(new File(MCNSAFlatcore.instance.getDataFolder(), "schematics"), name + ".schematic");
     	
     	if (!schematic.exists())
     		FCLog.severe("Schematic " + schematic.getAbsolutePath() + " does not exist!");
@@ -80,8 +83,9 @@ public class CachedSchematic {
 					{
 						Vector vector = new Vector(x, y, z);
 						BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
-						if (baseBlock.getType() == Material.CHEST.getId() || baseBlock.getType() == Material.TRAPPED_CHEST.getId())
+						if (Util.isInventoryContainer(baseBlock.getType()))
 						{
+							FCLog.info("Found chest! " + baseBlock.getType());
 							Vector chest = vector;
 							for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 							{
@@ -98,6 +102,8 @@ public class CachedSchematic {
 										
 								if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 								{
+									FCLog.info("Found sign!");
+
 									try
 									{
 										SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
@@ -105,12 +111,15 @@ public class CachedSchematic {
 										
 										if (sign.getText()[0].trim().startsWith("[loot]"))
 										{
+											FCLog.info("Found loot sign!");
+
 											int replaceID = 0;
 											String prvaSplit[] = sign.getText()[0].split(" ");
 											if (prvaSplit.length > 1 && Util.isInteger(prvaSplit[1]))
 												replaceID = Integer.parseInt(prvaSplit[1]);
 											
 											ChestInfo info = new ChestInfo();
+											info.restockable = true;
 											info.lootTable = sign.getText()[1];
 											info.interval = Integer.parseInt(sign.getText()[2]);
 											info.perPlayer = sign.getText()[3].contains("true");
@@ -121,7 +130,25 @@ public class CachedSchematic {
 											chests.add(info);
 
 											break;
-										}										
+										}
+										else if (sign.getText()[0].trim().startsWith("[Allow]"))
+										{
+											int replaceID = 0;
+											String prvaSplit[] = sign.getText()[0].split(" ");
+											if (prvaSplit.length > 1 && Util.isInteger(prvaSplit[1]))
+												replaceID = Integer.parseInt(prvaSplit[1]);
+
+											
+											ChestInfo info = new ChestInfo();
+											info.loc = new Location(Bukkit.getWorlds().get(0), chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
+											info.restockable = false;
+											
+											localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID));
+											
+											chests.add(info);
+											
+											break;
+										}
 									}
 									catch (DataException e)
 									{
@@ -141,7 +168,7 @@ public class CachedSchematic {
 		}
 	}
 	
-	public ChestInfo[] getChests(Location placementCenter)
+	public ChestInfo[] getChests(Location placementCorner)
 	{			
 		ChestInfo[] infos = new ChestInfo[chests.size()];
 		
@@ -149,9 +176,9 @@ public class CachedSchematic {
 		{
 			ChestInfo info = new ChestInfo(chests.get(i));
 			info.loc = info.loc.clone();
-			info.loc.setX(info.loc.getBlockX() + placementCenter.getBlockX());
-			info.loc.setY(info.loc.getBlockY() + placementCenter.getBlockY());
-			info.loc.setZ(info.loc.getBlockZ() + placementCenter.getBlockZ());
+			info.loc.setX(info.loc.getBlockX() + placementCorner.getBlockX());
+			info.loc.setY(info.loc.getBlockY() + placementCorner.getBlockY());
+			info.loc.setZ(info.loc.getBlockZ() + placementCorner.getBlockZ());
 			infos[i] = info;
 		}
 	
@@ -225,42 +252,39 @@ public class CachedSchematic {
 		}
 	}
 	
-	public void spawnVillagers(Location placementCenter)
+	public void spawnVillagers(Location placementCorner, VillagerSpawner spawner)
 	{
 		for (VillagerInfo villager : villagers)
 		{
 			Location loc = villager.loc.clone();
-			loc.setX(loc.getBlockX() + placementCenter.getBlockX());
-			loc.setY(loc.getBlockY() + placementCenter.getBlockY());
-			loc.setZ(loc.getBlockZ() + placementCenter.getBlockZ());
+			loc.setX(loc.getBlockX() + placementCorner.getBlockX());
+			loc.setY(loc.getBlockY() + placementCorner.getBlockY());
+			loc.setZ(loc.getBlockZ() + placementCorner.getBlockZ());
 			
 			for (int i = 0; i < villager.amount; i++)
 			{
-				Villager entity = loc.getWorld().spawn(loc, Villager.class);
-				entity.setProfession(Profession.getProfession(villager.id));
+				spawner.spawnVillager(loc, Profession.getProfession(villager.id));
 			}
 
 		}
 	}
 	
-	public void clearVillagers(Location center)
+	public void clearVillagers(Location corner)
 	{
-		Chunk centerChunk = center.getChunk();
-		int centerX = centerChunk.getX();
-		int centerZ = centerChunk.getZ();
+		Chunk cornerChunk = corner.getChunk();
 		int sizeChunksX = (int) Math.ceil(xSize / 16.0);
 		int sizeChunksZ = (int) Math.ceil(zSize / 16.0);
 		
-		int minX = centerX;
-		int minZ = centerZ;
-		int maxX = centerX + sizeChunksX;
-		int maxZ = centerZ + sizeChunksZ;
+		int minX = cornerChunk.getX();;
+		int minZ = cornerChunk.getZ();;
+		int maxX = minX + sizeChunksX;
+		int maxZ = minZ + sizeChunksZ;
 		
 		for (int x = minX; x <= maxX; x++)
 		{
 			for (int z = minZ; z <= maxZ; z++)
 			{
-				Chunk chunk = center.getWorld().getChunkAt(x,z);
+				Chunk chunk = corner.getWorld().getChunkAt(x,z);
 				
 				if (!chunk.isLoaded())
 					chunk.load();
@@ -291,7 +315,7 @@ public class CachedSchematic {
 		return placement;
 	}
 	
-	public Location place(int x, int y, int z, int randomOff)
+	public Location place(World world, int x, int y, int z, int randomOff)
 	{
 		int randX = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 		int randZ = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
@@ -352,8 +376,10 @@ public class CachedSchematic {
 		{
 			
 		}
+		
 		public ChestInfo(ChestInfo i)
 		{
+			restockable = i.restockable;
 			loc = i.loc;
 			lootTable = i.lootTable;
 			interval = i.interval;
@@ -361,6 +387,7 @@ public class CachedSchematic {
 		}
 		
 		public Location loc;
+		public boolean restockable;
 		public String lootTable;
 		public int interval;
 		public boolean perPlayer;

@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore.generation;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
@@ -23,6 +24,7 @@ public class GenerationModule extends FlatcoreModule {
 	@Override
 	protected boolean loadModule() {	
 		MCNSAFlatcore.instance.adminCommands.put("generate", new GenerateCommand());
+		
 		
 		return true;
 	}	

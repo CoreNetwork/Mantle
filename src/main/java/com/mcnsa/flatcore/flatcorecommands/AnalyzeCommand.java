@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import com.mcnsa.flatcore.CachedSchematic;
@@ -37,17 +38,18 @@ public class AnalyzeCommand extends BaseAdminCommand {
 				
 				try
 				{
-					PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CenterX,CenterZ,SizeX,SizeZ FROM villages");
+					PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ FROM villages");
 					ResultSet set = statement.executeQuery();
-					
+					World firstWorld = Bukkit.getWorlds().get(0);
+
 					while (set.next())
 					{
-						final int villageX = set.getInt("centerX");
-						final int villageZ = set.getInt("centerZ");
+						final int villageX = set.getInt("CornerX");
+						final int villageZ = set.getInt("CornerZ");
 						final int xSize = set.getInt("SizeX");
 						final int zSize = set.getInt("SizeZ");
 												
-						if (GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, false))
+						if (GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, false))
 						{
 							claimed++;
 						}		

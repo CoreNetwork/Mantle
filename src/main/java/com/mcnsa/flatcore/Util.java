@@ -303,4 +303,9 @@ public class Util {
     		permission = permission.substring(0, lastIndex).concat(".*");  
     	}
     }
+	
+	public static boolean isInventoryContainer(int id)
+	{
+		return id == Material.CHEST.getId() || id == Material.TRAPPED_CHEST.getId() || id == Material.DISPENSER.getId() || id == Material.FURNACE.getId() || id == Material.DROPPER.getId() || id == Material.BREWING_STAND.getId() || id == Material.HOPPER.getId();
+	}
 }

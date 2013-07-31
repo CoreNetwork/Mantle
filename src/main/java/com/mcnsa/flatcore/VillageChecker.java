@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import com.mcnsa.flatcore.generation.VillagerSpawner;
 
 public class VillageChecker implements Runnable {
 
@@ -20,6 +23,7 @@ public class VillageChecker implements Runnable {
 
 	@Override
 	public void run() {
+		World firstWorld = Bukkit.getWorlds().get(0);
 		boolean generated = false;
 		int tries = 0;
 		while (!generated)
@@ -38,8 +42,8 @@ public class VillageChecker implements Runnable {
 					final int id = set.getInt("id");
 
 					final int type = set.getInt("type");
-					final int villageX = set.getInt("centerX");
-					final int villageZ = set.getInt("centerZ");
+					final int villageX = set.getInt("CornerX");
+					final int villageZ = set.getInt("CornerZ");
 					final int xSize = set.getInt("SizeX");
 					final int zSize = set.getInt("SizeZ");
 					int lastRestore = set.getInt("lastRestore");
@@ -50,7 +54,7 @@ public class VillageChecker implements Runnable {
 					{
 						FCLog.info("Will not restore - player inside.");
 					}
-					else if (!GriefPreventionHandler.containsClaim(villageX, villageZ, xSize, zSize, false))
+					else if (!GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, false))
 					{
 						lastRestore = now;
 
@@ -70,7 +74,10 @@ public class VillageChecker implements Runnable {
 							public void run() {
 								Location center = village.placeAtCorner(villageX, y, villageZ);
 								village.clearVillagers(center);
-								village.spawnVillagers(center);
+								
+								VillagerSpawner villagerSpawner = new VillagerSpawner();
+								village.spawnVillagers(center, villagerSpawner);
+								villagerSpawner.close();
 								
 								FCLog.info("Village restored.");
 

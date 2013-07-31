@@ -2,8 +2,7 @@ package com.mcnsa.flatcore;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.ClaimArray;
@@ -18,64 +17,72 @@ import org.bukkit.World;
 
 public class GriefPreventionHandler {
 
-	public static void secureOutpost(Location center)
+	public static void secure(Location corner, List<Location> chestSubclaims, int xSize, int zSize, Integer claimPermission)
 	{
-		int radius = Settings.getInt(Setting.OUTPOST_PROTECITON_RADIUS);
-		World world = center.getWorld();
-
-		int x1 = center.getBlockX() - radius;
-		int z1 = center.getBlockZ() - radius;
-		int x2 = center.getBlockX() + radius;
-		int z2 = center.getBlockZ() + radius;
+		xSize /= 2;
+		zSize /= 2;
+		World world = corner.getWorld();
+		
+		int x1 = corner.getBlockX() - xSize;
+		int z1 = corner.getBlockZ() - zSize;
+		int x2 = corner.getBlockX() + xSize;
+		int z2 = corner.getBlockZ() + zSize;
 
 		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
 		if (bigClaimResult.succeeded != Result.Success)
 		{
-			FCLog.severe("Creation of GriefPrevention claim around outpost at " + center.getBlockX() + " " + center.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
+			FCLog.severe("Creation of GriefPrevention claim at " + corner.getBlockX() + " " + corner.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
 			return;
 		}
+		
 		Claim bigClaim = bigClaimResult.claim;
-		bigClaim.setPermission("public", ClaimPermission.Inventory);
 
-		FCLog.info("Creating claim " + bigClaim.getID());
+		FCLog.debug("Creating claim " + bigClaim.getID());
+		
+		if (claimPermission != null)
+		{
+			switch (claimPermission)
+			{
+			case 0:
+				bigClaim.setPermission("public", ClaimPermission.Access);
+				break;
+			case 1:
+				bigClaim.setPermission("public", ClaimPermission.Build);
+				break;
+			case 2:
+				bigClaim.setPermission("public", ClaimPermission.Inventory);
+				break;
+			}
+		}
+		
+		
+		if (chestSubclaims != null)
+		{			
+			for (Location subClaimLoc : chestSubclaims)
+			{
+				CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(subClaimLoc.getWorld(), subClaimLoc.getBlockX(), subClaimLoc.getBlockX(), subClaimLoc.getBlockY(), subClaimLoc.getBlockY(), subClaimLoc.getBlockZ(), subClaimLoc.getBlockZ(), "", bigClaim, null, false, null);
+				if (chestClaimResult.succeeded != Result.Success)
+				{
+					FCLog.severe("Creation of GriefPrevention sub claim at " + subClaimLoc.getBlockX() + " " + subClaimLoc.getBlockZ() + " failed! Please review that location manually (" + chestClaimResult.succeeded.toString() + ")");
+					continue;
+				}
 
+				Claim chestClaim = chestClaimResult.claim;
+				chestClaim.setPermission("public", ClaimPermission.Inventory);
+
+				GriefPrevention.instance.dataStore.saveClaim(chestClaim);
+			}
+
+		}
+		else
+		{
+			bigClaim.setPermission("public", ClaimPermission.Inventory);
+		}
+		
 		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
 	}
 
-	public static void secureCampfire(Location center)
-	{
-		int radius = Settings.getInt(Setting.CAMPFIRE_PROTECTION_RADIUS);
-		World world = center.getWorld();
-
-		int x1 = center.getBlockX() - radius;
-		int z1 = center.getBlockZ() - radius;
-		int x2 = center.getBlockX() + radius;
-		int z2 = center.getBlockZ() + radius;
-
-		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
-		if (bigClaimResult.succeeded != Result.Success)
-		{
-			FCLog.severe("Creation of GriefPrevention claim around chest at " + center.getBlockX() + " " + center.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
-			return;
-		}
-		Claim bigClaim = bigClaimResult.claim;
-		bigClaim.setPermission("public", ClaimPermission.Access);
-
-		CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(center.getWorld(), center.getBlockX(), center.getBlockX(), center.getBlockY(), center.getBlockY(), center.getBlockZ(), center.getBlockZ(), "", bigClaim, null, false, null);
-		if (chestClaimResult.succeeded != Result.Success)
-		{
-			FCLog.severe("Creation of GriefPrevention claim for chest at " + center.getBlockX() + " " + center.getBlockZ() + " failed! Please review that location manually (" + chestClaimResult.succeeded.toString() + ")");
-			return;
-		}
-
-		Claim chestClaim = chestClaimResult.claim;
-		chestClaim.setPermission("public", ClaimPermission.Inventory);
-
-		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
-		GriefPrevention.instance.dataStore.saveClaim(chestClaim);
-	}
-
-	public static boolean containsClaim(int x, int z, int xSize, int zSize, boolean adminOnly)
+	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, boolean adminOnly)
 	{		
 		int padding = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_PADDING);
 
@@ -88,8 +95,11 @@ public class GriefPreventionHandler {
 		for (int i = 0; i < ca.size(); i++)
 		{
 			Claim claim = ca.get(i);
-
+			
 			if (adminOnly && !claim.isAdminClaim())
+				continue;
+			
+			if (claim.getLesserBoundaryCorner().getWorld() != world)
 				continue;
 			
 			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
