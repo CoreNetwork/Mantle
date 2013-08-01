@@ -17,7 +17,7 @@ public class GeneratePathCommand extends BaseAdminCommand {
 
 	public Boolean run(CommandSender sender, String[] args) {
 		
-		Util.Message(Settings.getString(Setting.MESSAGE_SERVER_FROZEN), sender);
+		Util.Message(GenerationSettings.MESSAGE_SERVER_FROZEN.string(), sender);
 		
 		if (args.length < 1)
 		{

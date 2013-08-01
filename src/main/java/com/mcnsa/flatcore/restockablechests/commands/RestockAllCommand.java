@@ -6,10 +6,9 @@ import java.sql.SQLException;
 import org.bukkit.command.CommandSender;
 
 import com.mcnsa.flatcore.IO;
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
+import com.mcnsa.flatcore.restockablechests.RChestSettings;
 
 public class RestockAllCommand extends BaseAdminCommand {	
 	public RestockAllCommand()
@@ -33,7 +32,7 @@ public class RestockAllCommand extends BaseAdminCommand {
 			e.printStackTrace();
 		}
 		
-		Util.Message(Settings.getString(Setting.MESSAGE_CHESTS_RESTOCKED), sender);
+		Util.Message(RChestSettings.MESSAGE_CHESTS_RESTOCKED.string(), sender);
 		return true;
 	}	
 }

@@ -12,8 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.restockablechests.commands.CreateChestCommand;
 
@@ -64,7 +62,7 @@ public class RChestsListener implements Listener {
 		{
 			chest.delete();
 
-			Util.Message(Settings.getString(Setting.MESSAGE_CHEST_DELETED), event.getPlayer());
+			Util.Message(RChestSettings.MESSAGE_CHEST_DELETED.string(), event.getPlayer());
 			return;
 		}
 	}

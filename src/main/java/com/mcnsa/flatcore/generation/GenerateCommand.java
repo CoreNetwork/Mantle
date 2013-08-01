@@ -19,9 +19,8 @@ public class GenerateCommand extends BaseAdminCommand {
 
 	public Boolean run(CommandSender sender, String[] args) {
 		
-		Util.Message(Settings.getString(Setting.MESSAGE_SERVER_FROZEN), sender);
+		Util.Message(GenerationSettings.MESSAGE_SERVER_FROZEN.string(), sender);
 
-		
 		if (args.length > 0)
 		{
 			World world = Bukkit.getWorld(args[0]);

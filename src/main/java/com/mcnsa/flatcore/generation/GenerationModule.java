@@ -22,6 +22,13 @@ public class GenerationModule extends FlatcoreModule {
 
 	@Override
 	protected boolean loadModule() {	
+		for (GenerationSettings setting : GenerationSettings.values())
+		{
+			if (config.get(setting.string) == null)
+				config.set(setting.string, setting.def);
+		}
+		saveConfig();
+		
 		MCNSAFlatcore.adminCommands.put("generate", new GenerateCommand());
 		MCNSAFlatcore.adminCommands.put("generatePath", new GeneratePathCommand());
 

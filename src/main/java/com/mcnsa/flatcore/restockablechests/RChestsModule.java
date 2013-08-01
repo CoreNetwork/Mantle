@@ -32,6 +32,12 @@ public class RChestsModule extends FlatcoreModule {
 		MCNSAFlatcore.adminCommands.put("createchest", new CreateChestCommand());
 		MCNSAFlatcore.adminCommands.put("restockall", new RestockAllCommand());
 
+		for (RChestSettings setting : RChestSettings.values())
+		{
+			if (config.get(setting.string) == null)
+				config.set(setting.string, setting.def);
+		}
+		saveConfig();
 		
 		return true;
 	}

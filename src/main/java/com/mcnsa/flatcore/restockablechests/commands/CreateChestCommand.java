@@ -11,6 +11,7 @@ import com.mcnsa.flatcore.Setting;
 import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
+import com.mcnsa.flatcore.restockablechests.RChestSettings;
 import com.mcnsa.flatcore.restockablechests.RestockableChest;
 
 public class CreateChestCommand extends BaseAdminCommand {
@@ -33,7 +34,7 @@ public class CreateChestCommand extends BaseAdminCommand {
 		
 		if (IO.config.get("LootTables." + args[0]) == null)
 		{
-			Util.Message(Settings.getString(Setting.MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST), sender);
+			Util.Message(RChestSettings.MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST.string(), sender);
 			return true;
 		}
 		
@@ -44,7 +45,7 @@ public class CreateChestCommand extends BaseAdminCommand {
 		
 		selectionPlayers.put((Player) sender, playerData);
 		
-		Util.Message(Settings.getString(Setting.MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM), sender);
+		Util.Message(RChestSettings.MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM.string(), sender);
 		return true;
 
 	}
@@ -60,14 +61,14 @@ public class CreateChestCommand extends BaseAdminCommand {
 		RestockableChest rChest = RestockableChest.getChest(chest);
 		if (rChest != null)
 		{
-			Util.Message(Settings.getString(Setting.MESSAGE_CHEST_EXISTS), player);
+			Util.Message(RChestSettings.MESSAGE_CHEST_EXISTS.string(), player);
 			return true;
 		}
 		
 		RestockableChest.createChest(chest, data.lootingTable,  data.interval, data.perPlayer);
 		
 		
-		Util.Message(Settings.getString(Setting.MESSAGE_CHEST_CREATED), player);
+		Util.Message(RChestSettings.MESSAGE_CHEST_CREATED.string(), player);
 		return true;
 	}
 
