@@ -136,7 +136,7 @@ public class StructureGenerator {
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO villages (Schematic, CornerX, CornerZ, SizeX, SizeZ) VALUES (?,?,?,?,?)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO villages (Schematic, World, CornerX, CornerZ, SizeX, SizeZ) VALUES (?,?,?,?,?,?)");
 
 			
 			for (int rowNum = 0; rowNum < rows; rowNum++)
@@ -165,10 +165,11 @@ public class StructureGenerator {
 						if (structure.shouldStoreAsVillage())
 						{
 							statement.setString(1, schematic.name);
-							statement.setInt(2, schematicCorner.getBlockX());
-							statement.setInt(3, schematicCorner.getBlockZ());
-							statement.setInt(4, schematic.xSize);
-							statement.setInt(5, schematic.zSize);
+							statement.setString(2, world.getName());
+							statement.setInt(3, schematicCorner.getBlockX());
+							statement.setInt(4, schematicCorner.getBlockZ());
+							statement.setInt(5, schematic.xSize);
+							statement.setInt(6, schematic.zSize);
 							statement.addBatch();
 						}
 						

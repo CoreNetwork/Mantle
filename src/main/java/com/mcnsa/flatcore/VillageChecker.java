@@ -16,7 +16,8 @@ public class VillageChecker implements Runnable {
 
 	public static void schedule()
 	{
-		int period = Settings.getInt(Setting.RESTORATION_VILLAGE_CHECK_PERIOD) * 20;
+		//Disabled for now
+		int period = 0;//Settings.getInt(Setting.RESTORATION_VILLAGE_CHECK_PERIOD) * 20;
 		if (period > 0)
 			Bukkit.getServer().getScheduler().runTaskTimerAsynchronously(MCNSAFlatcore.instance, new VillageChecker(), 20, period);
 	}
@@ -72,7 +73,8 @@ public class VillageChecker implements Runnable {
 
 							@Override
 							public void run() {
-								Location center = village.placeAtCorner(villageX, y, villageZ);
+								//Comment until village system redone
+								Location center = null; //village.placeAtCorner(villageX, y, villageZ);
 								village.clearVillagers(center);
 								
 								VillagerSpawner villagerSpawner = new VillagerSpawner();
