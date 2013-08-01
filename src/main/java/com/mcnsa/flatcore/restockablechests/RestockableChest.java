@@ -11,7 +11,6 @@ import java.util.Map.Entry;
 import net.minecraft.server.v1_6_R2.Packet54PlayNoteBlock;
 import net.minecraft.server.v1_6_R2.TileEntityChest;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -503,6 +502,7 @@ public class RestockableChest {
 			return Util.getMaterialName(chestBlock.getType());
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	private InventoryType getInventoryType()
 	{
 		

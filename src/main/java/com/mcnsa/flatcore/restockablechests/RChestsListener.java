@@ -1,6 +1,5 @@
 package com.mcnsa.flatcore.restockablechests;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

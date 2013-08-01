@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 import com.matejdro.bukkit.mcnsa.nanobot.commands.LoadCommand;
 import com.mcnsa.flatcore.FCLog;
-import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.NodeParser;
 
 public class LootTableNodeParser extends NodeParser {

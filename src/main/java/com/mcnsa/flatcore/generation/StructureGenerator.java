@@ -95,8 +95,13 @@ public class StructureGenerator {
 				if (line == null)
 					break;
 				
-				textMap.add(line.trim());
+				line = line.replace(" ", "{SPACE}");
+				line = line.trim();
+				line = line.replace("{SPACE}", " ");
+				
+				textMap.add(line);
 			}
+			reader.close();
 		}
 		catch (IOException e)
 		{
@@ -153,7 +158,7 @@ public class StructureGenerator {
 						percentage /= tiles;
 						FCLog.info("Row " + (rowNum + 1) + "/" + rows + ", column " + (colNum + 1) + "/" + columns + " [" + percentage + "% total]");
 
-						CachedSchematic schematic = structure.getSchematic();
+						CachedSchematic schematic = structure.getRandomSchematic();
 						
 						Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0);
 						
@@ -217,7 +222,7 @@ public class StructureGenerator {
 			
 			statement.executeBatch();
 			statement.close();
-			IO.getConnection().commit();
+			IO.getConnection().commit();			
 		}
 		catch (SQLException e)
 		{
@@ -227,6 +232,8 @@ public class StructureGenerator {
 		{
 			villagerSpawner.close();
 		}
+		
+		FCLog.info("Generation finished");
 		
 	}
 	

@@ -8,8 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
-import com.mcnsa.flatcore.CachedSchematic;
-import com.mcnsa.flatcore.FCLog;
 import com.mcnsa.flatcore.GriefPreventionHandler;
 import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.MCNSAFlatcore;

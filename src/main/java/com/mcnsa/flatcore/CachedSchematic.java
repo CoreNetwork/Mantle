@@ -14,7 +14,6 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 
 import com.mcnsa.flatcore.generation.VillagerSpawner;
@@ -40,6 +39,7 @@ public class CachedSchematic {
 	public String name;
 	private Random random;
 	private List<ChestInfo> chests;
+	private int curRoation;
 	
 	private List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
 	
@@ -68,6 +68,26 @@ public class CachedSchematic {
 		}
 		
 		random = new Random();
+		curRoation = 0;
+	}
+	
+	public void rotateTo(int rotation)
+	{
+		rotation = rotation % 5;
+		int rotateBy = rotation - curRoation;
+		if (rotateBy < 0)
+			rotateBy = 4 + rotateBy;
+		
+		try {
+			localSession.getClipboard().rotate2D(rotateBy * 90);
+									
+			xSize = localSession.getClipboard().getWidth();
+			zSize = localSession.getClipboard().getLength();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		curRoation = rotation;
 	}
 	
 	public void findChests()
@@ -327,7 +347,7 @@ public class CachedSchematic {
 		return placement;
 	}
 	
-	private void place(Location placement)
+	public void place(Location placement)
 	{
 		
 		Vector middle = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());

@@ -9,7 +9,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.mcnsa.flatcore.FlatcoreModule;
 import com.mcnsa.flatcore.MCNSAFlatcore;
-import com.mcnsa.flatcore.NodeParser;
 
 public class HardmodeModule extends FlatcoreModule {
 	public static HardmodeModule instance;

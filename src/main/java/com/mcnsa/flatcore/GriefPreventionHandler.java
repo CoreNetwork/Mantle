@@ -47,10 +47,10 @@ public class GriefPreventionHandler {
 				bigClaim.setPermission("public", ClaimPermission.Access);
 				break;
 			case 1:
-				bigClaim.setPermission("public", ClaimPermission.Build);
+				bigClaim.setPermission("public", ClaimPermission.Inventory);
 				break;
 			case 2:
-				bigClaim.setPermission("public", ClaimPermission.Inventory);
+				bigClaim.setPermission("public", ClaimPermission.Build);
 				break;
 			}
 		}

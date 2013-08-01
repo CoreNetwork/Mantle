@@ -8,8 +8,6 @@ import java.util.Map.Entry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.mcnsa.flatcore.MCNSAFlatcore;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
 import com.mcnsa.flatcore.checkpoints.CheckpointsSettings;

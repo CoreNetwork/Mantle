@@ -82,7 +82,6 @@ public class Util {
 				continue;
 
 			Block upperBlock = b.getRelative(BlockFace.UP);
-			Block lowerBlock = b.getRelative(BlockFace.DOWN);
 
 			if (upperBlock != null && upperBlock.isEmpty())
 				return b;

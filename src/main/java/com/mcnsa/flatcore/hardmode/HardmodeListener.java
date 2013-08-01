@@ -135,7 +135,6 @@ public class HardmodeListener implements Listener {
 					@Override
 					public void run() {
 						Zombie newZombie = entity.getWorld().spawn(entity.getLocation(), Zombie.class);
-						double maxHealth = (Double) newZombie.getMaxHealth();
 						
 						
 						newZombie.setHealth(newZombie.getMaxHealth() / 2);

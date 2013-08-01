@@ -1,6 +1,5 @@
 package com.mcnsa.flatcore.checkpoints.admincommands;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.command.CommandSender;

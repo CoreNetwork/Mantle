@@ -91,7 +91,7 @@ public class StructureData {
 		return result;
 	}
 	
-	public CachedSchematic getSchematic()
+	public CachedSchematic getRandomSchematic()
 	{
 		List<?> schematics = (List<?>) configNode.get("Schematics");
 		if (schematics == null)
@@ -102,6 +102,34 @@ public class StructureData {
 		String pickedSchematic = SchematicNodeParser.pickSchematic(schematics);
 		return schematicsMap.get(pickedSchematic);
 	}
+	
+	public CachedSchematic getSchematic(int selection)
+	{
+		
+		List<?> schematics = (List<?>) configNode.get("Schematics");
+		if (schematics == null)
+		{
+			FCLog.severe("Structure " + name + " is missing Schematics!");
+		}
+
+		int counter = 0;
+		for (int i = 0; i < schematics.size(); i++)
+		{
+			Object o = schematics.get(i);
+			if (!((String) o).startsWith("weights ")) 
+				counter++;
+			else
+				continue;
+
+			if (counter == selection)
+			{
+				return schematicsMap.get((String) o);
+			}
+		}
+		
+		return null;
+	}
+	
 	
 	public int getPasteHeight()
 	{
