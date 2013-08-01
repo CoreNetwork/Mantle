@@ -160,7 +160,7 @@ public class StructureGenerator {
 
 						CachedSchematic schematic = structure.getRandomSchematic();
 						
-						Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0);
+						Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0, structure.shouldIgnoreAir());
 						
 						if (structure.shouldStoreAsVillage())
 						{

@@ -81,6 +81,16 @@ public class StructureData {
 		return result;
 	}
 	
+	public boolean shouldIgnoreAir()
+	{
+		Boolean result = (Boolean) configNode.get("IgnoreAir");
+		if (result == null)
+		{
+			return false;
+		}
+		return result;
+	}
+	
 	public boolean shouldCreateRestockableChests()
 	{
 		Boolean result = (Boolean) configNode.get("CreateRestockableChests");

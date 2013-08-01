@@ -322,19 +322,19 @@ public class CachedSchematic {
 		return corner;
 	}
 
-	public Location place(World world, int x, int y, int z, int randomOff)
+	public Location place(World world, int x, int y, int z, int randomOff, boolean ignoreAir)
 	{
 		int randX = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 		int randZ = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 
 		Location placement = new Location(world, x - xSize / 2 + randX, y, z - zSize / 2 + randZ);
 
-		place(placement);
+		place(placement, ignoreAir);
 
 		return placement;
 	}
 
-	public void place(Location placement)
+	public void place(Location placement, boolean ignoreAir)
 	{
 
 		Vector middle = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
@@ -342,7 +342,7 @@ public class CachedSchematic {
 		try {
 			EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
 
-			localSession.getClipboard().place(editSession, middle, false);
+			localSession.getClipboard().place(editSession, middle, ignoreAir);
 
 			localSession.clearHistory();
 
