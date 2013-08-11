@@ -75,7 +75,7 @@ public class SaveCommand extends BaseCheckpointUserCommand {
 		lastCheckpoint = new SavedCheckpoint();
 		lastCheckpoint.list = checkpointList;
 		lastCheckpoint.position = position;
-		lastCheckpoint.location = Util.unserializeLocation(stringList.get(position));
+		lastCheckpoint.location = Util.unserializeLocation(stringList.get(position - 1));
 		
 		CheckpointsModule.savedCheckpoints.put(player.getName(), lastCheckpoint);
 		
