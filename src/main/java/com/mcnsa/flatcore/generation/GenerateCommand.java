@@ -4,8 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
 

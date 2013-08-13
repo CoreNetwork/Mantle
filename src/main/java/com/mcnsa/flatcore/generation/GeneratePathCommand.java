@@ -2,8 +2,6 @@ package com.mcnsa.flatcore.generation;
 
 import org.bukkit.command.CommandSender;
 
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
 

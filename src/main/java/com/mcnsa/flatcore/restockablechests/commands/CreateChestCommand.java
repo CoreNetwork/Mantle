@@ -7,8 +7,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.mcnsa.flatcore.IO;
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
 import com.mcnsa.flatcore.restockablechests.RChestSettings;
