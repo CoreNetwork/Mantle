@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore;
+package com.mcnsa.flatcore.portals;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -8,6 +8,9 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+
+import com.mcnsa.flatcore.Setting;
+import com.mcnsa.flatcore.Settings;
 
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
@@ -32,23 +35,22 @@ public class PortalUtil {
 
 		currentSide = block.getLocation();
 
-		double modifier;
+		double modifier = PortalsSettings.PORTAL_RATIO.doubleNumber();
 		Environment destEnvironment;
 		int maxY = 0;
 		int minY = 0;
 		if (currentSide.getWorld().getEnvironment() == Environment.NETHER)
 		{
-			modifier = 8;
 			destEnvironment = Environment.NORMAL;
-			maxY = Settings.getInt(Setting.MAP_MOVE_PORTALS_WITH_HIGHER_Y);
-			minY = Settings.getInt(Setting.MAP_MOVE_PORTALS_WITH_LOWER_Y);
+			maxY = PortalsSettings.OVERWORLD_MOVE_PORTALS_WITH_HIGHER_Y.integer();
+			minY = PortalsSettings.OVERWORLD_MOVE_PORTALS_WITH_LOWER_Y.integer();
 		}
 		else
 		{
-			modifier = 0.125;
+			modifier = 1 / modifier;
 			destEnvironment = Environment.NETHER;
-			maxY = Settings.getInt(Setting.NETHER_MOVE_PORTALS_WITH_HIGHER_Y);
-			minY = Settings.getInt(Setting.NETHER_MOVE_PORTALS_WITH_LOWER_Y);
+			maxY = PortalsSettings.NETHER_MOVE_PORTALS_WITH_HIGHER_Y.integer();
+			minY = PortalsSettings.NETHER_MOVE_PORTALS_WITH_LOWER_Y.integer();
 		}
 		
 		World destWorld = null;
@@ -102,14 +104,14 @@ public class PortalUtil {
 		int maxY;
 		if (curLocation.getWorld().getEnvironment() == Environment.NETHER)
 		{
-			minY = Settings.getInt(Setting.NETHER_PORTAL_MIN_Y);
-			maxY = Settings.getInt(Setting.NETHER_PORTAL_MAX_Y);
+			minY = PortalsSettings.NETHER_MIN_Y.integer();
+			maxY = PortalsSettings.NETHER_MAX_Y.integer();
 
 		}
 		else
 		{
-			minY = Settings.getInt(Setting.MAP_PORTAL_MIN_Y);
-			maxY = Settings.getInt(Setting.MAP_PORTAL_MAX_Y);
+			minY = PortalsSettings.OVERWORLD_MIN_Y.integer();
+			maxY = PortalsSettings.OVERWORLD_MAX_Y.integer();
 		}
 		
 		int radius = curLocation.getWorld().getEnvironment() == Environment.NETHER ? 5 : 20;

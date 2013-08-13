@@ -40,91 +40,11 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 
+import com.mcnsa.flatcore.portals.PortalUtil;
 import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
 public class FlatcoreListener implements Listener {
-	private HashMap<Block, FlintSteelData> flintSteelUsage = new HashMap<Block, FlintSteelData>();
-
-	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerInteract(PlayerInteractEvent event)
-	{
-		Block clicked = event.getClickedBlock();
-		Player player = event.getPlayer();
-		ItemStack hand = event.getPlayer().getItemInHand();
-
-		if (event.getAction() == Action.LEFT_CLICK_BLOCK)
-		{
-			if (event.isCancelled())
-				return;
-		}
-		else if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
-			return;
-
-
-		//Investigation tool for portals
-		if (hand != null && hand.getTypeId() == Settings.getInt(Setting.INVESTIGATION_TOOL))
-		{
-			Location source = player.getLocation();
-			Claim sourceClaim = GriefPrevention.instance.dataStore.getClaimAt(source, true, null);
-			if (sourceClaim == null || sourceClaim.allowBuild(player) == null)
-			{
-				Location destination = PortalUtil.getOtherSide(clicked.getLocation());
-				Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
-
-				if (claim != null && claim.allowBuild(player) != null)
-				{
-					String message = Settings.getString(Setting.MESSAGE_CANT_MAKE_PORTAL);
-					message = message.replace("<OtherDimension>", clicked.getWorld().getEnvironment() == Environment.NORMAL ? "Nether" : "Overworld");
-
-					Util.Message(message, player);
-				}
-				else
-				{
-					Util.Message(Settings.getString(Setting.MESSAGE_CAN_MAKE_PORTAL), player);
-				}
-			}
-
-
-		}
-
-		if (event.isCancelled())
-			return;
-
-		//Flint and steel detection for portals
-		if (hand != null && hand.getType() == Material.FLINT_AND_STEEL)
-		{
-			FlintSteelData data = new FlintSteelData();
-			data.timestamp = System.currentTimeMillis();
-			data.player = player.getName();
-
-			flintSteelUsage.put(clicked, data);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onBlockBreak(final BlockBreakEvent event)
-	{
-		final Block block = event.getBlock();
-
-		//Do not drop colored sign
-		if (block.getState() instanceof Sign)
-		{
-			Sign sign = (Sign) block.getState();
-
-			String colorSymbol = "\u00A7";
-			for (String line : sign.getLines())
-			{
-				if (line.contains(colorSymbol))
-				{
-					block.setType(Material.AIR);
-					event.setCancelled(true);
-					return;
-				}
-			}
-		} 
-	}
-
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
@@ -229,99 +149,6 @@ public class FlatcoreListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onPortalCreate(PortalCreateEvent event)
-	{
-
-		if (event.getReason() == CreateReason.FIRE)
-		{
-			//Prevent creating portal out of boundaries
-			int minX;
-			int maxX;
-			int minZ;
-			int maxZ;
-			int minY;
-			int maxY;
-			if (event.getBlocks().get(0).getWorld().getEnvironment() == Environment.NETHER)
-			{
-				minX = Settings.getInt(Setting.NETHER_MIN_X);
-				maxX = Settings.getInt(Setting.NETHER_MAX_X);
-				minZ = Settings.getInt(Setting.NETHER_MIN_Z);
-				maxZ = Settings.getInt(Setting.NETHER_MAX_Z);
-				minY = Settings.getInt(Setting.NETHER_PORTAL_MIN_Y);
-				maxY = Settings.getInt(Setting.NETHER_PORTAL_MAX_Y);
-
-			}
-			else
-			{
-				minX = Settings.getInt(Setting.MAP_MIN_X);
-				maxX = Settings.getInt(Setting.MAP_MAX_X);
-				minZ = Settings.getInt(Setting.MAP_MIN_Z);
-				maxZ = Settings.getInt(Setting.MAP_MAX_Z);
-				minY = Settings.getInt(Setting.MAP_PORTAL_MIN_Y);
-				maxY = Settings.getInt(Setting.MAP_PORTAL_MAX_Y);
-			}
-
-
-			for (Block b : event.getBlocks())
-			{
-				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ || b.getY() < minY || b.getY() > maxY)
-				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), Settings.getString(Setting.SIGN_PORTAL_OUT_OF_BOUNDARIES));
-
-					FCLog.debug("Portal out of bounds ! " + b);
-					FCLog.debug("limits: " + minX + " " + maxX + " " + minZ + " " + maxZ + " " + minY + " " + maxY);
-					FCLog.debug("conditionals: " + (b.getX() < minX) + " " + (b.getX() > maxX) + " " + (b.getZ() < minZ) + " " + (b.getZ() > maxZ) + " " + (b.getY() < minY) + " " + (b.getY() > maxY));
-
-					event.setCancelled(true);
-					return;
-				}
-
-			}
-
-			//Prevent creating portals into other claims
-			Location destination = PortalUtil.getOtherSide(event.getBlocks().get(0).getLocation());
-			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
-
-			if (claim != null)
-			{
-				FlintSteelData creator = null;
-
-				for (Block b : event.getBlocks())
-				{
-					FlintSteelData data = flintSteelUsage.get(b);
-					if (data != null && System.currentTimeMillis() - data.timestamp < 1000)
-					{
-						creator = data;
-						break;
-					}
-				}
-
-
-				if (creator == null)
-				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), Settings.getString(Setting.SIGN_OVERLAP_CLAIM));
-
-					event.setCancelled(true);
-					return;
-				}
-
-				Player player = Bukkit.getServer().getPlayerExact(creator.player);
-
-				if (player == null || claim.allowBuild(player) != null)
-				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), Settings.getString(Setting.SIGN_OVERLAP_CLAIM));
-
-					event.setCancelled(true);
-					return;
-				}
-			}
-
-
-
-		}
-	}	
-
-	@EventHandler(ignoreCancelled = true)
 	public void onEntityTarget(EntityTargetEvent event)
 	{
 		if (event.getTarget() instanceof Player)
@@ -350,29 +177,6 @@ public class FlatcoreListener implements Listener {
 				return;
 			}
 		}
-	}
-
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-	public void onPlayerPortal(PlayerPortalEvent event)
-	{
-		//Controlled nether portals
-		if (event.getCause() == TeleportCause.NETHER_PORTAL)
-		{
-			Location destination = PortalUtil.processTeleport(event.getPlayer());
-			event.setTo(destination);
-			event.getPortalTravelAgent().setCanCreatePortal(false);
-			event.getPortalTravelAgent().setSearchRadius(0);
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-	public void onEntityPortal(EntityPortalEvent event)
-	{
-		Location destination = PortalUtil.processTeleport(event.getEntity());
-		event.setTo(destination);
-		event.getPortalTravelAgent().setCanCreatePortal(false);
-		event.getPortalTravelAgent().setSearchRadius(0);
-
 	}
 
 	@EventHandler(ignoreCancelled = true)

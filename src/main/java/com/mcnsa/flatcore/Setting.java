@@ -59,8 +59,6 @@ public enum Setting {
 	RESORATION_VILLAGE_CHECK_PADDING("Restoration.VillageCheckPadding", 10),
 	RESTORATION_VILLAGE_CHECK_PERIOD("Restoration.VillageCheckPeriod", 1800),
 	RESTORATION_WARN_PERCENTAGE("Restoration.WarnPercentage", 60),
-
-	INVESTIGATION_TOOL("InvestigationTool", Material.STICK.getId()),
 	
 	PIGMAN_ANGER_RANGE("HardMode.PigmanAngerRange", 1),
 	
@@ -72,8 +70,6 @@ public enum Setting {
 	MESSAGE_ANALYZING("Messages.Analyzing", "Analyzing villages. Please wait..."),
 	MESSAGE_VILLAGE_STATUS("Messages.VillageStatus", "Total number of Villages: <Total> [NEWLINE] Claimed Villages: <Claimed> (<ClaimedPercent>%) [NEWLINE] Empty villages: <Empty> (<EmptyPercent>%)"),
 	MESSAGE_LOGIN_WARN("Messages.LoginWarn", "Warning! <Claimed> of <Total> villages (<Percentage>%) are already claimed!"),
-	MESSAGE_CAN_MAKE_PORTAL("Messages.CanMakePortal", "&aYou can make a Nether portal here if you’d like"),
-	MESSAGE_CANT_MAKE_PORTAL("Messages.CantMakePortal", "&cYou cannot make a Nether portal here because it would overlap a claim in <OtherDimension>."),
 	MESSAGE_CONFIGURATION_RELOADED("Messages.ConfigurationReloaded", "Configuration reloaded successfully!"),
 	MESSAGE_DELETE_NEARBY_VILLAGE("Messages.DeleteNearbyVillage", "You have chosen to delete village #<ID> (Center is <Distance> blocks away). Enter command again to confirm."),
 	MESSAGE_NO_VILLAGES("Messages.NoVillages", "You have no villages on this server!"),
@@ -90,11 +86,7 @@ public enum Setting {
 	MESSAGE_SPAWN_PROTECTION_END_CLAIMS("Messages.SpawnProtectionEndClaims", "&eYou are no longer invincible! Find food and weapons before you try to reach your &6/base"),
 	MESSAGE_SPAWN_PROTECTION_END_NO_CLAIMS("Messages.SpawnProtectionEndNoClaims", "&eYou are no longer invincible! Find food or shelter."),
 	MESSAGE_SPAWN_UNPROTECT_NOT_PROTECTED("Messages.UnprotectNotProtected", "&eYou are already not protected."),
-	MESSAGE_SPAWN_PROTECTION_DONT_ABUSE("Messages.SpawnProtectionDontAbuse", "Do not abuse spawn protection! Use /unprotect to disable it to start killing mobs."),
-
-	
-	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
-	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");
+	MESSAGE_SPAWN_PROTECTION_DONT_ABUSE("Messages.SpawnProtectionDontAbuse", "Do not abuse spawn protection! Use /unprotect to disable it to start killing mobs.");
 	
 	private String name;
 	private Object def;

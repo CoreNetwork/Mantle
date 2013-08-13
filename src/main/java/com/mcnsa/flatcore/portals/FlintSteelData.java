@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore;
+package com.mcnsa.flatcore.portals;
 
 
 public class FlintSteelData {
