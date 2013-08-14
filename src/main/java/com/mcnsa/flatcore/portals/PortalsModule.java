@@ -3,9 +3,6 @@ package com.mcnsa.flatcore.portals;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.mcnsa.flatcore.FlatcoreModule;
 import com.mcnsa.flatcore.MCNSAFlatcore;

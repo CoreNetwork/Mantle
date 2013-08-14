@@ -26,8 +26,6 @@ import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 
 import com.mcnsa.flatcore.FCLog;
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
 
 public class PortalsListener implements Listener {

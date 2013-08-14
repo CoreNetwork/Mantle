@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore.generation;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +30,8 @@ public class PathGenerator {
 	public HashSet<PathTile> visitedTiles = new HashSet<PathTile>();
 	private World world;
 	private HashMap<Character, StructureData> structures;
-
+	private BufferedImage worldImage;
+	
 	public void generatePath(String path)
 	{
 
@@ -50,7 +52,7 @@ public class PathGenerator {
 			FCLog.info("Path " + path + " has invalid world set. Aborting...");
 			return;
 		}
-
+		
 		String[] startPos = ((String) pathConfig.get("Start")).split(" ");
 
 		startX = Integer.parseInt(startPos[0]);

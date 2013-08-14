@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager.Profession;
 
+import com.mcnsa.flatcore.generation.ImageGenerator;
 import com.mcnsa.flatcore.generation.VillagerSpawner;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.EmptyClipboardException;
@@ -31,6 +33,7 @@ public class CachedSchematic {
 	private LocalSession localSession;
 	public int xSize;
 	public int zSize;
+	public int ySize;
 	public String name;
 	private Random random;
 	private List<ChestInfo> chests;
@@ -52,6 +55,7 @@ public class CachedSchematic {
 			localSession.setClipboard(SchematicFormat.MCEDIT.load(schematic));
 			xSize = localSession.getClipboard().getWidth();
 			zSize = localSession.getClipboard().getLength();
+			ySize = localSession.getClipboard().getHeight();
 
 
 		} catch (Exception e) {
@@ -358,6 +362,46 @@ public class CachedSchematic {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void drawBitmap(BufferedImage image, int centerX, int centerZ)
+	{
+		int startX = centerX - xSize / 2;
+		int startZ = centerZ - zSize / 2;
+		
+		for (int x = 0; x < xSize; x++)
+		{
+			int realX = startX + x;
+			for (int z = 0; z < zSize; z++)
+			{
+				int realZ = startZ + z;
+				
+				int material = getHighestMaterial(x, z);
+				int color = ImageGenerator.getColor(material);
+				
+				image.setRGB(realX, realZ, color);
+			}
+		}
+	}
+	
+	public int getHighestMaterial(int x, int z)
+	{
+		for (int y = ySize - 1; y >= 0; y--)
+		{
+			Vector vector = new Vector(x, y, z);
+			int material;
+			try {
+				material = localSession.getClipboard().getPoint(vector).getType();
+				if (material != 0)
+					return material;
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+			} catch (EmptyClipboardException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return 0;
 	}
 
 	private static class VillagerInfo

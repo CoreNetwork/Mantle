@@ -1,5 +1,6 @@
 package com.mcnsa.flatcore.generation;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,10 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.configuration.MemorySection;
 
 import com.mcnsa.flatcore.CachedSchematic;
@@ -61,6 +66,22 @@ public class StructureGenerator {
 		
 		int sizeX = maxX - minX;
 		int sizeZ = maxZ - minZ;
+		
+		BufferedImage worldImage = new BufferedImage(sizeX, sizeZ, BufferedImage.TYPE_INT_RGB);
+		
+		int baseColor = 0;
+		if (world.getEnvironment() == Environment.NETHER)
+			baseColor = ImageGenerator.getColor(Material.NETHERRACK.getId());
+		else
+			baseColor = ImageGenerator.getColor(Material.GRASS.getId());
+		
+		for (int x = 0; x < sizeX; x++)
+		{
+			for (int z = 0; z < sizeZ; z++)
+			{
+				worldImage.setRGB(x, z, baseColor);
+			}
+		}
 		
 		FCLog.info("Preparing structures...");
 
@@ -162,6 +183,8 @@ public class StructureGenerator {
 						
 						Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0, structure.shouldIgnoreAir());
 						
+						schematic.drawBitmap(worldImage, x - minX, z - minZ);
+						
 						if (structure.shouldStoreAsVillage())
 						{
 							statement.setString(1, schematic.name);
@@ -232,6 +255,14 @@ public class StructureGenerator {
 		finally
 		{
 			villagerSpawner.close();
+		}
+		
+		File imageFile = new File(MCNSAFlatcore.instance.getDataFolder(), world.getName() + ".png");
+		
+		try {
+			ImageIO.write(worldImage, "png", imageFile);
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 		
 		FCLog.info("Generation finished");

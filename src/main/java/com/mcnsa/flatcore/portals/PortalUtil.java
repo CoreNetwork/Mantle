@@ -9,9 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
-import com.mcnsa.flatcore.Setting;
-import com.mcnsa.flatcore.Settings;
-
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{

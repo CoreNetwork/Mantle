@@ -2,8 +2,6 @@ package com.mcnsa.flatcore;
 
 import java.util.Arrays;
 
-import org.bukkit.Material;
-
 public enum Setting {
 	MAP_MIN_X("Map.MinX", -10000),
 	MAP_MIN_Z("Map.MinZ", -10000),
