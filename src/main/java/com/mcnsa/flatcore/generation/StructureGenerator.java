@@ -68,18 +68,12 @@ public class StructureGenerator {
 		int sizeZ = maxZ - minZ;
 		
 		BufferedImage worldImage = new BufferedImage(sizeX, sizeZ, BufferedImage.TYPE_INT_RGB);
-		
-		int baseColor = 0;
-		if (world.getEnvironment() == Environment.NETHER)
-			baseColor = ImageGenerator.getColor(Material.NETHERRACK.getId());
-		else
-			baseColor = ImageGenerator.getColor(Material.GRASS.getId());
-		
+				
 		for (int x = 0; x < sizeX; x++)
 		{
 			for (int z = 0; z < sizeZ; z++)
 			{
-				worldImage.setRGB(x, z, baseColor);
+				worldImage.setRGB(x, z, 0xffffff);
 			}
 		}
 		

@@ -32,7 +32,7 @@ public class GenerationModule extends FlatcoreModule {
 		MCNSAFlatcore.adminCommands.put("generate", new GenerateCommand());
 		MCNSAFlatcore.adminCommands.put("generatePath", new GeneratePathCommand());
 
-		ImageGenerator.getColor(1);
+		MapColors.getColor(1);
 		
 		return true;
 	}	

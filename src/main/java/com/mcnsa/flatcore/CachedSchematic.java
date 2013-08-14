@@ -3,6 +3,7 @@ package com.mcnsa.flatcore;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -15,7 +16,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager.Profession;
 
-import com.mcnsa.flatcore.generation.ImageGenerator;
+import com.mcnsa.flatcore.generation.MapColors;
+import com.mcnsa.flatcore.generation.ImagePixel;
 import com.mcnsa.flatcore.generation.VillagerSpawner;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.EmptyClipboardException;
@@ -377,12 +379,38 @@ public class CachedSchematic {
 				int realZ = startZ + z;
 				
 				int material = getHighestMaterial(x, z);
-				int color = ImageGenerator.getColor(material);
+				int color = MapColors.getColor(material);
 				
 				image.setRGB(realX, realZ, color);
 			}
 		}
 	}
+	
+	public void drawBitmap(Collection<ImagePixel> image, int centerX, int centerZ)
+	{
+		int startX = centerX - xSize / 2;
+		int startZ = centerZ - zSize / 2;
+		
+		for (int x = 0; x < xSize; x++)
+		{
+			int realX = startX + x;
+			for (int z = 0; z < zSize; z++)
+			{
+				int realZ = startZ + z;
+				
+				int material = getHighestMaterial(x, z);
+				int color = MapColors.getColor(material);
+				
+				ImagePixel pixel = new ImagePixel();
+				pixel.x = realX;
+				pixel.z = realZ;
+				pixel.color = color;
+				
+				image.add(pixel);
+			}
+		}
+	}
+	
 	
 	public int getHighestMaterial(int x, int z)
 	{

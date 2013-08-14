@@ -6,16 +6,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map.Entry;
 
+import javax.imageio.ImageIO;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.World.Environment;
 import org.bukkit.configuration.MemorySection;
 
 import com.mcnsa.flatcore.CachedSchematic;
@@ -30,11 +35,10 @@ public class PathGenerator {
 	public HashSet<PathTile> visitedTiles = new HashSet<PathTile>();
 	private World world;
 	private HashMap<Character, StructureData> structures;
-	private BufferedImage worldImage;
+	private ArrayDeque<ImagePixel> pixels;
 	
 	public void generatePath(String path)
 	{
-
 		MemorySection pathConfig = (MemorySection) GenerationModule.instance.config.get("Paths." + path);
 
 		if (pathConfig == null)
@@ -52,6 +56,8 @@ public class PathGenerator {
 			FCLog.info("Path " + path + " has invalid world set. Aborting...");
 			return;
 		}
+
+		pixels = new ArrayDeque<ImagePixel>();
 		
 		String[] startPos = ((String) pathConfig.get("Start")).split(" ");
 
@@ -127,6 +133,54 @@ public class PathGenerator {
 
 		processTile(firstTile, startX, startZ, 1, -1);
 
+		FCLog.info("Generating image");
+		
+		int highestX = 0;
+		int highestZ = 0;
+		int lowestX = Integer.MAX_VALUE;
+		int lowestZ = Integer.MAX_VALUE;
+		for (ImagePixel pixel : pixels)
+		{
+			if (highestX < pixel.x)
+				highestX = pixel.x;
+			
+			if (highestZ < pixel.z)
+				highestZ = pixel.z;
+			
+			if (lowestX > pixel.x)
+				lowestX = pixel.x;
+			
+			if (lowestZ > pixel.z)
+				lowestZ = pixel.z;
+		}
+		
+		int xSize = highestX - lowestX + 1;
+		int zSize = highestZ - lowestZ + 1;
+		
+		
+		BufferedImage pathImage = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_RGB);
+				
+		for (int x = 0; x < xSize; x++)
+		{
+			for (int z = 0; z < zSize; z++)
+			{
+				pathImage.setRGB(x, z, 0xffffff);
+			}
+		}
+		
+		for (ImagePixel pixel : pixels)
+		{
+			pathImage.setRGB(pixel.x - lowestX, pixel.z - lowestZ, pixel.color);
+		}
+		
+		File imageFile = new File(MCNSAFlatcore.instance.getDataFolder(), "path_" + path + ".png");
+		
+		try {
+			ImageIO.write(pathImage, "png", imageFile);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		FCLog.info("Generation finished");
 	}
 
@@ -177,7 +231,8 @@ public class PathGenerator {
 		}
 
 		schematic.place(new Location(world, x, structure.getPasteHeight(), z), structure.shouldIgnoreAir());
-
+		schematic.drawBitmap(pixels, x, z);
+		
 		float memLeft = (float) ((float) runtime.freeMemory() / runtime.totalMemory());
 		FCLog.debug("MemLeft: " + memLeft);
 		if (memLeft < 0.3)
