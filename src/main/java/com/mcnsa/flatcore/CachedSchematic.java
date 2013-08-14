@@ -386,11 +386,8 @@ public class CachedSchematic {
 		}
 	}
 	
-	public void drawBitmap(Collection<ImagePixel> image, int centerX, int centerZ)
-	{
-		int startX = centerX - xSize / 2;
-		int startZ = centerZ - zSize / 2;
-		
+	public void drawBitmap(Collection<ImagePixel> image, int startX, int startZ)
+	{		
 		for (int x = 0; x < xSize; x++)
 		{
 			int realX = startX + x;
