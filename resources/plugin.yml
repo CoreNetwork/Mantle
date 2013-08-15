@@ -3,6 +3,7 @@ main: com.mcnsa.flatcore.MCNSAFlatcore
 version: 1.2.0
 author: matejdro
 depend: [GriefPrevention, MCNSANanobot]
+softdepend: [WorldGuard]
 commands:
     flatcore:
         description: Main command
