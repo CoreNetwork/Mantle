@@ -18,9 +18,7 @@ import javax.imageio.ImageIO;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.configuration.MemorySection;
 
 import com.mcnsa.flatcore.CachedSchematic;

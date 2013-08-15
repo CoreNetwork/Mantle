@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 
 import com.mcnsa.flatcore.CachedSchematic;
@@ -175,12 +176,38 @@ public class StructureData {
 		return protection;
 	}
 	
+	public WorldGuard getWorldGuardData()
+	{
+		MemorySection worldGuardNode = (MemorySection) configNode.get("WorldGuardRegion");
+		if (worldGuardNode == null)
+			return null;		
+		
+		WorldGuard wgRegion = new WorldGuard();
+		
+		String firstBlockString[] = ((String) worldGuardNode.get("FirstBlock")).split(" ");
+		String secondBlockString[] = ((String) worldGuardNode.get("SecondBlock")).split(" ");
+
+		wgRegion.exampleRegion = (String) worldGuardNode.get("ExampleRegion");
+		
+		wgRegion.firstBlock = new Location(null, Integer.parseInt(firstBlockString[0]), Integer.parseInt(firstBlockString[1]), Integer.parseInt(firstBlockString[2]));
+		wgRegion.secondBlock = new Location(null, Integer.parseInt(secondBlockString[0]), Integer.parseInt(secondBlockString[1]), Integer.parseInt(secondBlockString[2]));
+		
+		return wgRegion;
+	}
+	
 	public static class Protection
 	{
 		Integer claimPermission;
 		Integer padding;
 		Boolean createChestSubclaims;
-		
 	}
+	
+	public static class WorldGuard
+	{
+		Location firstBlock;
+		Location secondBlock;
+		String exampleRegion;
+	}
+
 
 }

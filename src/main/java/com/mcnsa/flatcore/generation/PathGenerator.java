@@ -18,9 +18,7 @@ import javax.imageio.ImageIO;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.configuration.MemorySection;
 
 import com.mcnsa.flatcore.CachedSchematic;
@@ -230,8 +228,20 @@ public class PathGenerator {
 				z += diff;
 		}
 
-		schematic.place(new Location(world, x, structure.getPasteHeight(), z), structure.shouldIgnoreAir());
+		Location placingLocation = new Location(world, x, structure.getPasteHeight(), z);
+		
+		schematic.place(placingLocation, structure.shouldIgnoreAir());
 		schematic.drawBitmap(pixels, x, z);
+		
+		StructureData.WorldGuard region = structure.getWorldGuardData();
+		if (region != null)
+		{
+			Location firstBlock = placingLocation.clone().add(region.firstBlock.getX(), region.firstBlock.getY(), region.firstBlock.getZ());
+			Location secondBlock = placingLocation.clone().add(region.secondBlock.getX(), region.secondBlock.getY(), region.secondBlock.getZ());
+
+			String name = structure.getName() + "-" + tile.x + "x" + tile.z;
+			WorldGuardManager.createRegion(firstBlock, secondBlock, name, region.exampleRegion);
+		}
 		
 		float memLeft = (float) ((float) runtime.freeMemory() / runtime.totalMemory());
 		FCLog.debug("MemLeft: " + memLeft);
