@@ -151,7 +151,7 @@ public class StructureGenerator {
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO villages (Schematic, World, CornerX, CornerZ, SizeX, SizeZ) VALUES (?,?,?,?,?,?)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO villages (Schematic, StructureName, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?)");
 
 			
 			for (int rowNum = 0; rowNum < rows; rowNum++)
@@ -179,14 +179,16 @@ public class StructureGenerator {
 						
 						schematic.drawBitmap(worldImage, x - minX, z - minZ);
 						
-						if (structure.shouldStoreAsVillage())
+						if (structure.shouldStoreAsRespawnable())
 						{
 							statement.setString(1, schematic.name);
-							statement.setString(2, world.getName());
-							statement.setInt(3, schematicCorner.getBlockX());
-							statement.setInt(4, schematicCorner.getBlockZ());
-							statement.setInt(5, schematic.xSize);
-							statement.setInt(6, schematic.zSize);
+							statement.setString(2, structure.getRespawnableStructureName());
+							statement.setString(3, world.getName());
+							statement.setInt(4, schematicCorner.getBlockX());
+							statement.setInt(5, schematicCorner.getBlockZ());
+							statement.setInt(6, structure.getPasteHeight());
+							statement.setInt(7, schematic.xSize);
+							statement.setInt(8, schematic.zSize);
 							statement.addBatch();
 						}
 						

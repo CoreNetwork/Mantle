@@ -61,12 +61,17 @@ public class StructureData {
 		return textAlias.charAt(0);
 	}
 	
-	public boolean shouldStoreAsVillage()
+	public boolean shouldStoreAsRespawnable()
 	{
-		Boolean result = (Boolean) configNode.get("StoreAsVillage");
+		return getRespawnableStructureName() != null;
+	}
+	
+	public String getRespawnableStructureName()
+	{
+		String result = (String) configNode.get("StoreAsRespawnable");
 		if (result == null)
 		{
-			return false;
+			return null;
 		}
 		return result;
 	}
@@ -80,7 +85,7 @@ public class StructureData {
 		}
 		return result;
 	}
-	
+		
 	public boolean shouldIgnoreAir()
 	{
 		Boolean result = (Boolean) configNode.get("IgnoreAir");
