@@ -35,10 +35,10 @@ public class RSpawnCommand extends BaseRSpawnCommand {
 
 		Player player = (Player) sender;
 
-		int minX = Settings.getInt(Setting.GENERATION_MIN_X);
-		int minZ = Settings.getInt(Setting.GENERATION_MIN_Z);
-		int maxX = Settings.getInt(Setting.GENERATION_MAX_X);
-		int maxZ = Settings.getInt(Setting.GENERATION_MAX_Z);
+		int minX = Settings.getInt(Setting.RESPAWN_MIN_X);
+		int minZ = Settings.getInt(Setting.RESPAWN_MIN_Z);
+		int maxX = Settings.getInt(Setting.RESPAWN_MAX_X);
+		int maxZ = Settings.getInt(Setting.RESPAWN_MAX_Z);
 
 		Location biggestClaim = null;
 		if (!ToggleCommand.ignoredPlayers.contains(player.getName()) && throwDice(player))

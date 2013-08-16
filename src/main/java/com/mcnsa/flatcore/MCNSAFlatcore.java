@@ -10,12 +10,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.mcnsa.flatcore.flatcorecommands.AdminHelpCommand;
-import com.mcnsa.flatcore.flatcorecommands.AnalyzeCommand;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
-import com.mcnsa.flatcore.flatcorecommands.DeleteVillageCommand;
-import com.mcnsa.flatcore.flatcorecommands.FindAdminVillageCommand;
 import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
-import com.mcnsa.flatcore.flatcorecommands.TestVillageCommand;
+import com.mcnsa.flatcore.regeneration.StructureChecker;
 import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
 import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
 import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
@@ -56,15 +53,8 @@ public class MCNSAFlatcore extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(listener, this);
 
 		//Admin commands
-		adminCommands.put("help", new AdminHelpCommand());
-		
-		adminCommands.put("analyze", new AnalyzeCommand());
-		adminCommands.put("deletevillage", new DeleteVillageCommand());
-		adminCommands.put("findadminclaims", new FindAdminVillageCommand());
-		adminCommands.put("testvillage", new TestVillageCommand());
-		
+		adminCommands.put("help", new AdminHelpCommand());		
 		adminCommands.put("reload", new ReloadCommand());
-		
 		
 		rspawnCommands.put("rspawn", new RSpawnCommand());
 		rspawnCommands.put("toggle", new ToggleCommand());
@@ -72,7 +62,6 @@ public class MCNSAFlatcore extends JavaPlugin {
 		rspawnCommands.put("unprotect", new UnprotectCommand());
 		rspawnCommands.put("nodrop", new NoDropCommand());
 
-		VillageChecker.schedule();
 		getServer().getScheduler().runTaskTimer(this, new ProtectTimer(), 20, 20);
 		
 		FlatcoreModule.loadModules();

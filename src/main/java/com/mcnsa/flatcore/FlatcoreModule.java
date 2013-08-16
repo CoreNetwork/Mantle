@@ -14,6 +14,7 @@ import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
 import com.mcnsa.flatcore.generation.GenerationModule;
 import com.mcnsa.flatcore.hardmode.HardmodeModule;
 import com.mcnsa.flatcore.portals.PortalsModule;
+import com.mcnsa.flatcore.regeneration.RegenerationModule;
 import com.mcnsa.flatcore.restockablechests.RChestsModule;
 
 public abstract class FlatcoreModule implements CommandExecutor {
@@ -177,7 +178,14 @@ public abstract class FlatcoreModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}
-
+		
+		//Regeneration
+		module = new RegenerationModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
 	}
 
 	public static void reloadConfigs()

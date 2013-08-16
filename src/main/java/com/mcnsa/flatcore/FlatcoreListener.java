@@ -1,9 +1,5 @@
 package com.mcnsa.flatcore;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -21,7 +17,6 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
@@ -29,39 +24,7 @@ import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
 public class FlatcoreListener implements Listener {
 
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerJoin(PlayerJoinEvent event)
-	{		
-		if (Util.hasPermission(event.getPlayer(), "mcnsaflatcore.mod"))
-		{
-			try
-			{
-				PreparedStatement statement = IO.getConnection().prepareStatement("SELECT (SELECT COUNT(*) FROM villages WHERE lastCheck = lastRestore) AS claimed, (SELECT COUNT(*) FROM villages) AS every");
-				ResultSet set = statement.executeQuery();
-
-				set.next();
-				int total = set.getInt("every");
-				int claimed = set.getInt("claimed");
-				set.close();
-
-				int percentage = total == 0 ? 0 : (claimed * 100 / total);
-
-				if (percentage >= Settings.getInt(Setting.RESTORATION_WARN_PERCENTAGE))
-				{
-					String message = Settings.getString(Setting.MESSAGE_LOGIN_WARN);
-					message = message.replace("<Claimed>", Integer.toString(claimed));
-					message = message.replace("<Total>", Integer.toString(total));
-					message = message.replace("<Percentage>", Integer.toString(percentage));
-
-					Util.Message(message, event.getPlayer());
-				}
-			}
-			catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
-		}
-	}
+	
 
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityDamage(EntityDamageEvent event)

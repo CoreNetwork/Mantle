@@ -149,7 +149,7 @@ public class StructureGenerator {
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO villages (Schematic, StructureName, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (Schematic, StructureName, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?)");
 
 			
 			for (int rowNum = 0; rowNum < rows; rowNum++)

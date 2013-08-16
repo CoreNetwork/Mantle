@@ -294,8 +294,8 @@ public class CachedSchematic {
 		int sizeChunksX = (int) Math.ceil(xSize / 16.0);
 		int sizeChunksZ = (int) Math.ceil(zSize / 16.0);
 
-		int minX = cornerChunk.getX();;
-		int minZ = cornerChunk.getZ();;
+		int minX = cornerChunk.getX();
+		int minZ = cornerChunk.getZ();
 		int maxX = minX + sizeChunksX;
 		int maxZ = minZ + sizeChunksZ;
 

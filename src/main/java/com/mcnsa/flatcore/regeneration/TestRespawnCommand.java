@@ -1,4 +1,4 @@
-package com.mcnsa.flatcore.flatcorecommands;
+package com.mcnsa.flatcore.regeneration;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,12 +15,13 @@ import com.mcnsa.flatcore.IO;
 import com.mcnsa.flatcore.Setting;
 import com.mcnsa.flatcore.Settings;
 import com.mcnsa.flatcore.Util;
+import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
 
-public class TestVillageCommand extends BaseAdminCommand {
+public class TestRespawnCommand extends BaseAdminCommand {
 	
-	public TestVillageCommand()
+	public TestRespawnCommand()
 	{
-		desc = "Test nearby village for deletion";
+		desc = "Test nearby respawning structure for deletion";
 		needPlayer = true;
 	}
 
@@ -42,7 +43,7 @@ public class TestVillageCommand extends BaseAdminCommand {
 
 			ResultSet set = statement.executeQuery();
 			if (!set.next())
-				Util.Message(Settings.getString(Setting.MESSAGE_NO_VILLAGES), sender);
+				Util.Message(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
 			else
 			{
 				final int villageX = set.getInt("CornerX");
@@ -52,14 +53,16 @@ public class TestVillageCommand extends BaseAdminCommand {
 				int id = set.getInt("ID");
 				int distance = (int) Math.sqrt(set.getInt("dist"));
 							
+				int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
+				
 				String message;
-				if (GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, false))
+				if (GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, padding, false))
 				{
-					message = Settings.getString(Setting.MESSAGE_VILLAGE_WILL_NOT_BE_RESTORED);
+					message = RegenerationSettings.MESSAGE_STRUCTURE_WILL_NOT_BE_RESTORED.string();
 				}		
 				else
 				{
-					message = Settings.getString(Setting.MESSAGE_VILLAGE_WILL_BE_RESTORED);
+					message = RegenerationSettings.MESSAGE_STRUCTURE_WILL_BE_RESTORED.string();
 				}
 				
 				message = message.replace("<ID>", Integer.toString(id));

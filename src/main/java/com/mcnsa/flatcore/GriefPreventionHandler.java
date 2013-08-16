@@ -82,10 +82,8 @@ public class GriefPreventionHandler {
 		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
 	}
 
-	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, boolean adminOnly)
+	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly)
 	{		
-		int padding = Settings.getInt(Setting.RESORATION_VILLAGE_CHECK_PADDING);
-
 		int villageMinX = x - padding;
 		int villageMaxX = x + xSize + padding;
 		int villageMinZ = z - padding;
