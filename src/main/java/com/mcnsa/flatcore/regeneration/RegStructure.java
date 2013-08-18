@@ -50,7 +50,7 @@ public class RegStructure
 	
 	public int getTimeOffset()
 	{
-		Integer result = (Integer) configNode.get("TimeOffset");
+		Integer result = (Integer) configNode.get("TimeOffsetMinutes");
 		if (result == null)
 		{
 			return 0;
@@ -60,7 +60,7 @@ public class RegStructure
 	
 	public int getGenerationInterval()
 	{
-		Integer result = (Integer) configNode.get("RegenerateInterval");
+		Integer result = (Integer) configNode.get("RegenerateIntervalMinutes");
 		if (result == null)
 		{
 			return -1;

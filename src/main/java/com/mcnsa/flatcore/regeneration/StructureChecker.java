@@ -31,11 +31,11 @@ public class StructureChecker implements Runnable {
 	{
 		for (RegStructure structure : RegenerationModule.instance.structures.values())
 		{
-			int period = structure.getGenerationInterval();
+			int period = structure.getGenerationInterval() * 20;
 			if (period <= 0)
 				continue;
 			
-			int offset = structure.getTimeOffset();
+			int offset = structure.getTimeOffset() * 20;
 			
 			Bukkit.getServer().getScheduler().runTaskTimer(MCNSAFlatcore.instance, new StructureChecker(structure), offset + 20, period);
 		}
