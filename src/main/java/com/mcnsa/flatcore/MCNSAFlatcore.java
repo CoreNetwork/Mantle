@@ -63,7 +63,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 		rspawnCommands.put("nodrop", new NoDropCommand());
 
 		getServer().getScheduler().runTaskTimer(this, new ProtectTimer(), 20, 20);
-		
+				
 		FlatcoreModule.loadModules();
 		
 		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");

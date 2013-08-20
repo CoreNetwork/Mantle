@@ -222,6 +222,16 @@ public class StructureGenerator {
 							GriefPreventionHandler.secure(schematicCorner, chestLocations, protectionSizeX, protectionSizeZ, protection.claimPermission);
 						}
 						
+						StructureData.WorldGuard region = structure.getWorldGuardData();
+						if (region != null)
+						{
+							Location firstBlock = schematicCorner.clone().add(region.firstBlock.getX(), region.firstBlock.getY(), region.firstBlock.getZ());
+							Location secondBlock = schematicCorner.clone().add(region.secondBlock.getX(), region.secondBlock.getY(), region.secondBlock.getZ());
+
+							String name = structure.getName() + "-" + schematicCorner.getX() + "x" + schematicCorner.getZ();
+							WorldGuardManager.createRegion(firstBlock, secondBlock, name, region.exampleRegion);
+						}
+						
 						float memLeft = (float) ((float) runtime.freeMemory() / runtime.totalMemory());
 						FCLog.debug("MemLeft: " + memLeft);
 						if (memLeft < 0.3)
