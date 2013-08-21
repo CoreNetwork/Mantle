@@ -29,12 +29,6 @@ public class FlatcoreListener implements Listener {
 			entity.getEquipment().clear();
 			return;
 		}
-
-		//Pigmen dropping nether wart
-		if (entity instanceof PigZombie && Util.isNetherFortress(entity.getLocation()))
-		{
-			event.getDrops().add(new ItemStack(Material.NETHER_STALK, 1));
-		}
 	}
 	
 

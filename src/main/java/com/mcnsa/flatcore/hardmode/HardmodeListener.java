@@ -17,6 +17,7 @@ import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
@@ -146,6 +147,12 @@ public class HardmodeListener implements Listener {
 				if (stack.getType() == Material.GHAST_TEAR)
 					event.getDrops().remove(stack);
 			}
+		}
+		
+		//Pigmen dropping nether wart
+		if (entity instanceof PigZombie && Util.isNetherFortress(entity.getLocation()))
+		{
+			event.getDrops().add(new ItemStack(Material.NETHER_STALK, 1));
 		}
 	}
 
