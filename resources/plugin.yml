@@ -6,23 +6,10 @@ depend: [GriefPrevention, MCNSANanobot]
 softdepend: [WorldGuard]
 commands:
     flatcore:
-        description: Main command
-    rspawn:
-        description: Spawn randomly in the world
-    togglespawn:
-        description: Disable spawning closer to biggest claim
-    unprotect:
-        description: Disable invincibility upon spawn
-    chp:
-    checkpoint:
-    
+        description: Main command    
     
 permissions:
     mcnsaflatcore.command.flatcore:
         default: op
     mcnsaflatcore.mod:
         default: op
-    mcnsaflatcore.donorgrass:
-        default: false
-    mcnsaflatcore.donorsky:
-        default: false
