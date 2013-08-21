@@ -176,7 +176,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 		{
 			module.active = true;
 			modules.add(module);
-		}
+		}		
 	}
 
 	public static void reloadConfigs()

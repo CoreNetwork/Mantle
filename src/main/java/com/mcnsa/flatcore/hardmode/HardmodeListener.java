@@ -39,7 +39,6 @@ import org.bukkit.metadata.FixedMetadataValue;
 
 import com.mcnsa.flatcore.MCNSAFlatcore;
 import com.mcnsa.flatcore.Util;
-import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
 
 public class HardmodeListener implements Listener {
 
@@ -50,7 +49,7 @@ public class HardmodeListener implements Listener {
 	}
 
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		//Do not apply anything to End or void
@@ -90,14 +89,6 @@ public class HardmodeListener implements Listener {
 		//Environmental damage
 		if (event.getEntity() instanceof Player)
 		{
-			//Do not apply additional damage to spawn protected player
-			Player player = (Player) event.getEntity();
-			if (ProtectCommand.protectedPlayers.containsKey(player.getName()))
-			{
-				event.setCancelled(true);
-				return;
-			}
-
 			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
 		}
 	}

@@ -12,14 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.mcnsa.flatcore.flatcorecommands.AdminHelpCommand;
 import com.mcnsa.flatcore.flatcorecommands.BaseAdminCommand;
 import com.mcnsa.flatcore.flatcorecommands.ReloadCommand;
-import com.mcnsa.flatcore.regeneration.StructureChecker;
-import com.mcnsa.flatcore.rspawncommands.BaseRSpawnCommand;
-import com.mcnsa.flatcore.rspawncommands.NoDropCommand;
-import com.mcnsa.flatcore.rspawncommands.ProtectCommand;
-import com.mcnsa.flatcore.rspawncommands.ProtectCommand.ProtectTimer;
-import com.mcnsa.flatcore.rspawncommands.RSpawnCommand;
-import com.mcnsa.flatcore.rspawncommands.ToggleCommand;
-import com.mcnsa.flatcore.rspawncommands.UnprotectCommand;
 
 public class MCNSAFlatcore extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
@@ -31,10 +23,9 @@ public class MCNSAFlatcore extends JavaPlugin {
 	public static Plugin permissions = null;
 
 	public static HashMap<String, BaseAdminCommand> adminCommands = new HashMap<String, BaseAdminCommand>();
-	public static HashMap<String, BaseRSpawnCommand> rspawnCommands = new HashMap<String, BaseRSpawnCommand>();
 
 	public static Random random;
-	
+
 	@Override
 	public void onDisable() {
 		IO.freeConnection();
@@ -46,7 +37,7 @@ public class MCNSAFlatcore extends JavaPlugin {
 		instance = this;
 		listener = new FlatcoreListener();
 		random = new Random();
-		
+
 		IO.LoadSettings();
 		IO.PrepareDB();
 
@@ -55,17 +46,9 @@ public class MCNSAFlatcore extends JavaPlugin {
 		//Admin commands
 		adminCommands.put("help", new AdminHelpCommand());		
 		adminCommands.put("reload", new ReloadCommand());
-		
-		rspawnCommands.put("rspawn", new RSpawnCommand());
-		rspawnCommands.put("toggle", new ToggleCommand());
-		rspawnCommands.put("protect", new ProtectCommand());
-		rspawnCommands.put("unprotect", new UnprotectCommand());
-		rspawnCommands.put("nodrop", new NoDropCommand());
 
-		getServer().getScheduler().runTaskTimer(this, new ProtectTimer(), 20, 20);
-				
 		FlatcoreModule.loadModules();
-		
+
 		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");
 	}
 
@@ -74,35 +57,14 @@ public class MCNSAFlatcore extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
 		if (command.getName().equals("flatcore"))
-		{
 			if (args.length < 1 || Util.isInteger(args[0]))
 				return adminCommands.get("help").execute(sender, args);
 
-			BaseAdminCommand cmd = adminCommands.get(args[0]);
-			if (cmd != null)
-				return cmd.execute(sender, args);
-			else
-				return adminCommands.get("help").execute(sender, args);
-		}
-		else if (command.getName().equals("togglespawn"))
-		{
-			return rspawnCommands.get("toggle").execute(sender, args);
-		}
-		else if (command.getName().equals("unprotect"))
-		{
-			return rspawnCommands.get("unprotect").execute(sender, args);
-		}
+		BaseAdminCommand cmd = adminCommands.get(args[0]);
+		if (cmd != null)
+			return cmd.execute(sender, args);
 		else
-		{
-			if (args.length < 1 || Util.isInteger(args[0]))
-				return rspawnCommands.get("rspawn").execute(sender, args);
-
-			BaseRSpawnCommand cmd = rspawnCommands.get(args[0]);
-			if (cmd != null)
-				return cmd.execute(sender, args);
-			else
-				return false;
-		}
+			return adminCommands.get("help").execute(sender, args);
 	}
 
 }
