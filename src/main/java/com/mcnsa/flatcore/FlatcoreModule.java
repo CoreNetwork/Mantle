@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.mcnsa.flatcore.checkpoints.CheckpointsModule;
 import com.mcnsa.flatcore.generation.GenerationModule;
 import com.mcnsa.flatcore.hardmode.HardmodeModule;
 import com.mcnsa.flatcore.portals.PortalsModule;
