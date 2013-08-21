@@ -139,14 +139,6 @@ public abstract class FlatcoreModule implements CommandExecutor {
 	{
 		FlatcoreModule module;
 
-		//Checkpoints
-		module = new CheckpointsModule();
-		if (module.loadModuleInternal())
-		{
-			module.active = true;
-			modules.add(module);
-		}
-
 		//Hard mode
 		module = new HardmodeModule();
 		if (module.loadModuleInternal())
