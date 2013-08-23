@@ -1,11 +1,11 @@
-name: MCNSAFlatcore
-main: com.mcnsa.flatcore.MCNSAFlatcore
+name: Mantle
+main: us.corenetwork.mantle.MantlePlugin
 version: 1.2.0
 author: matejdro
 depend: [GriefPrevention, MCNSANanobot]
 softdepend: [WorldGuard]
 commands:
-    flatcore:
+    mantle:
         description: Main command    
     
 permissions:
