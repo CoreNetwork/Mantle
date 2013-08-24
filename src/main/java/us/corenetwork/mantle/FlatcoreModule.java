@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
+import us.corenetwork.mantle.hydration.HydrationModule;
 import us.corenetwork.mantle.portals.PortalsModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;
 import us.corenetwork.mantle.restockablechests.RChestsModule;
@@ -177,7 +178,16 @@ public abstract class FlatcoreModule implements CommandExecutor {
 		{
 			module.active = true;
 			modules.add(module);
+		}	
+		
+		//Regeneration
+		module = new HydrationModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
 		}		
+
 	}
 
 	public static void reloadConfigs()

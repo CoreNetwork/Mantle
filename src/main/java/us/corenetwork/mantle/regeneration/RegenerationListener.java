@@ -17,9 +17,7 @@ import us.corenetwork.mantle.Util;
 public class RegenerationListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
-	{		
-		System.out.println("hasPerms");
-		
+	{				
 		if (Util.hasPermission(event.getPlayer(), "mcnsaflatcore.mod"))
 		{
 			for (RegStructure structure : RegenerationModule.instance.structures.values())

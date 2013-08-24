@@ -2,7 +2,7 @@ name: Mantle
 main: us.corenetwork.mantle.MantlePlugin
 version: 1.2.0
 author: matejdro
-depend: [GriefPrevention, MCNSANanobot]
+depend: [GriefPrevention, MCNSANanobot, Core]
 softdepend: [WorldGuard]
 commands:
     mantle:
