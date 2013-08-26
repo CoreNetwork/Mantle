@@ -1,5 +1,8 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.util.Arrays;
+import java.util.List;
+
 
 public enum HardmodeSettings {
 
@@ -9,10 +12,11 @@ public enum HardmodeSettings {
 	ENDERMAN_TELEPORT_MAX_TRIES("EndermanTeleport.MaxTries", 3),
 	ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT("EndermanTeleport.ApplyDamageEffect", "EndermanTeleport"),
 	
-	NETHERRACK_FIRE_CHANCE("HardMode.NetherrackFireChance", 20),
-	PLAYER_PUNCH_FIRE_DURATION("HardMode.PlayerPunchFireDuration", 35),
-	ZOMBIE_RESPAWN_CHANCE("HardMode.ZombieRespawnChance", 20);
-
+	NETHERRACK_FIRE_CHANCE("NetherrackFireChance", 20),
+	PLAYER_PUNCH_FIRE_DURATION("PlayerPunchFireDuration", 35),
+	ZOMBIE_RESPAWN_CHANCE("ZombieRespawnChance", 20),
+	
+	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" }));
 	
 	protected String string;
 	protected Object def;
@@ -37,20 +41,9 @@ public enum HardmodeSettings {
 	{
 		return (String) HardmodeModule.instance.config.get(string, def);
 	}
-	
-	public static String getCommandDescription(String cmd, String def)
+		
+	public List<String> stringList()
 	{
-		String path = "CommandDescriptions." + cmd;
-		
-		Object descO = HardmodeModule.instance.config.get(path);
-		if (descO == null)
-		{
-			HardmodeModule.instance.config.set(path, "&a/chp " + cmd + " &8-&f " + def);
-			HardmodeModule.instance.saveConfig();
-			descO = HardmodeModule.instance.config.get(path);
-		}
-		
-		return (String) descO;
-		
+		return (List<String>) HardmodeModule.instance.config.get(string, def);
 	}
 }

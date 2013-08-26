@@ -14,23 +14,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
 
-public class FlatcoreListener implements Listener {
-
-	@EventHandler(ignoreCancelled = true)
-	public void onEntityDeath(EntityDeathEvent event)
-	{
-		final LivingEntity entity = event.getEntity();
-
-		//Mobs with name or silverfishes should not drop anything
-		if (entity.getCustomName() != null || entity.getType() == EntityType.SILVERFISH)
-		{
-			event.getDrops().clear();
-			event.setDroppedExp(0);
-			entity.getEquipment().clear();
-			return;
-		}
-	}
-	
+public class FlatcoreListener implements Listener {	
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockPhysics(BlockPhysicsEvent event)
