@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.hydration.HydrationModule;
@@ -187,6 +188,14 @@ public abstract class FlatcoreModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}		
+		
+		//Animal spawning
+		module = new AnimalSpawningModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
 
 	}
 

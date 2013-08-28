@@ -94,11 +94,11 @@ public class IO {
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS chests (ID INTEGER PRIMARY KEY NOT NULL, LootTable STRING, Interval INTEGER, PerPlayer INTEGER, World STRING, X INTEGER, Y INTEGER, Z INTEGER)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS playerChests (ID INTEGER, Player STRING, LastAccess INTEGER, Restocks INTEGER)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS chestInventory (ID INTEGER, Player STRING, Slot INTEGER, ItemID INTEGER, Damage INTEGER, Amount INTEGER, Enchants STRING)");
-
+        	st.executeUpdate("CREATE TABLE IF NOT EXISTS animal_chunks (X INTEGER, Z INTEGER, Spawned TINYINT)");
         	conn.commit();
             st.close();
         } catch (SQLException e) {
-            MantlePlugin.log.log(Level.SEVERE, "[FlatcoreWeekly]: Error while creating tables! - " + e.getMessage());
+            MantlePlugin.log.log(Level.SEVERE, "[Mantle]: Error while creating tables! - " + e.getMessage());
             e.printStackTrace();
     }
         UpdateDB();
@@ -118,7 +118,7 @@ public class IO {
     	}
     	catch(SQLException ex)
     	{
-    		MantlePlugin.log.log(Level.INFO, "[Jail] Updating database");
+    		MantlePlugin.log.log(Level.INFO, "[Mantle] Updating database");
     		try {
     			String[] query;
     			query = sql.split(";");
@@ -129,7 +129,7 @@ public class IO {
     			conn.commit();
     			st.close();
     		} catch (SQLException e) {
-    			MantlePlugin.log.log(Level.SEVERE, "[Jail] Error while updating tables to the new version - " + e.getMessage());
+    			MantlePlugin.log.log(Level.SEVERE, "[Mantle] Error while updating tables to the new version - " + e.getMessage());
                 e.printStackTrace();
     	}
         

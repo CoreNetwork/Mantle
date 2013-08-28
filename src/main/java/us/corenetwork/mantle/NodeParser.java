@@ -3,7 +3,10 @@ package us.corenetwork.mantle;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+
+import org.bukkit.configuration.MemorySection;
 
 public abstract class NodeParser {
 	private double chanceMultiplier;
@@ -14,7 +17,7 @@ public abstract class NodeParser {
 		chanceMultiplier = 1;
 		chanceAdder = 0;
 	}
-	
+
 	public NodeParser(double chanceMultiplier, double chanceAdder)
 	{
 		this.chanceMultiplier = chanceMultiplier;
@@ -206,4 +209,48 @@ public abstract class NodeParser {
 
 		return num;
 	}	
+
+	public static String pickNodeChance(MemorySection section)
+	{
+		Map<String, Object> nodes = section.getValues(false);
+
+		int childCount = 0;
+		for (Object o : nodes.values())
+			if (o instanceof MemorySection) childCount++;
+
+		int[] weights = new int[childCount];
+		for (int i = 0; i < childCount; i++)
+			weights[i] = 1;
+
+		String[] keys = new String[childCount];
+		
+		int counter = 0;
+		for (Entry<String, Object> e : nodes.entrySet())
+		{
+			if (e.getValue() instanceof MemorySection)
+			{
+				keys[counter] = e.getKey();
+				weights[counter] = ((MemorySection) e.getValue()).getInt("weight", 1);
+				counter++;
+			}
+		}
+
+		int weightsSum = 0;
+		for (int i = 0; i < childCount; i++)
+			weightsSum += weights[i];
+
+
+		int pickedNumber = MantlePlugin.random.nextInt(weightsSum);
+		int sum = 0;
+		for (int i = 0; i < childCount; i++)
+		{
+			sum += weights[i];
+			if (pickedNumber < sum)
+			{
+				return keys[i];
+			}
+		}
+
+		return null;
+	}
 }
