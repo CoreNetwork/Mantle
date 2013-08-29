@@ -85,7 +85,7 @@ public class NetherSpawner {
 		
 		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber())
 		{
-			skeleton.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD, 1));
+			skeleton.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
 		}
 		else
 		{
