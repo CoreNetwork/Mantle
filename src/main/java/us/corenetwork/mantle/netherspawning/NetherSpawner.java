@@ -82,12 +82,15 @@ public class NetherSpawner {
 		
 		skeleton.setSkeletonType(SkeletonType.WITHER);
 		
-		PotionEffect slowness = new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0);
-		skeleton.addPotionEffect(slowness);
 		
 		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber())
 		{
 			skeleton.getEquipment().setItemInHand(new ItemStack(Material.STONE_SWORD, 1));
+		}
+		else
+		{
+			PotionEffect slowness = new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0);
+			skeleton.addPotionEffect(slowness);
 		}
 	}
 
