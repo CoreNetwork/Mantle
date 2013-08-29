@@ -48,7 +48,7 @@ public class HydrationUtil {
 				if (layer == null)
 					layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
 				
-				playerData.fatigueLevel = Math.max(layer.startingMF, Math.min(playerData.fatigueLevel + 1, 5));
+				playerData.fatigueLevel = Math.max(layer == null ? 0 : layer.startingMF, Math.min(playerData.fatigueLevel + 1, 5));
 				
 				int timeLeft = (int) (HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer()) + 1;
 				PotionEffect effect = new PotionEffect(PotionEffectType.SLOW_DIGGING, timeLeft * 20, playerData.fatigueLevel - 1);

@@ -57,9 +57,8 @@ public class MantlePlugin extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if (command.getName().equals("flatcore"))
-			if (args.length < 1 || Util.isInteger(args[0]))
-				return adminCommands.get("help").execute(sender, args);
+		if (args.length < 1 || Util.isInteger(args[0]))
+			return adminCommands.get("help").execute(sender, args);
 
 		BaseAdminCommand cmd = adminCommands.get(args[0]);
 		if (cmd != null)

@@ -254,7 +254,7 @@ public class Util {
 		}, 10);
 	}
 
-	public static int flatDistance(Location a, Location b)
+	public static int flatDistanceSquared(Location a, Location b)
 	{
 		return ((a.getBlockX() - b.getBlockX()) * (a.getBlockX() - b.getBlockX())) + ((a.getBlockZ() - b.getBlockZ()) * (a.getBlockZ() - b.getBlockZ()));
 	}
