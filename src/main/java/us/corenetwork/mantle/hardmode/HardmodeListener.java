@@ -14,6 +14,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -82,11 +83,32 @@ public class HardmodeListener implements Listener {
 			}
 		}
 
-		//Environmental damage
 		if (event.getEntity() instanceof Player)
 		{
+			Player player = (Player) event.getEntity();
+						
+			//Environmental damage
 			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
+			
+			//Dismount player from the horse if player shot via arrow
+			if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse)
+			{
+				player.leaveVehicle();
+			}
+			
 		}
+		
+		//Dismount player from the horse if horse shot via arrow
+		if (event.getEntity() instanceof Horse)
+		{
+			Horse horse = (Horse) event.getEntity();
+			
+			if (event.getCause() == DamageCause.PROJECTILE && horse.getPassenger() != null)
+			{
+				horse.eject();
+			}
+		}
+		
 	}
 
 	@EventHandler(ignoreCancelled = true)
