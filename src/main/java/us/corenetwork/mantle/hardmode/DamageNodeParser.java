@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -119,9 +120,8 @@ public class DamageNodeParser extends NodeParser {
 		{
 			FCLog.warning("Invalid Damage modifiers config! Effect id is missing!");
 			return;
-		}
-
-
+		}		
+		
 		Object durationNode = node.get("duration");
 		int duration = 0;
 		if (durationNode == null)
@@ -158,7 +158,7 @@ public class DamageNodeParser extends NodeParser {
 		int amplifier = 0;
 		if (amplifierNode == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
+			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is missing!");
 			return;
 		}
 		else if (amplifierNode instanceof Integer)

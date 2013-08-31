@@ -16,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
@@ -340,12 +341,14 @@ public class HardmodeListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
+		LivingEntity entity = event.getEntity();
+		
 		//Wither timer
 		if (event.getEntityType() == EntityType.WITHER)
 		{
 			int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
 			MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
-			event.getEntity().setMetadata("DespawningTime", value);
+			entity.setMetadata("DespawningTime", value);
 		}
 		//Reduced ghast spawning
 		else if (event.getEntityType() == EntityType.GHAST)
@@ -354,6 +357,20 @@ public class HardmodeListener implements Listener {
 			{
 				event.setCancelled(true);
 				return;
+			}
+		}
+		//Pigmen spawning adjust
+		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
+		{
+			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
+			
+			entity.getEquipment().clear();
+			((PigZombie) entity).setAnger(Integer.MAX_VALUE);
+			
+			boolean hasSword = MantlePlugin.random.nextDouble() < HardmodeSettings.PIGMEN_SWORD_CHANCE.doubleNumber();
+			if (hasSword)
+			{
+				entity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD, 1));
 			}
 		}
 	}
