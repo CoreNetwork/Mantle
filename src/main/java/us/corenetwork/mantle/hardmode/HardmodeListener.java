@@ -36,6 +36,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
@@ -52,7 +53,7 @@ public class HardmodeListener implements Listener {
 		transparentBlocks.add((byte) 0);
 	}
 
-
+	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
@@ -243,6 +244,19 @@ public class HardmodeListener implements Listener {
 			return;
 		}
 	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
+	{
+		Entity entity = event.getRightClicked();
+		if (entity != null && entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER)
+		{
+			event.setCancelled(true);
+			event.getPlayer().updateInventory();
+			Util.Message(HardmodeSettings.MESSAGE_NO_MILKING_NETHER.string(), event.getPlayer());
+			return;
+		}
+	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockBreak(BlockBreakEvent event)
@@ -343,4 +357,6 @@ public class HardmodeListener implements Listener {
 			}
 		}
 	}
+	
+	
 }
