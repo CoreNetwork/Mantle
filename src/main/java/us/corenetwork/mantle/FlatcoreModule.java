@@ -131,7 +131,6 @@ public abstract class FlatcoreModule implements CommandExecutor {
 	{
 		for (FlatcoreModule module : modules)
 		{
-			module.saveConfig();
 			module.unloadModule();
 			module.active = false;
 		}
