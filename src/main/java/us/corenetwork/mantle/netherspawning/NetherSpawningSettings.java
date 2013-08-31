@@ -10,11 +10,14 @@ public enum NetherSpawningSettings {
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
 	BLAZE_CHANCE("BlazeSpawningChance", 0.6),
-	WITHER_SWORD_CHANCE("WitherSwordChance", 0.03),
-		
+	WITHER_SWORD_CHANCE("WitherSkeleton.SwordChance", 0.03),
+	WITHER_APPLY_DAMAGE_NODE_ON_SPAWN("WitherSkeleton.ApplyDamageNodeOnSpawnWithoutSword", "SlownessNode"),
+	
+	
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
 
+    
 	protected String string;
 	protected Object def;
 	

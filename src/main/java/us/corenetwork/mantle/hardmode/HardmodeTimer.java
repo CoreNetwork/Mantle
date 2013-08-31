@@ -3,7 +3,6 @@ package us.corenetwork.mantle.hardmode;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Wither;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
 import us.corenetwork.mantle.MantlePlugin;

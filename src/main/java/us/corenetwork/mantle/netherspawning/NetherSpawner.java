@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
+import us.corenetwork.mantle.hardmode.HardmodeModule;
 
 public class NetherSpawner {
 		
@@ -89,8 +90,7 @@ public class NetherSpawner {
 		}
 		else
 		{
-			PotionEffect slowness = new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0);
-			skeleton.addPotionEffect(slowness);
+			HardmodeModule.applyDamageNode(skeleton, NetherSpawningSettings.WITHER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 		}
 	}
 
