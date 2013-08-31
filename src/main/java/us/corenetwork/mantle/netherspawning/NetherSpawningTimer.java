@@ -41,37 +41,11 @@ public class NetherSpawningTimer implements Runnable {
                 continue;
             if (!belowBlock.getType().isSolid())
                 continue;
-
-//            while (!belowBlock.getType().isSolid())
-//            {
-//                block = belowBlock;
-//            	belowBlock = belowBlock.getRelative(BlockFace.DOWN);
-//            }
                         
             Block aboveBlock = block.getRelative(BlockFace.UP);
             if (aboveBlock == null)
                 continue;
             if (aboveBlock.getType().isSolid())
-                continue;
-
-            boolean tooSmallDistance = false;
-            int minDistance = Integer.MAX_VALUE;
-            
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                int distance = (int) Math.round(player.getLocation().distanceSquared(block.getLocation()));
-                if (distance < NetherSpawningSettings.MIN_DISTANCE_PLAYER.integer()) {
-                    tooSmallDistance = true;
-                    break;
-                }
-
-                if (distance < minDistance)
-                    minDistance = distance;
-            }
-            
-            if (tooSmallDistance)
-                continue;
-
-            if (minDistance > NetherSpawningSettings.MAX_DISTANCE_PLAYER.integer())
                 continue;
 
             NetherSpawner.spawnMob(block);
