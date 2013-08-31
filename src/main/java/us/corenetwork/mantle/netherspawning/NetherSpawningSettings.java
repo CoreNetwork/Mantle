@@ -11,7 +11,7 @@ public enum NetherSpawningSettings {
 
 	BLAZE_CHANCE("BlazeSpawningChance", 0.6),
 	WITHER_SWORD_CHANCE("WitherSwordChance", 0.03),
-	
+		
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
 

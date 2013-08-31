@@ -12,10 +12,10 @@ public enum HardmodeSettings {
 	ENDERMAN_TELEPORT_MAX_TRIES("EndermanTeleport.MaxTries", 3),
 	ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT("EndermanTeleport.ApplyDamageEffect", "EndermanTeleport"),
 	
-	NETHERRACK_FIRE_CHANCE("NetherrackFireChance", 20),
-	PLAYER_PUNCH_FIRE_DURATION("PlayerPunchFireDuration", 35),
 	ZOMBIE_RESPAWN_CHANCE("ZombieRespawnChance", 20),
 		
+	GHAST_SPAWNING_CHANCE("GhastSpawningChance", 0.2),
+	
 	WITHER_MIN_SPAWNING_Y("Wither.MinSpawningY", 20),
 	WITHER_DESPAWNING_Y("Wither.DespawningY", 60),
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),

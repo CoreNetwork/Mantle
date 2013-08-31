@@ -333,5 +333,14 @@ public class HardmodeListener implements Listener {
 			MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
 			event.getEntity().setMetadata("DespawningTime", value);
 		}
+		//Reduced ghast spawning
+		else if (event.getEntityType() == EntityType.GHAST)
+		{
+			if (MantlePlugin.random.nextDouble() > HardmodeSettings.GHAST_SPAWNING_CHANCE.doubleNumber())
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
 	}
 }
