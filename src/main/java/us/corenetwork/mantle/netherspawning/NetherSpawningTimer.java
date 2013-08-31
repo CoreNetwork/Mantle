@@ -2,14 +2,13 @@ package us.corenetwork.mantle.netherspawning;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
+
 import us.corenetwork.mantle.FCLog;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.Util;
 
 public class NetherSpawningTimer implements Runnable {
     public static NetherSpawningTimer timerSingleton;

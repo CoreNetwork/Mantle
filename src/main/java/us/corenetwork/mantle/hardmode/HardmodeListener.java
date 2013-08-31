@@ -17,6 +17,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Skeleton.SkeletonType;
+import org.bukkit.entity.Wither;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -25,6 +29,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -32,6 +38,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -81,34 +88,43 @@ public class HardmodeListener implements Listener {
 				}
 
 			}
+			//Wither reset timer
+			else if (victim instanceof Wither && (damager instanceof Player || 
+					(damager instanceof Projectile && (((Projectile) damager).getShooter() instanceof Player))))
+			{
+				int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
+				MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
+				victim.removeMetadata("DespawningTime", MantlePlugin.instance);
+				victim.setMetadata("DespawningTime", value);
+			}
 		}
 
 		if (event.getEntity() instanceof Player)
 		{
 			Player player = (Player) event.getEntity();
-						
+
 			//Environmental damage
 			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
-			
+
 			//Dismount player from the horse if player shot via arrow
 			if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse)
 			{
 				player.leaveVehicle();
 			}
-			
+
 		}
-		
+
 		//Dismount player from the horse if horse shot via arrow
 		if (event.getEntity() instanceof Horse)
 		{
 			Horse horse = (Horse) event.getEntity();
-			
+
 			if (event.getCause() == DamageCause.PROJECTILE && horse.getPassenger() != null)
 			{
 				horse.eject();
 			}
 		}
-		
+
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -167,6 +183,18 @@ public class HardmodeListener implements Listener {
 					event.getDrops().remove(stack);
 			}
 		}		
+
+		//Wither skeleton only dropping stuff if he has iron sword
+		if (event.getEntityType() == EntityType.SKELETON && ((Skeleton) entity).getSkeletonType() == SkeletonType.WITHER)
+		{
+			event.getDrops().clear();
+
+			ItemStack itemInHand = entity.getEquipment().getItemInHand();
+			if (itemInHand != null && itemInHand.getType() == Material.IRON_SWORD)
+			{
+				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (short) 1));
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -229,6 +257,7 @@ public class HardmodeListener implements Listener {
 		onCropDestroyed(block.getRelative(BlockFace.UP), false);
 	}
 
+	@EventHandler(ignoreCancelled = true)	
 	//Virtal event that combines multiple events. 
 	//Triggers when non-solid block (like crops) is about to be destroyed
 	public boolean onCropDestroyed(Block block, boolean dark)
@@ -246,4 +275,63 @@ public class HardmodeListener implements Listener {
 		return false;
 	}
 
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockPlace(BlockPlaceEvent event)
+	{
+		final Block block = event.getBlock();
+
+		//Prevent wither building
+		if (block.getType() == Material.SKULL && block.getY() >= 60 && block.getWorld().getEnvironment() == Environment.NETHER)
+		{
+			Block centerSkull = null;
+			BlockFace oneSkullDirection = null;
+
+			for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
+			{
+				Block neighbour = block.getRelative(face);
+				if (neighbour.getType() == Material.SKULL)
+				{
+					oneSkullDirection = face;
+
+					if (neighbour.getRelative(face).getType() == Material.SKULL)
+					{
+						centerSkull = neighbour;
+						break;
+					}
+					else if (block.getRelative(face.getOppositeFace()).getType() == Material.SKULL)
+					{
+						centerSkull = block;
+						break;
+					}
+				}
+			}
+
+			if (centerSkull != null)
+			{
+				Block belowCenter = centerSkull.getRelative(BlockFace.DOWN);
+
+				if (belowCenter.getType() == Material.SOUL_SAND && 
+						belowCenter.getRelative(oneSkullDirection).getType() == Material.SOUL_SAND &&
+						belowCenter.getRelative(oneSkullDirection.getOppositeFace()).getType() == Material.SOUL_SAND &&
+						belowCenter.getRelative(BlockFace.DOWN).getType() == Material.SOUL_SAND)
+				{
+					Util.Message(HardmodeSettings.MESSAGE_NO_WITHER_SURFACE.string(), event.getPlayer());
+					event.setCancelled(true);
+					return;
+				}
+			}
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true)
+	public void onCreatureSpawn(CreatureSpawnEvent event)
+	{
+		//Wither timer
+		if (event.getEntityType() == EntityType.WITHER)
+		{
+			int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
+			MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
+			event.getEntity().setMetadata("DespawningTime", value);
+		}
+	}
 }

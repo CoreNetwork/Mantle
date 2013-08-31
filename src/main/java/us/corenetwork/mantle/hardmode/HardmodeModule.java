@@ -37,6 +37,8 @@ public class HardmodeModule extends FlatcoreModule {
 				
 		Bukkit.getServer().getPluginManager().registerEvents(new HardmodeListener(), MantlePlugin.instance);
 		
+		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new HardmodeTimer(), 20, 20);
+		
 		return true;
 	}
 	
