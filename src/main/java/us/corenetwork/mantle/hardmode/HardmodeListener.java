@@ -2,6 +2,10 @@ package us.corenetwork.mantle.hardmode;
 
 import java.util.HashSet;
 
+import net.minecraft.server.v1_6_R2.AttributeInstance;
+import net.minecraft.server.v1_6_R2.EntityInsentient;
+import net.minecraft.server.v1_6_R2.GenericAttributes;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -11,6 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -37,11 +42,13 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
+import us.corenetwork.mantle.FCLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
@@ -375,5 +382,33 @@ public class HardmodeListener implements Listener {
 		}
 	}
 	
-	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onEntityPortal(EntityPortalEvent event)
+	{
+		if (event.getEntityType() == EntityType.HORSE)
+		{
+			String id = event.getEntity().getUniqueId().toString();
+			
+			AttributeInstance attributes = ((EntityInsentient)((CraftLivingEntity) event.getEntity()).getHandle()).getAttributeInstance(GenericAttributes.d);
+
+			if (event.getTo().getWorld().getEnvironment() == Environment.NETHER)
+			{
+				double originalSpeed = attributes.getValue();
+				HorseSpeed.setOriginalHorseSpeed(id, originalSpeed);
+				
+				attributes.setValue(HardmodeSettings.NETHER_HORSE_SPEED.doubleNumber());
+			}
+			else
+			{
+				double value = HorseSpeed.getOriginalHorseSpeed(id);
+				if (value < 0)
+				{
+					FCLog.severe("Horse speed not saved!");
+					value = 1.0;
+				}
+				attributes.setValue(value);
+			}
+			
+		}
+	}
 }

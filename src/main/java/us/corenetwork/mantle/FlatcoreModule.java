@@ -1,8 +1,15 @@
 package us.corenetwork.mantle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
@@ -11,12 +18,7 @@ import us.corenetwork.mantle.netherspawning.NetherSpawningModule;
 import us.corenetwork.mantle.portals.PortalsModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;
 import us.corenetwork.mantle.restockablechests.RChestsModule;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import us.corenetwork.mantle.spellbooks.SpellbooksModule;
 
 
 public abstract class FlatcoreModule implements CommandExecutor {
@@ -198,6 +200,14 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
         //Nether spawning
         module = new NetherSpawningModule();
+        if (module.loadModuleInternal())
+        {
+            module.active = true;
+            modules.add(module);
+        }
+        
+        //Spellbooks
+        module = new SpellbooksModule();
         if (module.loadModuleInternal())
         {
             module.active = true;

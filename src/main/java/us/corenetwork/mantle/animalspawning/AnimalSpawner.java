@@ -167,5 +167,7 @@ public class AnimalSpawner {
 			attributes.setValue(0.1);
 		else
 			attributes.setValue(0.25 * (0.45 + CorePlugin.random.nextInt(2) * 0.3 + CorePlugin.random.nextInt(2) * 0.3 + CorePlugin.random.nextInt(2) * 0.3));
+		attributes.setValue(1.5);
+
 	}
 }
