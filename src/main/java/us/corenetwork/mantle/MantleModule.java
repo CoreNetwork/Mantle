@@ -22,7 +22,7 @@ import us.corenetwork.mantle.restockablechests.RChestsModule;
 import us.corenetwork.mantle.spellbooks.SpellbooksModule;
 
 
-public abstract class FlatcoreModule implements CommandExecutor {
+public abstract class MantleModule implements CommandExecutor {
 	private String moduleName;
 
 	private String configName;
@@ -32,7 +32,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 	public YamlConfiguration config;
 
-	protected FlatcoreModule(String name, String[] commands, String configName)
+	protected MantleModule(String name, String[] commands, String configName)
 	{
 		this.moduleName = name;
 		this.configName = configName;
@@ -44,7 +44,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 	private boolean loadModuleInternal()
 	{
-		FCLog.info("Loading module " + moduleName + "....");
+		MLog.info("Loading module " + moduleName + "....");
 
 		if (configName != null)
 		{
@@ -61,7 +61,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 			if (!enabled)
 			{
-				FCLog.info("Module disabled. Skipping.");
+				MLog.info("Module disabled. Skipping.");
 				return false;
 			}
 
@@ -90,17 +90,17 @@ public abstract class FlatcoreModule implements CommandExecutor {
 			try {
 				config.load(configFile);
 			} catch (FileNotFoundException e) {
-				FCLog.severe("Error while loading conifg for module " + moduleName + ".");
+				MLog.severe("Error while loading conifg for module " + moduleName + ".");
 
 				e.printStackTrace();
 				return;
 			} catch (IOException e) {
-				FCLog.severe("Error while loading conifg for module " + moduleName + ".");
+				MLog.severe("Error while loading conifg for module " + moduleName + ".");
 
 				e.printStackTrace();
 				return;
 			} catch (InvalidConfigurationException e) {
-				FCLog.severe("Error while loading conifg for module " + moduleName + ".");
+				MLog.severe("Error while loading conifg for module " + moduleName + ".");
 
 				e.printStackTrace();
 				return;
@@ -128,11 +128,11 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 	//Module manager
 
-	private static List<FlatcoreModule> modules = new ArrayList<FlatcoreModule>();
+	private static List<MantleModule> modules = new ArrayList<MantleModule>();
 
 	public static void unloadAll()
 	{
-		for (FlatcoreModule module : modules)
+		for (MantleModule module : modules)
 		{
 			module.unloadModule();
 			module.active = false;
@@ -141,7 +141,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 	public static void loadModules()
 	{
-		FlatcoreModule module;
+		MantleModule module;
 
 		//Hard mode
 		module = new HardmodeModule();
@@ -226,7 +226,7 @@ public abstract class FlatcoreModule implements CommandExecutor {
 
 	public static void reloadConfigs()
 	{
-		for (FlatcoreModule module : modules)
+		for (MantleModule module : modules)
 		{
 			module.loadConfig();
 		}

@@ -8,13 +8,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import us.corenetwork.mantle.FCLog;
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 
 
-public class AnimalSpawningModule extends FlatcoreModule {
+public class AnimalSpawningModule extends MantleModule {
 	public static AnimalSpawningModule instance;
 	
 	public AnimalSpawningModule() {
@@ -67,7 +67,7 @@ public class AnimalSpawningModule extends FlatcoreModule {
 			
 			if (count <= 0)
 			{
-				FCLog.info("Initializing DB...");
+				MLog.info("Initializing DB...");
 				
 				int minX = AnimalSpawningSettings.CHUNK_MIN_X.integer();
 				int minZ = AnimalSpawningSettings.CHUNK_MIN_Z.integer();

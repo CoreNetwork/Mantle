@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.NodeParser;
 
@@ -71,7 +71,7 @@ public class DamageNodeParser extends NodeParser {
 
 		if (amount == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Set amount is missing!");
+			MLog.warning("Invalid Damage modifiers config! Set amount is missing!");
 			return;
 
 		}
@@ -85,7 +85,7 @@ public class DamageNodeParser extends NodeParser {
 
 		if (amount == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Add amount is missing!");
+			MLog.warning("Invalid Damage modifiers config! Add amount is missing!");
 			return;
 
 		}
@@ -100,7 +100,7 @@ public class DamageNodeParser extends NodeParser {
 
 		if (amount == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Multiply amount is missing!");
+			MLog.warning("Invalid Damage modifiers config! Multiply amount is missing!");
 			return;
 		}
 
@@ -118,7 +118,7 @@ public class DamageNodeParser extends NodeParser {
 		final Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect id is missing!");
+			MLog.warning("Invalid Damage modifiers config! Effect id is missing!");
 			return;
 		}		
 		
@@ -126,7 +126,7 @@ public class DamageNodeParser extends NodeParser {
 		int duration = 0;
 		if (durationNode == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
+			MLog.warning("Invalid Damage modifiers config! Effect duration is missing!");
 			return;
 		}
 		else if (durationNode instanceof Integer)
@@ -143,13 +143,13 @@ public class DamageNodeParser extends NodeParser {
 			} catch (ArgumentCastException e) {
 				e.printStackTrace();
 			} catch (InvalidExpressionException e) {
-				FCLog.warning("Invalid Damage modifiers config! Effect duration expression is invalid!");
+				MLog.warning("Invalid Damage modifiers config! Effect duration expression is invalid!");
 				return;
 			}
 		}
 		else
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect duration is invalid!");
+			MLog.warning("Invalid Damage modifiers config! Effect duration is invalid!");
 			return;
 		}
 
@@ -158,7 +158,7 @@ public class DamageNodeParser extends NodeParser {
 		int amplifier = 0;
 		if (amplifierNode == null)
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is missing!");
+			MLog.warning("Invalid Damage modifiers config! Effect amplifier is missing!");
 			return;
 		}
 		else if (amplifierNode instanceof Integer)
@@ -175,13 +175,13 @@ public class DamageNodeParser extends NodeParser {
 			} catch (ArgumentCastException e) {
 				e.printStackTrace();
 			} catch (InvalidExpressionException e) {
-				FCLog.warning("Invalid Damage modifiers config! Effect amplifier expression is invalid!");
+				MLog.warning("Invalid Damage modifiers config! Effect amplifier expression is invalid!");
 				return;
 			}			
 		}
 		else
 		{
-			FCLog.warning("Invalid Damage modifiers config! Effect amplifier is invalid!");
+			MLog.warning("Invalid Damage modifiers config! Effect amplifier is invalid!");
 			return;
 		}
 

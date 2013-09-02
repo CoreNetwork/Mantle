@@ -18,7 +18,7 @@ import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.Sheep;
 
 import us.corenetwork.core.CorePlugin;
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.NodeParser;
 
@@ -33,7 +33,7 @@ public class AnimalSpawner {
 		EntityType animalType = EntityType.fromName(animalSectionKey);
 		if (animalType == null)
 		{
-			FCLog.severe("Cannot spawn animal! Unknown animal type: " + animalSectionKey);
+			MLog.severe("Cannot spawn animal! Unknown animal type: " + animalSectionKey);
 			return;
 		}
 		
@@ -109,7 +109,7 @@ public class AnimalSpawner {
 		}
 		catch (IllegalArgumentException e)
 		{
-			FCLog.severe("Unknown sheep color: " + colorName);
+			MLog.severe("Unknown sheep color: " + colorName);
 			color = DyeColor.WHITE;
 
 		}
@@ -129,7 +129,7 @@ public class AnimalSpawner {
 		}
 		catch (IllegalArgumentException e)
 		{
-			FCLog.severe("Unknown horse color: " + colorName);
+			MLog.severe("Unknown horse color: " + colorName);
 		}
 		
 		String styleName = NodeParser.pickNodeChance((MemorySection) section.get("Styles"));
@@ -140,7 +140,7 @@ public class AnimalSpawner {
 		}
 		catch (IllegalArgumentException e)
 		{
-			FCLog.severe("Unknown horse style: " + styleName);
+			MLog.severe("Unknown horse style: " + styleName);
 		}
 		
 		String variantName = NodeParser.pickNodeChance((MemorySection) section.get("Variants"));
@@ -151,7 +151,7 @@ public class AnimalSpawner {
 		}
 		catch (IllegalArgumentException e)
 		{
-			FCLog.severe("Unknown horse variant: " + variantName);
+			MLog.severe("Unknown horse variant: " + variantName);
 		}
 		
 		horse.setMaxHealth(15.0 + CorePlugin.random.nextInt(8) + CorePlugin.random.nextInt(9));

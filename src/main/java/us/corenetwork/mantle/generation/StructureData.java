@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.CachedSchematic;
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 
 
 
@@ -26,7 +26,7 @@ public class StructureData {
 		List<String> schematics = (List<String>) configNode.get("Schematics");
 		if (schematics == null)
 		{
-			FCLog.severe("Structure " + name + " is missing Schematics!");
+			MLog.severe("Structure " + name + " is missing Schematics!");
 		}
 		
 		for (String schematic : schematics)
@@ -34,7 +34,7 @@ public class StructureData {
 			if (schematic.startsWith("weights"))
 				continue;
 		
-			FCLog.info("Loading schematic " + schematic + " for structure " + name + "...");
+			MLog.info("Loading schematic " + schematic + " for structure " + name + "...");
 			
 			CachedSchematic cs = new CachedSchematic(schematic);
 			
@@ -57,7 +57,7 @@ public class StructureData {
 		String textAlias = (String) configNode.get("TextmapAlias");
 		if (textAlias == null)
 		{
-			FCLog.severe("Structure " + name + " is missing TextmapAlias!");
+			MLog.severe("Structure " + name + " is missing TextmapAlias!");
 			return null;
 		}
 		return textAlias.charAt(0);
@@ -113,7 +113,7 @@ public class StructureData {
 		List<?> schematics = (List<?>) configNode.get("Schematics");
 		if (schematics == null)
 		{
-			FCLog.severe("Structure " + name + " is missing Schematics!");
+			MLog.severe("Structure " + name + " is missing Schematics!");
 		}
 		
 		String pickedSchematic = SchematicNodeParser.pickSchematic(schematics);
@@ -126,7 +126,7 @@ public class StructureData {
 		List<?> schematics = (List<?>) configNode.get("Schematics");
 		if (schematics == null)
 		{
-			FCLog.severe("Structure " + name + " is missing Schematics!");
+			MLog.severe("Structure " + name + " is missing Schematics!");
 		}
 
 		int counter = 0;

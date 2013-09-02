@@ -11,7 +11,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.CachedSchematic;
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
@@ -72,24 +72,24 @@ public class StructureChecker implements Runnable {
 					
 					World world = Bukkit.getWorld(worldName);
 
-					FCLog.info("Checking structure " + structure.getName() + " around " + cornerX + " " + cornerZ);
+					MLog.info("Checking structure " + structure.getName() + " around " + cornerX + " " + cornerZ);
 
 					int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 					
 					if (isPlayerInside(cornerX, cornerZ, xSize, zSize))
 					{
-						FCLog.info("Will not restore - player inside.");
+						MLog.info("Will not restore - player inside.");
 					}
 					else if (!GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false))
 					{
 						generated++;
 
 						RegenerationUtil.regenerateStructure(id);
-						FCLog.info("Restored!");
+						MLog.info("Restored!");
 					}		
 					else
 					{
-						FCLog.info("Will not restore - claim exist there.");
+						MLog.info("Will not restore - claim exist there.");
 					}
 
 					statement.close();
@@ -104,7 +104,7 @@ public class StructureChecker implements Runnable {
 				
 				if (tries > 30)
 				{
-					FCLog.warning("Failed to find enough " + structure.getName() + " to restore after 30 tries! Are all claimed?");
+					MLog.warning("Failed to find enough " + structure.getName() + " to restore after 30 tries! Are all claimed?");
 					break;
 				}
 			}

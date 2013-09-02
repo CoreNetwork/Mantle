@@ -1,11 +1,7 @@
 package us.corenetwork.mantle;
 
-import java.util.Arrays;
 
-public enum Setting {	
-	
-	PIGMAN_ANGER_RANGE("HardMode.PigmanAngerRange", 1),
-	
+public enum Setting {		
 	DEBUG("Debug", false),
 	
 	MESSAGE_NO_PERMISSION("Messages.NoPermission", "No permission!"),

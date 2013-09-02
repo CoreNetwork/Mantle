@@ -31,7 +31,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.nanobot.ArrayConvert;
 import us.corenetwork.mantle.nanobot.NanobotModule;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
@@ -87,11 +87,11 @@ public class LoadCommand extends NanobotBaseCommand {
 		} catch (FileNotFoundException e) {
 			return null;
 		} catch (IOException e) {
-			FCLog.severe("Error while loading tag yml file - " + e.getMessage());
+			MLog.severe("Error while loading tag yml file - " + e.getMessage());
 			e.printStackTrace();
 			return null;
 		} catch (InvalidConfigurationException e) {
-			FCLog.severe("Error while loading tag yml file - " + e.getMessage());
+			MLog.severe("Error while loading tag yml file - " + e.getMessage());
 			e.printStackTrace();
 			return null;
 		}

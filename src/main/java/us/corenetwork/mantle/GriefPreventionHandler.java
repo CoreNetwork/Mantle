@@ -31,13 +31,13 @@ public class GriefPreventionHandler {
 		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
 		if (bigClaimResult.succeeded != Result.Success)
 		{
-			FCLog.severe("Creation of GriefPrevention claim at " + corner.getBlockX() + " " + corner.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
+			MLog.severe("Creation of GriefPrevention claim at " + corner.getBlockX() + " " + corner.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
 			return;
 		}
 		
 		Claim bigClaim = bigClaimResult.claim;
 
-		FCLog.debug("Creating claim " + bigClaim.getID());
+		MLog.debug("Creating claim " + bigClaim.getID());
 		
 		if (claimPermission != null)
 		{
@@ -63,7 +63,7 @@ public class GriefPreventionHandler {
 				CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(subClaimLoc.getWorld(), subClaimLoc.getBlockX(), subClaimLoc.getBlockX(), subClaimLoc.getBlockY(), subClaimLoc.getBlockY(), subClaimLoc.getBlockZ(), subClaimLoc.getBlockZ(), "", bigClaim, null, false, null);
 				if (chestClaimResult.succeeded != Result.Success)
 				{
-					FCLog.severe("Creation of GriefPrevention sub claim at " + subClaimLoc.getBlockX() + " " + subClaimLoc.getBlockZ() + " failed! Please review that location manually (" + chestClaimResult.succeeded.toString() + ")");
+					MLog.severe("Creation of GriefPrevention sub claim at " + subClaimLoc.getBlockX() + " " + subClaimLoc.getBlockZ() + " failed! Please review that location manually (" + chestClaimResult.succeeded.toString() + ")");
 					continue;
 				}
 

@@ -7,7 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 
 public class NetherSpawningTimer implements Runnable {
@@ -21,7 +21,7 @@ public class NetherSpawningTimer implements Runnable {
 
     @Override
     public void run() {
-        FCLog.debug("Starting nether spawning!");
+        MLog.debug("Starting nether spawning!");
 
         long start = System.nanoTime();
         
@@ -53,8 +53,8 @@ public class NetherSpawningTimer implements Runnable {
 
         long end = System.nanoTime();
 
-        FCLog.debug("Nether spawning ended!");
-        FCLog.debug("Nether spawning time: " + (end - start) / 1000000.0);
+        MLog.debug("Nether spawning ended!");
+        MLog.debug("Nether spawning time: " + (end - start) / 1000000.0);
     }
 
 }

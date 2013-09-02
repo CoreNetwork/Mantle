@@ -14,7 +14,9 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.inventory.ItemStack;
 
-public class FlatcoreListener implements Listener {	
+import us.corenetwork.mantle.hardmode.HardmodeSettings;
+
+public class MantleListener implements Listener {	
 
 	@EventHandler(ignoreCancelled = true)
 	public void onBlockPhysics(BlockPhysicsEvent event)
@@ -39,19 +41,5 @@ public class FlatcoreListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityTarget(EntityTargetEvent event)
 	{
-		//Restrict pigmen range
-		if (event.getReason() == TargetReason.PIG_ZOMBIE_TARGET)
-		{
-			Location targetLocation = event.getTarget().getLocation();
-			Location pigmanLocation = event.getEntity().getLocation();
-
-			int distance = (int) Math.round(pigmanLocation.distance(targetLocation));
-
-			if (distance > Settings.getInt(Setting.PIGMAN_ANGER_RANGE))
-			{
-				event.setCancelled(true);
-				return;
-			}
-		}
 	}
 }

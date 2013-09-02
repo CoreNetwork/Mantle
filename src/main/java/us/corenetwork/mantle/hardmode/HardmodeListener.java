@@ -48,7 +48,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
@@ -403,7 +403,7 @@ public class HardmodeListener implements Listener {
 				double value = HorseSpeed.getOriginalHorseSpeed(id);
 				if (value < 0)
 				{
-					FCLog.severe("Horse speed not saved!");
+					MLog.severe("Horse speed not saved!");
 					value = 1.0;
 				}
 				attributes.setValue(value);

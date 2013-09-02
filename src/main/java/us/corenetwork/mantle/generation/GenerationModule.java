@@ -3,11 +3,11 @@ package us.corenetwork.mantle.generation;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
 
-public class GenerationModule extends FlatcoreModule {
+public class GenerationModule extends MantleModule {
 	public static GenerationModule instance;
 
 	public GenerationModule() {

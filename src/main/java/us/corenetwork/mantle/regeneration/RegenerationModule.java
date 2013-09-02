@@ -8,11 +8,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
 
-public class RegenerationModule extends FlatcoreModule {
+public class RegenerationModule extends MantleModule {
 	public static RegenerationModule instance;
 	public HashMap<String, RegStructure> structures = new HashMap<String, RegStructure>();
 	

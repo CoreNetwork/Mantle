@@ -11,7 +11,7 @@ import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 
@@ -37,7 +37,7 @@ public class LootTableNodeParser extends NodeParser {
 
 		if (node == null)
 		{
-			FCLog.warning("Invalid Loot tables config! Loot table " + tableName +" does not exists!");
+			MLog.warning("Invalid Loot tables config! Loot table " + tableName +" does not exists!");
 			return result;	
 		}
 
@@ -67,7 +67,7 @@ public class LootTableNodeParser extends NodeParser {
 		Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			FCLog.warning("Invalid Loot tables config! Enchant ID is missing!");
+			MLog.warning("Invalid Loot tables config! Enchant ID is missing!");
 			return;
 		}
 
@@ -85,7 +85,7 @@ public class LootTableNodeParser extends NodeParser {
 		Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			FCLog.warning("Invalid Loot tables config! Item ID is missing!");
+			MLog.warning("Invalid Loot tables config! Item ID is missing!");
 			return;
 		}
 

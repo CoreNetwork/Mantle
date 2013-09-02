@@ -4,11 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
 
-public class PortalsModule extends FlatcoreModule {
+public class PortalsModule extends MantleModule {
 	public static PortalsModule instance;
 
 	public PortalsModule() {

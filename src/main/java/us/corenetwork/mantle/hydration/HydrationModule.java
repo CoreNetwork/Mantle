@@ -8,11 +8,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
 
-public class HydrationModule extends FlatcoreModule {
+public class HydrationModule extends MantleModule {
 	public static HydrationModule instance;
 	public static HashMap<String, CachedDrainConfig> drainConfigs;	
 	

@@ -17,7 +17,7 @@ import us.corenetwork.mantle.mantlecommands.ReloadCommand;
 public class MantlePlugin extends JavaPlugin {
 	public static Logger log = Logger.getLogger("Minecraft");
 
-	private FlatcoreListener listener;
+	private MantleListener listener;
 
 	public static MantlePlugin instance;
 
@@ -30,13 +30,13 @@ public class MantlePlugin extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		IO.freeConnection();
-		FlatcoreModule.unloadAll();
+		MantleModule.unloadAll();
 	}
 
 	@Override
 	public void onEnable() {
 		instance = this;
-		listener = new FlatcoreListener();
+		listener = new MantleListener();
 		random = new Random();
 
 		IO.LoadSettings();
@@ -48,7 +48,7 @@ public class MantlePlugin extends JavaPlugin {
 		adminCommands.put("help", new AdminHelpCommand());		
 		adminCommands.put("reload", new ReloadCommand());
 
-		FlatcoreModule.loadModules();
+		MantleModule.loadModules();
 
 		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");
 	}

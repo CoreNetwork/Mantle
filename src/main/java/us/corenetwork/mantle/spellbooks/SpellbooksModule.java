@@ -4,11 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
 
-public class SpellbooksModule extends FlatcoreModule {
+public class SpellbooksModule extends MantleModule {
 	public static SpellbooksModule instance;
 
 	public SpellbooksModule() {

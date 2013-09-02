@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.generation;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 
 public class PathTile {
 	public PathTileMap map;
@@ -54,6 +54,6 @@ public class PathTile {
 	
 	public void printTile()
 	{
-		FCLog.info("Tile " + x + " " + z + " " + structure + " " + rotation + " " + schematic);
+		MLog.info("Tile " + x + " " + z + " " + structure + " " + rotation + " " + schematic);
 	}
 }

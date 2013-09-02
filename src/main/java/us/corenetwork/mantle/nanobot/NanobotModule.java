@@ -17,7 +17,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.material.TexturedMaterial;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.commands.HeadCommand;
@@ -28,7 +28,7 @@ import us.corenetwork.mantle.nanobot.commands.NanobotBaseCommand;
 import us.corenetwork.mantle.nanobot.commands.SaveCommand;
 
 
-public class NanobotModule extends FlatcoreModule {
+public class NanobotModule extends MantleModule {
 	public static NanobotModule instance;
 
 	private HashMap<String, NanobotBaseCommand> commands = new HashMap<String, NanobotBaseCommand>();

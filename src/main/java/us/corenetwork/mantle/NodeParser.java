@@ -76,7 +76,7 @@ public abstract class NodeParser {
 
 		if (pickCount > childCount)
 		{
-			FCLog.warning("Invalid Loot tables config! Amount of items to pick must be smaller or equal to amount of items!");
+			MLog.warning("Invalid Loot tables config! Amount of items to pick must be smaller or equal to amount of items!");
 			return;
 		}
 

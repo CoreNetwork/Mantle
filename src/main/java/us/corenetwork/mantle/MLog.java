@@ -2,7 +2,7 @@ package us.corenetwork.mantle;
 
 import org.bukkit.Bukkit;
 
-public class FCLog {
+public class MLog {
 	public static void debug(String text)
 	{
 		if (Settings.getBoolean(Setting.DEBUG))

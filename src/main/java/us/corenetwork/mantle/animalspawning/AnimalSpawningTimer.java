@@ -15,7 +15,7 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -31,7 +31,7 @@ public class AnimalSpawningTimer implements Runnable {
 	
 	@Override
 	public void run() {		
-		FCLog.debug("Starting animal spawning PREPARE!");
+		MLog.debug("Starting animal spawning PREPARE!");
 
 		long start = System.nanoTime();
 		
@@ -63,7 +63,7 @@ public class AnimalSpawningTimer implements Runnable {
 			statement.close();
 			if (chunks.size() < amount)
 			{
-				FCLog.debug("All chunks spawned! Resetting...");
+				MLog.debug("All chunks spawned! Resetting...");
 				statement = IO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = random()");
 				statement.executeUpdate();
 				statement.close();
@@ -78,9 +78,9 @@ public class AnimalSpawningTimer implements Runnable {
 		}
 				
 		long end = System.nanoTime();
-		FCLog.debug("Spawning PREPARE ended!");
-		FCLog.debug("PREPARE Counter: " + chunks.size());
-		FCLog.debug("PREPARE Time: " + (end - start) / 1000000.0);
+		MLog.debug("Spawning PREPARE ended!");
+		MLog.debug("PREPARE Counter: " + chunks.size());
+		MLog.debug("PREPARE Time: " + (end - start) / 1000000.0);
 		
 		SyncSpawner spawner = new SyncSpawner(chunks);
 		Bukkit.getScheduler().runTask(MantlePlugin.instance, spawner);
@@ -97,11 +97,11 @@ public class AnimalSpawningTimer implements Runnable {
 		
 		@Override
 		public void run() {
-			FCLog.debug("Starting animal spawning SYNC!");
+			MLog.debug("Starting animal spawning SYNC!");
 
 			if (overworld.getTime() > 13000 && overworld.getTime() < 23000)
 			{
-				FCLog.debug("Night! Cancelling...");
+				MLog.debug("Night! Cancelling...");
 				Bukkit.getScheduler().runTaskLaterAsynchronously(MantlePlugin.instance, AnimalSpawningTimer.timerSingleton, AnimalSpawningSettings.SPAWNING_INTERVAL_TICKS.integer());
 				return;
 			}
@@ -164,10 +164,10 @@ public class AnimalSpawningTimer implements Runnable {
 			
 			long end = System.nanoTime();
 			
-			FCLog.debug("Spawning SYNC ended!");
-			FCLog.debug("SYNC Unloaded: " + unloaded);
-			FCLog.debug("SYNC Time: " + (end - start) / 1000000.0);
-			FCLog.debug("SYNC Chunk loading only time: " + chunkLoad / 1000000.0);
+			MLog.debug("Spawning SYNC ended!");
+			MLog.debug("SYNC Unloaded: " + unloaded);
+			MLog.debug("SYNC Time: " + (end - start) / 1000000.0);
+			MLog.debug("SYNC Chunk loading only time: " + chunkLoad / 1000000.0);
 
 			Bukkit.getScheduler().runTaskLaterAsynchronously(MantlePlugin.instance, AnimalSpawningTimer.timerSingleton, AnimalSpawningSettings.SPAWNING_INTERVAL_TICKS.integer());
 		}

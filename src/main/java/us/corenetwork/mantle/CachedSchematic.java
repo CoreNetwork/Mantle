@@ -50,7 +50,7 @@ public class CachedSchematic {
 		File schematic = new File(new File(MantlePlugin.instance.getDataFolder(), "schematics"), name + ".schematic");
 
 		if (!schematic.exists())
-			FCLog.severe("Schematic " + schematic.getAbsolutePath() + " does not exist!");
+			MLog.severe("Schematic " + schematic.getAbsolutePath() + " does not exist!");
 
 		WorldEditPlugin worldEdit = (WorldEditPlugin) MantlePlugin.instance.getServer().getPluginManager().getPlugin("WorldEdit");
 		localSession = new LocalSession(worldEdit.getLocalConfiguration());
@@ -103,7 +103,7 @@ public class CachedSchematic {
 						BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
 						if (Util.isInventoryContainer(baseBlock.getType()))
 						{
-							FCLog.info("Found chest! " + baseBlock.getType());
+							MLog.info("Found chest! " + baseBlock.getType());
 							Vector chest = vector;
 							for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 							{
@@ -120,7 +120,7 @@ public class CachedSchematic {
 
 								if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 								{
-									FCLog.info("Found sign!");
+									MLog.info("Found sign!");
 
 									try
 									{
@@ -129,7 +129,7 @@ public class CachedSchematic {
 
 										if (sign.getText()[0].trim().startsWith("[loot]"))
 										{
-											FCLog.info("Found loot sign!");
+											MLog.info("Found loot sign!");
 
 											int replaceID = 0;
 											String prvaSplit[] = sign.getText()[0].split(" ");

@@ -2,7 +2,7 @@ package us.corenetwork.mantle.mantlecommands;
 
 import org.bukkit.command.CommandSender;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
@@ -20,7 +20,7 @@ public class ReloadCommand extends BaseMantleCommand {
 
 	public void run(final CommandSender sender, String[] args) {
 		IO.LoadSettings();
-		FlatcoreModule.reloadConfigs();
+		MantleModule.reloadConfigs();
 		Util.Message(Settings.getString(Setting.MESSAGE_CONFIGURATION_RELOADED), sender);
 	}	
 }

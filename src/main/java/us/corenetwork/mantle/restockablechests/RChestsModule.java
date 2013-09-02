@@ -4,13 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import us.corenetwork.mantle.FlatcoreModule;
+import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
 import us.corenetwork.mantle.restockablechests.commands.RestockAllCommand;
 
 
-public class RChestsModule extends FlatcoreModule {
+public class RChestsModule extends MantleModule {
 	public static RChestsModule instance;
 	
 	public RChestsModule() {

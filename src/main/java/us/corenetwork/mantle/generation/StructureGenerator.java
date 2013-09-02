@@ -22,7 +22,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.CachedSchematic;
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
@@ -47,11 +47,11 @@ public class StructureGenerator {
 		
 		if (worldConfig == null)
 		{
-			FCLog.info("World " + worldName + " does not have generation config node. Skipping...");
+			MLog.info("World " + worldName + " does not have generation config node. Skipping...");
 			return;
 		}
 		
-		FCLog.info("Starting generation for world " + worldName);
+		MLog.info("Starting generation for world " + worldName);
 		
 		
 		String[] minDimensions = ((String) worldConfig.get("Dimensions.Min")).split(" ");
@@ -76,7 +76,7 @@ public class StructureGenerator {
 			}
 		}
 		
-		FCLog.info("Preparing structures...");
+		MLog.info("Preparing structures...");
 
 		
 		HashMap<Character, StructureData> structures = new HashMap<Character, StructureData>();
@@ -88,13 +88,13 @@ public class StructureGenerator {
 			structures.put(structure.getTextAlias(), structure);
 		}
 	
-		FCLog.info("Preparing textmap...");
+		MLog.info("Preparing textmap...");
 		
 		File textMapFile = new File(MantlePlugin.instance.getDataFolder(), (String) worldConfig.get("TextmapFileName"));
 		
 		if (!textMapFile.exists())
 		{
-			FCLog.info("Text map file for world " + worldName + " does not exist. Skipping...");
+			MLog.info("Text map file for world " + worldName + " does not exist. Skipping...");
 			return;
 		}
 		
@@ -124,7 +124,7 @@ public class StructureGenerator {
 		
 		if (textMap.size() == 0)
 		{
-			FCLog.info("Text map file for world " + worldName + " is empty. Skipping...");
+			MLog.info("Text map file for world " + worldName + " is empty. Skipping...");
 			return;
 		}
 		
@@ -135,7 +135,7 @@ public class StructureGenerator {
 		{
 			if (row.length() != columns)
 			{
-				FCLog.info("Text map file for world " + worldName + " is not properly aligned. Skipping...");
+				MLog.info("Text map file for world " + worldName + " is not properly aligned. Skipping...");
 				return;
 			}
 		}
@@ -144,7 +144,7 @@ public class StructureGenerator {
 		int tileSizeZ = sizeZ / rows;
 		int tiles = columns * rows;
 		
-		FCLog.info("Size of every letter's tile on the map is " + tileSizeX + "x" + tileSizeZ + ". Structures will be placed into center of each area.");
+		MLog.info("Size of every letter's tile on the map is " + tileSizeX + "x" + tileSizeZ + ". Structures will be placed into center of each area.");
 		
 		VillagerSpawner villagerSpawner = new VillagerSpawner();
 		
@@ -165,12 +165,12 @@ public class StructureGenerator {
 					if (structure != null)
 					{
 						
-						FCLog.info("Pasting " + structure.getName() + " to " + x + "," + z);
+						MLog.info("Pasting " + structure.getName() + " to " + x + "," + z);
 						
 						int percentage = rowNum * columns + colNum;
 						percentage *= 100;
 						percentage /= tiles;
-						FCLog.info("Row " + (rowNum + 1) + "/" + rows + ", column " + (colNum + 1) + "/" + columns + " [" + percentage + "% total]");
+						MLog.info("Row " + (rowNum + 1) + "/" + rows + ", column " + (colNum + 1) + "/" + columns + " [" + percentage + "% total]");
 
 						CachedSchematic schematic = structure.getRandomSchematic();
 						
@@ -234,7 +234,7 @@ public class StructureGenerator {
 						}
 						
 						float memLeft = (float) ((float) runtime.freeMemory() / runtime.totalMemory());
-						FCLog.debug("MemLeft: " + memLeft);
+						MLog.debug("MemLeft: " + memLeft);
 						if (memLeft < 0.3)
 						{
 							for (Chunk c : Bukkit.getServer().getWorlds().get(0).getLoadedChunks())
@@ -270,7 +270,7 @@ public class StructureGenerator {
 			e1.printStackTrace();
 		}
 		
-		FCLog.info("Generation finished");
+		MLog.info("Generation finished");
 		
 	}
 	

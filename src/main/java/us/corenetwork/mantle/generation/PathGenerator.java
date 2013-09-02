@@ -22,7 +22,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.CachedSchematic;
-import us.corenetwork.mantle.FCLog;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 
 
@@ -42,17 +42,17 @@ public class PathGenerator {
 
 		if (pathConfig == null)
 		{
-			FCLog.info("Path " + path + " does not have generation config node. Aborting...");
+			MLog.info("Path " + path + " does not have generation config node. Aborting...");
 			return;
 		}
 
-		FCLog.info("Starting generation for path " + path);
+		MLog.info("Starting generation for path " + path);
 
 		world = Bukkit.getWorld((String) pathConfig.get("World"));
 
 		if (world == null)
 		{
-			FCLog.info("Path " + path + " has invalid world set. Aborting...");
+			MLog.info("Path " + path + " has invalid world set. Aborting...");
 			return;
 		}
 
@@ -63,7 +63,7 @@ public class PathGenerator {
 		startX = Integer.parseInt(startPos[0]);
 		startZ = Integer.parseInt(startPos[1]);
 
-		FCLog.info("Preparing structures...");
+		MLog.info("Preparing structures...");
 
 		structures = new HashMap<Character, StructureData>();
 
@@ -74,13 +74,13 @@ public class PathGenerator {
 			structures.put(structure.getTextAlias(), structure);
 		}
 
-		FCLog.info("Preparing textmap...");
+		MLog.info("Preparing textmap...");
 
 		File textMapFile = new File(MantlePlugin.instance.getDataFolder(), (String) pathConfig.get("TextmapFileName"));
 
 		if (!textMapFile.exists())
 		{
-			FCLog.info("Text map file for path " + path + " does not exist. Aborting...");
+			MLog.info("Text map file for path " + path + " does not exist. Aborting...");
 			return;
 		}
 
@@ -110,7 +110,7 @@ public class PathGenerator {
 
 		if (textMap.size() == 0)
 		{
-			FCLog.info("Text map file for path " + path + " is empty. Aborting...");
+			MLog.info("Text map file for path " + path + " is empty. Aborting...");
 			return;
 		}
 
@@ -121,7 +121,7 @@ public class PathGenerator {
 		{
 			if (row.length() != columns)
 			{
-				FCLog.info("Text map file for path " + path + " is not properly aligned. Aborting...");
+				MLog.info("Text map file for path " + path + " is not properly aligned. Aborting...");
 				return;
 			}
 		}
@@ -132,7 +132,7 @@ public class PathGenerator {
 
 		processTile(firstTile, startX, startZ, 1, -1);
 
-		FCLog.info("Generating image");
+		MLog.info("Generating image");
 		
 		int highestX = 0;
 		int highestZ = 0;
@@ -180,7 +180,7 @@ public class PathGenerator {
 			e1.printStackTrace();
 		}
 		
-		FCLog.info("Generation finished");
+		MLog.info("Generation finished");
 	}
 
 	private void processTile(PathTile tile, int x, int z, int coordCorner, int cornerSize)
@@ -220,7 +220,7 @@ public class PathGenerator {
 		{
 			int myCornerSize = (coordCorner == 0 || coordCorner == 2) ? schematic.xSize : schematic.zSize;
 			int diff = cornerSize - myCornerSize;
-			FCLog.info("Corned diff " + diff);
+			MLog.info("Corned diff " + diff);
 			diff /= 2;
 
 			if (coordCorner == 0 || coordCorner == 2)
@@ -245,7 +245,7 @@ public class PathGenerator {
 		}
 		
 		float memLeft = (float) ((float) runtime.freeMemory() / runtime.totalMemory());
-		FCLog.debug("MemLeft: " + memLeft);
+		MLog.debug("MemLeft: " + memLeft);
 		if (memLeft < 0.3)
 		{
 			for (Chunk c : Bukkit.getServer().getWorlds().get(0).getLoadedChunks())
