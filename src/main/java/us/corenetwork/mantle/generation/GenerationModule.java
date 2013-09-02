@@ -31,7 +31,7 @@ public class GenerationModule extends FlatcoreModule {
 		saveConfig();
 		
 		MantlePlugin.adminCommands.put("generate", new GenerateCommand());
-		MantlePlugin.adminCommands.put("generatePath", new GeneratePathCommand());
+		MantlePlugin.adminCommands.put("generatepath", new GeneratePathCommand());
 
 		MapColors.getColor(1);
 		

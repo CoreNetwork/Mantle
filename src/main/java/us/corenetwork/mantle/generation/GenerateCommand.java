@@ -5,18 +5,19 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class GenerateCommand extends BaseAdminCommand {
+public class GenerateCommand extends BaseMantleCommand {
 	public GenerateCommand()
 	{
+		permission = "generate";
 		desc = "Start world generation";
 		needPlayer = false;
 	}
 
 
-	public Boolean run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args) {
 		
 		Util.Message(GenerationSettings.MESSAGE_SERVER_FROZEN.string(), sender);
 
@@ -26,14 +27,12 @@ public class GenerateCommand extends BaseAdminCommand {
 			if (world == null)
 			{
 				sender.sendMessage("World does not exist! Generation aborted.");
-				return true;
+				return;
 			}
 			
 			StructureGenerator.generateWorld(world);
 		}
 		else
 			StructureGenerator.generateAllWorlds();
-		
-		return true;
 	}
 }

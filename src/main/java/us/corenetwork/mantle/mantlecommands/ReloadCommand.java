@@ -9,18 +9,18 @@ import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 
 
-public class ReloadCommand extends BaseAdminCommand {	
+public class ReloadCommand extends BaseMantleCommand {	
 	public ReloadCommand()
 	{
+		permission = "reload";
 		desc = "Reload config";
 		needPlayer = false;
 	}
 
 
-	public Boolean run(final CommandSender sender, String[] args) {
+	public void run(final CommandSender sender, String[] args) {
 		IO.LoadSettings();
 		FlatcoreModule.reloadConfigs();
 		Util.Message(Settings.getString(Setting.MESSAGE_CONFIGURATION_RELOADED), sender);
-		return true;
 	}	
 }

@@ -10,7 +10,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
 
 
@@ -23,7 +23,7 @@ public class MantlePlugin extends JavaPlugin {
 
 	public static Plugin permissions = null;
 
-	public static HashMap<String, BaseAdminCommand> adminCommands = new HashMap<String, BaseAdminCommand>();
+	public static HashMap<String, BaseMantleCommand> adminCommands = new HashMap<String, BaseMantleCommand>();
 
 	public static Random random;
 
@@ -60,7 +60,7 @@ public class MantlePlugin extends JavaPlugin {
 		if (args.length < 1 || Util.isInteger(args[0]))
 			return adminCommands.get("help").execute(sender, args);
 
-		BaseAdminCommand cmd = adminCommands.get(args[0]);
+		BaseMantleCommand cmd = adminCommands.get(args[0]);
 		if (cmd != null)
 			return cmd.execute(sender, args);
 		else

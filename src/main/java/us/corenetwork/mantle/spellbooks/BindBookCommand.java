@@ -10,18 +10,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class BindBookCommand extends BaseAdminCommand {	
+public class BindBookCommand extends BaseMantleCommand {	
 	public BindBookCommand()
 	{
+		permission = "bindbook";
 		desc = "Bind book to player";
 		needPlayer = true;
 	}
 
 
-	public Boolean run(final CommandSender sender, String[] args) {
+	public void run(final CommandSender sender, String[] args) {
 		
 		Player player = (Player) sender;
 		
@@ -30,7 +31,7 @@ public class BindBookCommand extends BaseAdminCommand {
 		if (item == null || item.getType() != Material.ENCHANTED_BOOK)
 		{
 			Util.Message("You need to have enchanted book in hand!", sender);
-			return true;
+			return;
 		}
 		
 		ItemMeta meta = item.getItemMeta();
@@ -38,7 +39,7 @@ public class BindBookCommand extends BaseAdminCommand {
 		if (!meta.hasLore())
 		{
 			Util.Message("Book needs to have lore!", sender);
-			return true;
+			return;
 		}
 			
 		List<String> loreList = meta.getLore();
@@ -82,8 +83,5 @@ public class BindBookCommand extends BaseAdminCommand {
 		meta.setLore(loreList);
 		item.setItemMeta(meta);
 		player.setItemInHand(item);
-
-		
-		return true;
 	}	
 }

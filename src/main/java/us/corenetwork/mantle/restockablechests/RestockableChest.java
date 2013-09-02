@@ -14,6 +14,8 @@ import net.minecraft.server.v1_6_R2.TileEntityChest;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventory;
@@ -23,6 +25,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
@@ -55,6 +58,14 @@ public class RestockableChest {
 		if (!Util.isInventoryContainer(chest.getTypeId()))
 			return null;
 
+		Inventory inventory = ((InventoryHolder) chest.getState()).getInventory();
+		if (inventory instanceof DoubleChestInventory)
+		{
+			DoubleChestInventory doubleChestInventory = (DoubleChestInventory) inventory;
+			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
+			chest = leftChest.getBlock();
+		}
+		
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
@@ -89,6 +100,14 @@ public class RestockableChest {
 
 	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer)
 	{
+		Inventory inventory = ((InventoryHolder) chest.getState()).getInventory();
+		if (inventory instanceof DoubleChestInventory)
+		{
+			DoubleChestInventory doubleChestInventory = (DoubleChestInventory) inventory;
+			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
+			chest = leftChest.getBlock();
+		}
+		
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO chests (Interval, LootTable, PerPlayer, World, X, Y, Z) VALUES (?,?,?,?,?,?,?)");

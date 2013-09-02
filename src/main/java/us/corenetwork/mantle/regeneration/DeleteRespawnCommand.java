@@ -11,20 +11,21 @@ import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class DeleteRespawnCommand extends BaseAdminCommand {
+public class DeleteRespawnCommand extends BaseMantleCommand {
 	private static HashMap<String, Integer> pickedStructure = new HashMap<String, Integer>();
 	
 	public DeleteRespawnCommand()
 	{
+		permission = "deleterespawn";
 		desc = "Delete nearby respawnable structure from database";
 		needPlayer = true;
 	}
 
 
-	public Boolean run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args) {
 		Integer previousDecision = pickedStructure.get(((Player) sender).getName());
 		
 		if (previousDecision != null)
@@ -57,7 +58,7 @@ public class DeleteRespawnCommand extends BaseAdminCommand {
 			if (nearbyVillage == null)
 			{
 				Util.Message(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
-				return true;
+				return;
 			}
 			
 			pickedStructure.put(((Player) sender).getName(), nearbyVillage.id);
@@ -67,8 +68,5 @@ public class DeleteRespawnCommand extends BaseAdminCommand {
 			message = message.replace("<Distance>", Integer.toString(nearbyVillage.distance));
 			Util.Message(message, sender);
 		}
-		
-		return true;
-
 	}
 }

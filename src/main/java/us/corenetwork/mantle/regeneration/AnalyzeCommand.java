@@ -12,18 +12,19 @@ import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class AnalyzeCommand extends BaseAdminCommand {	
+public class AnalyzeCommand extends BaseMantleCommand {	
 	public AnalyzeCommand()
 	{
+		permission = "analyze";
 		desc = "Analyze all structures for claim status";
 		needPlayer = false;
 	}
 
 
-	public Boolean run(final CommandSender sender, String[] args) {
+	public void run(final CommandSender sender, String[] args) {
 		Util.Message(RegenerationSettings.MESSAGE_ANALYZING.string(), sender);
 
 		Bukkit.getServer().getScheduler().runTaskAsynchronously(MantlePlugin.instance, new Runnable() {
@@ -90,7 +91,5 @@ public class AnalyzeCommand extends BaseAdminCommand {
 			}
 
 		});
-
-		return true;
 	}	
 }

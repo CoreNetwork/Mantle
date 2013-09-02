@@ -40,8 +40,8 @@ public class RegenerationModule extends FlatcoreModule {
 		Bukkit.getServer().getPluginManager().registerEvents(new RegenerationListener(), MantlePlugin.instance);
 		
 		MantlePlugin.adminCommands.put("analyze", new AnalyzeCommand());
-		MantlePlugin.adminCommands.put("deleteRespawn", new DeleteRespawnCommand());
-		MantlePlugin.adminCommands.put("testRespawn", new TestRespawnCommand());
+		MantlePlugin.adminCommands.put("deleterespawn", new DeleteRespawnCommand());
+		MantlePlugin.adminCommands.put("testrespawn", new TestRespawnCommand());
 		MantlePlugin.adminCommands.put("respawn", new RespawnCommand());
 
 		MemorySection structuresConfig = (MemorySection) config.get("Structures");

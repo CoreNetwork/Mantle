@@ -8,12 +8,13 @@ import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 
 
-public abstract class BaseAdminCommand {
+public abstract class BaseMantleCommand {
 	public Boolean needPlayer;
 	public String desc;
+	public String permission;
 
-	public abstract Boolean run(CommandSender sender, String[] args);
-	
+	public abstract void run(CommandSender sender, String[] args);
+
 	public Boolean execute(CommandSender sender, String[] args)
 	{
 		if (args.length > 0 && !Util.isInteger(args[0]))
@@ -28,16 +29,17 @@ public abstract class BaseAdminCommand {
 
 		if (!(sender instanceof Player) && needPlayer) 
 		{
-		Util.Message("Sorry, but you need to execute this command as player.", sender);
-			return false;
+			Util.Message("Sorry, but you need to execute this command as player.", sender);
+			return true;
 		}
-		if (sender instanceof Player && !Util.hasPermission(sender,"mcnsaflatcore.command.cha")) 
+		if (sender instanceof Player && !Util.hasPermission(sender,"mantle.command." + permission)) 
 		{
 			Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
-			return false;
+			return true;
 		}
-		
-		return run(sender, args);
+
+		run(sender, args);
+		return true;
 	}
 
 }

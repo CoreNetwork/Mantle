@@ -13,21 +13,22 @@ import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 
 
-public class AdminHelpCommand extends BaseAdminCommand {
+public class AdminHelpCommand extends BaseMantleCommand {
 	
 	public AdminHelpCommand()
 	{
+		permission = "help";
 		desc = "List all possible commands";
 		needPlayer = false;
 	}
 
 
-	public Boolean run(CommandSender sender, String[] args) {		
+	public void run(CommandSender sender, String[] args) {		
 		int page = 1;
 		if (args.length > 0 && Util.isInteger(args[0])) page = Integer.parseInt(args[0]);
 		List<String> komandes = new ArrayList<String>();
 
-		for (Entry<String, BaseAdminCommand> e : MantlePlugin.adminCommands.entrySet())
+		for (Entry<String, BaseMantleCommand> e : MantlePlugin.adminCommands.entrySet())
 		{
 			komandes.add(Settings.getCommandDescription(e.getKey(), "mantle", e.getValue().desc));
 		}  		
@@ -47,7 +48,6 @@ public class AdminHelpCommand extends BaseAdminCommand {
 			if (komande.length < i + 1 || i < 0) break;	
 			Util.Message(komande[i], sender);
 		}   		
-		return true;
 	}
 	
 

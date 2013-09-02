@@ -15,19 +15,20 @@ import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class TestRespawnCommand extends BaseAdminCommand {
+public class TestRespawnCommand extends BaseMantleCommand {
 	
 	public TestRespawnCommand()
 	{
+		permission = "testrespawn";
 		desc = "Test nearby respawning structure for deletion";
 		needPlayer = true;
 	}
 
 
-	public Boolean run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		Location location = player.getLocation();
 		World firstWorld = Bukkit.getWorlds().get(0);
@@ -77,9 +78,6 @@ public class TestRespawnCommand extends BaseAdminCommand {
 		{
 			e.printStackTrace();
 		}
-		
-		return true;
-
 	}
 	
 }

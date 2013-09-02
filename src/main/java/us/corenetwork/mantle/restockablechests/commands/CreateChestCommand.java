@@ -8,33 +8,35 @@ import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.restockablechests.RChestSettings;
+import us.corenetwork.mantle.restockablechests.RChestsModule;
 import us.corenetwork.mantle.restockablechests.RestockableChest;
 
 
-public class CreateChestCommand extends BaseAdminCommand {
+public class CreateChestCommand extends BaseMantleCommand {
 	private static HashMap<Player, PlayerData> selectionPlayers = new HashMap<Player, PlayerData>();
 	
 	public CreateChestCommand()
 	{
+		permission = "createchest";
 		desc = "Create restockable chest";
 		needPlayer = true;
 	}
 
 
-	public Boolean run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args) {
 		
 		if (args.length < 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2]))
 		{
 			Util.Message("/flatcore createchest [Looting Table] [Restock interval in hours] [Per-player chests - 1/0]", sender);
-			return true;
+			return;
 		}
 		
-		if (IO.config.get("LootTables." + args[0]) == null)
+		if (RChestsModule.instance.config.get("LootTables." + args[0]) == null)
 		{
 			Util.Message(RChestSettings.MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST.string(), sender);
-			return true;
+			return;
 		}
 		
 		PlayerData playerData = new PlayerData();
@@ -45,7 +47,6 @@ public class CreateChestCommand extends BaseAdminCommand {
 		selectionPlayers.put((Player) sender, playerData);
 		
 		Util.Message(RChestSettings.MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM.string(), sender);
-		return true;
 
 	}
 	

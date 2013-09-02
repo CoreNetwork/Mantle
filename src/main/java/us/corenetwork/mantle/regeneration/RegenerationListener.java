@@ -18,7 +18,7 @@ public class RegenerationListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{				
-		if (Util.hasPermission(event.getPlayer(), "mcnsaflatcore.mod"))
+		if (Util.hasPermission(event.getPlayer(), "mantle.mod"))
 		{
 			for (RegStructure structure : RegenerationModule.instance.structures.values())
 			{

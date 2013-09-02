@@ -3,18 +3,19 @@ package us.corenetwork.mantle.hydration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class HydrateCommand extends BaseAdminCommand {	
+public class HydrateCommand extends BaseMantleCommand {	
 	public HydrateCommand()
 	{
+		permission = "hydrate";
 		desc = "Reset hydration for specified player";
 		needPlayer = true;
 	}
 
 
-	public Boolean run(final CommandSender sender, String[] args) {
+	public void run(final CommandSender sender, String[] args) {
 		
 		Player player = (Player) sender;
 		
@@ -29,7 +30,5 @@ public class HydrateCommand extends BaseAdminCommand {
 		
 		HydrationUtil.upateMineFatigue(player, playerData, null);
 		HydrationUtil.updateScoreboard(player.getName(), 100);
-		
-		return true;
 	}	
 }

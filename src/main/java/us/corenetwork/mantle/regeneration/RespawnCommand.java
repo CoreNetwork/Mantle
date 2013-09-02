@@ -4,24 +4,25 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseAdminCommand;
+import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
-public class RespawnCommand extends BaseAdminCommand {
+public class RespawnCommand extends BaseMantleCommand {
 
 	public RespawnCommand()
 	{
+		permission = "respawn";
 		desc = "Respawn nearest respawning structure";
 		needPlayer = true;
 	}
 
 
-	public Boolean run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args) {
 		StructureData nearbyVillage = RegenerationUtil.pickNearestStructure(((Player) sender).getLocation());
 		if (nearbyVillage == null)
 		{
 			Util.Message(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
-			return true;
+			return;
 		}
 
 		RegenerationUtil.regenerateStructure(nearbyVillage.id);
@@ -29,7 +30,5 @@ public class RespawnCommand extends BaseAdminCommand {
 		String message = RegenerationSettings.MESSAGE_RESPAWNED.string();
 		message = message.replace("<Distance>", Integer.toString(nearbyVillage.distance));
 		Util.Message(message, sender);
-		return true;
-
 	}
 }
