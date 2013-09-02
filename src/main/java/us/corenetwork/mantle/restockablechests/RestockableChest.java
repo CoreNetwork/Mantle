@@ -309,17 +309,29 @@ public class RestockableChest {
 
 	public Inventory restock(Player player, int restocks, boolean finiteChest)
 	{		
-		double multiplyChance = Math.pow(IO.config.getDouble("LootTables." + lootTable + ".MultiplyChances", 1), restocks);
-		double addChance = IO.config.getDouble("LootTables." + lootTable + ".AddChances", 0) * restocks;
+		double multiplyChance = Math.pow(RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".MultiplyChances", 1), restocks);
+		double addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".AddChances", 0) * restocks;
 		restocks++;
 
 		String numberDisplay = "";
-		int maxNumber = IO.config.getInt("LootTables." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
+		int maxNumber = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 		if (restocks <= maxNumber)
 			numberDisplay = Integer.toString(restocks);
 		else
 			numberDisplay = maxNumber + "+";
 
+		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".MultiChestTimeout", 0);
+		if (timeoutMinutes > 0)
+		{
+			if (ChestTimeout.isUnderTimer(lootTable, player.getName()))
+			{
+				double reducedBy = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".MultiChestTimeoutReduceBy", 0);
+				addChance -= reducedBy;
+			}
+
+			ChestTimeout.addTimer(lootTable, player.getName(), timeoutMinutes);
+		}
+		
 		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance, RChestsModule.instance.config);
 		Inventory inventory;
 		if (player == null)
@@ -403,7 +415,7 @@ public class RestockableChest {
 			statement.close();
 
 			String numberDisplay = "";
-			int maxNumber = IO.config.getInt("LootTable." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
+			int maxNumber = RChestsModule.instance.config.getInt("LootTable." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 			if (restocks <= maxNumber)
 				numberDisplay = Integer.toString(restocks);
 			else

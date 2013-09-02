@@ -137,7 +137,6 @@ public class Util {
 
 			char lastColor = lines[i - 1].charAt(lastColorChar + 1);
 			lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);	
-			System.out.println(lines[i]);
 		}		
 
 		for (int i = 0; i < lines.length; i++)
