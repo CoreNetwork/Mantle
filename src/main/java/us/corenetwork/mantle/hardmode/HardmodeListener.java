@@ -43,6 +43,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
+import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -408,7 +410,27 @@ public class HardmodeListener implements Listener {
 				}
 				attributes.setValue(value);
 			}
-			
+		}
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onEntityTarget(EntityTargetEvent event)
+	{
+		Entity entity = event.getEntity();
+		Entity target = event.getTarget();
+		
+		if (event.getEntityType() == EntityType.GHAST)
+		{
+			TargetReason reason = event.getReason();
+			if (reason == TargetReason.CLOSEST_PLAYER || reason == TargetReason.RANDOM_TARGET)
+			{
+				int distanceSquared = Util.flatDistanceSquared(entity.getLocation(), target.getLocation());
+				if (distanceSquared > HardmodeSettings.GHAST_MAXIMUM_ATTACK_RANGE.integer())
+				{
+					event.setCancelled(true);
+					return;
+				}
+			}
 		}
 	}
 }

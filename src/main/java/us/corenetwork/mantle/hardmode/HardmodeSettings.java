@@ -14,7 +14,8 @@ public enum HardmodeSettings {
 	
 	ZOMBIE_RESPAWN_CHANCE("ZombieRespawnChance", 20),
 		
-	GHAST_SPAWNING_CHANCE("GhastSpawningChance", 0.2),
+	GHAST_SPAWNING_CHANCE("Ghast.SpawningChance", 0.2),
+	GHAST_MAXIMUM_ATTACK_RANGE("Ghast.MaxmimumHorizontalTargetRangeSquared", 70 * 70),
 	
 	WITHER_MIN_SPAWNING_Y("Wither.MinSpawningY", 20),
 	WITHER_DESPAWNING_Y("Wither.DespawningY", 60),
