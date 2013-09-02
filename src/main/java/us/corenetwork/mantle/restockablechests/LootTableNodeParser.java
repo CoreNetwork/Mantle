@@ -13,8 +13,8 @@ import org.bukkit.inventory.ItemStack;
 
 import us.corenetwork.mantle.FCLog;
 import us.corenetwork.mantle.NodeParser;
+import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 
-import com.matejdro.bukkit.mcnsa.nanobot.commands.LoadCommand;
 
 public class LootTableNodeParser extends NodeParser {
 	private String tableName;

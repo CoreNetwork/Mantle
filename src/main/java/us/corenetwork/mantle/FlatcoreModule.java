@@ -14,6 +14,7 @@ import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.hydration.HydrationModule;
+import us.corenetwork.mantle.nanobot.NanobotModule;
 import us.corenetwork.mantle.netherspawning.NetherSpawningModule;
 import us.corenetwork.mantle.portals.PortalsModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;
@@ -214,6 +215,13 @@ public abstract class FlatcoreModule implements CommandExecutor {
             modules.add(module);
         }
 
+        //Nanobot
+        module = new NanobotModule();
+        if (module.loadModuleInternal())
+        {
+            module.active = true;
+            modules.add(module);
+        }
 	}
 
 	public static void reloadConfigs()

@@ -2,14 +2,10 @@ name: Mantle
 main: us.corenetwork.mantle.MantlePlugin
 version: 1.2.0
 author: matejdro
-depend: [GriefPrevention, MCNSANanobot, Core]
+depend: [GriefPrevention, Core]
 softdepend: [WorldGuard]
 commands:
     mantle:
         description: Main command    
-    
-permissions:
-    mcnsaflatcore.command.flatcore:
-        default: op
-    mcnsaflatcore.mod:
-        default: op
+    nbt:
+        description: Nanobot
