@@ -241,6 +241,8 @@ public class CachedSchematic {
 									type = 3;
 								else if (lineS[0].trim().equalsIgnoreCase("butcher"))
 									type = 4;
+								else if (lineS[0].trim().equalsIgnoreCase("greenie"))
+									type = 5;
 								else
 									continue;
 
@@ -283,7 +285,7 @@ public class CachedSchematic {
 
 			for (int i = 0; i < villager.amount; i++)
 			{
-				spawner.spawnVillager(loc, Profession.getProfession(villager.id));
+				spawner.spawnVillager(loc, villager.id);
 			}
 
 		}

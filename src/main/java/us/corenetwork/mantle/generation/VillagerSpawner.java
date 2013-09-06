@@ -2,9 +2,9 @@ package us.corenetwork.mantle.generation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Villager;
-import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
@@ -15,7 +15,7 @@ import us.corenetwork.mantle.MantlePlugin;
 
 
 public class VillagerSpawner implements Listener {
-	private static Profession nextVillagerProfession;
+	private static Integer nextVillagerProfession;
 
 	public VillagerSpawner()
 	{
@@ -23,7 +23,7 @@ public class VillagerSpawner implements Listener {
 
 	}
 
-	public void spawnVillager(Location location, Profession profession)
+	public void spawnVillager(Location location, int profession)
 	{
 		nextVillagerProfession = profession;
 
@@ -42,7 +42,7 @@ public class VillagerSpawner implements Listener {
 	{
 		if (event.getEntityType() == EntityType.VILLAGER && nextVillagerProfession != null)
 		{
-			((Villager) event.getEntity()).setProfession(nextVillagerProfession);
+			((CraftVillager) event.getEntity()).getHandle().setProfession(nextVillagerProfession);
 		}
 	}
 }
