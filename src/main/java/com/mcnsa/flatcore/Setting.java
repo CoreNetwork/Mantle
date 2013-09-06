@@ -68,6 +68,8 @@ public enum Setting {
 	
 	PIGMAN_ANGER_RANGE("HardMode.PigmanAngerRange", 1),
 	
+	NO_DROP_NAMES("NoDropNames", Arrays.asList(new String[] { "Guard" })),
+	
 	DEBUG("Debug", false),
 	
 	MESSAGE_DELETE_DB_TO_IMPORT("Messages.DeleteDBToImport", "Villages are already created! Delete data.db file to reset plugin."),

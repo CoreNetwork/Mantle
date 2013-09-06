@@ -9,13 +9,10 @@ import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -27,7 +24,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPhysicsEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -242,13 +238,12 @@ public class FlatcoreListener implements Listener {
 	{
 		final LivingEntity entity = event.getEntity();
 
-		//Mobs with name or silverfishes should not drop anything
-		if (entity.getCustomName() != null || entity.getType() == EntityType.SILVERFISH)
+		if (entity.getType() == EntityType.SILVERFISH ||
+				(entity.getCustomName() != null && Settings.getList(Setting.NO_DROP_NAMES).contains(entity.getCustomName())))
 		{
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 			entity.getEquipment().clear();
-			return;
 		}
 
 		//Pigmen dropping nether wart
