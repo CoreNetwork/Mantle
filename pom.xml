@@ -91,14 +91,6 @@
       <systemPath>${basedir}/lib/JExel-1_0_0-beta_13.jar</systemPath>
     </dependency>
     
-    <dependency>
-      <groupId>com.matejdro.bukkit.mcnsa.nanobot</groupId>
-      <artifactId>MCNSANanobot</artifactId>
-      <version>1.1</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/MCNSANanobot.jar</systemPath>
-    </dependency>
-
   </dependencies>
 
 </project>

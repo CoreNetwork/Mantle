@@ -3,6 +3,7 @@ package us.corenetwork.mantle.spellbooks;
 import java.util.HashMap;
 
 import us.corenetwork.mantle.spellbooks.books.GrowthBook;
+import us.corenetwork.mantle.spellbooks.books.TimeTravelBook;
 
 
 public class SpellbookManager {
@@ -11,6 +12,8 @@ public class SpellbookManager {
 	public static void init()
 	{
 		addSpellbook(new GrowthBook());
+		addSpellbook(new TimeTravelBook());
+
 	}
 	
 	public static Spellbook getBook(String name)

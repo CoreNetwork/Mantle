@@ -144,6 +144,15 @@ public class Util {
 
 
 	}
+	
+	public static void Broadcast(String message)
+	{
+		for (Player p : Bukkit.getOnlinePlayers())
+		{
+				Util.Message(message, p);
+		}
+
+	}
 
 	public static void Broadcast(String message, String exclusion)
 	{
