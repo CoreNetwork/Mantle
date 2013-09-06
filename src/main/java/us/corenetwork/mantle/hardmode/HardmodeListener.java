@@ -116,7 +116,12 @@ public class HardmodeListener implements Listener {
 
 			//Environmental damage
 			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
-
+			if (event.getDamage() < 0)
+			{
+				event.setCancelled(true);
+				return;
+			}
+			
 			//Dismount player from the horse if player shot via arrow
 			if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse)
 			{

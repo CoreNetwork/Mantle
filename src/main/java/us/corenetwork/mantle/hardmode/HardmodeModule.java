@@ -49,7 +49,10 @@ public class HardmodeModule extends MantleModule {
 		
 		EntityDamageEvent customDamage = new EntityDamageEvent(entity, DamageCause.CUSTOM, 0d);
 		DamageNodeParser.parseDamageEvent(customDamage, node, instance.config);
-		entity.damage(customDamage.getDamage());
+		
+		double damage = customDamage.getDamage();
+		if (damage >= 0)
+			entity.damage(damage);
 
 	}
 

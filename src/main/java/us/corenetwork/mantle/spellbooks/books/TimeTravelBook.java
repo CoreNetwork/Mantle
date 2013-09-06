@@ -1,7 +1,9 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.server.v1_6_R2.EntityVillager;
@@ -32,6 +34,8 @@ public class TimeTravelBook extends Spellbook implements CircleIterator.EntityRe
 
 	public TimeTravelBook() {
 		super("Spellbook of Time Travel");
+		
+		initEnchants();
 	}
 	
 	private Player curPlayer;
@@ -65,7 +69,9 @@ public class TimeTravelBook extends Spellbook implements CircleIterator.EntityRe
 				for (Enchantment e : enchantmentTypes)
 					stack.removeEnchantment(e);
 							
-				curPlayer.giveExp(addedExp);
+				if (addedExp > 25)
+					addedExp = 25;
+				curPlayer.giveExpLevels(addedExp);
 				
 				curPlayer.updateInventory();
 				
@@ -103,10 +109,61 @@ public class TimeTravelBook extends Spellbook implements CircleIterator.EntityRe
         return MantlePlugin.random.nextInt(firstDice) + MantlePlugin.random.nextInt(secondDice) + removalMinimum;
     }
     
+    private static Map<Enchantment, Integer[]> xpTable;
+    
     private static int getEnchantmentWorth(Enchantment enchantment, int level)
     {
-    	return 25;
+    	Integer[] enchantmentLevels = xpTable.get(enchantment);
+    	if (enchantmentLevels == null)
+    		return 8;
+    	
+    	return enchantmentLevels[0] * --level + enchantmentLevels[1];
     }
 
+    private static void initEnchants()
+    {
+    	xpTable = new HashMap<Enchantment, Integer[]>();
+    	
+    	//Armor
+    	addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 11, 1);
+    	addEnchant(Enchantment.PROTECTION_FIRE, 8, 10);
+    	addEnchant(Enchantment.PROTECTION_FALL, 6, 5);
+    	addEnchant(Enchantment.PROTECTION_EXPLOSIONS, 8, 5);
+    	addEnchant(Enchantment.PROTECTION_PROJECTILE, 6, 3);
+    	addEnchant(Enchantment.OXYGEN, 10, 10);
+    	addEnchant(Enchantment.WATER_WORKER, 0, 10);
+    	addEnchant(Enchantment.THORNS, 20, 10);
+
+    	//Sword
+    	addEnchant(Enchantment.DAMAGE_ALL, 11, 1);
+    	addEnchant(Enchantment.DAMAGE_UNDEAD, 8, 10);
+    	addEnchant(Enchantment.DAMAGE_ARTHROPODS, 8, 10);
+    	addEnchant(Enchantment.KNOCKBACK, 15, 5);
+    	addEnchant(Enchantment.FIRE_ASPECT, 20, 10);
+    	addEnchant(Enchantment.LOOT_BONUS_MOBS, 9, 15);
+
+    	//Bow
+    	addEnchant(Enchantment.ARROW_DAMAGE, 10, 1);
+    	addEnchant(Enchantment.ARROW_KNOCKBACK, 20, 12);
+    	addEnchant(Enchantment.ARROW_FIRE, 0, 20);
+    	addEnchant(Enchantment.ARROW_INFINITE, 0, 20);
+    	
+    	//Tool
+    	addEnchant(Enchantment.DIG_SPEED, 10, 1);
+    	addEnchant(Enchantment.SILK_TOUCH, 0, 15);
+    	addEnchant(Enchantment.DURABILITY, 8, 5);
+    	addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 9, 15);
+
+    }
+    
+    private static void addEnchant(Enchantment enchantment, int k, int m)
+    {
+    	Integer[] parameters = new Integer[2];
+    	parameters[0] = k;
+    	parameters[1] = m;
+    	
+    	xpTable.put(enchantment, parameters);
+    }
+    
 
 }

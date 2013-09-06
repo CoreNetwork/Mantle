@@ -11,11 +11,13 @@ import java.util.Map.Entry;
 import net.minecraft.server.v1_6_R2.Packet54PlayNoteBlock;
 import net.minecraft.server.v1_6_R2.TileEntityChest;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventory;
@@ -31,10 +33,12 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.hardmode.HardmodeModule;
 
 
 public class RestockableChest {
@@ -155,12 +159,14 @@ public class RestockableChest {
 
 	public boolean open(Player player)
 	{
-		if (!perPlayer) player = null;
-
 		RestockableChest chest = openedInventories.get(player);
 		if (chest != null)
 			return true;
 
+		applyPoison(player);
+		
+		if (!perPlayer) player = null;
+		
 		if (player == null) 
 		{
 			tryRestock(player);
@@ -309,23 +315,23 @@ public class RestockableChest {
 
 	public Inventory restock(Player player, int restocks, boolean finiteChest)
 	{		
-		double multiplyChance = Math.pow(RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".MultiplyChances", 1), restocks);
-		double addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".AddChances", 0) * restocks;
+		double multiplyChance = Math.pow(RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.MultiplyChances", 1), restocks);
+		double addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.AddChances", 0) * restocks;
 		restocks++;
 
 		String numberDisplay = "";
-		int maxNumber = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
+		int maxNumber = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 		if (restocks <= maxNumber)
 			numberDisplay = Integer.toString(restocks);
 		else
 			numberDisplay = maxNumber + "+";
 
-		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".MultiChestTimeout", 0);
+		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout", 0);
 		if (timeoutMinutes > 0)
 		{
 			if (ChestTimeout.isUnderTimer(lootTable, player.getName()))
 			{
-				double reducedBy = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".MultiChestTimeoutReduceBy", 0);
+				double reducedBy = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.MultiChestTimeoutReduceBy", 0);
 				addChance -= reducedBy;
 			}
 
@@ -415,7 +421,7 @@ public class RestockableChest {
 			statement.close();
 
 			String numberDisplay = "";
-			int maxNumber = RChestsModule.instance.config.getInt("LootTable." + lootTable + ".MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
+			int maxNumber = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 			if (restocks <= maxNumber)
 				numberDisplay = Integer.toString(restocks);
 			else
@@ -519,6 +525,38 @@ public class RestockableChest {
 		}
 	}
 
+	
+	private void applyPoison(Player player)
+	{
+		MemorySection section = (MemorySection) RChestsModule.instance.config.get("LootTables." + lootTable + ".PlayerControl.Poison");
+		if (section == null)
+			return;
+		
+		Number chance = (Number) section.get("Chance");
+		if (chance == null)
+		{
+			MLog.warning("Poison section in loot table " + lootTable + " is missing chance!");
+			return;
+		}
+		
+		if (chance.doubleValue() < MantlePlugin.random.nextDouble())
+			return;
+		
+		String damageNode = (String) section.get("ApplyDamageNode");
+		if (damageNode == null)
+		{
+			MLog.warning("Poison section in loot table " + lootTable + " is missing damage node!");
+			return;
+		}
+		
+		HardmodeModule.applyDamageNode(player, damageNode);
+		
+		Location location = player.getLocation();
+		World world = location.getWorld();
+		
+		world.playSound(location, Sound.GLASS, 1f, 1f);
+		ParticleLibrary.SPELL.sendToPlayer(player, location, 0, 0, 0, 0, 3);
+	}
 	private String getCustomName()
 	{
 		if (!Util.isInventoryContainer(chestBlock.getTypeId()))

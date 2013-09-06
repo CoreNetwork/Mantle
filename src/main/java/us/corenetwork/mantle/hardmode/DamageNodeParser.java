@@ -37,7 +37,10 @@ public class DamageNodeParser extends NodeParser {
 	{
 		List<?> node = (List<?>) config.getList("DamageModifiers." + eventName);
 		if (node == null)
+		{
+			MLog.warning("Damage node " + eventName + " does not exist!");
 			return;
+		}
 
 		parseNodeList(node);
 	}
