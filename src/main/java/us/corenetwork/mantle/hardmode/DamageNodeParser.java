@@ -1,6 +1,5 @@
 package us.corenetwork.mantle.hardmode;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -25,12 +24,14 @@ public class DamageNodeParser extends NodeParser {
 	private EntityDamageEvent event;
 	private String eventName;
 	YamlConfiguration config;
+	private boolean customName;
 	
-	private DamageNodeParser(EntityDamageEvent event, String eventName, YamlConfiguration config)
+	private DamageNodeParser(EntityDamageEvent event, String eventName, YamlConfiguration config, boolean customName)
 	{
 		this.eventName = eventName;
 		this.event = event;
 		this.config = config;
+		this.customName = customName;
 	}
 
 	private void parse()
@@ -38,7 +39,7 @@ public class DamageNodeParser extends NodeParser {
 		List<?> node = (List<?>) config.getList("DamageModifiers." + eventName);
 		if (node == null)
 		{
-			MLog.warning("Damage node " + eventName + " does not exist!");
+			if (customName) MLog.warning("Damage node " + eventName + " does not exist!");
 			return;
 		}
 
@@ -47,12 +48,12 @@ public class DamageNodeParser extends NodeParser {
 
 	public static void parseDamageEvent(EntityDamageEvent event, String eventName, YamlConfiguration config)
 	{
-		new DamageNodeParser(event, eventName, config).parse();
+		new DamageNodeParser(event, eventName, config, true).parse();
 	}	
 
 	public static void parseDamageEvent(EntityDamageEvent event, YamlConfiguration config)
 	{
-		parseDamageEvent(event, event.getCause().toString(), config);
+		new DamageNodeParser(event, event.getCause().toString(), config, false).parse();
 	}
 
 	@Override

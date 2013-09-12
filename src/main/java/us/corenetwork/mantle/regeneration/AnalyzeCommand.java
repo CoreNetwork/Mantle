@@ -57,7 +57,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 							
 							int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 							
-							if (GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false))
+							if (GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false, null))
 							{
 								claimed++;
 							}		

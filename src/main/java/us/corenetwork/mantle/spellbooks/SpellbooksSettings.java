@@ -5,7 +5,8 @@ import java.util.List;
 public enum SpellbooksSettings {
 
 	MESSAGE_NOT_AUTHORIZED("Messages.NotAuthorized", "Sorry, you can't use spellbook bound to someone else!"),
-	MESSAGE_USED("Messages.Used", "Player <Player> used <Spellbook>.");
+	MESSAGE_USED("Messages.Used", "Player <Player> used <Spellbook>."),
+	NO_BUILD_PERMISSION("Messages.NoBuildPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
 	
 	protected String string;
 	protected Object def;

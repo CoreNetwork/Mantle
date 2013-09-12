@@ -278,6 +278,21 @@ public class RestockableChest {
 
 	public Inventory tryRestock(Player player)
 	{		
+		if (RChestsModule.instance.config.contains("LootTables." + lootTable + ".PlayerControl.TimeRestrict"))
+		{			
+			int minTime = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.TimeRestrict.MinTime");
+			int maxTime = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.TimeRestrict.MaxTime");
+			long curTime = chestBlock.getWorld().getTime();
+			
+			if (!((minTime < maxTime && curTime > minTime && curTime < maxTime) || (minTime > maxTime && (curTime > minTime || curTime < maxTime))))
+			{
+				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.TimeRestrict.Message");
+				Util.Message(message, player);
+				return null;
+			}
+			
+		}
+		
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM playerChests WHERE ID = ? AND Player = ? LIMIT 1");

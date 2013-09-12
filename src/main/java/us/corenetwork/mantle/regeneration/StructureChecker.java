@@ -80,7 +80,7 @@ public class StructureChecker implements Runnable {
 					{
 						MLog.info("Will not restore - player inside.");
 					}
-					else if (!GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false))
+					else if (!GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false, null))
 					{
 						generated++;
 

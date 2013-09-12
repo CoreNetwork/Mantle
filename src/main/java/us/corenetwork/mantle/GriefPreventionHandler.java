@@ -13,6 +13,7 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 
 public class GriefPreventionHandler {
@@ -82,7 +83,7 @@ public class GriefPreventionHandler {
 		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
 	}
 
-	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly)
+	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
 		int villageMinX = x - padding;
 		int villageMaxX = x + xSize + padding;
@@ -98,6 +99,9 @@ public class GriefPreventionHandler {
 				continue;
 			
 			if (claim.getLesserBoundaryCorner().getWorld() != world)
+				continue;
+			
+			if (player != null && (claim.allowAccess(player) == null))
 				continue;
 			
 			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
@@ -117,7 +121,7 @@ public class GriefPreventionHandler {
 		}
 
 		return false;		
-	}	
+	}
 	
 	public static Deque<Location> getAllClaims()
 	{

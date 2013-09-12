@@ -10,7 +10,7 @@ import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 
-public abstract class Spellbook {
+public abstract class Spellbook {	
 	private String name;
 	
 	public Spellbook(String name)
@@ -33,28 +33,29 @@ public abstract class Spellbook {
 			return;
 		}
 		
-		onActivate(item, event);
-		
-		Player player = event.getPlayer();
-		if (player.getGameMode() != GameMode.CREATIVE)
+		if (onActivate(item, event))
 		{
-			player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
+			Player player = event.getPlayer();
+			if (player.getGameMode() != GameMode.CREATIVE)
+			{
+				player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
+			}
+			
+			long end = System.nanoTime();
+			if (Settings.getBoolean(Setting.DEBUG))
+			{
+				player.sendMessage("Book time: " + (end - start) / 1000000.0);
+			}
+			
+			String message = SpellbooksSettings.MESSAGE_USED.string();
+			message = message.replace("<Player>", player.getName());
+			message = message.replace("<Spellbook>", getName());
+			Util.Broadcast(message);
+			
+			Location playerLoc = player.getLocation();
+			MLog.info("Player " + player.getName() + " used " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());
 		}
-		
-		long end = System.nanoTime();
-		if (Settings.getBoolean(Setting.DEBUG))
-		{
-			player.sendMessage("Book time: " + (end - start) / 1000000.0);
-		}
-		
-		String message = SpellbooksSettings.MESSAGE_USED.string();
-		message = message.replace("<Player>", player.getName());
-		message = message.replace("<Spellbook>", getName());
-		Util.Broadcast(message);
-		
-		Location playerLoc = player.getLocation();
-		MLog.info("Player " + player.getName() + " used " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());
 	}
 	
-	protected abstract void onActivate(SpellbookItem item, PlayerInteractEvent event);
+	protected abstract boolean onActivate(SpellbookItem item, PlayerInteractEvent event);
 }

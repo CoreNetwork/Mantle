@@ -41,13 +41,12 @@ public class TimeTravelBook extends Spellbook implements CircleIterator.EntityRe
 	private Player curPlayer;
 	
 	@Override
-	public void onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		curPlayer = event.getPlayer();
 
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(curPlayer.getEyeLocation(), 2);
 
 		FireworkEffect effect = FireworkEffect.builder().withColor(Color.BLUE).withFade(Color.BLUE).build();
-		
 		Util.showFirework(effectLoc, effect);
 		
 		CircleIterator.iterateCircleEntities(this, event.getPlayer().getLocation(), 8 / 2);
@@ -79,6 +78,8 @@ public class TimeTravelBook extends Spellbook implements CircleIterator.EntityRe
 					break;
 			}
 		}
+		
+		return true;
 	}
 
 	@Override

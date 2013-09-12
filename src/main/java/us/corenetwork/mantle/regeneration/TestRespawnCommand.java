@@ -58,7 +58,7 @@ public class TestRespawnCommand extends BaseMantleCommand {
 				int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 				
 				String message;
-				if (GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, padding, false))
+				if (GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, padding, false, null))
 				{
 					message = RegenerationSettings.MESSAGE_STRUCTURE_WILL_NOT_BE_RESTORED.string();
 				}		

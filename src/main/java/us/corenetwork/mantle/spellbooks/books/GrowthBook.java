@@ -1,15 +1,18 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.TreeSpecies;
+import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
 
 import us.corenetwork.mantle.ParticleLibrary;
@@ -26,7 +29,8 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 	}
 
 	@Override
-	public void onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+		
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
 		Vector direction = event.getPlayer().getLocation().getDirection();
 
@@ -35,6 +39,8 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 		
 		CircleIterator.iterateCircleBlocks(this, event.getPlayer().getLocation(), 32 / 2);
 		CircleIterator.iterateCircleEntities(this, event.getPlayer().getLocation(), 32 / 2);
+		
+		return true;
 	}
 
 	@Override
@@ -50,6 +56,8 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 	{
 		if (block.getType() == Material.CROPS || block.getType() == Material.CARROT || block.getType() == Material.POTATO)
 			block.setData((byte) 7);
+		else if (block.getType() == Material.NETHER_WARTS)
+			block.setData((byte) 3);
 		else if (block.getType() == Material.MELON_STEM)
 		{
 			block.setData((byte) 7);
@@ -67,6 +75,35 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 				}
 			}
 		}
+		else if (block.getType() == Material.SAPLING)
+		{
+			byte data = block.getData();
+			TreeSpecies species = new Tree(block.getTypeId(), data).getSpecies();
+			
+			TreeType tree;
+			
+			switch (species)
+			{
+			case BIRCH:
+				tree = TreeType.BIRCH;
+				break;
+			case JUNGLE:
+				tree = TreeType.JUNGLE;
+				break;
+			case REDWOOD:
+				tree = TreeType.REDWOOD;
+				break;
+			default:
+				tree = TreeType.BIG_TREE;
+			}
+			
+			block.setType(Material.AIR);
+			
+			boolean generated = block.getWorld().generateTree(block.getLocation(), tree);
+			if (!generated)
+				block.setTypeIdAndData(Material.SAPLING.getId(), data, false);
+		}
+		
 	}
 
 	@Override
