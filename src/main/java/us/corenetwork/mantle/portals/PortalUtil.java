@@ -228,8 +228,6 @@ public class PortalUtil {
 	public static void buildPortal(Location location)
 	{
 		Block baseBlock = location.getBlock();
-
-		MLog.info(baseBlock.toString());
 		
 		//Build top and bottom frame
 		for (int x = -1; x < 3; x++)
