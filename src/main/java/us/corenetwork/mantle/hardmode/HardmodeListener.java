@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
+import org.bukkit.GrassSpecies;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
@@ -286,7 +287,6 @@ public class HardmodeListener implements Listener {
 		onCropDestroyed(block.getRelative(BlockFace.UP), false);
 	}
 
-	@EventHandler(ignoreCancelled = true)	
 	//Virtal event that combines multiple events. 
 	//Triggers when non-solid block (like crops) is about to be destroyed
 	public boolean onCropDestroyed(Block block, boolean dark)
@@ -298,6 +298,17 @@ public class HardmodeListener implements Listener {
 		if ((block.getType() == Material.PUMPKIN_STEM || block.getType() == Material.MELON_STEM || block.getType() == Material.CROPS || block.getType() == Material.POTATO || block.getType() == Material.CARROT) && block.getData() < 7)
 		{
 			block.setType(Material.AIR);
+			return true;
+		}
+		
+		//Drop sticks when destroying dead shrub
+		if (block.getType() == Material.LONG_GRASS && block.getData() == GrassSpecies.DEAD.getData())
+		{
+			int sticksDropped = MantlePlugin.random.nextInt(3);
+			if (sticksDropped > 0)
+				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.STICK, sticksDropped));
+			block.setType(Material.AIR);
+
 			return true;
 		}
 
