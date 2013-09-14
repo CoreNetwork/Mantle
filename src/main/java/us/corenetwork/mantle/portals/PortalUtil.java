@@ -9,13 +9,20 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
+import us.corenetwork.mantle.MLog;
+
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{
 		final Location destination = getOtherSide(entity.getLocation());
+		
+		destination.getChunk().load();
+		
 		if (destination.getBlock().getType() != Material.PORTAL)
 			buildPortal(destination);
 
+		MLog.info(destination.getBlock().getType().toString());
+		
 		return destination;		
 	}
 
@@ -23,6 +30,15 @@ public class PortalUtil {
 	{
 		//Always pick northest or westest portal block
 		Block block = currentSide.getBlock();
+		
+		if (block.getType() != Material.PORTAL)
+		{
+			if (block.getRelative(BlockFace.EAST).getType() == Material.PORTAL)
+				block = block.getRelative(BlockFace.EAST);
+			if (block.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL)
+				block = block.getRelative(BlockFace.SOUTH);
+		}
+		
 		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
 			block = block.getRelative(BlockFace.NORTH);
 		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
@@ -111,7 +127,8 @@ public class PortalUtil {
 			maxY = PortalsSettings.OVERWORLD_MAX_Y.integer();
 		}
 		
-		int radius = curLocation.getWorld().getEnvironment() == Environment.NETHER ? 5 : 20;
+		int radius = Math.max(curLocation.getWorld().getEnvironment() == Environment.NETHER ? 1 : (int) Math.ceil(PortalsSettings.PORTAL_RATIO.doubleNumber()), 1);
+		
 		int x = 0;
 		int y = 0;
 		int dir = 0;
@@ -120,6 +137,27 @@ public class PortalUtil {
 		int startX = 0;
 		int startY = 0;
 
+		int closestPortalDistance = Integer.MAX_VALUE;
+		Location closestPortal = null;
+		
+		for (int h = minY; h < maxY; h++)
+		{
+			Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
+			if (block != null)
+			{
+				if (block.getType() == Material.PORTAL)
+				{
+					Location portalLoc = block.getLocation();
+					int distance = (int) Math.round(portalLoc.distanceSquared(curLocation));
+					if (distance < closestPortalDistance)
+					{
+						closestPortalDistance = distance;
+						closestPortal = portalLoc;
+					}
+				}
+			}			
+		}
+		
 		while (true)
 		{
 			switch (dir)
@@ -159,12 +197,12 @@ public class PortalUtil {
 
 				startX = x;
 			}
-
-			if (Math.abs(x) + 1 >= radius || Math.abs(y) + 1 >= radius)
+			
+			if (Math.abs(x) > radius || Math.abs(y) > radius)
 			{
 				break;
 			}
-
+			
 			for (int h = minY; h < maxY; h++)
 			{
 				Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
@@ -172,25 +210,27 @@ public class PortalUtil {
 				{
 					if (block.getType() == Material.PORTAL)
 					{
-						Block below = block.getRelative(BlockFace.DOWN);
-						if (below != null && below.getType() == Material.PORTAL)
+						Location portalLoc = block.getLocation();
+						int distance = (int) Math.round(portalLoc.distanceSquared(curLocation));
+						if (distance < closestPortalDistance)
 						{
-							return below.getLocation();
+							closestPortalDistance = distance;
+							closestPortal = portalLoc;
 						}
-						return block.getLocation();
 					}
 				}			
-			}
+			}			
 		}
 
-		return null;
+		return closestPortal;
 	}
 
 	public static void buildPortal(Location location)
 	{
 		Block baseBlock = location.getBlock();
 
-
+		MLog.info(baseBlock.toString());
+		
 		//Build top and bottom frame
 		for (int x = -1; x < 3; x++)
 		{
