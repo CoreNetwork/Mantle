@@ -133,7 +133,7 @@ public class NanobotUtil {
 	public static String fixFormatting(String source)
 	{
 		source = source.replaceAll("(?<!&)&([klmnor0-9abcdef])", ChatColor.COLOR_CHAR + "$1");
-		source = source.replaceAll("&&([klmnor0-9abcdef])", ChatColor.COLOR_CHAR + "§$1");
+		source = source.replaceAll("&&([klmnor0-9abcdef])", ChatColor.COLOR_CHAR + "$1");
 	
 		return source;
 	}
