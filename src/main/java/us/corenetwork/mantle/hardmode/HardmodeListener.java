@@ -378,7 +378,7 @@ public class HardmodeListener implements Listener {
 		//Reduced ghast spawning
 		else if (event.getEntityType() == EntityType.GHAST)
 		{
-			if (MantlePlugin.random.nextDouble() > HardmodeSettings.GHAST_SPAWNING_CHANCE.doubleNumber())
+			if (MantlePlugin.random.nextDouble() > HardmodeSettings.GHAST_SPAWNING_CHANCE.doubleNumber() || event.getLocation().getY() < HardmodeSettings.GHAST_MINIMUM_SPAWNING_Y.integer())
 			{
 				event.setCancelled(true);
 				return;
