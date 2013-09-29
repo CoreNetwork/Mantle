@@ -126,14 +126,11 @@ public class CachedSchematic {
 										SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
 										sign.setNbtData(baseBlock.getNbtData());
 
+										boolean properSign = true;
+										
 										if (sign.getText()[0].trim().startsWith("[loot]"))
 										{
 											MLog.info("Found loot sign!");
-
-											int replaceID = 0;
-											String prvaSplit[] = sign.getText()[0].split(" ");
-											if (prvaSplit.length > 1 && Util.isInteger(prvaSplit[1]))
-												replaceID = Integer.parseInt(prvaSplit[1]);
 
 											ChestInfo info = new ChestInfo();
 											info.restockable = true;
@@ -142,29 +139,53 @@ public class CachedSchematic {
 											info.perPlayer = sign.getText()[3].contains("true");
 											info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
 
-											localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID));
-
 											chests.add(info);
 
 											break;
 										}
 										else if (sign.getText()[0].trim().startsWith("[Allow]"))
 										{
-											int replaceID = 0;
-											String prvaSplit[] = sign.getText()[0].split(" ");
-											if (prvaSplit.length > 1 && Util.isInteger(prvaSplit[1]))
-												replaceID = Integer.parseInt(prvaSplit[1]);
 
 
 											ChestInfo info = new ChestInfo();
 											info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
 											info.restockable = false;
 
-											localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID));
-
 											chests.add(info);
 
 											break;
+										}
+										else
+											properSign = false;
+										
+										if (properSign)
+										{
+											int replaceID = 0;
+											int replaceData = 0;
+											
+											String prvaSplit[] = sign.getText()[0].split(" ");
+											if (prvaSplit.length > 1)
+											{
+												String idString = prvaSplit[1];
+												if (Util.isInteger(idString))
+												{
+													replaceID = Integer.parseInt(idString);
+												}
+												else if (idString.contains(":"))
+												{
+													String[] idSplit = idString.split(":");
+													if (Util.isInteger(idSplit[0]))
+													{
+														replaceID = Integer.parseInt(idSplit[0]);
+													}
+													if (Util.isInteger(idSplit[1]))
+													{
+														replaceData = Integer.parseInt(idSplit[1]);
+													}
+												}
+											}
+
+											localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID, replaceData));
 										}
 									}
 									catch (DataException e)
