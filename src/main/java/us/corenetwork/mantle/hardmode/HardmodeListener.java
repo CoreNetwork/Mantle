@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import net.minecraft.server.v1_6_R2.AttributeInstance;
@@ -28,6 +29,7 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.entity.Wither;
+import org.bukkit.entity.WitherSkull;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -50,6 +52,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.potion.PotionEffectType;
 
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -59,10 +62,13 @@ import us.corenetwork.mantle.Util;
 public class HardmodeListener implements Listener {
 
 	private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
+	private static HashMap<String, Long> lastWitherHits = new HashMap<String, Long>();
+
 	static
 	{
 		transparentBlocks.add((byte) 0);
 	}
+	
 
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
@@ -71,7 +77,7 @@ public class HardmodeListener implements Listener {
 		//Do not apply anything to End or void
 		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
 			return;
-
+		
 		if (event instanceof EntityDamageByEntityEvent)
 		{
 			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
@@ -109,6 +115,24 @@ public class HardmodeListener implements Listener {
 				victim.removeMetadata("DespawningTime", MantlePlugin.instance);
 				victim.setMetadata("DespawningTime", value);
 			}
+			else if (victim instanceof Player && damager instanceof Skeleton)
+			{
+				Skeleton skeleton = (Skeleton) damager;
+				if (skeleton.getSkeletonType() == SkeletonType.WITHER)
+				{
+					ItemStack weapon = skeleton.getEquipment().getItemInHand();
+					
+					//Remember last wither skeleton attack 
+					if (weapon != null && weapon.getType() == Material.IRON_SWORD)
+					{
+						lastWitherHits.put(((Player) victim).getName(), System.currentTimeMillis());
+					}
+				}
+			}
+			else if (victim instanceof Player && (damager instanceof WitherSkull || damager instanceof Wither))
+			{
+				lastWitherHits.put(((Player) victim).getName(), System.currentTimeMillis());
+			}
 		}
 
 		if (event.getEntity() instanceof Player)
@@ -127,6 +151,18 @@ public class HardmodeListener implements Listener {
 			if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse)
 			{
 				player.leaveVehicle();
+			}
+			
+			//Remove wither if inflicted by invalid skeleton
+			if (event.getCause() == DamageCause.WITHER)
+			{
+				Long lastWitherHit = lastWitherHits.get(player.getName());
+				if (lastWitherHit == null || lastWitherHit < System.currentTimeMillis() - 20000)
+				{
+					player.removePotionEffect(PotionEffectType.WITHER);
+					event.setCancelled(true);
+					return;
+				}
 			}
 
 		}
