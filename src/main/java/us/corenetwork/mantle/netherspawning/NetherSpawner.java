@@ -18,11 +18,6 @@ public class NetherSpawner {
 		
 	public static void spawnMob(Block block)
 	{
-		if (block.getLightLevel() > NetherSpawningSettings.MAX_SPAWNING_LIGHT_LEVEL.integer())
-		{
-			return;
-		}
-
 		boolean blaze = false;
 		if (block.getY() < 60)
 		{

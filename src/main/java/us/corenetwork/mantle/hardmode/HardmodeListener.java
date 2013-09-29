@@ -368,6 +368,15 @@ public class HardmodeListener implements Listener {
 	{
 		LivingEntity entity = event.getEntity();
 		
+		if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
+		{
+			if (event.getLocation().getY() >= HardmodeSettings.NETHER_IGNORE_LIGHT_UNDER_Y.integer() && event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 		//Wither timer
 		if (event.getEntityType() == EntityType.WITHER)
 		{
@@ -387,6 +396,7 @@ public class HardmodeListener implements Listener {
 		//Pigmen spawning adjust
 		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
 		{
+			
 			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
 			
 			entity.getEquipment().clear();

@@ -6,8 +6,7 @@ public enum NetherSpawningSettings {
 
     MIN_DISTANCE_PLAYER("DistanceToPlayerSquared.Min", 100),
     MAX_DISTANCE_PLAYER("DistanceToPlayerSquared.Max", 900),
-	MAX_SPAWNING_LIGHT_LEVEL("MaxSpawningLightLevel", 7),
-    
+    	
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
 	BLAZE_CHANCE("BlazeSpawningChance", 0.6),
