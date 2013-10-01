@@ -21,8 +21,6 @@ public class NetherSpawningTimer implements Runnable {
 
     @Override
     public void run() {
-        MLog.debug("Starting nether spawning!");
-
         long start = System.nanoTime();
         
         for (Chunk c : nether.getLoadedChunks()) {
@@ -52,9 +50,6 @@ public class NetherSpawningTimer implements Runnable {
         }
 
         long end = System.nanoTime();
-
-        MLog.debug("Nether spawning ended!");
-        MLog.debug("Nether spawning time: " + (end - start) / 1000000.0);
     }
 
 }

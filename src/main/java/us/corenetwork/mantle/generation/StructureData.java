@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.generation;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +62,17 @@ public class StructureData {
 			return null;
 		}
 		return textAlias.charAt(0);
+	}
+	
+	public Integer getImageColor()
+	{
+		String imageColor = (String) configNode.get("ImageMapColor");
+		if (imageColor == null)
+		{
+			MLog.severe("Structure " + name + " is missing ImageMapColor!");
+			return null;
+		}
+		return Integer.parseInt(imageColor, 16);
 	}
 	
 	public boolean shouldStoreAsRespawnable()
