@@ -2,7 +2,7 @@ package us.corenetwork.mantle;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import net.minecraft.server.v1_6_R2.ChunkProviderHell;
+import net.minecraft.server.v1_6_R3.ChunkProviderHell;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,9 +16,9 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftFirework;
-import org.bukkit.craftbukkit.v1_6_R2.generator.NormalChunkGenerator;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftFirework;
+import org.bukkit.craftbukkit.v1_6_R3.generator.NormalChunkGenerator;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -183,8 +183,8 @@ public class Util {
 		meta.setPower(0);
 		firework.setFireworkMeta(meta);
 
-		net.minecraft.server.v1_6_R2.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
-		net.minecraft.server.v1_6_R2.World world = ((CraftWorld) location.getWorld()).getHandle();
+		net.minecraft.server.v1_6_R3.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
+		net.minecraft.server.v1_6_R3.World world = ((CraftWorld) location.getWorld()).getHandle();
 
 		world.broadcastEntityEffect(nmsFirework, (byte) 17);
 

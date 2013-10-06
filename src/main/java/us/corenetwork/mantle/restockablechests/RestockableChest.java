@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_6_R2.Packet54PlayNoteBlock;
-import net.minecraft.server.v1_6_R2.TileEntityChest;
+import net.minecraft.server.v1_6_R3.Packet54PlayNoteBlock;
+import net.minecraft.server.v1_6_R3.TileEntityChest;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,10 +18,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;

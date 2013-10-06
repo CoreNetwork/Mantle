@@ -1,9 +1,9 @@
 package us.corenetwork.mantle.generation;
 
 
-import net.minecraft.server.v1_6_R2.Block;
-import net.minecraft.server.v1_6_R2.Material;
-import net.minecraft.server.v1_6_R2.MaterialMapColor;
+import net.minecraft.server.v1_6_R3.Block;
+import net.minecraft.server.v1_6_R3.Material;
+import net.minecraft.server.v1_6_R3.MaterialMapColor;
 
 public class MapColors {
 	
