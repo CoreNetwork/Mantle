@@ -3,9 +3,6 @@ package us.corenetwork.mantle.netherspawning;
 
 public enum NetherSpawningSettings {
     NETHER_WORLD("NetherWorld", "world_nether"),
-
-    MIN_DISTANCE_PLAYER("DistanceToPlayerSquared.Min", 100),
-    MAX_DISTANCE_PLAYER("DistanceToPlayerSquared.Max", 900),
     	
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
