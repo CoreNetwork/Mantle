@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R2.NBTTagCompound;
+import net.minecraft.server.v1_6_R4.NBTTagCompound;
 
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R4.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
@@ -104,7 +104,7 @@ public class LootTableNodeParser extends NodeParser {
 		{
 			NBTTagCompound newTag = LoadCommand.load(yamlNbtTag);
 
-			net.minecraft.server.v1_6_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
+			net.minecraft.server.v1_6_R4.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
 			nmsStack.tag = newTag;
 			curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
 		}
