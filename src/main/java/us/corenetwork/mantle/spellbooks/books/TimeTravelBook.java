@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_6_R4.EntityVillager;
-import net.minecraft.server.v1_6_R4.MerchantRecipe;
-import net.minecraft.server.v1_6_R4.MerchantRecipeList;
+import net.minecraft.server.v1_6_R3.EntityVillager;
+import net.minecraft.server.v1_6_R3.MerchantRecipe;
+import net.minecraft.server.v1_6_R3.MerchantRecipeList;
 
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R4.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;

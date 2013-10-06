@@ -2,10 +2,10 @@ package us.corenetwork.mantle;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_6_R4.Packet63WorldParticles;
+import net.minecraft.server.v1_6_R3.Packet63WorldParticles;
 
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R4.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public enum ParticleLibrary {
