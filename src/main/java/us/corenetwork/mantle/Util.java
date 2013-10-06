@@ -210,42 +210,6 @@ public class Util {
 		}
 	}
 
-
-	public static boolean isNetherFortress(Location location)
-	{
-		World world = location.getWorld();
-
-		if (world.getEnvironment() != Environment.NETHER)
-			return false;
-
-		NormalChunkGenerator generator = (NormalChunkGenerator) ((CraftWorld) world).getHandle().chunkProviderServer.chunkProvider;
-
-		Field f;
-		try {
-			f = generator.getClass().getSuperclass().getDeclaredField("provider");
-			f.setAccessible(true);
-			ChunkProviderHell provider = (ChunkProviderHell) f.get(generator);
-
-			return provider.c.a(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-
-		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return false;
-
-	}
-
 	public static void safeTeleport(final Player player, final Location location)
 	{
 		Chunk c = location.getChunk();

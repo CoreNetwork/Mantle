@@ -620,7 +620,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 			
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_6_R2.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom$MinecraftInventory");
 			
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);
