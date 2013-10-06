@@ -154,18 +154,18 @@ public class AnimalSpawner {
 			MLog.severe("Unknown horse variant: " + variantName);
 		}
 		
-		horse.setMaxHealth(15.0 + CorePlugin.random.nextInt(8) + CorePlugin.random.nextInt(9));
+		horse.setMaxHealth(15.0 + MantlePlugin.random.nextInt(8) + MantlePlugin.random.nextInt(9));
 		
 		if (horse.getVariant() == Variant.DONKEY || horse.getVariant() == Variant.MULE)
 			horse.setJumpStrength(0.5);
 		else
-			horse.setJumpStrength(0.4 + CorePlugin.random.nextInt(2) * 0.2 + CorePlugin.random.nextInt(2) * 0.2 + CorePlugin.random.nextInt(2)* 0.2);
+			horse.setJumpStrength(0.4 + MantlePlugin.random.nextInt(2) * 0.2 + MantlePlugin.random.nextInt(2) * 0.2 + CorePlugin.random.nextInt(2)* 0.2);
 
 		AttributeInstance attributes = ((EntityInsentient)((CraftLivingEntity)horse).getHandle()).getAttributeInstance(GenericAttributes.d);
         		
 		if (horse.getVariant() == Variant.DONKEY || horse.getVariant() == Variant.MULE)
 			attributes.setValue(0.1);
 		else
-			attributes.setValue(0.25 * (0.45 + CorePlugin.random.nextInt(2) * 0.3 + CorePlugin.random.nextInt(2) * 0.3 + CorePlugin.random.nextInt(2) * 0.3));
+			attributes.setValue(0.25 * (0.45 + MantlePlugin.random.nextInt(2) * 0.3 + MantlePlugin.random.nextInt(2) * 0.3 + CorePlugin.random.nextInt(2) * 0.3));
 	}
 }
