@@ -60,7 +60,7 @@ public class RegStructure
 	
 	public int getGenerationInterval()
 	{
-		Integer result = (Integer) configNode.get("RegenerateIntervalMinutes");
+		Integer result = (Integer) configNode.get("RegenerateIntervalSeconds");
 		if (result == null)
 		{
 			return -1;

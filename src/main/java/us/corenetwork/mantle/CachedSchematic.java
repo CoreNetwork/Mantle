@@ -140,8 +140,6 @@ public class CachedSchematic {
 											info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
 
 											chests.add(info);
-
-											break;
 										}
 										else if (sign.getText()[0].trim().startsWith("[Allow]"))
 										{
@@ -152,8 +150,6 @@ public class CachedSchematic {
 											info.restockable = false;
 
 											chests.add(info);
-
-											break;
 										}
 										else
 											properSign = false;
@@ -186,6 +182,8 @@ public class CachedSchematic {
 											}
 
 											localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID, replaceData));
+										
+											break;
 										}
 									}
 									catch (DataException e)
