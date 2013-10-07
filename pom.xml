@@ -70,9 +70,10 @@
     
     <dependency>
       <groupId>com.sk89q</groupId>
-      <artifactId>worldedit</artifactId>
-      <version>5.5.3</version>
-      <scope>compile</scope>
+      <artifactId>WorldEdit</artifactId>
+      <version>5.5.9</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/WorldEdit-5.5.9-SNAPSHOT.jar</systemPath>
     </dependency>
 
     <dependency>
