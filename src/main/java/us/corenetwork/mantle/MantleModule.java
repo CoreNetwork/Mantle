@@ -50,10 +50,10 @@ public abstract class MantleModule implements CommandExecutor {
 		{
 			loadConfig();
 
-			Boolean enabled = (Boolean) config.get("enabled");
+			Boolean enabled = (Boolean) config.get("Enabled");
 			if (enabled == null)
 			{
-				config.set("enabled", true);
+				config.set("Enabled", true);
 				saveConfig();
 
 				enabled = true;
