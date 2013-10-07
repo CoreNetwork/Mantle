@@ -368,8 +368,10 @@ public class CachedSchematic {
 		try {
 			EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
 
+			editSession.enableQueue();
 			localSession.getClipboard().place(editSession, middle, ignoreAir);
-
+			editSession.flushQueue();
+			
 			localSession.clearHistory();
 
 		} catch (MaxChangedBlocksException e) {
