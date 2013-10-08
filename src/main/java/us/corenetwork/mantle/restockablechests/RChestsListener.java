@@ -7,6 +7,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -74,6 +75,12 @@ public class RChestsListener implements Listener {
 		RestockableChest.inventoryClosed((Player) event.getPlayer());
 	}
 
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event)
+	{
+		RestockableChest.inventoryClicked(event);
+	}
+	
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{

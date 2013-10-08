@@ -26,6 +26,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
@@ -263,6 +264,19 @@ public class RestockableChest {
 		}
 	}
 
+	public static void inventoryClicked(InventoryClickEvent event)
+	{
+		if (!event.isShiftClick())
+			return;
+		
+		RestockableChest chest = openedInventories.get(event.getWhoClicked());
+	
+		if (chest != null && chest.chestBlock.getType() != Material.CHEST)
+		{
+			event.setCancelled(true);
+		}
+	}
+	
 	public Inventory getInventory(Player player)
 	{
 		Inventory inv = tryRestock(player);
