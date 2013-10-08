@@ -18,16 +18,14 @@ import org.bukkit.entity.Player;
 
 public class GriefPreventionHandler {
 
-	public static void secure(Location corner, List<Location> chestSubclaims, int xSize, int zSize, Integer claimPermission)
+	public static void secure(Location corner, List<Location> chestSubclaims, int xSize, int zSize, int padding, Integer claimPermission)
 	{
-		xSize /= 2;
-		zSize /= 2;
 		World world = corner.getWorld();
 		
-		int x1 = corner.getBlockX() - xSize;
-		int z1 = corner.getBlockZ() - zSize;
-		int x2 = corner.getBlockX() + xSize;
-		int z2 = corner.getBlockZ() + zSize;
+		int x1 = corner.getBlockX() - padding;
+		int z1 = corner.getBlockZ() - padding;
+		int x2 = corner.getBlockX() + xSize + padding - 1;
+		int z2 = corner.getBlockZ() + zSize + padding - 1;
 
 		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
 		if (bigClaimResult.succeeded != Result.Success)

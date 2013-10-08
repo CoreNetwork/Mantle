@@ -163,10 +163,7 @@ public class StructureGenerator {
 
 				if (protection != null)
 				{
-					int protectionSizeX = schematic.xSize + protection.padding * 2;
-					int protectionSizeZ = schematic.zSize + protection.padding * 2;
-
-					GriefPreventionHandler.secure(schematicCorner, chestLocations, protectionSizeX, protectionSizeZ, protection.claimPermission);
+					GriefPreventionHandler.secure(schematicCorner, chestLocations, schematic.xSize, schematic.zSize, protection.padding, protection.claimPermission);
 				}
 
 				StructureData.WorldGuard region = structure.getWorldGuardData();
