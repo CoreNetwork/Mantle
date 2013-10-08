@@ -9,8 +9,16 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.server.v1_6_R3.Packet54PlayNoteBlock;
+import net.minecraft.server.v1_6_R3.TileEntity;
+import net.minecraft.server.v1_6_R3.TileEntityBeacon;
+import net.minecraft.server.v1_6_R3.TileEntityBrewingStand;
 import net.minecraft.server.v1_6_R3.TileEntityChest;
+import net.minecraft.server.v1_6_R3.TileEntityDispenser;
+import net.minecraft.server.v1_6_R3.TileEntityDropper;
+import net.minecraft.server.v1_6_R3.TileEntityFurnace;
+import net.minecraft.server.v1_6_R3.TileEntityHopper;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -583,14 +591,45 @@ public class RestockableChest {
 		if (!Util.isInventoryContainer(chestBlock.getTypeId()))
 			return "";
 
-		if (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST)
+		TileEntity tEntity = ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
+				
+		if (tEntity instanceof TileEntityChest)
 		{
-			TileEntityChest tileEntity = (TileEntityChest) ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
-			return tileEntity.c() ? tileEntity.getName() : "Chest";
-
+			TileEntityChest container = (TileEntityChest) tEntity;
+			return container.c() ? container.getName() : "Chest";
 		}
-		else
-			return Util.getMaterialName(chestBlock.getType());
+		else if (tEntity instanceof TileEntityDispenser)
+		{
+			TileEntityDispenser container = (TileEntityDispenser) tEntity;
+			return container.c() ? container.getName() : "Dispenser";
+		}
+		else if (tEntity instanceof TileEntityFurnace)
+		{
+			TileEntityFurnace container = (TileEntityFurnace) tEntity;
+			return container.c() ? container.getName() : "Furnace";
+		}
+		else if (tEntity instanceof TileEntityHopper)
+		{
+			TileEntityHopper container = (TileEntityHopper) tEntity;
+			return container.c() ? container.getName() : "Hopper";
+		}
+		else if (tEntity instanceof TileEntityDropper)
+		{
+			TileEntityDropper container = (TileEntityDropper) tEntity;
+			return container.c() ? container.getName() : "Dropper";
+		}
+		else if (tEntity instanceof TileEntityBeacon)
+		{
+			TileEntityBeacon container = (TileEntityBeacon) tEntity;
+			return container.c() ? container.getName() : "Beacon";
+		}
+		else if (tEntity instanceof TileEntityBrewingStand)
+		{
+			TileEntityBrewingStand container = (TileEntityBrewingStand) tEntity;
+			return container.c() ? container.getName() : "Brewing Stand";
+		}
+		
+		return Util.getMaterialName(chestBlock.getType());
 	}
 	
 	@SuppressWarnings("incomplete-switch")
