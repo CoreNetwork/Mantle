@@ -25,10 +25,6 @@ public class ChestTimeout {
 		if (tableTimers == null)
 			return false;
 		
-		System.out.print(Arrays.toString(tableTimers.keySet().toArray()));
-		System.out.print(Arrays.toString(tableTimers.values().toArray()));
-
-		
 		Long time = tableTimers.get(player);
 		if (time == null)
 			return false;
