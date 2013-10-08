@@ -2,6 +2,8 @@ package us.corenetwork.mantle.restockablechests;
 
 public enum RChestSettings {	
 	
+	USE_ONLY_CHEST_GUI("UseOnlyChestGUI", true),
+	
 	MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM("Messages.RightClickChestWithArm", "Right click chest with your arm to finish creating it!"),
 	MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST("Messages.LootingTableDoesNotExist", "That looting table does not exist!"),
 	MESSAGE_CHEST_CREATED("Messages.ChestCreated", "Restockable chest created."),
@@ -27,6 +29,11 @@ public enum RChestSettings {
 	public Integer integer()
 	{
 		return (Integer) RChestsModule.instance.config.get(string, def);
+	}
+	
+	public Boolean bool()
+	{
+		return (Boolean) RChestsModule.instance.config.get(string, def);
 	}
 	
 	public String string()

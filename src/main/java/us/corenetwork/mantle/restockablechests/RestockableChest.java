@@ -266,7 +266,7 @@ public class RestockableChest {
 
 	public static void inventoryClicked(InventoryClickEvent event)
 	{
-		if (!event.isShiftClick())
+		if (!event.isShiftClick() || RChestSettings.USE_ONLY_CHEST_GUI.bool())
 			return;
 		
 		RestockableChest chest = openedInventories.get(event.getWhoClicked());
@@ -373,11 +373,7 @@ public class RestockableChest {
 			inventory = inventoryHolder.getInventory();
 		else
 		{
-			inventory = new CraftInventoryCustom(inventoryHolder, inventoryHolder.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
-		
-			InventoryType type = getInventoryType();
-			if (type != InventoryType.CHEST)
-				fixInventoryType(inventory, type);
+			inventory = createEmptyInventory(numberDisplay);
 		}
 		
 		inventory.clear();
@@ -456,11 +452,7 @@ public class RestockableChest {
 			else
 				numberDisplay = maxNumber + "+";
 
-			Inventory inventory = new CraftInventoryCustom(inventoryHolder, inventoryHolder.getInventory().getSize(), getCustomName() + " (" + numberDisplay + ")");
-
-			InventoryType type = getInventoryType();
-			if (type != InventoryType.CHEST)
-				fixInventoryType(inventory, type);
+			Inventory inventory = createEmptyInventory(numberDisplay);
 
 			statement = IO.getConnection().prepareStatement("SELECT * FROM chestInventory WHERE ID = ? AND Player = ?");
 			statement.setInt(1, id);
@@ -622,6 +614,28 @@ public class RestockableChest {
 		}
 		
 		return InventoryType.CHEST;
+	}
+	
+	private Inventory createEmptyInventory(String numberDisplay)
+	{
+		InventoryType type = getInventoryType();
+
+		int size = inventoryHolder.getInventory().getSize();
+		boolean onlyChest = RChestSettings.USE_ONLY_CHEST_GUI.bool();
+		if (onlyChest && type != InventoryType.CHEST)
+		{
+			size = (int) (Math.ceil(size / 9.0) * 9);
+		}
+		
+		Inventory inventory = new CraftInventoryCustom(inventoryHolder, size, getCustomName() + " (" + numberDisplay + ")");
+	
+		if (!onlyChest && type != InventoryType.CHEST)
+		{
+				fixInventoryType(inventory, type);
+		}
+		
+		return inventory;
+
 	}
 	
 	private static void fixInventoryType(Inventory inventory, InventoryType type)
