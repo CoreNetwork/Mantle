@@ -10,14 +10,10 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.CachedSchematic;
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.Setting;
-import us.corenetwork.mantle.Settings;
-import us.corenetwork.mantle.generation.VillagerSpawner;
 
 
 public class StructureChecker implements Runnable {
@@ -30,6 +26,7 @@ public class StructureChecker implements Runnable {
 	
 	public static void schedule()
 	{
+		MLog.info("Scheduling regenerations...");
 		for (RegStructure structure : RegenerationModule.instance.structures.values())
 		{
 			int period = structure.getGenerationInterval() * 20;
@@ -37,6 +34,8 @@ public class StructureChecker implements Runnable {
 				continue;
 			
 			int offset = structure.getTimeOffset() * 20;
+			
+			MLog.info(structure.getName());
 			
 			Bukkit.getServer().getScheduler().runTaskTimer(MantlePlugin.instance, new StructureChecker(structure), offset + 20, period);
 		}
