@@ -31,7 +31,10 @@ public class StructureChecker implements Runnable {
 		{
 			int period = structure.getGenerationInterval() * 20;
 			if (period <= 0)
+			{
+				MLog.info("Skipping " + structure.getName());
 				continue;
+			}
 			
 			int offset = structure.getTimeOffset() * 20;
 			
