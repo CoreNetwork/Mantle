@@ -2,6 +2,8 @@ package us.corenetwork.mantle.regeneration;
 
 import org.bukkit.configuration.MemorySection;
 
+import us.corenetwork.mantle.MLog;
+
 public class RegStructure
 {
 	private MemorySection configNode;
@@ -63,6 +65,7 @@ public class RegStructure
 		Integer result = (Integer) configNode.get("RegenerateIntervalSeconds");
 		if (result == null)
 		{
+			MLog.severe("RegenerateIntervalSeconds is missing!");
 			return -1;
 		}
 		return result;
