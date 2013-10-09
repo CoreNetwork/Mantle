@@ -1,27 +1,11 @@
-name: MCNSAFlatcore
-main: com.mcnsa.flatcore.MCNSAFlatcore
+name: Mantle
+main: us.corenetwork.mantle.MantlePlugin
 version: 1.2.0
 author: matejdro
-depend: [GriefPrevention, MCNSANanobot]
+depend: [GriefPrevention, Core]
+softdepend: [WorldGuard]
 commands:
-    flatcore:
-        description: Main command
-    rspawn:
-        description: Spawn randomly in the world
-    togglespawn:
-        description: Disable spawning closer to biggest claim
-    unprotect:
-        description: Disable invincibility upon spawn
-    chp:
-    checkpoint:
-    
-    
-permissions:
-    mcnsaflatcore.command.flatcore:
-        default: op
-    mcnsaflatcore.mod:
-        default: op
-    mcnsaflatcore.donorgrass:
-        default: false
-    mcnsaflatcore.donorsky:
-        default: false
+    mantle:
+        description: Main command    
+    nbt:
+        description: Nanobot

@@ -2,15 +2,15 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>MCNSAFlatcore</groupId>
-  <artifactId>MCNSAFlatcore</artifactId>
+  <groupId>Mantle</groupId>
+  <artifactId>Mantle</artifactId>
   <version>1.2.1</version>
   <packaging>jar</packaging>
-  <name>MCNSAFlatcore</name>
-  <url>https://github.com/MCNSA/MCNSAFlatcore</url>
+  <name>Mantle</name>
+  <url>https://github.com/CoreNetwork/Mantle</url>
 
   <build>
-    <finalName>MCNSAFlatcore</finalName>
+    <finalName>Mantle</finalName>
     <resources>
       <resource>
         <directory>resources</directory>
@@ -55,32 +55,40 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.6.2-R0.1-SNAPSHOT</version>
+      <version>1.6.4-R0.1-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>${basedir}/lib/bukkit-1.6.2-R0.1-SNAPSHOT.jar</systemPath>
+      <systemPath>${basedir}/lib/bukkit-1.6.4-R0.1-SNAPSHOT.jar</systemPath>
     </dependency>
     
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
-      <version>1.6.2-R0.1-SNAPSHOT</version>
+      <version>1.6.4-R0.1-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>${basedir}/lib/craftbukkit-1.6.2-R0.1-SNAPSHOT.jar</systemPath>
+      <systemPath>${basedir}/lib/craftbukkit-1.6.4-R0.1-SNAPSHOT.jar</systemPath>
     </dependency>
     
     <dependency>
       <groupId>com.sk89q</groupId>
-      <artifactId>worldedit</artifactId>
-      <version>5.5.3</version>
+      <artifactId>WorldEdit</artifactId>
+      <version>5.5.9</version>
+      <scope>system</scope>
+      <systemPath>${basedir}/lib/WorldEdit-5.5.9-SNAPSHOT.jar</systemPath>
+    </dependency>
+
+    <dependency>
+      <groupId>com.sk89q</groupId>
+      <artifactId>worldguard</artifactId>
+      <version>5.7.3</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>me.ryanhamshire</groupId>
       <artifactId>GriefPrevention</artifactId>
-      <version>7.8</version>
+      <version>7.8-SNAPSHOT</version>
       <scope>system</scope>
-      <systemPath>${basedir}/lib/GriefPrevention.jar</systemPath>
+      <systemPath>${basedir}/lib/GriefPrevention-7.8-SNAPSHOT.jar</systemPath>
     </dependency>
     
     <dependency>
@@ -92,13 +100,13 @@
     </dependency>
     
     <dependency>
-      <groupId>com.matejdro.bukkit.mcnsa.nanobot</groupId>
-      <artifactId>MCNSANanobot</artifactId>
-      <version>1.1</version>
+      <groupId>us.core-network</groupId>
+      <artifactId>Core</artifactId>
+      <version>1.0.0</version>
       <scope>system</scope>
-      <systemPath>${basedir}/lib/MCNSANanobot.jar</systemPath>
+      <systemPath>${basedir}/lib/Core.jar</systemPath>
     </dependency>
-
+    
   </dependencies>
 
 </project>
