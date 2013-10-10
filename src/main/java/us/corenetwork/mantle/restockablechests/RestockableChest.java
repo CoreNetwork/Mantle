@@ -78,7 +78,7 @@ public class RestockableChest {
 			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
 			chest = leftChest.getBlock();
 		}
-		
+
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
@@ -120,7 +120,7 @@ public class RestockableChest {
 			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
 			chest = leftChest.getBlock();
 		}
-		
+
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO chests (Interval, LootTable, PerPlayer, World, X, Y, Z) VALUES (?,?,?,?,?,?,?)");
@@ -172,56 +172,67 @@ public class RestockableChest {
 		if (chest != null)
 			return true;
 
+		if (RChestsModule.instance.config.contains("LootTables." + lootTable + ".PlayerControl.TimeRestrict"))
+		{			
+			int minTime = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.TimeRestrict.MinTime");
+			int maxTime = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.TimeRestrict.MaxTime");
+			long curTime = chestBlock.getWorld().getTime();
+
+			if (!((minTime < maxTime && curTime > minTime && curTime < maxTime) || (minTime > maxTime && (curTime > minTime || curTime < maxTime))))
+			{
+				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.TimeRestrict.Message");
+				Util.Message(message, player);
+				return true;
+			}
+		}
+
 		applyPoison(player);
-		
-		if (!perPlayer) player = null;
-		
-		if (player == null) 
+
+
+		if (!perPlayer) 
 		{
-			tryRestock(player);
+			tryRestock(null);
 			return false;
 		}
-		else
+		
+		Inventory inventory = getInventory(player);
+		InventoryView view = player.openInventory(inventory);
+		inventoryCache.put(player, view.getTopInventory());
+		openedInventories.put(player, this);
+		storeInventoryToDB(player, null);
+
+		if (chestBlock.getType() == Material.TRAPPED_CHEST)
 		{
-			Inventory inventory = getInventory(player);
-			InventoryView view = player.openInventory(inventory);
-			inventoryCache.put(player, view.getTopInventory());
-			openedInventories.put(player, this);
-			storeInventoryToDB(player, null);
-
-			if (chestBlock.getType() == Material.TRAPPED_CHEST)
-			{
-				Block redstoneBlock = chestBlock.getRelative(0, -2, 0);
-				if (redstoneBlock != null && redstoneBlock.getType() == Material.AIR)
-					redstoneBlock.setType(Material.REDSTONE_BLOCK);
-			}
-
-			Integer currentAmountOfOpened = openedNumber.get(chestBlock);
-			if (currentAmountOfOpened == null)
-				currentAmountOfOpened = 0;
-			currentAmountOfOpened++;
-			openedNumber.put(chestBlock, currentAmountOfOpened);
-
-			//Chest animation
-			if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
-			{
-				Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
-
-				List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
-				nearbyEntities.add(player);
-				for (Entity e : nearbyEntities)
-				{
-					if (e.getType() != EntityType.PLAYER)
-						continue;
-					
-					((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
-				}
-				
-				chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
-			}
-
-			return true;
+			Block redstoneBlock = chestBlock.getRelative(0, -2, 0);
+			if (redstoneBlock != null && redstoneBlock.getType() == Material.AIR)
+				redstoneBlock.setType(Material.REDSTONE_BLOCK);
 		}
+
+		Integer currentAmountOfOpened = openedNumber.get(chestBlock);
+		if (currentAmountOfOpened == null)
+			currentAmountOfOpened = 0;
+		currentAmountOfOpened++;
+		openedNumber.put(chestBlock, currentAmountOfOpened);
+
+		//Chest animation
+		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
+		{
+			Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
+
+			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+			nearbyEntities.add(player);
+			for (Entity e : nearbyEntities)
+			{
+				if (e.getType() != EntityType.PLAYER)
+					continue;
+
+				((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
+			}
+
+			chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
+		}
+
+		return true;
 	}
 
 	public static void inventoryClosed(Player player)
@@ -262,7 +273,7 @@ public class RestockableChest {
 
 						((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
 					}
-					
+
 					chest.chestBlock.getWorld().playSound(chest.chestBlock.getLocation(), Sound.CHEST_CLOSE, 1f, 1f);
 				}
 
@@ -276,15 +287,15 @@ public class RestockableChest {
 	{
 		if (!event.isShiftClick() || RChestSettings.USE_ONLY_CHEST_GUI.bool())
 			return;
-		
+
 		RestockableChest chest = openedInventories.get(event.getWhoClicked());
-	
+
 		if (chest != null && chest.chestBlock.getType() != Material.CHEST)
 		{
 			event.setCancelled(true);
 		}
 	}
-	
+
 	public Inventory getInventory(Player player)
 	{
 		Inventory inv = tryRestock(player);
@@ -299,22 +310,7 @@ public class RestockableChest {
 	}
 
 	public Inventory tryRestock(Player player)
-	{		
-		if (RChestsModule.instance.config.contains("LootTables." + lootTable + ".PlayerControl.TimeRestrict"))
-		{			
-			int minTime = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.TimeRestrict.MinTime");
-			int maxTime = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.TimeRestrict.MaxTime");
-			long curTime = chestBlock.getWorld().getTime();
-			
-			if (!((minTime < maxTime && curTime > minTime && curTime < maxTime) || (minTime > maxTime && (curTime > minTime || curTime < maxTime))))
-			{
-				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.TimeRestrict.Message");
-				Util.Message(message, player);
-				return null;
-			}
-			
-		}
-		
+	{				
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM playerChests WHERE ID = ? AND Player = ? LIMIT 1");
@@ -374,7 +370,7 @@ public class RestockableChest {
 
 			ChestTimeout.addTimer(lootTable, player.getName(), timeoutMinutes);
 		}
-		
+
 		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance, RChestsModule.instance.config);
 		Inventory inventory;
 		if (player == null)
@@ -383,7 +379,7 @@ public class RestockableChest {
 		{
 			inventory = createEmptyInventory(numberDisplay);
 		}
-		
+
 		inventory.clear();
 
 		for (ItemStack i : items)
@@ -554,35 +550,35 @@ public class RestockableChest {
 		}
 	}
 
-	
+
 	private void applyPoison(Player player)
 	{
 		MemorySection section = (MemorySection) RChestsModule.instance.config.get("LootTables." + lootTable + ".PlayerControl.Poison");
 		if (section == null)
 			return;
-		
+
 		Number chance = (Number) section.get("Chance");
 		if (chance == null)
 		{
 			MLog.warning("Poison section in loot table " + lootTable + " is missing chance!");
 			return;
 		}
-		
+
 		if (chance.doubleValue() < MantlePlugin.random.nextDouble())
 			return;
-		
+
 		String damageNode = (String) section.get("ApplyDamageNode");
 		if (damageNode == null)
 		{
 			MLog.warning("Poison section in loot table " + lootTable + " is missing damage node!");
 			return;
 		}
-		
+
 		HardmodeModule.applyDamageNode(player, damageNode);
-		
+
 		Location location = player.getLocation();
 		World world = location.getWorld();
-		
+
 		world.playSound(location, Sound.GLASS, 1f, 1f);
 		ParticleLibrary.SPELL.sendToPlayer(player, location, 0, 0, 0, 0, 3);
 	}
@@ -592,7 +588,7 @@ public class RestockableChest {
 			return "";
 
 		TileEntity tEntity = ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
-				
+
 		if (tEntity instanceof TileEntityChest)
 		{
 			TileEntityChest container = (TileEntityChest) tEntity;
@@ -628,14 +624,14 @@ public class RestockableChest {
 			TileEntityBrewingStand container = (TileEntityBrewingStand) tEntity;
 			return container.c() ? container.getName() : "Brewing Stand";
 		}
-		
+
 		return Util.getMaterialName(chestBlock.getType());
 	}
-	
+
 	@SuppressWarnings("incomplete-switch")
 	private InventoryType getInventoryType()
 	{
-		
+
 		switch (chestBlock.getType())
 		{
 		case BEACON:
@@ -651,10 +647,10 @@ public class RestockableChest {
 		case HOPPER:
 			return InventoryType.HOPPER;
 		}
-		
+
 		return InventoryType.CHEST;
 	}
-	
+
 	private Inventory createEmptyInventory(String numberDisplay)
 	{
 		InventoryType type = getInventoryType();
@@ -665,18 +661,18 @@ public class RestockableChest {
 		{
 			size = (int) (Math.ceil(size / 9.0) * 9);
 		}
-		
+
 		Inventory inventory = new CraftInventoryCustom(inventoryHolder, size, getCustomName() + " (" + numberDisplay + ")");
-	
+
 		if (!onlyChest && type != InventoryType.CHEST)
 		{
-				fixInventoryType(inventory, type);
+			fixInventoryType(inventory, type);
 		}
-		
+
 		return inventory;
 
 	}
-	
+
 	private static void fixInventoryType(Inventory inventory, InventoryType type)
 	{
 		CraftInventory   customInv = (CraftInventory)  inventory;
@@ -685,13 +681,13 @@ public class RestockableChest {
 		try {
 			field = CraftInventory.class.getDeclaredField("inventory");
 			field.setAccessible(true);
-			
+
 			Object internalInv = field.get(customInv);
 			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom$MinecraftInventory");
-			
+
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);
-			
+
 			field.set(internalInv, type);
 		} catch (NoSuchFieldException e) {
 			e.printStackTrace();
@@ -705,7 +701,7 @@ public class RestockableChest {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 }
