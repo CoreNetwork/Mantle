@@ -6,8 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import us.corenetwork.core.Util;
 import us.corenetwork.core.scoreboard.CoreScoreboardManager;
+import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
 
 public class HydrationUtil {

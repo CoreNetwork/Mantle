@@ -41,8 +41,14 @@ public class AnimalSpawningTimer implements Runnable {
 		
 		try
 		{
+			MLog.debug("[ANIMAL] Executing SQL!");
+
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM animal_chunks WHERE Spawned <> 0 ORDER BY Spawned LIMIT " + amount);
 			ResultSet set = statement.executeQuery();
+			
+			
+			MLog.debug("[ANIMAL] Iterating SQL!");
+
 			
 			while (set.next())
 			{
@@ -59,6 +65,8 @@ public class AnimalSpawningTimer implements Runnable {
 				updateStatement.executeUpdate();
 				updateStatement.close();
 			}
+			
+			MLog.debug("[ANIMAL] Finished SQL!");
 			
 			statement.close();
 			if (chunks.size() < amount)
