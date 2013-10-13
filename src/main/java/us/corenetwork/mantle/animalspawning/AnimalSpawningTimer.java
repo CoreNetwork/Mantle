@@ -43,7 +43,7 @@ public class AnimalSpawningTimer implements Runnable {
 		{
 			MLog.debug("[ANIMAL] Executing SQL!");
 
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM animal_chunks WHERE Spawned <> 0 ORDER BY Spawned LIMIT " + amount);
+			PreparedStatement statement = AnimalSpawningIO.getConnection().prepareStatement("SELECT * FROM animal_chunks WHERE Spawned <> 0 ORDER BY Spawned LIMIT " + amount);
 			ResultSet set = statement.executeQuery();
 			
 			
@@ -58,7 +58,7 @@ public class AnimalSpawningTimer implements Runnable {
 				
 				chunks.add(coordinates);
 				
-				PreparedStatement updateStatement = IO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = 0 WHERE X = ? AND Z = ?");
+				PreparedStatement updateStatement = AnimalSpawningIO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = 0 WHERE X = ? AND Z = ?");
 				updateStatement.setInt(1, coordinates.x);
 				updateStatement.setInt(2, coordinates.z);
 
@@ -72,12 +72,12 @@ public class AnimalSpawningTimer implements Runnable {
 			if (chunks.size() < amount)
 			{
 				MLog.debug("All chunks spawned! Resetting...");
-				statement = IO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = random()");
+				statement = AnimalSpawningIO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = random()");
 				statement.executeUpdate();
 				statement.close();
 			}
 			
-			IO.getConnection().commit();				
+			AnimalSpawningIO.getConnection().commit();				
 			
 		}
 		catch (SQLException e)

@@ -57,9 +57,11 @@ public class AnimalSpawningModule extends MantleModule {
 	
 	private static void initSql()
 	{
+		AnimalSpawningIO.PrepareDB();
+		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT COUNT(*) FROM animal_chunks");
+			PreparedStatement statement = AnimalSpawningIO.getConnection().prepareStatement("SELECT COUNT(*) FROM animal_chunks");
 			ResultSet set = statement.executeQuery();
 			
 			int count = set.getInt(1);
@@ -70,7 +72,7 @@ public class AnimalSpawningModule extends MantleModule {
 			{
 				MLog.info("Initializing DB...");
 				
-				Statement init = IO.getConnection().createStatement();
+				Statement init = AnimalSpawningIO.getConnection().createStatement();
 				init.executeUpdate("CREATE INDEX IF NOT EXISTS selectIndex ON animal_chunks (\"Spawned\" ASC)");
 				init.executeUpdate("CREATE INDEX IF NOT EXISTS updateIndex ON animal_chunks (\"X\" ASC, \"Z\" ASC)");
 				init.close();
@@ -80,7 +82,7 @@ public class AnimalSpawningModule extends MantleModule {
 				int maxX = AnimalSpawningSettings.CHUNK_MAX_X.integer();
 				int maxZ = AnimalSpawningSettings.CHUNK_MAX_Z.integer();
 				
-				statement = IO.getConnection().prepareStatement("INSERT INTO animal_chunks (X, Z, Spawned) VALUES (?,?, random())");
+				statement = AnimalSpawningIO.getConnection().prepareStatement("INSERT INTO animal_chunks (X, Z, Spawned) VALUES (?,?, random())");
 				for (int x = minX; x <= maxX; x++)
 				{
 					for (int z = minZ; z <= maxZ; z++)
@@ -93,7 +95,7 @@ public class AnimalSpawningModule extends MantleModule {
 				
 				statement.executeBatch();
 				statement.close();
-				IO.getConnection().commit();
+				AnimalSpawningIO.getConnection().commit();
 			}
 		}
 		catch (SQLException e)

@@ -94,7 +94,6 @@ public class IO {
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS chests (ID INTEGER PRIMARY KEY NOT NULL, LootTable STRING, Interval INTEGER, PerPlayer INTEGER, World STRING, X INTEGER, Y INTEGER, Z INTEGER)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS playerChests (ID INTEGER, Player STRING, LastAccess INTEGER, Restocks INTEGER)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS chestInventory (ID INTEGER, Player STRING, Slot INTEGER, ItemID INTEGER, Damage INTEGER, Amount INTEGER)");
-        	st.executeUpdate("CREATE TABLE IF NOT EXISTS animal_chunks (X INTEGER, Z INTEGER, Spawned TINYINT)");
         	conn.commit();
             st.close();
         } catch (SQLException e) {
