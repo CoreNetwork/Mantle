@@ -1,34 +1,47 @@
 package us.corenetwork.mantle.restockablechests;
 
-import java.util.Arrays;
 import java.util.HashMap;
 
+import org.bukkit.block.Block;
+
+import us.corenetwork.mantle.MLog;
+
 public class ChestTimeout {
-	private static HashMap<String, HashMap<String, Long>> timers = new HashMap<String, HashMap<String, Long>>();
+	private static HashMap<String, HashMap<String, ChestTimer>> timers = new HashMap<String, HashMap<String, ChestTimer>>();
 	
-	public static void addTimer(String table, String player, int time)
+	public static void addTimer(String table, String player, int time, Block chest)
 	{
-		HashMap<String, Long> tableTimers = timers.get(table);
+		HashMap<String, ChestTimer> tableTimers = timers.get(table);
 		if (tableTimers == null)
 		{
-			tableTimers = new HashMap<String, Long>();
+			tableTimers = new HashMap<String, ChestTimer>();
 			timers.put(table, tableTimers);
 		}
 		
-		tableTimers.put(player, System.currentTimeMillis() + time * 60000);
+		ChestTimer timer = new ChestTimer();
+		timer.lastsUntil = System.currentTimeMillis() + time * 60000;
+		timer.ignoredChest = chest;
+				
+		tableTimers.put(player, timer);
 	}
 	
-	public static boolean isUnderTimer(String table, String player)
+	public static boolean isUnderTimer(String table, String player, Block chest)
 	{
-		HashMap<String, Long> tableTimers = timers.get(table);
+		HashMap<String, ChestTimer> tableTimers = timers.get(table);
 		
 		if (tableTimers == null)
 			return false;
 		
-		Long time = tableTimers.get(player);
-		if (time == null)
+		ChestTimer timer = tableTimers.get(player);
+		if (timer == null)
 			return false;
 		
-		return time > System.currentTimeMillis();
+		return timer.lastsUntil > System.currentTimeMillis() && !chest.equals(timer.ignoredChest);
+	}
+	
+	private static class ChestTimer
+	{
+		long lastsUntil;
+		Block ignoredChest;
 	}
 }

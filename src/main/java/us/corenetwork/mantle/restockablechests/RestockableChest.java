@@ -185,6 +185,14 @@ public class RestockableChest {
 				return true;
 			}
 		}
+		
+		if (ChestTimeout.isUnderTimer(lootTable, player.getName(), chestBlock))
+		{
+			String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Message", "Admin of this server is too lazy to enter message!");
+			Util.Message(message, player);
+			
+			return true;
+		}
 
 		applyPoison(player);
 
@@ -352,24 +360,16 @@ public class RestockableChest {
 		double addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.AddChances", 0) * restocks;
 		restocks++;
 
+		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Timeout", 0);
+		if (timeoutMinutes > 0)
+			ChestTimeout.addTimer(lootTable, player.getName(), timeoutMinutes, chestBlock);
+		
 		String numberDisplay = "";
 		int maxNumber = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MaximumDisplayedAccessNumber", Integer.MAX_VALUE);
 		if (restocks <= maxNumber)
 			numberDisplay = Integer.toString(restocks);
 		else
 			numberDisplay = maxNumber + "+";
-
-		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout", 0);
-		if (timeoutMinutes > 0)
-		{
-			if (ChestTimeout.isUnderTimer(lootTable, player.getName()))
-			{
-				double reducedBy = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.MultiChestTimeoutReduceBy", 0);
-				addChance -= reducedBy;
-			}
-
-			ChestTimeout.addTimer(lootTable, player.getName(), timeoutMinutes);
-		}
 
 		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance, RChestsModule.instance.config);
 		Inventory inventory;
