@@ -3,14 +3,15 @@ package us.corenetwork.mantle.animalspawning;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
-import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 
 
@@ -69,11 +70,16 @@ public class AnimalSpawningModule extends MantleModule {
 			{
 				MLog.info("Initializing DB...");
 				
+				Statement init = IO.getConnection().createStatement();
+				init.executeUpdate("CREATE INDEX IF NOT EXISTS selectIndex ON animal_chunks (\"Spawned\" ASC)");
+				init.executeUpdate("CREATE INDEX IF NOT EXISTS updateIndex ON animal_chunks (\"X\" ASC, \"Z\" ASC)");
+				init.close();
+				
 				int minX = AnimalSpawningSettings.CHUNK_MIN_X.integer();
 				int minZ = AnimalSpawningSettings.CHUNK_MIN_Z.integer();
 				int maxX = AnimalSpawningSettings.CHUNK_MAX_X.integer();
 				int maxZ = AnimalSpawningSettings.CHUNK_MAX_Z.integer();
-
+				
 				statement = IO.getConnection().prepareStatement("INSERT INTO animal_chunks (X, Z, Spawned) VALUES (?,?, random())");
 				for (int x = minX; x <= maxX; x++)
 				{
