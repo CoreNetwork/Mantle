@@ -40,6 +40,8 @@ public class RChestsModule extends MantleModule {
 		}
 		saveConfig();
 		
+		NBTStorage.cleanStorage();
+		
 		return true;
 	}
 
