@@ -91,7 +91,7 @@ public class SaveCommand extends NanobotBaseCommand {
 		sender.sendMessage("Tag was saved sucessfully!");
 	}
 
-	public void addTag(ConfigurationSection yaml, NBTBase tag) {
+	public static void addTag(ConfigurationSection yaml, NBTBase tag) {
 		switch (tag.getTypeId()) {
 		case 1: // Byte
 			yaml.set(tag.getName() + ".byte", ((NBTTagByte) tag).data);
@@ -153,7 +153,7 @@ public class SaveCommand extends NanobotBaseCommand {
 		}
 	}
 
-	public void addTagWithoutName(ConfigurationSection yaml, NBTBase tag) {
+	public static void addTagWithoutName(ConfigurationSection yaml, NBTBase tag) {
 		switch (tag.getTypeId()) {
 		case 1: // Byte
 			yaml.set("byte", ((NBTTagByte) tag).data);

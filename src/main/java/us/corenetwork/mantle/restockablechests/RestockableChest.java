@@ -469,27 +469,16 @@ public class RestockableChest {
 				int id = set.getInt("itemID");
 				int damage = set.getInt("damage");
 				int amount = set.getInt("amount");
-				String enchants[] = set.getString("enchants").split(",");
 
 				ItemStack stack = new ItemStack(id, amount, (short) damage);
-
-				for (String enchant : enchants)
-				{
-					if (!enchant.contains(":"))
-						continue;
-
-					String[] enchantS = enchant.split(":");
-					int eID = Integer.parseInt(enchantS[0]);
-					int eLevel = Integer.parseInt(enchantS[1]);
-
-					stack.addUnsafeEnchantment(Enchantment.getById(eID), eLevel);
-				}
 
 				inventory.setItem(slot, stack);
 			}
 
 			statement.close();
 
+			NBTStorage.loadNbtTags(id, player.getName(), inventory);
+			
 			return inventory;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -516,7 +505,7 @@ public class RestockableChest {
 				return;
 			}
 
-			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, Player, Slot, ItemID, Damage, Amount, Enchants) VALUES (?,?,?,?,?,?,?)");
+			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, Player, Slot, ItemID, Damage, Amount) VALUES (?,?,?,?,?,?)");
 
 			int size = inventory.getSize();
 			for (int i = 0; i < size; i++)
@@ -532,13 +521,6 @@ public class RestockableChest {
 				statement.setInt(5, stack.getDurability());
 				statement.setInt(6, stack.getAmount());
 
-				String enchants = "";
-				for (Entry<Enchantment, Integer> e : stack.getEnchantments().entrySet())
-				{
-					enchants += e.getKey().getId() + ":" + e.getValue() + ",";
-				}
-
-				statement.setString(7, enchants);
 				statement.addBatch();
 			}
 
@@ -548,6 +530,8 @@ public class RestockableChest {
 		}
 		catch (SQLException e) {
 		}
+		
+		NBTStorage.saveNbtTags(id, player.getName(), inventory);
 	}
 
 
