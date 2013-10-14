@@ -11,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -195,6 +197,16 @@ public class PortalsListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
 	public void onEntityPortal(EntityPortalEvent event)
 	{
+		if (event.getEntityType() == EntityType.VILLAGER)
+		{
+			int profession = ((CraftVillager) event.getEntity()).getHandle().getProfession();
+			if (profession == 5)
+			{
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 		Location destination = PortalUtil.processTeleport(event.getEntity());
 		event.setTo(destination);
 		event.getPortalTravelAgent().setCanCreatePortal(false);
