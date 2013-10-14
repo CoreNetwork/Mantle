@@ -1,8 +1,5 @@
 package us.corenetwork.mantle;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-
-import net.minecraft.server.v1_6_R3.ChunkProviderHell;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,14 +8,12 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftFirework;
-import org.bukkit.craftbukkit.v1_6_R3.generator.NormalChunkGenerator;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;

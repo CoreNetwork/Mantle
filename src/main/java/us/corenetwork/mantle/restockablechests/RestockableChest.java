@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import net.minecraft.server.v1_6_R3.Packet54PlayNoteBlock;
 import net.minecraft.server.v1_6_R3.TileEntity;
@@ -18,7 +17,6 @@ import net.minecraft.server.v1_6_R3.TileEntityDropper;
 import net.minecraft.server.v1_6_R3.TileEntityFurnace;
 import net.minecraft.server.v1_6_R3.TileEntityHopper;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,7 +28,6 @@ import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;

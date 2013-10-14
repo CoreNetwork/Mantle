@@ -9,8 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import us.corenetwork.mantle.IO;
-import us.corenetwork.mantle.Setting;
-import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 
 

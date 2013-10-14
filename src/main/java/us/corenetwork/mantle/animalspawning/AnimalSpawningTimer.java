@@ -13,10 +13,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 
 import us.corenetwork.mantle.MLog;
-import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 
 public class AnimalSpawningTimer implements Runnable {

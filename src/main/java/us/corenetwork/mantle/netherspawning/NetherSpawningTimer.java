@@ -5,9 +5,7 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 
 public class NetherSpawningTimer implements Runnable {

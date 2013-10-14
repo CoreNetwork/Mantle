@@ -7,8 +7,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
