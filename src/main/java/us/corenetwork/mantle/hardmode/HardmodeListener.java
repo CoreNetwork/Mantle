@@ -40,6 +40,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -50,6 +51,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Door;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
@@ -494,5 +496,20 @@ public class HardmodeListener implements Listener {
 				}
 			}
 		}
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onZombieBreakDoor(EntityBreakDoorEvent event)
+	{
+		Block doorBlock = event.getBlock();
+		
+		Block bottomBlock = event.getBlock().getRelative(BlockFace.DOWN);
+		if (bottomBlock.getType() == Material.WOODEN_DOOR)
+			doorBlock = bottomBlock;
+		
+		doorBlock.setData((byte) ((byte) doorBlock.getData() | (byte) 0x4), true);
+		doorBlock.getWorld().playSound(doorBlock.getLocation(), Sound.DOOR_OPEN, 1f, 1f);
+		
+		event.setCancelled(true);
 	}
 }
