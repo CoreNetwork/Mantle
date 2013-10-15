@@ -3,8 +3,6 @@ package us.corenetwork.mantle.animalspawning;
 import java.util.Arrays;
 import java.util.List;
 
-import us.corenetwork.mantle.hardmode.HardmodeModule;
-
 
 
 public enum AnimalSpawningSettings {

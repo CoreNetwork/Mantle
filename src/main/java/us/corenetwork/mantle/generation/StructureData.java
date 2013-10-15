@@ -196,13 +196,31 @@ public class StructureData {
 		
 		WorldGuard wgRegion = new WorldGuard();
 		
-		String firstBlockString[] = ((String) worldGuardNode.get("FirstBlock")).split(" ");
-		String secondBlockString[] = ((String) worldGuardNode.get("SecondBlock")).split(" ");
-
-		wgRegion.exampleRegion = (String) worldGuardNode.get("ExampleRegion");
+		String firstBlockString = ((String) worldGuardNode.get("FirstBlock"));
+		if (firstBlockString == null)
+		{
+			MLog.severe("Structure " + name + " is missing WorldGuardRegion.FirstBlock! Reverting to auto...");
+		}
+		else if (!firstBlockString.equalsIgnoreCase("auto"))
+		{
+			String firstBlockStringSplit[] = firstBlockString.split(" ");
+			wgRegion.firstBlock = new Location(null, Integer.parseInt(firstBlockStringSplit[0]), Integer.parseInt(firstBlockStringSplit[1]), Integer.parseInt(firstBlockStringSplit[2]));
+		}
 		
-		wgRegion.firstBlock = new Location(null, Integer.parseInt(firstBlockString[0]), Integer.parseInt(firstBlockString[1]), Integer.parseInt(firstBlockString[2]));
-		wgRegion.secondBlock = new Location(null, Integer.parseInt(secondBlockString[0]), Integer.parseInt(secondBlockString[1]), Integer.parseInt(secondBlockString[2]));
+		String secondBlockString = ((String) worldGuardNode.get("SecondBlock"));
+		if (secondBlockString == null)
+		{
+			MLog.severe("Structure " + name + " is missing WorldGuardRegion.SecondBlock! Reverting to auto...");
+		}
+		else if (!secondBlockString.equalsIgnoreCase("auto"))
+		{
+			String secondBlockStringSplit[] = secondBlockString.split(" ");
+			wgRegion.secondBlock = new Location(null, Integer.parseInt(secondBlockStringSplit[0]), Integer.parseInt(secondBlockStringSplit[1]), Integer.parseInt(secondBlockStringSplit[2]));
+		}
+		
+		wgRegion.padding = worldGuardNode.getInt("Padding", 0);
+		
+		wgRegion.exampleRegion = (String) worldGuardNode.get("ExampleRegion");		
 		
 		return wgRegion;
 	}
@@ -219,6 +237,7 @@ public class StructureData {
 		Location firstBlock;
 		Location secondBlock;
 		String exampleRegion;
+		Integer padding;
 	}
 
 

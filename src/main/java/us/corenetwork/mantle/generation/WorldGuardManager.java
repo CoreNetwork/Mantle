@@ -24,15 +24,18 @@ public class WorldGuardManager {
 	
 		ProtectedRegion region = new ProtectedCuboidRegion(name, firstVector, secondVector);
 		
-		ProtectedRegion eRegion = manager.getRegion(exampleRegion);
-		
-		region.setFlags(eRegion.getFlags());
-		region.setMembers(eRegion.getMembers());
-		region.setOwners(eRegion.getOwners());
-		try {
-			region.setParent(eRegion.getParent());
-		} catch (CircularInheritanceException e1) {
-			e1.printStackTrace();
+		if (exampleRegion != null)
+		{
+			ProtectedRegion eRegion = manager.getRegion(exampleRegion);
+			
+			region.setFlags(eRegion.getFlags());
+			region.setMembers(eRegion.getMembers());
+			region.setOwners(eRegion.getOwners());
+			try {
+				region.setParent(eRegion.getParent());
+			} catch (CircularInheritanceException e1) {
+				e1.printStackTrace();
+			}
 		}
 		
 		manager.addRegion(region);

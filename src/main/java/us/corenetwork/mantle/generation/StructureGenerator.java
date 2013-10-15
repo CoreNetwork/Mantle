@@ -169,10 +169,20 @@ public class StructureGenerator {
 				StructureData.WorldGuard region = structure.getWorldGuardData();
 				if (region != null)
 				{
-					Location firstBlock = schematicCorner.clone().add(region.firstBlock.getX(), region.firstBlock.getY(), region.firstBlock.getZ());
-					Location secondBlock = schematicCorner.clone().add(region.secondBlock.getX(), region.secondBlock.getY(), region.secondBlock.getZ());
+					Location firstBlock = schematicCorner.clone();
+					if (region.firstBlock != null)
+						firstBlock = firstBlock.add(region.firstBlock.getX(), region.firstBlock.getY(), region.firstBlock.getZ());
+					else
+						firstBlock.subtract(region.padding, region.padding, region.padding);
+					
+					Location secondBlock = schematicCorner.clone();
+					if (region.secondBlock != null)
+						secondBlock = secondBlock.add(region.secondBlock.getX(), region.secondBlock.getY(), region.secondBlock.getZ());
+					else
+						secondBlock = secondBlock.add(schematic.xSize + region.padding, schematic.ySize + region.padding, schematic.zSize + region.padding);
+						
+					String name = structure.getName() + "," + schematicCorner.getBlockX() + "x" + schematicCorner.getBlockZ();
 
-					String name = structure.getName() + "-" + schematicCorner.getX() + "x" + schematicCorner.getZ();
 					WorldGuardManager.createRegion(firstBlock, secondBlock, name, region.exampleRegion);
 				}
 
