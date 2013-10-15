@@ -18,7 +18,19 @@ public class AnimalSpawningHelper implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
 		if (!spawningMob)
+		{
+			String type = event.getEntityType().toString();
+			for (String rejectedType : AnimalSpawningSettings.PREVENT_SPAWNING_ANIMALS.stringList())
+			{
+				if (type.equalsIgnoreCase(rejectedType))
+				{
+					event.setCancelled(true);
+					break;
+				}
+			}
+			
 			return;
+		}
 		
 		try
 		{

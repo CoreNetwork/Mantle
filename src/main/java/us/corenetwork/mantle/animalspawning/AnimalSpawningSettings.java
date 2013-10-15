@@ -1,5 +1,10 @@
 package us.corenetwork.mantle.animalspawning;
 
+import java.util.Arrays;
+import java.util.List;
+
+import us.corenetwork.mantle.hardmode.HardmodeModule;
+
 
 
 public enum AnimalSpawningSettings {
@@ -7,6 +12,8 @@ public enum AnimalSpawningSettings {
 	CHUNK_MIN_Z("Chunks.MinZ", -500),
 	CHUNK_MAX_X("Chunks.MaxX", 500),
 	CHUNK_MAX_Z("Chunks.MaxZ", 500),
+	
+	PREVENT_SPAWNING_ANIMALS("PreventSpawningAnimals", Arrays.asList("Cow", "Horse", "Pig", "Sheep")),
 
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 	CHUNKS_SPAWNING_AMOUNT("ChunksSpawningAmount", 10),
@@ -35,6 +42,11 @@ public enum AnimalSpawningSettings {
 	public String string()
 	{
 		return (String) AnimalSpawningModule.instance.config.get(string, def);
+	}
+	
+	public List<String> stringList()
+	{
+		return (List<String>) AnimalSpawningModule.instance.config.get(string, def);
 	}
 	
 	public static String getCommandDescription(String cmd, String def)
