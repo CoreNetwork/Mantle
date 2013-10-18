@@ -82,7 +82,7 @@ public class NetherSpawner {
 		skeleton.setSkeletonType(SkeletonType.WITHER);
 		
 		
-		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber())
+		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SWORD_MAX_Y.integer())
 		{
 			skeleton.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
 		}

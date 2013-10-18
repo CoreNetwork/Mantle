@@ -7,7 +7,8 @@ public enum NetherSpawningSettings {
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
 	BLAZE_CHANCE("BlazeSpawningChance", 0.6),
-	WITHER_SWORD_CHANCE("WitherSkeleton.SwordChance", 0.03),
+	WITHER_SWORD_CHANCE("WitherSkeleton.Sword.Chance", 0.03),
+	WITHER_SWORD_MAX_Y("WitherSkeleton.Sword.MaxY", 60),
 	WITHER_APPLY_DAMAGE_NODE_ON_SPAWN("WitherSkeleton.ApplyDamageNodeOnSpawnWithoutSword", "SlownessNode"),
 	
 	

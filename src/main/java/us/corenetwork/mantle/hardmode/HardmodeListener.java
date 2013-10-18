@@ -272,35 +272,7 @@ public class HardmodeListener implements Listener {
 			//Check if skeleton is rare one
 			if (itemInHand != null && itemInHand.getType() == Material.IRON_SWORD)
 			{
-				//Only drop if no obstruction is find to prevent grinders
-				boolean foundObstruction = false;
-				Block skellyBlock = event.getEntity().getLocation().getBlock().getRelative(BlockFace.UP);
-
-				for (int x = -3; x <= 3; x++)
-				{					
-					for (int z = -3; z <= 3; z++)
-					{
-						for (int y = 0; y <= 1; y++)
-						{
-							Block relativeBlock = skellyBlock.getRelative(x, y, z);
-							if (!relativeBlock.isEmpty())
-							{
-								foundObstruction = true;
-								break;
-							}
-						}
-
-						if (foundObstruction)
-							break;
-					}
-
-					if (foundObstruction)
-						break;
-				}
-
-
-				if (!foundObstruction)
-					event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (short) 1));
+				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (short) 1));
 			}
 		}
 	}
