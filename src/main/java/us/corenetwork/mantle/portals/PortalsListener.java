@@ -130,10 +130,6 @@ public class PortalsListener implements Listener {
 				{
 					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES.string());
 
-					MLog.debug("Portal out of bounds ! " + b);
-					MLog.debug("limits: " + minX + " " + maxX + " " + minZ + " " + maxZ + " " + minY + " " + maxY);
-					MLog.debug("conditionals: " + (b.getX() < minX) + " " + (b.getX() > maxX) + " " + (b.getZ() < minZ) + " " + (b.getZ() > maxZ) + " " + (b.getY() < minY) + " " + (b.getY() > maxY));
-
 					event.setCancelled(true);
 					return;
 				}
