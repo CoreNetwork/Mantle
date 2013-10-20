@@ -20,8 +20,6 @@ public class PortalUtil {
 		
 		if (destination.getBlock().getType() != Material.PORTAL)
 			buildPortal(destination);
-
-		MLog.info(destination.getBlock().getType().toString());
 		
 		return destination;		
 	}
