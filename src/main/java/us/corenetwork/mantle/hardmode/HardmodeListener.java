@@ -2,6 +2,7 @@ package us.corenetwork.mantle.hardmode;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 
 import net.minecraft.server.v1_6_R3.AttributeInstance;
 import net.minecraft.server.v1_6_R3.EntityInsentient;
@@ -266,7 +267,13 @@ public class HardmodeListener implements Listener {
 		//Wither skeleton only dropping stuff if he has iron sword
 		if (event.getEntityType() == EntityType.SKELETON && ((Skeleton) entity).getSkeletonType() == SkeletonType.WITHER)
 		{
-			event.getDrops().clear();
+			Iterator<ItemStack> iterator = event.getDrops().iterator();
+			while (iterator.hasNext())
+			{
+				ItemStack stack = iterator.next();
+				if (stack.getType() == Material.SKULL_ITEM)
+					iterator.remove();
+			}
 
 			ItemStack itemInHand = entity.getEquipment().getItemInHand();
 			//Check if skeleton is rare one
