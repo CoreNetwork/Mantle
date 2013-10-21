@@ -477,7 +477,12 @@ public class HardmodeListener implements Listener {
 		//Pigmen spawning adjust
 		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
 		{
-
+			if (event.getLocation().getWorld().getEnvironment() != Environment.NETHER)
+			{
+				event.setCancelled(true);
+				return;
+			}
+			
 			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
 
 			entity.getEquipment().clear();
