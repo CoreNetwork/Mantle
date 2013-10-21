@@ -20,6 +20,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -83,7 +84,7 @@ public class HardmodeListener implements Listener {
 		//Do not apply anything to End or void
 		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
 			return;
-
+		
 		if (event instanceof EntityDamageByEntityEvent)
 		{
 			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
@@ -149,6 +150,16 @@ public class HardmodeListener implements Listener {
 					return;
 				}
 			}
+			else if (event.getEntityType() == EntityType.VILLAGER)
+			{
+				int profession = ((CraftVillager) event.getEntity()).getHandle().getProfession();
+				if (profession == 5)
+				{
+					event.setCancelled(true);
+					return;
+				}
+			}
+
 
 		}
 
