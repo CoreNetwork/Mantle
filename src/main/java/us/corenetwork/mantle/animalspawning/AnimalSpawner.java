@@ -78,6 +78,7 @@ public class AnimalSpawner {
 		
 	}
 	
+	@SuppressWarnings("incomplete-switch")
 	private static void spawn(Location location, EntityType type, MemorySection configSection)
 	{
 		AnimalSpawningHelper.spawningMob = true;

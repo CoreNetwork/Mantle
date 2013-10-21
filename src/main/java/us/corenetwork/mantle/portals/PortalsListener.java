@@ -27,7 +27,6 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
 
 

@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import org.bukkit.block.Block;
 
-import us.corenetwork.mantle.MLog;
-
 public class ChestTimeout {
 	private static HashMap<String, HashMap<String, ChestTimer>> timers = new HashMap<String, HashMap<String, ChestTimer>>();
 	

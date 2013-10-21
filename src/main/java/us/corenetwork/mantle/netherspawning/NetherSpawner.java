@@ -2,19 +2,23 @@ package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.server.v1_6_R3.EntityInsentient;
 import net.minecraft.server.v1_6_R3.EntitySkeleton;
-import net.minecraft.server.v1_6_R3.Item;
+import net.minecraft.server.v1_6_R3.GenericAttributes;
 import net.minecraft.server.v1_6_R3.PathfinderGoal;
 import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_6_R3.World;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftSkeleton;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.inventory.ItemStack;
 
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
@@ -24,7 +28,7 @@ public class NetherSpawner {
 	public static void spawnMob(Block block)
 	{
 		boolean blaze = false;
-		if (block.getY() < 60)
+		if (block.getY() < NetherSpawningSettings.BLAZE_MAX_Y.integer());
 		{
 			blaze = MantlePlugin.random.nextDouble() < NetherSpawningSettings.BLAZE_CHANCE.doubleNumber();
 		}
@@ -83,24 +87,34 @@ public class NetherSpawner {
 		if (thirdBlock == null || !thirdBlock.isEmpty())
 			return;
 			
+		World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
+		EntitySkeleton nmsSkeleton = new EntitySkeleton(nmsWorld);
+		nmsSkeleton.setSkeletonType(1);
+		
+		try
+		{
+			Field goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
+			goalSelectorField.setAccessible(true);
+			PathfinderGoalSelector goalSelector = (PathfinderGoalSelector) goalSelectorField.get(nmsSkeleton);
+			
+			Field meleePathfinder = EntitySkeleton.class.getDeclaredField("bq");
+			meleePathfinder.setAccessible(true);
+			goalSelector.a(4, (PathfinderGoal) meleePathfinder.get(nmsSkeleton));
+		}
+		catch (Exception e)
+		{
+			MLog.severe("Error while spawning wither skeleton! Go bug matejdro!");
+			e.printStackTrace();
+		}
+		
+		nmsSkeleton.getAttributeInstance(GenericAttributes.e).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
+		nmsSkeleton.setLocation(block.getX(), block.getY(), block.getZ(), 0f, 0f);
 		NetherSpawningHelper.spawningMob = true;
-		Skeleton skeleton = (Skeleton) block.getWorld().spawnEntity(block.getLocation(), EntityType.SKELETON);
+		nmsWorld.addEntity(nmsSkeleton);
 		
-		EntitySkeleton ent = ((CraftSkeleton)skeleton).getHandle();
-        try {
-            ent.setSkeletonType(1);
-            Field selector = EntitySkeleton.class.getDeclaredField("goalSelector");
-            selector.setAccessible(true);
-            Field e = EntitySkeleton.class.getDeclaredField("e");
-            e.setAccessible(true);
-            PathfinderGoalSelector goals = (PathfinderGoalSelector) selector.get(ent);
-            goals.a(4, (PathfinderGoal) e.get(ent));
-        }
-        catch (Throwable e) {
-            e.printStackTrace();
-        }
+		//CreatureSpawnEvent event = new CreatureSpawnEvent(spawnee, spawnReason)
 		
-		
+		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
 		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SWORD_MAX_Y.integer())
 		{
 			skeleton.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD, 1));

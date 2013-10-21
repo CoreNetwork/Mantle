@@ -1,14 +1,14 @@
 package us.corenetwork.mantle.netherspawning;
 
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 
 
 public class NetherSpawningHelper implements Listener {
@@ -21,7 +21,7 @@ public class NetherSpawningHelper implements Listener {
 			return;
 		
 		try
-		{
+		{			
 			Field reasonField = CreatureSpawnEvent.class.getDeclaredField("spawnReason");
 			reasonField.setAccessible(true);
 			

@@ -9,8 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
-import us.corenetwork.mantle.MLog;
-
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{

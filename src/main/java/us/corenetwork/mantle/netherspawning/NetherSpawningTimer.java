@@ -21,8 +21,6 @@ public class NetherSpawningTimer implements Runnable {
 
     @Override
     public void run() {
-        long start = System.nanoTime();
-        
         for (Chunk c : nether.getLoadedChunks()) {
             int randomX = MantlePlugin.random.nextInt(16);
             int randomZ = MantlePlugin.random.nextInt(16);
@@ -51,8 +49,6 @@ public class NetherSpawningTimer implements Runnable {
             
             NetherSpawner.spawnMob(block);
         }
-
-        long end = System.nanoTime();
     }
 
     public static int getDistanceToNearestPlayer(Location location)
@@ -60,6 +56,9 @@ public class NetherSpawningTimer implements Runnable {
     	int minDistance = Integer.MAX_VALUE;
     	for (Player player : Bukkit.getOnlinePlayers())
     	{
+    		if (player.getWorld() != location.getWorld())
+    			continue;
+    		
     		int distance = (int) player.getLocation().distanceSquared(location);
     		if (distance < minDistance)
     			minDistance = distance;
