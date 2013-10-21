@@ -6,6 +6,8 @@ public enum NetherSpawningSettings {
     	
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
+	NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED("MinimumDistanceToPlayerSquared", 625),
+	
 	BLAZE_CHANCE("BlazeSpawningChance", 0.6),
 	WITHER_SWORD_CHANCE("WitherSkeleton.Sword.Chance", 0.03),
 	WITHER_SWORD_MAX_Y("WitherSkeleton.Sword.MaxY", 60),

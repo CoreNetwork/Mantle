@@ -2,9 +2,11 @@ package us.corenetwork.mantle.netherspawning;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -44,10 +46,25 @@ public class NetherSpawningTimer implements Runnable {
             if (aboveBlock.getType().isSolid())
                 continue;
 
+            if (getDistanceToNearestPlayer(block.getLocation()) < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer())
+            	continue;
+            
             NetherSpawner.spawnMob(block);
         }
 
         long end = System.nanoTime();
     }
 
+    public static int getDistanceToNearestPlayer(Location location)
+    {
+    	int minDistance = Integer.MAX_VALUE;
+    	for (Player player : Bukkit.getOnlinePlayers())
+    	{
+    		int distance = (int) player.getLocation().distanceSquared(location);
+    		if (distance < minDistance)
+    			minDistance = distance;
+    	}
+    	
+    	return minDistance;
+    }    
 }
