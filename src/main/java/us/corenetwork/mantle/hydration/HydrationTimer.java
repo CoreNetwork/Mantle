@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.hydration;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
@@ -26,6 +27,9 @@ public class HydrationTimer implements Runnable {
 				if (drain > 0 && player.getFireTicks() > 0)
 					drain *= HydrationSettings.FIRE_DEHYDRATION_MULTIPLIER.doubleNumber();
 
+				if (drain > 0 && player.getGameMode() == GameMode.CREATIVE)
+					continue;
+				
 				if (drain < 0)
 				{
 					playerData.hydrationLevel -= drain;
