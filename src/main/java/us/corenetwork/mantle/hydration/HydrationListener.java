@@ -38,8 +38,8 @@ public class HydrationListener implements Listener {
 			data.hydrationLevel += potion.normal;
 			if (data.hydrationLevel > 100)
 				data.hydrationLevel = 100;
-			else
-				HydrationUtil.updateScoreboard(event.getPlayer().getName(), (int) Math.round(data.hydrationLevel));
+
+			HydrationUtil.updateScoreboard(event.getPlayer().getName(), (int) Math.round(data.hydrationLevel));
 
 			data.saturationLevel += potion.saturation;
 			if (data.saturationLevel > 100)
