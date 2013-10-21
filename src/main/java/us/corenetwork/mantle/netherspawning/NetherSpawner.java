@@ -111,9 +111,7 @@ public class NetherSpawner {
 		nmsSkeleton.setLocation(block.getX(), block.getY(), block.getZ(), 0f, 0f);
 		NetherSpawningHelper.spawningMob = true;
 		nmsWorld.addEntity(nmsSkeleton);
-		
-		//CreatureSpawnEvent event = new CreatureSpawnEvent(spawnee, spawnReason)
-		
+				
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
 		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SWORD_MAX_Y.integer())
 		{
