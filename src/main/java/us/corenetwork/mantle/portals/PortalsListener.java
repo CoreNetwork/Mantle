@@ -76,8 +76,6 @@ public class PortalsListener implements Listener {
 					Util.Message(PortalsSettings.MESSAGE_CAN_MAKE_PORTAL.string(), player);
 				}
 			}
-
-
 		}
 
 		if (event.isCancelled())
@@ -142,8 +140,11 @@ public class PortalsListener implements Listener {
 
 			//Prevent creating portals into other claims
 			Location destination = PortalUtil.getOtherSide(event.getBlocks().get(0).getLocation());
-			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
-
+			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination.clone().add(-1, 0, 0), true, null);
+			
+			if (claim == null)
+				claim = GriefPrevention.instance.dataStore.getClaimAt(destination.clone().add(3, 0, 0), true, null);
+			
 			if (claim != null)
 			{
 				FlintSteelData creator = null;
