@@ -1,11 +1,18 @@
 package us.corenetwork.mantle.netherspawning;
 
+import java.lang.reflect.Field;
+
+import net.minecraft.server.v1_6_R3.EntitySkeleton;
+import net.minecraft.server.v1_6_R3.Item;
+import net.minecraft.server.v1_6_R3.PathfinderGoal;
+import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
+
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftSkeleton;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.inventory.ItemStack;
 
 import us.corenetwork.mantle.MantlePlugin;
@@ -79,7 +86,19 @@ public class NetherSpawner {
 		NetherSpawningHelper.spawningMob = true;
 		Skeleton skeleton = (Skeleton) block.getWorld().spawnEntity(block.getLocation(), EntityType.SKELETON);
 		
-		skeleton.setSkeletonType(SkeletonType.WITHER);
+		EntitySkeleton ent = ((CraftSkeleton)skeleton).getHandle();
+        try {
+            ent.setSkeletonType(1);
+            Field selector = EntitySkeleton.class.getDeclaredField("goalSelector");
+            selector.setAccessible(true);
+            Field e = EntitySkeleton.class.getDeclaredField("e");
+            e.setAccessible(true);
+            PathfinderGoalSelector goals = (PathfinderGoalSelector) selector.get(ent);
+            goals.a(4, (PathfinderGoal) e.get(ent));
+        }
+        catch (Throwable e) {
+            e.printStackTrace();
+        }
 		
 		
 		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SWORD_MAX_Y.integer())
