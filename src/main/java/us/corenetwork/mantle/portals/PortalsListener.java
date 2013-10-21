@@ -62,8 +62,13 @@ public class PortalsListener implements Listener {
 
 				if (claim != null && claim.allowBuild(player) != null)
 				{
+					String owner = claim.getOwnerName();
+					if (owner == null)
+						owner = "ADMIN";
+					
 					String message = PortalsSettings.MESSAGE_CANT_MAKE_PORTAL.string();
 					message = message.replace("<OtherDimension>", clicked.getWorld().getEnvironment() == Environment.NORMAL ? "Nether" : "Overworld");
+					message = message.replace("<Owner>", owner);
 
 					Util.Message(message, player);
 				}
