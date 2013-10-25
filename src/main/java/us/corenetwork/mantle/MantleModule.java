@@ -31,7 +31,8 @@ public abstract class MantleModule implements CommandExecutor {
 	public boolean active = false;
 
 	public YamlConfiguration config;
-
+	public YamlConfiguration storageConfig;
+	
 	protected MantleModule(String name, String[] commands, String configName)
 	{
 		this.moduleName = name;
@@ -125,6 +126,56 @@ public abstract class MantleModule implements CommandExecutor {
 		}
 	}
 
+	public void loadStorageYaml()
+	{
+		File storageFolder = new File(MantlePlugin.instance.getDataFolder(), "storage");
+		if (!storageFolder.exists())
+			storageFolder.mkdir();
+		
+		File configFile = new File(storageFolder, configName.concat(".yml"));
+
+		storageConfig = new YamlConfiguration();
+
+		if (configFile.exists())
+		{
+			try {
+				storageConfig.load(configFile);
+			} catch (FileNotFoundException e) {
+				MLog.severe("Error while loading storage for module " + moduleName + ".");
+
+				e.printStackTrace();
+				return;
+			} catch (IOException e) {
+				MLog.severe("Error while loading storage for module " + moduleName + ".");
+
+				e.printStackTrace();
+				return;
+			} catch (InvalidConfigurationException e) {
+				MLog.severe("Error while loading storage for module " + moduleName + ".");
+
+				e.printStackTrace();
+				return;
+			}
+		}
+	}
+
+	public void saveStorageYaml()
+	{
+		if (storageConfig == null)
+			return;
+
+		try
+		{
+			File storageFolder = new File(MantlePlugin.instance.getDataFolder(), "storage");			
+			File configFile = new File(storageFolder, configName.concat(".yml"));
+
+			storageConfig.save(configFile);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	//Module manager
 
