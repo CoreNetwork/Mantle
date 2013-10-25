@@ -13,7 +13,7 @@ public class HorseSpeed {
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT Speed FROM horseSpeeds WHERE ID = ?");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT Speed FROM horseSpeeds WHERE ID = ? LIMIT 1");
 			statement.setString(1, id);
 			
 			ResultSet set = statement.executeQuery();

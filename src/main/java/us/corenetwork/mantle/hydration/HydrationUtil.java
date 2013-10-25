@@ -55,7 +55,6 @@ public class HydrationUtil {
 				player.addPotionEffect(effect, true);
 				playerData.fatigueEffectStart = System.currentTimeMillis();
 				
-				playerData.save();
 				return true;
 			}
 			else
@@ -63,7 +62,6 @@ public class HydrationUtil {
 				playerData.fatigueEffectStart = 0;
 				playerData.fatigueLevel = 0;
 				
-				playerData.save();
 				return true;
 
 			}
@@ -74,7 +72,6 @@ public class HydrationUtil {
 			playerData.fatigueEffectStart = 0;
 			playerData.fatigueLevel = 0;
 			
-			playerData.save();
 			return true;
 		}
 		return false;

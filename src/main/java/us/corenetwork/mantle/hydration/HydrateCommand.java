@@ -25,9 +25,7 @@ public class HydrateCommand extends BaseMantleCommand {
 		playerData.fatigueEffectStart = 0;
 		playerData.fatigueLevel = 0;
 		playerData.save();
-		
-		HydrationTimer.updated = true;
-		
+				
 		HydrationUtil.upateMineFatigue(player, playerData, null);
 		HydrationUtil.updateScoreboard(player.getName(), 100);
 	}	

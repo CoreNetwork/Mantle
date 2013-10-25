@@ -1,79 +1,102 @@
 package us.corenetwork.mantle.hydration;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
+import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
 
 public class HydrationTimer implements Runnable {
-	private int lastSave = 0;
-	public static boolean updated = false;
 	
 	@Override
 	public void run() {	
-		lastSave++;
-		
-		for (Player player : Bukkit.getServer().getOnlinePlayers())
+		boolean updated = false;
+
+		try
 		{
-			PlayerData playerData = PlayerData.getPlayer(player.getName());
-			
-			int oldHydration = (int) Math.round(playerData.hydrationLevel);
-			
-			WorldLayer layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
-			if (layer != null && layer.drain != 0)
+			PreparedStatement delStatement = IO.getConnection().prepareStatement("DELETE FROM hydration WHERE Player = ?");
+			PreparedStatement insertStatement = IO.getConnection().prepareStatement("INSERT INTO hydration (Player, Hydration, Saturation, FatigueLevel, FatigueLevelStart, DeliveredMessages) VALUES (?,?,?,?,?,?)");
+
+			for (Player player : Bukkit.getServer().getOnlinePlayers())
 			{
-				double drain = layer.drain;
-				if (drain > 0 && player.getFireTicks() > 0)
-					drain *= HydrationSettings.FIRE_DEHYDRATION_MULTIPLIER.doubleNumber();
-
-				if (drain > 0 && player.getGameMode() == GameMode.CREATIVE)
-					continue;
+				PlayerData playerData = PlayerData.getPlayer(player.getName());
+				boolean playerUpdated = playerData.waitingToSave;
 				
-				if (drain < 0)
+				int oldHydration = (int) Math.round(playerData.hydrationLevel);
+				
+				WorldLayer layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
+				if (layer != null && layer.drain != 0 && (layer.drain < 0 || player.getGameMode() != GameMode.CREATIVE))
 				{
-					playerData.hydrationLevel -= drain;
-					if (playerData.hydrationLevel > 100)
+					double drain = layer.drain;
+					if (drain > 0 && player.getFireTicks() > 0)
+						drain *= HydrationSettings.FIRE_DEHYDRATION_MULTIPLIER.doubleNumber();
+					
+					if (drain < 0)
 					{
-						playerData.hydrationLevel = 100;
-					}
-				}
-				else
-				{
-					playerData.saturationLevel -= drain;
-					if (playerData.saturationLevel < 0)
-					{
-						drain = -playerData.saturationLevel;
-						playerData.saturationLevel = 0;
-
 						playerData.hydrationLevel -= drain;
-						if (playerData.hydrationLevel < 0)
-							playerData.hydrationLevel = 0;
+						if (playerData.hydrationLevel > 100)
+						{
+							playerData.hydrationLevel = 100;
+						}
 					}
-				}
-				
-				int newHydration = (int) Math.round(playerData.hydrationLevel);
+					else
+					{
+						playerData.saturationLevel -= drain;
+						if (playerData.saturationLevel < 0)
+						{
+							drain = -playerData.saturationLevel;
+							playerData.saturationLevel = 0;
 
-				if (oldHydration != newHydration)
-				{
-					HydrationUtil.updateScoreboard(player.getName(), newHydration);
-					HydrationUtil.notify(playerData, player);
-				}
+							playerData.hydrationLevel -= drain;
+							if (playerData.hydrationLevel < 0)
+								playerData.hydrationLevel = 0;
+						}
+					}
+					
+					int newHydration = (int) Math.round(playerData.hydrationLevel);
+
+					if (oldHydration != newHydration)
+					{
+						HydrationUtil.updateScoreboard(player.getName(), newHydration);
+						HydrationUtil.notify(playerData, player);
+					}
+					
+					playerUpdated = true;
+				} 
 				
-				updated = true;
-				playerData.save();
-			} 
+				playerUpdated |= HydrationUtil.upateMineFatigue(player, playerData, layer);
+				
+				if (playerUpdated || playerData.waitingToSave)
+				{
+					playerData.save(delStatement, insertStatement);
+					delStatement.addBatch();
+					insertStatement.addBatch();
+					
+					updated = true;
+				}
+			}
 			
-			updated |= HydrationUtil.upateMineFatigue(player, playerData, layer);
+			if (updated)
+			{
+				delStatement.executeBatch();
+				insertStatement.executeBatch();
+				
+				IO.getConnection().commit();
+			}
+			
+			delStatement.close();
+			insertStatement.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
 		}
 		
-		
-		if (lastSave > 20 && updated)
-		{
-			HydrationModule.instance.saveConfig();
-			lastSave = 0;
-			updated = false;
-		}			
+				
 	}
 }
 

@@ -58,8 +58,6 @@ public class HydrationModule extends MantleModule {
 		{
 			CachedNotificationsConfig.load(notifications);
 		}
-		
-		PlayerData.load();
 	}
 	
 	@Override
