@@ -119,7 +119,7 @@ public class PlayerData {
 			return new ArrayList<Integer>();
 		
 		String[] splittedString = listString.split(",");
-		List<Integer> list = new ArrayList<>(splittedString.length);
+		List<Integer> list = new ArrayList<Integer>(splittedString.length);
 		
 		for (String s : splittedString)
 			list.add(Integer.parseInt(s));

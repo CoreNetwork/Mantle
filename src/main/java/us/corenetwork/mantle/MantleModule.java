@@ -272,7 +272,7 @@ public abstract class MantleModule implements CommandExecutor {
         {
             module.active = true;
             modules.add(module);
-        }
+        }        
 	}
 
 	public static void reloadConfigs()
