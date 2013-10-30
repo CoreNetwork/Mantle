@@ -93,7 +93,7 @@ public class StructureImageMapParser implements MapIterator {
 		
 		int rowOneBased = row + 1;
 		int colOneBased = column + 1;
-		int percentage = (rowOneBased * colOneBased) * 100 / (rows * columns);
+		int percentage = (row * columns + column) * 100 / (rows * columns);
 		
 		MLog.info("Placing structrue at imagemap location " + colOneBased + "x" + rowOneBased + " [" + percentage + "%]...");
 		
