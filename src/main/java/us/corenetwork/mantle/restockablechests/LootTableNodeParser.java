@@ -3,6 +3,7 @@ package us.corenetwork.mantle.restockablechests;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.server.v1_6_R3.NBTTagCompound;
 
@@ -99,14 +100,31 @@ public class LootTableNodeParser extends NodeParser {
 		curItemStack = stack;
 
 
-		LinkedHashMap<?,?> yamlNbtTag = (LinkedHashMap<?,?>) node.get("nbt");
+		Object yamlNbtTag = node.get("nbt");
 		if (yamlNbtTag != null)
 		{
-			NBTTagCompound newTag = LoadCommand.load(yamlNbtTag);
-
-			net.minecraft.server.v1_6_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
-			nmsStack.tag = newTag;
-			curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
+			NBTTagCompound newTag;
+			if (yamlNbtTag instanceof String)
+			{
+				newTag = LoadCommand.load((String) yamlNbtTag);
+				if (newTag == null)
+				{
+					MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml is missing!");
+					return;
+				}
+			}
+			else 
+			{
+				newTag = LoadCommand.load((Map<?,?>) yamlNbtTag);
+			}
+			
+			if (newTag != null)
+			{
+				net.minecraft.server.v1_6_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
+				nmsStack.tag = newTag;
+				curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
+			}
+			
 		}
 
 		List<?> enchants = (List<?>) node.get("enchants");
