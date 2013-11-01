@@ -33,10 +33,12 @@ public class ChestTimeout {
 		ChestTimer timer = tableTimers.get(player);
 		if (timer == null)
 			return false;
-		
-		int chestRange = (int) Math.round(chest.getLocation().distanceSquared(timer.ignoredChest.getLocation()));
-		if (chest.getWorld().equals(timer.ignoredChest.getWorld()) && chestRange <=  RChestSettings.CHEST_COOLDOWN_EXCLUSION_RANGE.integer())
-			return false;
+		if (chest.getWorld().equals(timer.ignoredChest.getWorld()))
+		{
+			int chestRange = (int) Math.round(chest.getLocation().distanceSquared(timer.ignoredChest.getLocation()));
+			if (chestRange <=  RChestSettings.CHEST_COOLDOWN_EXCLUSION_RANGE.integer())
+				return false;
+		}
 		
 		return timer.lastsUntil > System.currentTimeMillis();
 	}
