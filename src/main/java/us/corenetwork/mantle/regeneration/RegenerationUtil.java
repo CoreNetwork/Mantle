@@ -18,6 +18,11 @@ public class RegenerationUtil {
 
 	public static void regenerateStructure(int id)
 	{
+		regenerateStructure(id, System.currentTimeMillis() / 1000);
+	}
+	
+	public static void regenerateStructure(int id, long time)
+	{
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT StructureName, Schematic, World, CornerX, CornerZ, PastingY FROM regeneration_structures WHERE id = ? LIMIT 1");
@@ -70,7 +75,7 @@ public class RegenerationUtil {
 			statement.close();
 			
 			statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET LastRestore = ? WHERE ID = ?");
-			statement.setInt(1, (int) (System.currentTimeMillis() / 1000));
+			statement.setInt(1, time);
 			statement.setInt(2, id);
 			statement.executeUpdate();
 			IO.getConnection().commit();

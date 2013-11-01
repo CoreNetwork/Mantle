@@ -86,7 +86,7 @@ public class StructureChecker implements Runnable {
 					{
 						generated++;
 
-						RegenerationUtil.regenerateStructure(id);
+						RegenerationUtil.regenerateStructure(id, now);
 						MLog.info("Restored!");
 					}		
 					else
