@@ -34,7 +34,11 @@ public class ChestTimeout {
 		if (timer == null)
 			return false;
 		
-		return timer.lastsUntil > System.currentTimeMillis() && !chest.equals(timer.ignoredChest);
+		int chestRange = (int) Math.round(chest.getLocation().distanceSquared(timer.ignoredChest.getLocation()));
+		if (chestRange <=  RChestSettings.CHEST_COOLDOWN_EXCLUSION_RANGE.integer())
+			return false;
+		
+		return timer.lastsUntil > System.currentTimeMillis();
 	}
 	
 	private static class ChestTimer
