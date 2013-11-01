@@ -350,12 +350,18 @@ public class CachedSchematic {
 
 	public Location place(World world, int x, int y, int z, int randomOff, boolean ignoreAir)
 	{
+		return place(world, x, y, z, randomOff, ignoreAir, true);
+	}
+	
+	public Location place(World world, int x, int y, int z, int randomOff, boolean ignoreAir, boolean actuallyPlace)
+	{
 		int randX = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 		int randZ = randomOff == 0 ? 0 : (random.nextInt(randomOff) - randomOff / 2);
 
 		Location placement = new Location(world, x - xSize / 2 + randX, y, z - zSize / 2 + randZ);
 
-		place(placement, ignoreAir);
+		if (actuallyPlace)
+			place(placement, ignoreAir);
 
 		return placement;
 	}

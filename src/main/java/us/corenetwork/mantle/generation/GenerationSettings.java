@@ -3,6 +3,9 @@ package us.corenetwork.mantle.generation;
 
 public enum GenerationSettings {
 
+	NO_GENERATE("DontSpawnSchematics", false),
+	WE_DETECT_GP_REGIONS("WERegionDetectGPRegionSize", false),
+	
 	MESSAGE_SERVER_FROZEN("Messages.ServerFrozen", "Generating stuff... [NEWLINE] &cYour server is now &bfrozen&c and you will soon disconnect! [NEWLINE] &fMonitor progress in server console.");
 	
 	protected String string;
@@ -22,6 +25,11 @@ public enum GenerationSettings {
 	public Integer integer()
 	{
 		return (Integer) GenerationModule.instance.config.get(string, def);
+	}
+	
+	public Boolean bool()
+	{
+		return (Boolean) GenerationModule.instance.config.get(string, def);
 	}
 	
 	public String string()

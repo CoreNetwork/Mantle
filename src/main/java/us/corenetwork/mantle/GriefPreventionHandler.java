@@ -81,6 +81,11 @@ public class GriefPreventionHandler {
 		GriefPrevention.instance.dataStore.saveClaim(bigClaim);
 	}
 
+	public static Claim getClaimAt(Location location)
+	{
+		return GriefPrevention.instance.dataStore.getClaimAt(location, true);
+	}
+	
 	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
 		int villageMinX = x - padding;

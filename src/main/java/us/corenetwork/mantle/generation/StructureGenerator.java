@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -120,7 +122,7 @@ public class StructureGenerator {
 
 				CachedSchematic schematic = structure.getRandomSchematic();
 
-				Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0, structure.shouldIgnoreAir());
+				Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0, structure.shouldIgnoreAir(), !GenerationSettings.NO_GENERATE.bool());
 
 				schematic.drawBitmap(worldImage, x - minX, z - minZ);
 
@@ -170,12 +172,27 @@ public class StructureGenerator {
 				if (region != null)
 				{
 					Location firstBlock = schematicCorner.clone();
+					Location secondBlock = schematicCorner.clone();
+
+					if (GenerationSettings.WE_DETECT_GP_REGIONS.bool())
+					{
+						Claim claim = GriefPreventionHandler.getClaimAt(schematic.getCenter(schematicCorner));
+						if (claim != null)
+						{
+							firstBlock = claim.getLesserBoundaryCorner();
+							secondBlock = claim.getGreaterBoundaryCorner();
+						}
+						else
+						{
+							MLog.warning("[WE Region generation] Unable to find GriefPrevention region at " + schematicCorner.getBlockX() + " " + schematicCorner.getZ() + "! Reverting to schematic size.");
+						}
+					}
+					
 					if (region.firstBlock != null)
 						firstBlock = firstBlock.add(region.firstBlock.getX(), region.firstBlock.getY(), region.firstBlock.getZ());
 					else
 						firstBlock.subtract(region.padding, region.padding, region.padding);
 					
-					Location secondBlock = schematicCorner.clone();
 					if (region.secondBlock != null)
 						secondBlock = secondBlock.add(region.secondBlock.getX(), region.secondBlock.getY(), region.secondBlock.getZ());
 					else
