@@ -18,10 +18,10 @@ public class RegenerationUtil {
 
 	public static void regenerateStructure(int id)
 	{
-		regenerateStructure(id, System.currentTimeMillis() / 1000);
+		regenerateStructure(id, (int) (System.currentTimeMillis() / 1000));
 	}
 	
-	public static void regenerateStructure(int id, long time)
+	public static void regenerateStructure(int id, int time)
 	{
 		try
 		{
