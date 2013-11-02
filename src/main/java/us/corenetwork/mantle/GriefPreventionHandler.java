@@ -1,5 +1,6 @@
 package us.corenetwork.mantle;
 
+import java.awt.Rectangle;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
@@ -88,10 +89,7 @@ public class GriefPreventionHandler {
 	
 	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
-		int villageMinX = x - padding;
-		int villageMaxX = x + xSize + padding;
-		int villageMinZ = z - padding;
-		int villageMaxZ = z + zSize + padding;		
+		Rectangle villageRectangle = new Rectangle(x, z, xSize + padding, zSize + padding);
 
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
@@ -112,14 +110,9 @@ public class GriefPreventionHandler {
 			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
 			int claimMaxZ = Math.max(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
 
-			if ((((claimMinX < villageMaxX && claimMinX > villageMinX) || (claimMaxX < villageMaxX && claimMaxX > villageMinX)) &&
-				((claimMinZ < villageMaxZ && claimMinZ > villageMinZ) || (claimMaxZ < villageMaxZ && claimMaxZ > villageMinZ)))
-				||
-				(((villageMinX < claimMaxX && villageMinX > claimMinX) || (villageMaxX < claimMaxX && villageMaxX > claimMinX)) &&
-				((villageMinZ < claimMaxZ && villageMinZ > claimMinZ) || (villageMaxZ < claimMaxZ && villageMaxZ > claimMinZ))))
-			{
+			Rectangle claimRectangle = new Rectangle(claimMinX, claimMinZ, claimMaxX - claimMinX, claimMaxZ - claimMinZ);
+			if (villageRectangle.intersects(claimRectangle))
 				return true;
-			}
 
 		}
 
