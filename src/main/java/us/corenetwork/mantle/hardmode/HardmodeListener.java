@@ -69,7 +69,7 @@ import us.corenetwork.mantle.Util;
 public class HardmodeListener implements Listener {
 
 	private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
-	private static HashMap<String, Long> lastWitherHits = new HashMap<String, Long>();
+	protected static HashMap<String, Long> lastWitherHits = new HashMap<String, Long>();
 
 	static
 	{

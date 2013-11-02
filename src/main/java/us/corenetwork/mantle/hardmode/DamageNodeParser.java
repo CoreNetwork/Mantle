@@ -194,6 +194,9 @@ public class DamageNodeParser extends NodeParser {
 
 		final Boolean ambient = (Boolean) node.get("ambient");
 
+		if (event.getEntity() instanceof Player)
+			HardmodeListener.lastWitherHits.put(((Player) event.getEntity()).getName(), System.currentTimeMillis() + duration * 1000 / 20);
+		
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
