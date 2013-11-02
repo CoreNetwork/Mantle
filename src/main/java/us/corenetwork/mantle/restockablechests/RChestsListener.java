@@ -54,7 +54,7 @@ public class RChestsListener implements Listener {
 
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockBreak(final BlockBreakEvent event)
 	{
 		final Block block = event.getBlock();
@@ -69,19 +69,19 @@ public class RChestsListener implements Listener {
 		}
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onInventoryClose(InventoryCloseEvent event)
 	{
 		RestockableChest.inventoryClosed((Player) event.getPlayer());
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onInventoryClick(InventoryClickEvent event)
 	{
 		RestockableChest.inventoryClicked(event);
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event)
 	{
 		RestockableChest.inventoryClosed((Player) event.getPlayer());
