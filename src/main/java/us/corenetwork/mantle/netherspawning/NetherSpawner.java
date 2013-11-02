@@ -67,13 +67,7 @@ public class NetherSpawner {
 				spawnBlaze(newBlock);
 			else
 				spawnWitherSkeleton(newBlock);
-		}
-		
-		if (blaze)
-			spawnBlaze(block);
-		else
-			spawnWitherSkeleton(block);
-		
+		}		
 	}
 	
 	private static void spawnBlaze(Block block)
