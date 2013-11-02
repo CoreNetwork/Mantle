@@ -41,7 +41,7 @@ public class RegenerationListener implements Listener {
 					if (percentage >= RegenerationSettings.RESTORATION_WARN_PERCENTAGE.integer())
 					{
 						String message = RegenerationSettings.MESSAGE_LOGIN_WARN.string();
-						message = message.replace("<Structure>", structure.getName());
+						message = message.replace("<Structure>", structure.getName().replace('_', ' '));
 						message = message.replace("<Claimed>", Integer.toString(claimed));
 						message = message.replace("<Total>", Integer.toString(total));
 						message = message.replace("<Percentage>", Integer.toString(percentage));

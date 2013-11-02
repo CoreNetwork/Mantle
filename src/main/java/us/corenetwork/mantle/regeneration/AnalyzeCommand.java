@@ -79,7 +79,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 					int emptyPercent = total == 0 ? 0 : (empty * 100 / total);
 
 					String message = RegenerationSettings.MESSAGE_ANALYZE_LINE.string();
-					message = message.replace("<Structure>", structure.getName());
+					message = message.replace("<Structure>", structure.getName().replace('_', ' '));
 					message = message.replace("<Total>", Integer.toString(total));
 					message = message.replace("<Claimed>", Integer.toString(claimed));
 					message = message.replace("<ClaimedPercent>", Integer.toString(claimedPercent));
