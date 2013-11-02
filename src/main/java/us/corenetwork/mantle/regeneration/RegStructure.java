@@ -52,7 +52,7 @@ public class RegStructure
 	
 	public int getTimeOffset()
 	{
-		Integer result = (Integer) configNode.get("TimeOffsetMinutes");
+		Integer result = (Integer) configNode.get("TimeOffsetSeconds");
 		if (result == null)
 		{
 			return 0;
