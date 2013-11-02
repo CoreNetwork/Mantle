@@ -183,9 +183,11 @@ public class RestockableChest {
 			}
 		}
 		
-		if (ChestTimeout.isUnderTimer(lootTable, player.getName(), chestBlock))
+		int timerLeft = ChestTimeout.getRemainingTime(lootTable, player.getName(), chestBlock);
+		if (timerLeft >= 0)
 		{
 			String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Message", "Admin of this server is too lazy to enter message!");
+			message = message.replace("<TimeLeft>", Util.printTimeHours(timerLeft));
 			Util.Message(message, player);
 			
 			return true;

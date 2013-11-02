@@ -4,6 +4,8 @@ import java.util.HashMap;
 
 import org.bukkit.block.Block;
 
+import us.corenetwork.mantle.MLog;
+
 public class ChestTimeout {
 	private static HashMap<String, HashMap<String, ChestTimer>> timers = new HashMap<String, HashMap<String, ChestTimer>>();
 	
@@ -23,25 +25,25 @@ public class ChestTimeout {
 		tableTimers.put(player, timer);
 	}
 	
-	public static boolean isUnderTimer(String table, String player, Block chest)
+	public static int getRemainingTime(String table, String player, Block chest)
 	{
 		HashMap<String, ChestTimer> tableTimers = timers.get(table);
 		
 		if (tableTimers == null)
-			return false;
-		
+			return -1;
+
 		ChestTimer timer = tableTimers.get(player);
 		if (timer == null)
-			return false;
+			return -1;
 		
 		if (chest.getWorld().equals(timer.ignoredChest.getWorld()))
 		{
 			int chestRange = (int) Math.round(chest.getLocation().distanceSquared(timer.ignoredChest.getLocation()));
 			if (chestRange <= RChestsModule.instance.config.getInt("LootTables." + table + ".PlayerControl.MultiChestTimeout.ExclusionRangeSquared"))
-				return false;
+				return -1;
 		}
-		
-		return timer.lastsUntil > System.currentTimeMillis();
+
+		return (int) ((timer.lastsUntil - System.currentTimeMillis()) / 60000);
 	}
 	
 	private static class ChestTimer

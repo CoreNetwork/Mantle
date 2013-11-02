@@ -168,6 +168,22 @@ public class Util {
 		}
 	}
 
+	public static String printTimeHours(int minutes)
+	{
+		if (minutes > 60)
+		{
+			return Math.round(minutes / 60.0) + " hours";
+		}
+		else if (minutes > 1)
+		{
+			return minutes + " minutes";
+		}
+		else
+		{
+			return "several seconds";
+		}
+	}
+	
 	public static void showFirework(Location location, FireworkEffect effect)
 	{
 		Firework firework = location.getWorld().spawn(location, Firework.class);
