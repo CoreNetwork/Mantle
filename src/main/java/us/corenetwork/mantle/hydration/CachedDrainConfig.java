@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.bukkit.configuration.MemorySection;
+import org.bukkit.entity.Player;
 
 public class CachedDrainConfig {
 	
@@ -20,8 +21,11 @@ public class CachedDrainConfig {
 			MemorySection section = (MemorySection) e.getValue();
 			WorldLayer layer = new WorldLayer();
 			
-			layer.drain = section.getDouble("drain", 0);
-			layer.startingMF = section.getInt("startingMF", 0);
+			layer.regularDrain = section.getDouble("Drain", 0);
+			layer.lavaDrain = section.getDouble("LavaDrain", 0);
+			layer.fireDrain = section.getDouble("FireDrain", 0);
+
+			layer.startingMF = section.getInt("StartingMF", 0);
 			
 			worldLayers.add(layer);
 		}		
@@ -48,7 +52,25 @@ public class CachedDrainConfig {
 	
 	public static class WorldLayer
 	{
-		double drain;
+		public double getDrain(Player player)
+		{
+			Long lastLavaDamage = HydrationListener.lavaPlayer.get(player.getName());
+			if (lastLavaDamage != null && lastLavaDamage > System.currentTimeMillis() - 2000)
+			{
+				HydrationListener.lavaPlayer.remove(player.getName());
+				return lavaDrain;
+			}
+			
+			if (player.getFireTicks() > 0)
+				return fireDrain;
+			
+			return regularDrain;
+		}
+		
+		double regularDrain;
+		double lavaDrain;
+		double fireDrain;
+		
 		int startingMF;		
 	}
 

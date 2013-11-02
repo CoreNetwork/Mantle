@@ -4,7 +4,6 @@ package us.corenetwork.mantle.hydration;
 
 public enum HydrationSettings {
 	SCOREBOARD_LINE("ScoreboardLine", ""),
-	FIRE_DEHYDRATION_MULTIPLIER("FireDehydrationMultiplier", 10),
 	MINING_FATIGUE_DURATION_SECONDS("MiningFatigueDurationSeconds", 180);
 
 	protected String string;
