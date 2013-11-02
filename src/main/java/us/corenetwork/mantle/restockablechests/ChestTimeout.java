@@ -33,10 +33,11 @@ public class ChestTimeout {
 		ChestTimer timer = tableTimers.get(player);
 		if (timer == null)
 			return false;
+		
 		if (chest.getWorld().equals(timer.ignoredChest.getWorld()))
 		{
 			int chestRange = (int) Math.round(chest.getLocation().distanceSquared(timer.ignoredChest.getLocation()));
-			if (chestRange <=  RChestSettings.CHEST_COOLDOWN_EXCLUSION_RANGE.integer())
+			if (chestRange <= RChestsModule.instance.config.getInt("LootTables." + table + ".PlayerControl.MultiChestTimeout.ExclusionRangeSquared"))
 				return false;
 		}
 		

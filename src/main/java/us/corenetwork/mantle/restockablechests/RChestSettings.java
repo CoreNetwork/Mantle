@@ -3,7 +3,6 @@ package us.corenetwork.mantle.restockablechests;
 public enum RChestSettings {	
 	
 	USE_ONLY_CHEST_GUI("UseOnlyChestGUI", true),
-	CHEST_COOLDOWN_EXCLUSION_RANGE("ChestCooldownExclusionRangeSquared", 900),
 	
 	MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM("Messages.RightClickChestWithArm", "Right click chest with your arm to finish creating it!"),
 	MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST("Messages.LootingTableDoesNotExist", "That looting table does not exist!"),
