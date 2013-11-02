@@ -128,9 +128,23 @@ public class PortalsListener implements Listener {
 
 			for (Block b : event.getBlocks())
 			{
-				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ || b.getY() < minY || b.getY() > maxY)
+				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES.string());
+					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
+
+					event.setCancelled(true);
+					return;
+				}
+				if (b.getY() < minY)
+				{
+					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
+
+					event.setCancelled(true);
+					return;
+				}
+				if  (b.getY() > maxY)
+				{
+					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
 
 					event.setCancelled(true);
 					return;

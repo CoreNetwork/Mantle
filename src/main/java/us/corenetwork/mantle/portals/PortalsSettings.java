@@ -28,7 +28,9 @@ public enum PortalsSettings {
 	MESSAGE_CAN_MAKE_PORTAL("Messages.CanMakePortal", "&aYou can make a Nether portal here if you’d like"),
 	MESSAGE_CANT_MAKE_PORTAL("Messages.CantMakePortal", "&cYou cannot make a Nether portal here because it would overlap a claim in <OtherDimension>. [NEWLINE] Owner of conflicting claim: <Owner>"),
 	
-	SIGN_PORTAL_OUT_OF_BOUNDARIES("Signs.PortalOutOfBoundaries", "&cWarning![NEWLINE]Your portal[NEWLINE]Is out of[NEWLINE]world limit"),
+	SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH("Signs.PortalOutOfBoundaries.TooHigh", "&cWarning![NEWLINE]Your portal[NEWLINE]Is[NEWLINE]too high!"),
+	SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW("Signs.PortalOutOfBoundaries.TooLow", "&cWarning![NEWLINE]Your portal[NEWLINE]Is[NEWLINE]too low!"),
+	SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR("Signs.PortalOutOfBoundaries.TooFar", "&cWarning![NEWLINE]Your portal[NEWLINE]Is[NEWLINE]too far!"),
 	SIGN_OVERLAP_CLAIM("Signs.OverlapClaim", "&cWarning![NEWLINE]Foreign claim[NEWLINE]overlaps your[NEWLINE]destination");
 	
 	protected String string;
