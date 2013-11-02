@@ -44,6 +44,8 @@ public class HydrationListener implements Listener {
 			data.saturationLevel += potion.saturation;
 			if (data.saturationLevel > 100)
 				data.saturationLevel = 100;
+			
+			data.save();
 		}
 
 		Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
