@@ -9,6 +9,7 @@ import net.minecraft.server.v1_6_R3.PathfinderGoal;
 import net.minecraft.server.v1_6_R3.PathfinderGoalSelector;
 import net.minecraft.server.v1_6_R3.World;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -78,7 +79,7 @@ public class NetherSpawner {
 	private static void spawnBlaze(Block block)
 	{
 		NetherSpawningHelper.spawningMob = true;
-		block.getWorld().spawnEntity(block.getLocation(), EntityType.BLAZE);
+		block.getWorld().spawnEntity(getLocation(block), EntityType.BLAZE);
 	}
 	
 	private static void spawnWitherSkeleton(Block block)
@@ -108,7 +109,7 @@ public class NetherSpawner {
 		}
 		
 		nmsSkeleton.getAttributeInstance(GenericAttributes.e).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
-		nmsSkeleton.setLocation(block.getX(), block.getY(), block.getZ(), 0f, 0f);
+		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		NetherSpawningHelper.spawningMob = true;
 		nmsWorld.addEntity(nmsSkeleton);
 				
@@ -121,6 +122,11 @@ public class NetherSpawner {
 		{
 			HardmodeModule.applyDamageNode(skeleton, NetherSpawningSettings.WITHER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 		}
+	}
+	
+	private static Location getLocation(Block block)
+	{
+		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
 }
