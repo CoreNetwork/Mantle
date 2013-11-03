@@ -30,6 +30,7 @@ public enum HardmodeSettings {
 	NETHER_MAX_SPAWN_LIGHT_LEVEL("Nether.MaxSpawnLightLevel", 7),
     NETHER_IGNORE_LIGHT_UNDER_Y("Nether.IgnoreSpawnLightUnderY", 64),
 	NETHER_HORSE_SPEED("Nether.HorseSpeed", 0.125),
+	NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN("Nether.VillagerApplyDamageNodeOnSpawn", "SlownessVillager"),
 	
 	MESSAGE_NO_WITHER_SURFACE("Messages.NoWitherSurface", "Sorry, you can't build wither on the surface!"),
 	MESSAGE_NO_MILKING_NETHER("Messages.NoMilkingNether", "Sorry, you can't milk cows in nether!");

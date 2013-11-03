@@ -501,6 +501,14 @@ public class HardmodeListener implements Listener {
 				entity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD, 1));
 			}
 		}
+		//Add slowness to nether villagers
+		else if (entity.getType() == EntityType.VILLAGER)
+		{
+			if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
+			{
+				HardmodeModule.applyDamageNode(event.getEntity(), HardmodeSettings.NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
