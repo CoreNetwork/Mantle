@@ -34,12 +34,15 @@ public class HydrationUtil {
 			long timePassed = System.currentTimeMillis() - playerData.fatigueEffectStart;
 			if (timePassed < HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer() * 1000)
 			{
-				if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
+				if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING) && player.hasPotionEffect(PotionEffectType.SLOW))
 					return false;
 				else
 				{
 					int timeLeft = (int) (HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer() - timePassed / 1000) + 1;
+					
 					PotionEffect effect = new PotionEffect(PotionEffectType.SLOW_DIGGING, timeLeft * 20, playerData.fatigueLevel - 1);
+					player.addPotionEffect(effect, true);
+					effect = new PotionEffect(PotionEffectType.SLOW, timeLeft * 20, playerData.fatigueLevel - 1);
 					player.addPotionEffect(effect, true);
 				}
 			}
@@ -52,7 +55,11 @@ public class HydrationUtil {
 				
 				int timeLeft = (int) (HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer()) + 1;
 				PotionEffect effect = new PotionEffect(PotionEffectType.SLOW_DIGGING, timeLeft * 20, playerData.fatigueLevel - 1);
+				
 				player.addPotionEffect(effect, true);
+				effect = new PotionEffect(PotionEffectType.SLOW, timeLeft * 20, playerData.fatigueLevel - 1);
+				player.addPotionEffect(effect, true);
+				
 				playerData.fatigueEffectStart = System.currentTimeMillis();
 				
 				return true;
@@ -69,6 +76,7 @@ public class HydrationUtil {
 		else
 		{
 			player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+			player.removePotionEffect(PotionEffectType.SLOW);
 			playerData.fatigueEffectStart = 0;
 			playerData.fatigueLevel = 0;
 			
