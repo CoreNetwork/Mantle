@@ -29,7 +29,7 @@ public class NetherSpawner {
 	public static void spawnMob(Block block)
 	{
 		boolean blaze = false;
-		if (block.getY() < NetherSpawningSettings.BLAZE_MAX_Y.integer());
+		if (block.getY() < NetherSpawningSettings.BLAZE_MAX_Y.integer())
 		{
 			blaze = MantlePlugin.random.nextDouble() < NetherSpawningSettings.BLAZE_CHANCE.doubleNumber();
 		}
@@ -53,14 +53,19 @@ public class NetherSpawner {
 			int zDiff = MantlePlugin.random.nextInt(10) - 5;
 
 			Block newBlock = block.getRelative(xDiff, 0, zDiff);
-			if (newBlock.getType() != Material.AIR)
+			if (!newBlock.isEmpty())
 				continue;
 
-			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
-			
-			if (belowBlock == null)
+			Block aboveBlock = newBlock.getRelative(BlockFace.UP);
+			if (aboveBlock == null || aboveBlock.getY() < newBlock.getY())
 				continue;
-			if (!belowBlock.getType().isSolid())
+			if (!aboveBlock.isEmpty())
+				continue;
+			
+			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
+			if (belowBlock == null || belowBlock.getY() > newBlock.getY())
+				continue;
+			if (belowBlock.isEmpty())
 				continue;
 		
 			if (blaze)
@@ -79,7 +84,7 @@ public class NetherSpawner {
 	private static void spawnWitherSkeleton(Block block)
 	{
 		Block thirdBlock = block.getRelative(BlockFace.UP, 2);
-		if (thirdBlock == null || !thirdBlock.isEmpty())
+		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !thirdBlock.isEmpty())
 			return;
 			
 		World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();

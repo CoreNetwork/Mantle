@@ -24,7 +24,7 @@ public class NetherSpawningTimer implements Runnable {
         for (Chunk c : nether.getLoadedChunks()) {
             int randomX = MantlePlugin.random.nextInt(16);
             int randomZ = MantlePlugin.random.nextInt(16);
-            int randomY = MantlePlugin.random.nextInt(256);
+            int randomY = MantlePlugin.random.nextInt(128);
 
             Block block = c.getBlock(randomX, randomY, randomZ);
 
@@ -39,7 +39,7 @@ public class NetherSpawningTimer implements Runnable {
                 continue;
                         
             Block aboveBlock = block.getRelative(BlockFace.UP);
-            if (aboveBlock == null)
+            if (aboveBlock == null || aboveBlock.getY() < block.getY())
                 continue;
             if (!aboveBlock.isEmpty())
                 continue;
