@@ -50,7 +50,7 @@ public class MantlePlugin extends JavaPlugin {
 
 		MantleModule.loadModules();
 
-		log.info("[MCNSAFlatcore] " + getDescription().getFullName() + " loaded!");
+		log.info("[Mantle] " + getDescription().getFullName() + " loaded!");
 	}
 
 
