@@ -65,7 +65,7 @@ public class NetherSpawner {
 			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
 			if (belowBlock == null || belowBlock.getY() > newBlock.getY())
 				continue;
-			if (belowBlock.isEmpty())
+			if (!belowBlock.getType().isOccluding())
 				continue;
 		
 			if (blaze)
