@@ -165,7 +165,7 @@ public class HardmodeListener implements Listener {
 
 		if (event.getEntity() instanceof Player)
 		{
-			Player player = (Player) event.getEntity();
+			final Player player = (Player) event.getEntity();
 
 			//Environmental damage
 			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
@@ -187,7 +187,14 @@ public class HardmodeListener implements Listener {
 				Long lastWitherHit = lastWitherHits.get(player.getName());
 				if (lastWitherHit == null || lastWitherHit < System.currentTimeMillis() - 20000)
 				{
-					player.removePotionEffect(PotionEffectType.WITHER);
+					Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
+						
+						@Override
+						public void run() {
+							player.removePotionEffect(PotionEffectType.WITHER);
+						}
+					});
+					
 					event.setCancelled(true);
 					return;
 				}
