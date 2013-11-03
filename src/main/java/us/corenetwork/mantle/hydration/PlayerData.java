@@ -99,7 +99,7 @@ public class PlayerData {
 		fatigueLevel = 0;
 		fatigueEffectStart = 0;
 		hydrationLevel = 100;
-		saturationLevel = 0;
+		saturationLevel = 50;
 		deliveredMessages = new ArrayList<Integer>();
 	}
 	

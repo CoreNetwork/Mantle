@@ -21,7 +21,7 @@ public class HydrateCommand extends BaseMantleCommand {
 		
 		PlayerData playerData = PlayerData.getPlayer(player.getName());
 		playerData.hydrationLevel = 100;
-		playerData.saturationLevel = 0;
+		playerData.saturationLevel = 50;
 		playerData.fatigueEffectStart = 0;
 		playerData.fatigueLevel = 0;
 		playerData.save();
