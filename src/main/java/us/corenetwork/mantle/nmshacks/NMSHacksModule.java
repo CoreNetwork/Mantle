@@ -6,6 +6,7 @@ import net.minecraft.server.v1_6_R3.StepSound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
 
 
@@ -35,11 +36,15 @@ public class NMSHacksModule extends MantleModule {
 	
 	public static void fixWheatSound()
 	{
+		MLog.info("Enabling wheat sound hack...");
+
 		Block.CROPS.stepSound = new StepSound("grass", 1.0F, 1.0F) {
 			@Override
 			public String getPlaceSound() {
 				return "silent";
 			}
 		};
+		
+		MLog.info("Wheat sound hack enabled!");
 	}
 }
