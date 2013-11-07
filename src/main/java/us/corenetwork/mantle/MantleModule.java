@@ -16,6 +16,7 @@ import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.hydration.HydrationModule;
 import us.corenetwork.mantle.nanobot.NanobotModule;
 import us.corenetwork.mantle.netherspawning.NetherSpawningModule;
+import us.corenetwork.mantle.nmshacks.NMSHacksModule;
 import us.corenetwork.mantle.portals.PortalsModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;
 import us.corenetwork.mantle.restockablechests.RChestsModule;
@@ -273,6 +274,15 @@ public abstract class MantleModule implements CommandExecutor {
             module.active = true;
             modules.add(module);
         }        
+        
+        //NMS Hacks
+        module = new NMSHacksModule();
+        if (module.loadModuleInternal())
+        {
+            module.active = true;
+            modules.add(module);
+        }        
+
 	}
 
 	public static void reloadConfigs()
