@@ -11,12 +11,12 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
+import us.corenetwork.mantle.gametweaks.GameTweaksModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.hydration.HydrationModule;
 import us.corenetwork.mantle.nanobot.NanobotModule;
 import us.corenetwork.mantle.netherspawning.NetherSpawningModule;
-import us.corenetwork.mantle.nmshacks.NMSHacksModule;
 import us.corenetwork.mantle.portals.PortalsModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;
 import us.corenetwork.mantle.restockablechests.RChestsModule;
@@ -275,8 +275,8 @@ public abstract class MantleModule implements CommandExecutor {
             modules.add(module);
         }        
         
-        //NMS Hacks
-        module = new NMSHacksModule();
+        //Game Tweaks
+        module = new GameTweaksModule();
         if (module.loadModuleInternal())
         {
             module.active = true;

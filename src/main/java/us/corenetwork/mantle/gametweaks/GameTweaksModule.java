@@ -1,20 +1,22 @@
-package us.corenetwork.mantle.nmshacks;
+package us.corenetwork.mantle.gametweaks;
 
 import net.minecraft.server.v1_6_R3.Block;
 import net.minecraft.server.v1_6_R3.StepSound;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
+import us.corenetwork.mantle.MantlePlugin;
 
 
-public class NMSHacksModule extends MantleModule {
-	public static NMSHacksModule instance;
+public class GameTweaksModule extends MantleModule {
+	public static GameTweaksModule instance;
 
-	public NMSHacksModule() {
-		super("NMS Hacks", null, "NMSHacks");
+	public GameTweaksModule() {
+		super("Game Tweaks", null, "gametweaks");
 		
 		instance = this;
 	}
@@ -27,6 +29,8 @@ public class NMSHacksModule extends MantleModule {
 	@Override
 	protected boolean loadModule() {
 		fixWheatSound();
+		
+		Bukkit.getPluginManager().registerEvents(new GameTweaksListener(), MantlePlugin.instance);
 		
 		return true;
 	}
