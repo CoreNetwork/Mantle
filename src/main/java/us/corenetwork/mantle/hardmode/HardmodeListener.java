@@ -44,6 +44,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -456,7 +457,7 @@ public class HardmodeListener implements Listener {
 	{
 		LivingEntity entity = event.getEntity();
 
-		if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
+		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
 		{
 			if (event.getLocation().getY() >= HardmodeSettings.NETHER_IGNORE_LIGHT_UNDER_Y.integer() && event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
 			{
