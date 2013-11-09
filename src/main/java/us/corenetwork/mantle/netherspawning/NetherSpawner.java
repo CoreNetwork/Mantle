@@ -123,7 +123,8 @@ public class NetherSpawner {
 		nmsSkeleton.getAttributeInstance(GenericAttributes.e).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		NetherSpawningHelper.spawningMob = true;
-		nmsWorld.addEntity(nmsSkeleton);
+		if (!nmsWorld.addEntity(nmsSkeleton))
+			return;
 
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
 		if (rareSpawn)
