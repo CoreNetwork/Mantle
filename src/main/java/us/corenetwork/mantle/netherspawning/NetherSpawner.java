@@ -87,6 +87,9 @@ public class NetherSpawner {
 		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !thirdBlock.isEmpty())
 			return;
 
+		boolean rareSpawn = MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_SPAWN_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SKELETON_RARE_MAX_SPAWN_Y.integer();
+		boolean bowSkeleton = rareSpawn && MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_BOW_CHANCE.doubleNumber();
+		
 		World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 		EntitySkeleton nmsSkeleton = new EntitySkeleton(nmsWorld);
 		nmsSkeleton.setSkeletonType(1);
@@ -97,9 +100,19 @@ public class NetherSpawner {
 			goalSelectorField.setAccessible(true);
 			PathfinderGoalSelector goalSelector = (PathfinderGoalSelector) goalSelectorField.get(nmsSkeleton);
 
-			Field meleePathfinder = EntitySkeleton.class.getDeclaredField("bq");
-			meleePathfinder.setAccessible(true);
-			goalSelector.a(4, (PathfinderGoal) meleePathfinder.get(nmsSkeleton));
+			if (bowSkeleton)
+			{
+				Field bowPathFinder = EntitySkeleton.class.getDeclaredField("bp");
+				bowPathFinder.setAccessible(true);
+				goalSelector.a(4, (PathfinderGoal) bowPathFinder.get(nmsSkeleton));
+
+			}
+			else
+			{
+				Field meleePathfinder = EntitySkeleton.class.getDeclaredField("bq");
+				meleePathfinder.setAccessible(true);
+				goalSelector.a(4, (PathfinderGoal) meleePathfinder.get(nmsSkeleton));
+			}
 		}
 		catch (Exception e)
 		{
@@ -113,14 +126,18 @@ public class NetherSpawner {
 		nmsWorld.addEntity(nmsSkeleton);
 
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
-		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SWORD_MAX_Y.integer())
+		if (rareSpawn)
 		{
-			skeleton.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
+			if (bowSkeleton)
+				skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
+			else
+				skeleton.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
 		}
 		else
 		{
-			nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_NOSWORD_SPEED.doubleNumber());
+			nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_SKELETON_NORMAL_SPEED.doubleNumber());
 		}
+		
 	}
 
 	private static Location getLocation(Block block)

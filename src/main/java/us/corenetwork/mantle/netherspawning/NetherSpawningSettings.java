@@ -12,9 +12,10 @@ public enum NetherSpawningSettings {
 	BLAZE_MAX_Y("Blaze.MaxY", 60),
 
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
-	WITHER_SWORD_CHANCE("WitherSkeleton.Sword.Chance", 0.03),
-	WITHER_SWORD_MAX_Y("WitherSkeleton.Sword.MaxY", 60),
-	WITHER_NOSWORD_SPEED("WitherSkeleton.NoSword.Speed", 0.25),	
+	WITHER_SKELETON_RARE_SPAWN_CHANCE("WitherSkeleton.Rare.SpawnChance", 0.5),
+	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.Rare.BowChance", 0.5),
+	WITHER_SKELETON_RARE_MAX_SPAWN_Y("WitherSkeleton.Rare.MaxSpawnY", 60),
+	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Normal.Speed", 0.25),	
 	
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
