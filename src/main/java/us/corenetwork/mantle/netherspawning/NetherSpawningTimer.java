@@ -3,6 +3,7 @@ package us.corenetwork.mantle.netherspawning;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,7 +36,7 @@ public class NetherSpawningTimer implements Runnable {
             
             if (belowBlock == null)
                 continue;
-            if (!belowBlock.getType().isOccluding())
+            if (!belowBlock.getType().isOccluding() || belowBlock.getType() == Material.BEDROCK)
                 continue;
                         
             Block aboveBlock = block.getRelative(BlockFace.UP);
