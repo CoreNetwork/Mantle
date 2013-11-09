@@ -130,7 +130,7 @@ public class HardmodeListener implements Listener {
 					ItemStack weapon = skeleton.getEquipment().getItemInHand();
 
 					//Remember last wither skeleton attack 
-					if (weapon != null && (weapon.getType() == Material.IRON_SWORD || weapon.getType() == Material.BOW))
+					if (weapon != null && weapon.getType() == Material.IRON_SWORD)
 					{
 						lastWitherHits.put(((Player) victim).getName(), System.currentTimeMillis());
 					}
