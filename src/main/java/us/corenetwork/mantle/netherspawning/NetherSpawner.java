@@ -25,7 +25,7 @@ import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 
 public class NetherSpawner {
-		
+
 	public static void spawnMob(Block block)
 	{
 		boolean blaze = false;
@@ -33,19 +33,19 @@ public class NetherSpawner {
 		{
 			blaze = MantlePlugin.random.nextDouble() < NetherSpawningSettings.BLAZE_CHANCE.doubleNumber();
 		}
-		
+
 		if (blaze)
 			spawnBlaze(block);
 		else
 			spawnWitherSkeleton(block);
-		
+
 		int	maxAdditionalPackMobs = AnimalSpawningSettings.MAX_ADDITIONAL_PACK_MOBS.integer();		
 		int	minAdditionalPackMobs = AnimalSpawningSettings.MIN_ADDITIONAL_PACK_MOBS.integer();
 		int diff = maxAdditionalPackMobs - minAdditionalPackMobs;
-		
+
 		if (diff <= 0)
 			return;
-		
+
 		int additionalMobs = MantlePlugin.random.nextInt(diff) + minAdditionalPackMobs;
 		for (int i = 0; i < additionalMobs; i++)
 		{
@@ -61,42 +61,42 @@ public class NetherSpawner {
 				continue;
 			if (!aboveBlock.isEmpty())
 				continue;
-			
+
 			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
 			if (belowBlock == null || belowBlock.getY() > newBlock.getY())
 				continue;
 			if (!belowBlock.getType().isOccluding())
 				continue;
-		
+
 			if (blaze)
 				spawnBlaze(newBlock);
 			else
 				spawnWitherSkeleton(newBlock);
 		}		
 	}
-	
+
 	private static void spawnBlaze(Block block)
 	{
 		NetherSpawningHelper.spawningMob = true;
 		block.getWorld().spawnEntity(getLocation(block), EntityType.BLAZE);
 	}
-	
+
 	private static void spawnWitherSkeleton(Block block)
 	{
 		Block thirdBlock = block.getRelative(BlockFace.UP, 2);
 		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !thirdBlock.isEmpty())
 			return;
-			
+
 		World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 		EntitySkeleton nmsSkeleton = new EntitySkeleton(nmsWorld);
 		nmsSkeleton.setSkeletonType(1);
-		
+
 		try
 		{
 			Field goalSelectorField = EntityInsentient.class.getDeclaredField("goalSelector");
 			goalSelectorField.setAccessible(true);
 			PathfinderGoalSelector goalSelector = (PathfinderGoalSelector) goalSelectorField.get(nmsSkeleton);
-			
+
 			Field meleePathfinder = EntitySkeleton.class.getDeclaredField("bq");
 			meleePathfinder.setAccessible(true);
 			goalSelector.a(4, (PathfinderGoal) meleePathfinder.get(nmsSkeleton));
@@ -106,12 +106,12 @@ public class NetherSpawner {
 			MLog.severe("Error while spawning wither skeleton! Go bug matejdro!");
 			e.printStackTrace();
 		}
-		
+
 		nmsSkeleton.getAttributeInstance(GenericAttributes.e).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		NetherSpawningHelper.spawningMob = true;
 		nmsWorld.addEntity(nmsSkeleton);
-				
+
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
 		if (MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SWORD_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SWORD_MAX_Y.integer())
 		{
@@ -120,9 +120,10 @@ public class NetherSpawner {
 		else
 		{
 			HardmodeModule.applyDamageNode(skeleton, NetherSpawningSettings.WITHER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
+			nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_NOSWORD_SPEED.doubleNumber());
 		}
 	}
-	
+
 	private static Location getLocation(Block block)
 	{
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
