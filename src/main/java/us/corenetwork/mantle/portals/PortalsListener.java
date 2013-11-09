@@ -1,16 +1,20 @@
 package us.corenetwork.mantle.portals;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import net.minecraft.server.v1_6_R3.EntityPlayer;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -27,6 +31,8 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 
+import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
 
@@ -197,7 +203,7 @@ public class PortalsListener implements Listener {
 
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-	public void onPlayerPortal(PlayerPortalEvent event)
+	public void onPlayerPortal(final PlayerPortalEvent event)
 	{
 		//Controlled nether portals
 		if (event.getCause() == TeleportCause.NETHER_PORTAL)
@@ -206,6 +212,32 @@ public class PortalsListener implements Listener {
 			event.setTo(destination);
 			event.getPortalTravelAgent().setCanCreatePortal(false);
 			event.getPortalTravelAgent().setSearchRadius(0);
+			
+			//Enable going back instantly
+			if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
+			{
+				Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
+					@Override
+					public void run() {
+						EntityPlayer nmsPlayer = ((CraftPlayer) event.getPlayer()).getHandle();
+						
+						try
+						{
+							Field portalCounterField = net.minecraft.server.v1_6_R3.Entity.class.getDeclaredField("aq");
+							portalCounterField.setAccessible(true);
+							
+							portalCounterField.set(nmsPlayer, 0);
+						}
+						catch (Exception e)
+						{
+							MLog.severe("Error while applying portal fixes! Go bug matejdro!");
+							e.printStackTrace();
+						}
+						
+						nmsPlayer.portalCooldown = 0;
+					}
+				});
+			}
 		}
 	}
 
