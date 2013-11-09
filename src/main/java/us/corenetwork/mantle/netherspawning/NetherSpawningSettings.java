@@ -13,7 +13,7 @@ public enum NetherSpawningSettings {
 
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
 	WITHER_SKELETON_RARE_SPAWN_CHANCE("WitherSkeleton.Rare.SpawnChance", 0.5),
-	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.Rare.BowChance", 0.5),
+	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.Normal.BowChance", 0.5),
 	WITHER_SKELETON_RARE_MAX_SPAWN_Y("WitherSkeleton.Rare.MaxSpawnY", 60),
 	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Normal.Speed", 0.25),	
 	

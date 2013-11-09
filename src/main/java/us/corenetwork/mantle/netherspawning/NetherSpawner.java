@@ -88,7 +88,7 @@ public class NetherSpawner {
 			return;
 
 		boolean rareSpawn = MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_SPAWN_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SKELETON_RARE_MAX_SPAWN_Y.integer();
-		boolean bowSkeleton = rareSpawn && MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_BOW_CHANCE.doubleNumber();
+		boolean bowSkeleton = !rareSpawn && MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_BOW_CHANCE.doubleNumber();
 		
 		World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
 		EntitySkeleton nmsSkeleton = new EntitySkeleton(nmsWorld);
@@ -128,13 +128,13 @@ public class NetherSpawner {
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
 		if (rareSpawn)
 		{
-			if (bowSkeleton)
-				skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
-			else
 				skeleton.getEquipment().setItemInHand(new ItemStack(Material.IRON_SWORD, 1));
 		}
 		else
 		{
+			if (bowSkeleton)
+				skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
+
 			nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_SKELETON_NORMAL_SPEED.doubleNumber());
 		}
 		
