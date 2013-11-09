@@ -1,9 +1,10 @@
 package us.corenetwork.mantle.netherspawning;
 
+import java.util.List;
 
 public enum NetherSpawningSettings {
     NETHER_WORLD("NetherWorld", "world_nether"),
-    	
+    	    
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
 	NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED("MinimumDistanceToPlayerSquared", 625),
@@ -43,6 +44,11 @@ public enum NetherSpawningSettings {
 	public String string()
 	{
 		return (String) NetherSpawningModule.instance.config.get(string, def);
+	}
+	
+	public List<String> stringList()
+	{
+		return (List<String>) NetherSpawningModule.instance.config.get(string, def);
 	}
 
 	public static String getCommandDescription(String cmd, String def)
