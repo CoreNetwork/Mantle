@@ -119,7 +119,6 @@ public class NetherSpawner {
 		}
 		else
 		{
-			HardmodeModule.applyDamageNode(skeleton, NetherSpawningSettings.WITHER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 			nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_NOSWORD_SPEED.doubleNumber());
 		}
 	}

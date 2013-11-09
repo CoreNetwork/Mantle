@@ -14,9 +14,7 @@ public enum NetherSpawningSettings {
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
 	WITHER_SWORD_CHANCE("WitherSkeleton.Sword.Chance", 0.03),
 	WITHER_SWORD_MAX_Y("WitherSkeleton.Sword.MaxY", 60),
-	WITHER_NOSWORD_SPEED("WitherSkeleton.NoSword.Speed", 0.25),
-	WITHER_APPLY_DAMAGE_NODE_ON_SPAWN("WitherSkeleton.ApplyDamageNodeOnSpawnWithoutSword", "SlownessNode"),
-	
+	WITHER_NOSWORD_SPEED("WitherSkeleton.NoSword.Speed", 0.25),	
 	
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
