@@ -1,15 +1,16 @@
-package us.corenetwork.mantle.hydration;
+package us.corenetwork.mantle.hydration.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
+import us.corenetwork.mantle.hydration.HydrationUtil;
+import us.corenetwork.mantle.hydration.PlayerData;
 
 
-public class HydrateCommand extends BaseMantleCommand {	
-	public HydrateCommand()
+public class RestoreCommand extends BaseHydrationCommand {	
+	public RestoreCommand()
 	{
-		permission = "hydrate";
+		permission = "restore";
 		desc = "Reset hydration for specified player";
 		needPlayer = true;
 	}

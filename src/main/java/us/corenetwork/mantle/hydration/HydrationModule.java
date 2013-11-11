@@ -10,6 +10,9 @@ import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.hydration.commands.BaseHydrationCommand;
+import us.corenetwork.mantle.hydration.commands.MantleHydrationCommand;
+import us.corenetwork.mantle.hydration.commands.RestoreCommand;
 
 
 public class HydrationModule extends MantleModule {
@@ -72,7 +75,7 @@ public class HydrationModule extends MantleModule {
 				
 		Bukkit.getServer().getPluginManager().registerEvents(new HydrationListener(), MantlePlugin.instance);
 		
-		MantlePlugin.adminCommands.put("hydrate", new HydrateCommand());
+		MantlePlugin.adminCommands.put("hydration", new MantleHydrationCommand());
 
 		cacheConfigs();
 		
