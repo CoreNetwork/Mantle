@@ -592,9 +592,11 @@ public class HardmodeListener implements Listener {
 					for (int i = 0; i < amount; i++)
 					{
 						MagmaCube minion = location.getWorld().spawn(location, MagmaCube.class);
-						int size = MantlePlugin.random.nextInt(3) + 1;
+						int size = MantlePlugin.random.nextInt(4) + 1;
 						if (size == 3)
-							size = 4;
+							size = 2;
+						else if (size < 2)
+							continue;
 						
 						minion.setSize(size);
 						//minion.setSkeletonType(SkeletonType.WITHER);
