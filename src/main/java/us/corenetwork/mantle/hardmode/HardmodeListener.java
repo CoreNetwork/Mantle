@@ -455,6 +455,9 @@ public class HardmodeListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
+		if (event.getSpawnReason() == SpawnReason.SPAWNER)
+			return;
+		
 		LivingEntity entity = event.getEntity();
 
 		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
