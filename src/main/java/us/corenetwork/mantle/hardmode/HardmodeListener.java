@@ -454,10 +454,7 @@ public class HardmodeListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
-	{
-		if (event.getSpawnReason() == SpawnReason.SPAWNER)
-			return;
-		
+	{		
 		LivingEntity entity = event.getEntity();
 
 		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
@@ -488,7 +485,7 @@ public class HardmodeListener implements Listener {
 		//Pigmen spawning adjust
 		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
 		{
-			if (event.getLocation().getWorld().getEnvironment() != Environment.NETHER)
+			if (event.getLocation().getWorld().getEnvironment() == Environment.NORMAL)
 			{
 				event.setCancelled(true);
 				return;
