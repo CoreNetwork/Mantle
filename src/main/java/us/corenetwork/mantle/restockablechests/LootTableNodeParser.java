@@ -24,14 +24,14 @@ public class LootTableNodeParser extends NodeParser {
 	private static ItemStack curItemStack;
 	private YamlConfiguration config;
 
-	private LootTableNodeParser(String name, double chanceMultiplier, double chanceAdder, YamlConfiguration config)
+	public LootTableNodeParser(String name, double chanceMultiplier, double chanceAdder, YamlConfiguration config)
 	{
 		super(chanceMultiplier, chanceAdder);
 		this.tableName = name;
 		this.config = config;
 	}
 
-	private List<ItemStack> parse()
+	public List<ItemStack> parse()
 	{
 		List<?> node = (List<?>) config.getList("LootTables." + tableName + ".Items");
 		result = new ArrayList<ItemStack>();
@@ -46,14 +46,6 @@ public class LootTableNodeParser extends NodeParser {
 
 		return result;
 	}
-
-	public static List<ItemStack> parseTable(String name, double chanceMultiplier, double chanceAdder, YamlConfiguration config)
-	{
-		return new LootTableNodeParser(name, chanceMultiplier, chanceAdder, config).parse();
-	}
-
-
-
 
 	@Override
 	protected void parseNode(String type, LinkedHashMap<?, ?> node) {
@@ -135,7 +127,4 @@ public class LootTableNodeParser extends NodeParser {
 
 		result.add(curItemStack);
 	}
-
-
-
 }

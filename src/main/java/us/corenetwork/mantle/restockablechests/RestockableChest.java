@@ -356,10 +356,10 @@ public class RestockableChest {
 	public Inventory restock(Player player, int restocks, boolean finiteChest)
 	{		
 		double addChance = 0;
-		if (restocks == 1)
-			addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.SubstractChanceOnce", 0) * restocks;
-		else if (restocks > 1)
-			addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.SubstractChances", 0) * restocks;
+		if (restocks > 0)
+			addChance = -RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.SubstractChanceOnce", 0);
+		if (restocks > 1)
+			addChance += -RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.SubstractChances", 0) * (restocks - 1);
 
 		restocks++;
 
@@ -374,13 +374,22 @@ public class RestockableChest {
 		else
 			numberDisplay = maxNumber + "+";
 
-		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, 0, addChance, RChestsModule.instance.config);
+		LootTableNodeParser parser = new LootTableNodeParser(lootTable, 1, addChance, RChestsModule.instance.config);
+		List<ItemStack> items = parser.parse();
+		
 		Inventory inventory;
 		if (player == null)
 			inventory = inventoryHolder.getInventory();
 		else
 		{
 			inventory = createEmptyInventory(numberDisplay);
+			
+			if (!parser.didAnyItemHadAnyChance())
+			{
+				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.ZeroChanceMessage", "Admin of this server is too lazy to enter message!");
+				Util.Message(message, player);
+
+			}
 		}
 
 		inventory.clear();

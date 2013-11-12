@@ -12,6 +12,8 @@ public abstract class NodeParser {
 	private double chanceMultiplier;
 	private double chanceAdder;
 
+	private boolean anyChance = false;
+	
 	public NodeParser()
 	{
 		chanceMultiplier = 1;
@@ -24,6 +26,11 @@ public abstract class NodeParser {
 		this.chanceAdder = chanceAdder;
 	}
 
+	public boolean didAnyItemHadAnyChance()
+	{
+		return anyChance;
+	}
+	
 	protected void parseNodeList(List<?> node)
 	{
 		for (Object setObject : node)
@@ -196,6 +203,8 @@ public abstract class NodeParser {
 		if (chance < 0.01)
 			return 0;
 
+		anyChance = true;
+		
 		int num = 0;
 		for (int i = 0; i < rolls; i++)
 		{
