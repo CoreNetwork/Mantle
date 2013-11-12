@@ -249,7 +249,7 @@ public class PortalUtil {
 				Block block = baseBlock.getRelative(x, y, -1);
 				if (block.getType() != Material.BEDROCK)
 					block.setType(Material.AIR);
-				baseBlock.getRelative(x, y, 1);
+				block = baseBlock.getRelative(x, y, 1);
 				if (block.getType() != Material.BEDROCK)
 					block.setType(Material.AIR);
 				
