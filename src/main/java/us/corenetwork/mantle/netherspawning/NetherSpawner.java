@@ -80,11 +80,11 @@ public class NetherSpawner {
 		block.getWorld().spawnEntity(getLocation(block), EntityType.BLAZE);
 	}
 
-	private static void spawnWitherSkeleton(Block block)
+	public static Skeleton spawnWitherSkeleton(Block block)
 	{
 		Block thirdBlock = block.getRelative(BlockFace.UP, 2);
 		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !thirdBlock.isEmpty())
-			return;
+			return null;
 
 		boolean rareSpawn = MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_SPAWN_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SKELETON_RARE_MAX_SPAWN_Y.integer();
 		boolean bowSkeleton = !rareSpawn && MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_BOW_CHANCE.doubleNumber();
@@ -123,7 +123,7 @@ public class NetherSpawner {
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		NetherSpawningHelper.spawningMob = true;
 		if (!nmsWorld.addEntity(nmsSkeleton))
-			return;
+			return null;
 
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
 		if (rareSpawn)
@@ -138,6 +138,7 @@ public class NetherSpawner {
 			nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_SKELETON_NORMAL_SPEED.doubleNumber());
 		}
 		
+		return skeleton;
 	}
 
 	private static Location getLocation(Block block)

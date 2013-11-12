@@ -68,6 +68,7 @@ import org.bukkit.potion.PotionEffectType;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.netherspawning.NetherSpawner;
 
 
 public class HardmodeListener implements Listener {
@@ -594,15 +595,19 @@ public class HardmodeListener implements Listener {
 					int amount = MantlePlugin.random.nextInt(2);
 					for (int i = 0; i < amount; i++)
 					{
-						MagmaCube minion = location.getWorld().spawn(location, MagmaCube.class);
-						int size = MantlePlugin.random.nextInt(3) + 1;
-						if (size == 3)
-							size = 2;
-						else if (size < 2)
+						Block spawningBlock = location.getBlock();
+						if (spawningBlock.getType().isOccluding())
+							continue;
+						Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
+						if (aboveBlock.getType().isOccluding())
 							continue;
 						
-						minion.setSize(size);
-						//minion.setSkeletonType(SkeletonType.WITHER);
+						Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock);
+						if (minion == null)
+							continue;
+						
+						
+						minion.setHealth(HardmodeSettings.WITHER_MINION_HEALTH.doubleNumber());
 
 						minion.setCustomName("Wither Minion");
 						minion.setCustomNameVisible(false);
@@ -614,26 +619,27 @@ public class HardmodeListener implements Listener {
 		else if (event.getEntityType() == EntityType.WITHER)
 		{
 			event.setFire(true);
-			event.setRadius(30);
+			event.setRadius(HardmodeSettings.WITHER_EXPLOSION_RADIUS.integer());
 			
 			//Clear up some obsidian.
-			Block witherBlock = event.getEntity().getLocation().getBlock();
+			Location wither = event.getEntity().getLocation();
+			Block witherBlock = wither.getBlock();
 			for (int x = -8; x <= 8; x++ )
 			{
 				for (int y = -8; y <= 8; y++)
 				{
 					for (int z = -8; z <= 8; z++)
 					{
+						
 						Block nBlock = witherBlock.getRelative(x, y, z);
 						if (nBlock == null || !(nBlock.getType() == Material.OBSIDIAN || nBlock.getType() == Material.ENDER_CHEST || nBlock.getType() == Material.ANVIL || nBlock.getType() == Material.ENCHANTMENT_TABLE))
 								continue;
 						
-						Block aboveBlock = nBlock.getRelative(BlockFace.UP);
-						if (aboveBlock != null && aboveBlock.isEmpty() && MantlePlugin.random.nextInt(10) < 1)
-						{
-							aboveBlock.setType(Material.FIRE);
-						}
-						else if (MantlePlugin.random.nextInt(100) < 75)
+						int range = (int) nBlock.getLocation().distanceSquared(wither);
+						if (range > 32 * 32)
+							continue;
+						
+						if (MantlePlugin.random.nextInt(32 * 32 * 100 / 20) > range)
 						{
 							nBlock.breakNaturally(new ItemStack(Material.AIR));
 						}

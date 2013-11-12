@@ -21,7 +21,9 @@ public enum HardmodeSettings {
 	WITHER_MIN_SPAWNING_Y("Wither.MinSpawningY", 20),
 	WITHER_DESPAWNING_Y("Wither.DespawningY", 60),
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),
-	
+	WITHER_MINION_HEALTH("Wither.MinionHealth", 4),
+	WITHER_EXPLOSION_RADIUS("Wither.ExplosionRadius", 20),
+
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),
 	
 	APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN("Pigmen.ApplyDamageNodeOnSpawn", "SlownessNode"),
