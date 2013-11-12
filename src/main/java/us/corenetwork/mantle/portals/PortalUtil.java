@@ -246,8 +246,13 @@ public class PortalUtil {
 		{
 			for (int y = 0; y < 3; y++)
 			{
-				baseBlock.getRelative(x, y, -1).setType(Material.AIR);
-				baseBlock.getRelative(x, y, 1).setType(Material.AIR);
+				Block block = baseBlock.getRelative(x, y, -1);
+				if (block.getType() != Material.BEDROCK)
+					block.setType(Material.AIR);
+				baseBlock.getRelative(x, y, 1);
+				if (block.getType() != Material.BEDROCK)
+					block.setType(Material.AIR);
+				
 				baseBlock.getRelative(x, y, 0).setTypeId(Material.PORTAL.getId(), false);
 			}
 		}
