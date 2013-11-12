@@ -19,6 +19,8 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R3.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
 import org.bukkit.entity.Enderman;
@@ -50,6 +52,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -592,7 +595,7 @@ public class HardmodeListener implements Listener {
 					for (int i = 0; i < amount; i++)
 					{
 						MagmaCube minion = location.getWorld().spawn(location, MagmaCube.class);
-						int size = MantlePlugin.random.nextInt(4) + 1;
+						int size = MantlePlugin.random.nextInt(3) + 1;
 						if (size == 3)
 							size = 2;
 						else if (size < 2)
@@ -603,11 +606,53 @@ public class HardmodeListener implements Listener {
 
 						minion.setCustomName("Wither Minion");
 						minion.setCustomNameVisible(false);
+						
 					}
 				}
 			}, 5); //Spawn minions after 5 ticks to ensure they won't be hit by explosion
 		}
+		else if (event.getEntityType() == EntityType.WITHER)
+		{
+			event.setFire(true);
+			event.setRadius(30);
+			
+			//Clear up some obsidian.
+			Block witherBlock = event.getEntity().getLocation().getBlock();
+			for (int x = -8; x <= 8; x++ )
+			{
+				for (int y = -8; y <= 8; y++)
+				{
+					for (int z = -8; z <= 8; z++)
+					{
+						Block nBlock = witherBlock.getRelative(x, y, z);
+						if (nBlock == null || !(nBlock.getType() == Material.OBSIDIAN || nBlock.getType() == Material.ENDER_CHEST || nBlock.getType() == Material.ANVIL || nBlock.getType() == Material.ENCHANTMENT_TABLE))
+								continue;
+						
+						Block aboveBlock = nBlock.getRelative(BlockFace.UP);
+						if (aboveBlock != null && aboveBlock.isEmpty() && MantlePlugin.random.nextInt(10) < 1)
+						{
+							aboveBlock.setType(Material.FIRE);
+						}
+						else if (MantlePlugin.random.nextInt(100) < 75)
+						{
+							nBlock.breakNaturally(new ItemStack(Material.AIR));
+						}
+					}
+				}
+			}
+		}
 	}
+	
+	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+	public void onEntityExplode(EntityExplodeEvent event)
+	{
+		if (event.getEntityType() == EntityType.WITHER)
+		{
+			event.setYield(0);
+			
+		}
+	}
+
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onChunkUnload(ChunkUnloadEvent event)

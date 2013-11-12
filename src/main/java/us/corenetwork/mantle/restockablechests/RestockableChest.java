@@ -355,8 +355,12 @@ public class RestockableChest {
 
 	public Inventory restock(Player player, int restocks, boolean finiteChest)
 	{		
-		double multiplyChance = Math.pow(RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.MultiplyChances", 1), restocks);
-		double addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.AddChances", 0) * restocks;
+		double addChance = 0;
+		if (restocks == 1)
+			addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.SubstractChanceOnce", 0) * restocks;
+		else if (restocks > 1)
+			addChance = RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.SubstractChances", 0) * restocks;
+
 		restocks++;
 
 		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Timeout", 0);
@@ -370,7 +374,7 @@ public class RestockableChest {
 		else
 			numberDisplay = maxNumber + "+";
 
-		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, multiplyChance, addChance, RChestsModule.instance.config);
+		List<ItemStack> items = LootTableNodeParser.parseTable(lootTable, 0, addChance, RChestsModule.instance.config);
 		Inventory inventory;
 		if (player == null)
 			inventory = inventoryHolder.getInventory();

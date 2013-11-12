@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
-import us.corenetwork.mantle.hardmode.HardmodeModule;
 
 public class NetherSpawner {
 
