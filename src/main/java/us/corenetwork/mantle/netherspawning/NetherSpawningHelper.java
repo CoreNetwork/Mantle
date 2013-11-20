@@ -4,11 +4,14 @@ package us.corenetwork.mantle.netherspawning;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+
+import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
 
 
 public class NetherSpawningHelper implements Listener {
@@ -18,8 +21,22 @@ public class NetherSpawningHelper implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
 		if (!spawningMob)
+		{
+			if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
+			{
+				String type = event.getEntityType().toString();
+				for (String rejectedType : NetherSpawningSettings.PREVENT_SPAWNING_NETHER.stringList())
+				{
+					if (type.equalsIgnoreCase(rejectedType))
+					{
+						event.setCancelled(true);
+						break;
+					}
+				}
+			}
+			
 			return;
-		
+		}		
 		try
 		{			
 			Field reasonField = CreatureSpawnEvent.class.getDeclaredField("spawnReason");

@@ -1,10 +1,12 @@
 package us.corenetwork.mantle.netherspawning;
 
+import java.util.Arrays;
 import java.util.List;
 
 public enum NetherSpawningSettings {
     NETHER_WORLD("NetherWorld", "world_nether"),
-    	    
+	PREVENT_SPAWNING_NETHER("PreventSpawningNether", Arrays.asList("Skeleton", "Blaze")),
+
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
 	NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED("MinimumDistanceToPlayerSquared", 625),
