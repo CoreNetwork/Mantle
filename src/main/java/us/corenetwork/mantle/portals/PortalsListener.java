@@ -160,10 +160,30 @@ public class PortalsListener implements Listener {
 
 			//Prevent creating portals into other claims
 			Location destination = PortalUtil.getOtherSide(event.getBlocks().get(0).getLocation());
-			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination.clone().add(-1, 0, 0), true, null);
+			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination.clone(), true, null);
 			
 			if (claim == null)
-				claim = GriefPrevention.instance.dataStore.getClaimAt(destination.clone().add(3, 0, 0), true, null);
+			{
+				Block portalBlock = destination.getBlock();
+				for (int x = -2; x < 4; x++)
+				{
+					for (int y = -1; y < 3; y++)
+					{
+						for (int z = -2; z < 3; z++)
+						{
+							claim = GriefPrevention.instance.dataStore.getClaimAt(portalBlock.getLocation(), true, null);
+							if (claim != null)
+								break;
+						}
+						
+						if (claim != null)
+							break;
+					}
+					
+					if (claim != null)
+						break;
+				}
+			}
 			
 			if (claim != null)
 			{
