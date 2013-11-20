@@ -104,7 +104,7 @@ public class PortalUtil {
 			}
 		}
 
-		return destBlock.getLocation();
+		return getLocation(destBlock);
 	}
 
 	private static Location getExistingPortal(Location curLocation)
@@ -143,7 +143,7 @@ public class PortalUtil {
 			{
 				if (block.getType() == Material.PORTAL)
 				{
-					Location portalLoc = block.getLocation();
+					Location portalLoc = getLocation(block);
 					int distance = (int) Math.round(portalLoc.distanceSquared(curLocation));
 					if (distance < closestPortalDistance)
 					{
@@ -285,6 +285,11 @@ public class PortalUtil {
 			}
 		}
 
+	}
+	
+	private static Location getLocation(Block block)
+	{
+		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
 }

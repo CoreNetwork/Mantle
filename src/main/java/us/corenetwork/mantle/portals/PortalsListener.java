@@ -278,7 +278,20 @@ public class PortalsListener implements Listener {
 		event.setTo(destination);
 		event.getPortalTravelAgent().setCanCreatePortal(false);
 		event.getPortalTravelAgent().setSearchRadius(0);
-
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void onEntityPortalFinal(final EntityPortalEvent event)
+	{
+		event.setCancelled(true);
+		Util.safeTeleport(event.getEntity(), event.getTo());
+	}
+	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+	public void onPlayerPortalFinal(final PlayerPortalEvent event)
+	{
+		event.setCancelled(true);
+		Util.safeTeleport(event.getPlayer(), event.getTo());
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)

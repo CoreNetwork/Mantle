@@ -14,6 +14,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftFirework;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
@@ -221,17 +222,17 @@ public class Util {
 		}
 	}
 
-	public static void safeTeleport(final Player player, final Location location)
+	public static void safeTeleport(final Entity entity, final Location location)
 	{
 		Chunk c = location.getChunk();
 		if (!c.isLoaded())
 			location.getChunk().load();
-		player.teleport(location);
+		entity.teleport(location);
 
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
-				player.teleport(location);
+				entity.teleport(location);
 
 			}
 		}, 10);
