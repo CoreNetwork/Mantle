@@ -357,9 +357,9 @@ public class RestockableChest {
 	{		
 		double addChance = 0;
 		if (restocks > 0)
-			addChance = -RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.SubstractChanceOnce", 0);
+			addChance = -RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.SubtractChanceOnce", 0);
 		if (restocks > 1)
-			addChance += -RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.SubstractChances", 0) * (restocks - 1);
+			addChance += -RChestsModule.instance.config.getDouble("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.SubtractChances", 0) * (restocks - 1);
 
 		restocks++;
 
