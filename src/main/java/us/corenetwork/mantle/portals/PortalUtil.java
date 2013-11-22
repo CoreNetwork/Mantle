@@ -217,6 +217,9 @@ public class PortalUtil {
 				}			
 			}			
 		}
+		
+		if (closestPortal == null)
+			return null;
 
 		while (true)
 		{
