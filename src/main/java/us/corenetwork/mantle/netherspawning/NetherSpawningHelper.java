@@ -11,8 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 
-import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
-
 
 public class NetherSpawningHelper implements Listener {
 	public static boolean spawningMob = false;
