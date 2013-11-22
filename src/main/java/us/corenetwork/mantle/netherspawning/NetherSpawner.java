@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
+import java.security.cert.CertPathValidatorException.Reason;
 
 import net.minecraft.server.v1_6_R3.EntityInsentient;
 import net.minecraft.server.v1_6_R3.EntitySkeleton;
@@ -17,6 +18,7 @@ import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftSkeleton;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 
 import us.corenetwork.mantle.MLog;
@@ -36,7 +38,7 @@ public class NetherSpawner {
 		if (blaze)
 			spawnBlaze(block);
 		else
-			spawnWitherSkeleton(block);
+			spawnWitherSkeleton(block, SpawnReason.NATURAL);
 
 		int	maxAdditionalPackMobs = AnimalSpawningSettings.MAX_ADDITIONAL_PACK_MOBS.integer();		
 		int	minAdditionalPackMobs = AnimalSpawningSettings.MIN_ADDITIONAL_PACK_MOBS.integer();
@@ -70,7 +72,7 @@ public class NetherSpawner {
 			if (blaze)
 				spawnBlaze(newBlock);
 			else
-				spawnWitherSkeleton(newBlock);
+				spawnWitherSkeleton(newBlock, SpawnReason.NATURAL);
 		}		
 	}
 
@@ -80,7 +82,7 @@ public class NetherSpawner {
 		block.getWorld().spawnEntity(getLocation(block), EntityType.BLAZE);
 	}
 
-	public static Skeleton spawnWitherSkeleton(Block block)
+	public static Skeleton spawnWitherSkeleton(Block block, SpawnReason reason)
 	{
 		Block thirdBlock = block.getRelative(BlockFace.UP, 2);
 		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !thirdBlock.isEmpty())
@@ -121,8 +123,10 @@ public class NetherSpawner {
 
 		nmsSkeleton.getAttributeInstance(GenericAttributes.e).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
-		NetherSpawningHelper.spawningMob = true;
-		if (!nmsWorld.addEntity(nmsSkeleton))
+		
+		if (reason == SpawnReason.NATURAL)
+			NetherSpawningHelper.spawningMob = true;
+		if (!nmsWorld.addEntity(nmsSkeleton, reason))
 			return null;
 
 		Skeleton skeleton = (CraftSkeleton) nmsSkeleton.getBukkitEntity();
