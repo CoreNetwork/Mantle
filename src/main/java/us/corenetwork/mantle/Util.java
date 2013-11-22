@@ -19,6 +19,8 @@ import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.FireworkMeta;
 
+import us.corenetwork.core.respawn.ProtectTimer;
+
 public class Util {
 
 	public static void placeSign(Block block, String message)
@@ -227,15 +229,18 @@ public class Util {
 		Chunk c = location.getChunk();
 		if (!c.isLoaded())
 			location.getChunk().load();
-		entity.teleport(location);
 
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+		MantleListener.godEntities.add(entity.getEntityId());
+		entity.teleport(location);
+			
+		Bukkit.getServer().getScheduler().runTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
 				entity.teleport(location);
+				MantleListener.godEntities.remove(entity.getEntityId());
 
 			}
-		}, 10);
+		});
 	}
 
 	public static int flatDistanceSquared(Location a, Location b)

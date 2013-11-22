@@ -1,9 +1,13 @@
 package us.corenetwork.mantle;
 
+import java.util.HashSet;
+
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 public class MantleListener implements Listener {	
 
@@ -26,4 +30,16 @@ public class MantleListener implements Listener {
 			}
 		} 
 	}
+	
+	//Dirty solution until god module is made in core
+		public static HashSet<Integer> godEntities = new HashSet<Integer>();
+		
+		@EventHandler(ignoreCancelled = true)
+		public void onEntityDamage(final EntityDamageEvent event)
+		{
+			if (godEntities.contains(event.getEntity().getEntityId()))
+			{
+				event.setCancelled(true);
+			}
+		}
 }

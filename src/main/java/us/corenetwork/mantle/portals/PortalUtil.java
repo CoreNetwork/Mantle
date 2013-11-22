@@ -108,7 +108,7 @@ public class PortalUtil {
 	}
 
 	private static Location getExistingPortal(Location curLocation)
-	{
+	{		
 		int minY;
 		int maxY;
 		if (curLocation.getWorld().getEnvironment() == Environment.NETHER)
@@ -134,7 +134,7 @@ public class PortalUtil {
 		int startY = 0;
 
 		int closestPortalDistance = Integer.MAX_VALUE;
-		Location closestPortal = null;
+		Block closestPortal = null;
 		
 		for (int h = minY; h < maxY; h++)
 		{
@@ -143,12 +143,12 @@ public class PortalUtil {
 			{
 				if (block.getType() == Material.PORTAL)
 				{
-					Location portalLoc = getLocation(block);
+					Location portalLoc = block.getLocation();
 					int distance = (int) Math.round(portalLoc.distanceSquared(curLocation));
 					if (distance < closestPortalDistance)
 					{
 						closestPortalDistance = distance;
-						closestPortal = portalLoc;
+						closestPortal = block;
 					}
 				}
 			}			
@@ -211,14 +211,24 @@ public class PortalUtil {
 						if (distance < closestPortalDistance)
 						{
 							closestPortalDistance = distance;
-							closestPortal = portalLoc;
+							closestPortal = block;
 						}
 					}
 				}			
 			}			
 		}
 
-		return closestPortal;
+		while (true)
+		{
+			Block bottomBlock = closestPortal.getRelative(BlockFace.DOWN);
+			if (bottomBlock.getType() != Material.PORTAL || bottomBlock.getY() > closestPortal.getY())
+				break;
+			
+			closestPortal = bottomBlock;
+		}
+		
+		
+		return getLocation(closestPortal);
 	}
 
 	public static void buildPortal(Location location)
