@@ -97,7 +97,15 @@ public abstract class NodeParser {
 					String[] textSplit = text.split(" ");
 					for (int i = 0; i < childCount; i++)
 					{
-						weights[i] = Integer.parseInt(textSplit[i + 1]);
+						try
+						{
+							weights[i] = Integer.parseInt(textSplit[i + 1]);
+						}
+						catch (ArrayIndexOutOfBoundsException e)
+						{
+							MLog.warning("Invalid Loot tables config! Amount of weights must be equal to amount of items!");
+							return;
+						}
 					}
 				}
 
