@@ -71,7 +71,7 @@ public class HydrationTimer implements Runnable {
 					playerUpdated = true;
 				} 
 
-				playerUpdated |= HydrationUtil.upateMineFatigue(player, playerData, layer);
+				playerUpdated |= HydrationUtil.updateNegativeEffects(player, playerData, layer);
 
 				if (playerUpdated || playerData.waitingToSave)
 				{

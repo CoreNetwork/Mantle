@@ -23,7 +23,7 @@ public class HydrationUtil {
 		}
 	}
 	
-	public static boolean upateMineFatigue(Player player, PlayerData playerData, WorldLayer layer)
+	public static boolean updateNegativeEffects(Player player, PlayerData playerData, WorldLayer layer)
 	{
 		int neededHydrationToStop = (int) (playerData.fatigueLevel * 100 / 5);
 		if (neededHydrationToStop == 0)
@@ -34,32 +34,39 @@ public class HydrationUtil {
 			long timePassed = System.currentTimeMillis() - playerData.fatigueEffectStart;
 			if (timePassed < HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer() * 1000)
 			{
-				if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING) && player.hasPotionEffect(PotionEffectType.SLOW))
+				if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING) && player.hasPotionEffect(PotionEffectType.SLOW) && player.hasPotionEffect(PotionEffectType.HUNGER))
 					return false;
 				else
 				{
+					//Player lost negative effects somehow, lets reward him by giving it again
 					int timeLeft = (int) (HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer() - timePassed / 1000) + 1;
 					
 					PotionEffect effect = new PotionEffect(PotionEffectType.SLOW_DIGGING, timeLeft * 20, playerData.fatigueLevel - 1);
 					player.addPotionEffect(effect, true);
 					effect = new PotionEffect(PotionEffectType.SLOW, timeLeft * 20, playerData.fatigueLevel - 1);
 					player.addPotionEffect(effect, true);
+					effect = new PotionEffect(PotionEffectType.HUNGER, timeLeft * 20, 0);
+					player.addPotionEffect(effect, true);
 				}
 			}
 			else if (playerData.hydrationLevel == 0)
 			{
+				//Player did not drink anything and effect passed. Lets give him higher level
 				if (layer == null)
 					layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
 				
 				playerData.fatigueLevel = Math.max(layer == null ? 0 : layer.startingMF, Math.min(playerData.fatigueLevel + 1, 5));
 				
 				int timeLeft = (int) (HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer()) + 1;
-				PotionEffect effect = new PotionEffect(PotionEffectType.SLOW_DIGGING, timeLeft * 20, playerData.fatigueLevel - 1);
 				
+				PotionEffect effect = new PotionEffect(PotionEffectType.SLOW_DIGGING, timeLeft * 20, playerData.fatigueLevel - 1);
+	
 				player.addPotionEffect(effect, true);
 				effect = new PotionEffect(PotionEffectType.SLOW, timeLeft * 20, playerData.fatigueLevel - 1);
 				player.addPotionEffect(effect, true);
-				
+				effect = new PotionEffect(PotionEffectType.HUNGER, timeLeft * 20, 0);
+				player.addPotionEffect(effect, true);
+
 				playerData.fatigueEffectStart = System.currentTimeMillis();
 				
 				return true;
@@ -77,6 +84,7 @@ public class HydrationUtil {
 		{
 			player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
 			player.removePotionEffect(PotionEffectType.SLOW);
+			player.removePotionEffect(PotionEffectType.HUNGER);
 			playerData.fatigueEffectStart = 0;
 			playerData.fatigueLevel = 0;
 			

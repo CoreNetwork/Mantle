@@ -59,7 +59,7 @@ public class HydrationListener implements Listener {
 		Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
-				HydrationUtil.upateMineFatigue(event.getPlayer(), data, null);
+				HydrationUtil.updateNegativeEffects(event.getPlayer(), data, null);
 			}
 		});
 	}

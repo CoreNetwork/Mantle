@@ -36,7 +36,7 @@ public class SetCommand extends BaseHydrationCommand {
 		playerData.saturationLevel = saturation;
 		playerData.save();
 				
-		HydrationUtil.upateMineFatigue(player, playerData, null);
+		HydrationUtil.updateNegativeEffects(player, playerData, null);
 		HydrationUtil.updateScoreboard(player.getName(), (int) Math.round(hydration));
 	}	
 }

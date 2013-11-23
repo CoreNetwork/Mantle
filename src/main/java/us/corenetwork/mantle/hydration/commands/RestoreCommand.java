@@ -27,7 +27,7 @@ public class RestoreCommand extends BaseHydrationCommand {
 		playerData.fatigueLevel = 0;
 		playerData.save();
 				
-		HydrationUtil.upateMineFatigue(player, playerData, null);
+		HydrationUtil.updateNegativeEffects(player, playerData, null);
 		HydrationUtil.updateScoreboard(player.getName(), 100);
 	}	
 }
