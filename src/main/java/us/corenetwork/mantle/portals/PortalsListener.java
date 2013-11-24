@@ -259,15 +259,39 @@ public class PortalsListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onEntityPortalFinal(final EntityPortalEvent event)
 	{
-		event.setCancelled(true);
 		Util.safeTeleport(event.getEntity(), event.getTo());
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onPlayerPortalFinal(final PlayerPortalEvent event)
 	{
-		event.setCancelled(true);
 		Util.safeTeleport(event.getPlayer(), event.getTo());
+		
+		//Enable going back instantly
+		if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
+		{
+			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
+				@Override
+				public void run() {
+					EntityPlayer nmsPlayer = ((CraftPlayer) event.getPlayer()).getHandle();
+					
+					try
+					{
+						Field portalCounterField = net.minecraft.server.v1_6_R3.Entity.class.getDeclaredField("aq");
+						portalCounterField.setAccessible(true);
+						
+						portalCounterField.set(nmsPlayer, 0);
+					}
+					catch (Exception e)
+					{
+						MLog.severe("Error while applying portal fixes! Go bug matejdro!");
+						e.printStackTrace();
+					}
+					
+					nmsPlayer.portalCooldown = 0;
+				}
+			});
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
