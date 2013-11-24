@@ -233,33 +233,7 @@ public class PortalsListener implements Listener {
 			Location destination = PortalUtil.processTeleport(event.getPlayer());
 			event.setTo(destination);
 			event.getPortalTravelAgent().setCanCreatePortal(false);
-			event.getPortalTravelAgent().setSearchRadius(0);
-			
-			//Enable going back instantly
-			if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
-			{
-				Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
-					@Override
-					public void run() {
-						EntityPlayer nmsPlayer = ((CraftPlayer) event.getPlayer()).getHandle();
-						
-						try
-						{
-							Field portalCounterField = net.minecraft.server.v1_6_R3.Entity.class.getDeclaredField("aq");
-							portalCounterField.setAccessible(true);
-							
-							portalCounterField.set(nmsPlayer, 0);
-						}
-						catch (Exception e)
-						{
-							MLog.severe("Error while applying portal fixes! Go bug matejdro!");
-							e.printStackTrace();
-						}
-						
-						nmsPlayer.portalCooldown = 0;
-					}
-				});
-			}
+			event.getPortalTravelAgent().setSearchRadius(0);			
 		}
 	}
 
