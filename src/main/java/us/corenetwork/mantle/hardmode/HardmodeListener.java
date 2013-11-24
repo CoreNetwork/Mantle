@@ -19,16 +19,15 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_6_R3.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -162,6 +161,15 @@ public class HardmodeListener implements Listener {
 				{
 					event.setCancelled(true);
 					return;
+				}
+			}
+			else if (damager instanceof Fireball)
+			{
+				Fireball fireball = (Fireball) damager;
+				if (fireball.getShooter() instanceof Ghast)
+				{
+					double multiplier = HardmodeSettings.GHAST_FIREBALL_DAMAGE_MULTIPLIER.doubleNumber();
+					event.setDamage(event.getDamage() * multiplier);
 				}
 			}
 
@@ -645,6 +653,15 @@ public class HardmodeListener implements Listener {
 						}
 					}
 				}
+			}
+		}
+		else if (event.getEntityType() == EntityType.FIREBALL)
+		{
+			Fireball fireball = (Fireball) event.getEntity();
+			if (fireball.getShooter() instanceof Ghast)
+			{
+				double multiplier = HardmodeSettings.GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER.doubleNumber();
+				event.setRadius((float) (event.getRadius() * multiplier));
 			}
 		}
 	}

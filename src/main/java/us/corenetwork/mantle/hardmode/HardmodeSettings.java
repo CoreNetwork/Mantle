@@ -17,7 +17,9 @@ public enum HardmodeSettings {
 	GHAST_SPAWNING_CHANCE("Ghast.SpawningChance", 0.2),
 	GHAST_MINIMUM_SPAWNING_Y("Ghast.MinimumSpawningY", 80),
 	GHAST_MAXIMUM_ATTACK_RANGE("Ghast.MaxmimumHorizontalTargetRangeSquared", 70 * 70),
-	
+	GHAST_FIREBALL_DAMAGE_MULTIPLIER("Ghast.Fireball.DamageMultiplier", 4.0),
+	GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER("Ghast.Fireball.BlastRadiusMultiplier", 2.0),
+
 	WITHER_MIN_SPAWNING_Y("Wither.MinSpawningY", 20),
 	WITHER_DESPAWNING_Y("Wither.DespawningY", 60),
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),
