@@ -28,7 +28,7 @@ public class GameTweaksModule extends MantleModule {
 
 	@Override
 	protected boolean loadModule() {
-		fixWheatSound();
+		fixSound();
 		
 		Bukkit.getPluginManager().registerEvents(new GameTweaksListener(), MantlePlugin.instance);
 		
@@ -38,17 +38,17 @@ public class GameTweaksModule extends MantleModule {
 	protected void unloadModule() {
 	}
 	
-	public static void fixWheatSound()
+	public static void fixSound()
 	{
-		MLog.info("Enabling wheat sound hack...");
+		MLog.info("Enabling sound hack...");
 
-		Block.CROPS.stepSound = new StepSound("grass", 1.0F, 1.0F) {
-			@Override
-			public String getPlaceSound() {
-				return "silent";
-			}
-		};
+		Block.CROPS.stepSound = new SilentPlaceProxy(Block.CROPS.stepSound);
+		Block.POTATOES.stepSound = new SilentPlaceProxy(Block.POTATOES.stepSound);
+		Block.CARROTS.stepSound = new SilentPlaceProxy(Block.CARROTS.stepSound);
+		Block.MELON_STEM.stepSound = new SilentPlaceProxy(Block.MELON_STEM.stepSound);
+		Block.PUMPKIN_STEM.stepSound = new SilentPlaceProxy(Block.PUMPKIN_STEM.stepSound);
+		Block.NETHER_WART.stepSound = new SilentPlaceProxy(Block.NETHER_WART.stepSound);
 		
-		MLog.info("Wheat sound hack enabled!");
+		MLog.info("Sound hack enabled!");
 	}
 }
