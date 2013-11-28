@@ -366,7 +366,13 @@ public class HardmodeListener implements Listener {
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
 	{
 		Entity entity = event.getRightClicked();
-		if (entity != null && entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER)
+		if (entity == null)
+			return;
+		
+		ItemStack handItem = event.getPlayer().getItemInHand();
+		
+		if (entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER && 
+			handItem != null && handItem.getType() == Material.BUCKET)
 		{
 			event.setCancelled(true);
 			event.getPlayer().updateInventory();
