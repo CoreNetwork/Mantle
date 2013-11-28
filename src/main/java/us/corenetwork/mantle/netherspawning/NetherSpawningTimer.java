@@ -36,7 +36,7 @@ public class NetherSpawningTimer implements Runnable {
             
             if (belowBlock == null)
                 continue;
-            if (!belowBlock.getType().isOccluding() || belowBlock.getType() == Material.BEDROCK)
+            if (!NetherSpawner.canSpawnOnThisBlock(belowBlock))
                 continue;
                         
             Block aboveBlock = block.getRelative(BlockFace.UP);

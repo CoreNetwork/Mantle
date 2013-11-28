@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
-import java.security.cert.CertPathValidatorException.Reason;
 
 import net.minecraft.server.v1_6_R3.EntityInsentient;
 import net.minecraft.server.v1_6_R3.EntitySkeleton;
@@ -20,6 +19,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Stairs;
+import org.bukkit.material.Step;
 
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -66,7 +67,7 @@ public class NetherSpawner {
 			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
 			if (belowBlock == null || belowBlock.getY() > newBlock.getY())
 				continue;
-			if (!belowBlock.getType().isOccluding() || belowBlock.getType() == Material.BEDROCK)
+			if (!canSpawnOnThisBlock(belowBlock))
 				continue;
 
 			if (blaze)
@@ -148,6 +149,31 @@ public class NetherSpawner {
 	private static Location getLocation(Block block)
 	{
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
+	}
+	
+	public static boolean canSpawnOnThisBlock(Block block)
+	{
+		//Mobs can't spawn on top of bedrock
+		if (block.getType() == Material.BEDROCK)
+			return false;
+		
+		//Solid blocks automatically qualify.
+		if (block.getType().isOccluding())
+			return true;
+		
+		//Mobs can spawn on top of upside down half blocks
+		if (block.getType().getData() == Step.class)
+		{
+			return new Step(block.getType(), block.getData()).isInverted();
+		}
+		
+		if (block.getType().getData() == Stairs.class)
+		{
+			return new Stairs(block.getType(), block.getData()).isInverted();
+
+		}
+		
+		return false;
 	}
 
 }
