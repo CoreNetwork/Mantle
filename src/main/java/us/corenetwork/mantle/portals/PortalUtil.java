@@ -9,40 +9,39 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 
+import us.corenetwork.mantle.MLog;
+
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{
-		final Location destination = getOtherSide(entity.getLocation());
+		Block portalBlock = getPortalBlock(entity.getLocation());
+		Block destination = getOtherSide(portalBlock);
+				
 		
 		destination.getChunk().load();
 		
-		if (destination.getBlock().getType() != Material.PORTAL)
-			buildPortal(destination);
-		
-		return destination;		
+		if (destination.getType() != Material.PORTAL)
+		{
+			int orientation = 0;
+			BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH };
+			for (int i = 0; i < 4 ; i++)
+			{
+				if (portalBlock.getRelative(faces[i]).getType() == Material.PORTAL)
+				{
+					orientation = i;
+					break;
+				}
+			}
+			
+			buildPortal(destination, orientation);
+		}
+				
+		return getLocation(destination);		
 	}
 
-	public static Location getOtherSide(Location currentSide)
+	public static Block getOtherSide(Block block)
 	{
-		//Always pick northest or westest portal block
-		Block block = currentSide.getBlock();
-		
-		if (block.getType() != Material.PORTAL)
-		{
-			if (block.getRelative(BlockFace.EAST).getType() == Material.PORTAL)
-				block = block.getRelative(BlockFace.EAST);
-			if (block.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL)
-				block = block.getRelative(BlockFace.SOUTH);
-		}
-		
-		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.NORTH);
-		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.WEST);
-		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.NORTH);
-
-		currentSide = block.getLocation();
+		Location currentSide = block.getLocation();
 
 		double modifier = PortalsSettings.PORTAL_RATIO.doubleNumber();
 		Environment destEnvironment;
@@ -80,7 +79,7 @@ public class PortalUtil {
 			destination.setY(minY);
 
 		//Find possible existing portal
-		Location existing = getExistingPortal(destination);
+		Block existing = getExistingPortal(destination);
 		if (existing != null)
 			return existing;
 
@@ -104,10 +103,10 @@ public class PortalUtil {
 			}
 		}
 
-		return getLocation(destBlock);
+		return destBlock;
 	}
 
-	private static Location getExistingPortal(Location curLocation)
+	private static Block getExistingPortal(Location curLocation)
 	{		
 		int minY;
 		int maxY;
@@ -231,69 +230,97 @@ public class PortalUtil {
 		}
 		
 		
-		return getLocation(closestPortal);
+		return closestPortal;
 	}
 
-	public static void buildPortal(Location location)
+	private static final SchematicBlock[] portal = new SchematicBlock[] {
+		//Front view:
+		// OOOO
+		// OPPO
+		// OPPO
+		// OXPO
+		// OOOO
+		// O = Obsidian
+		// P = Portal
+		// X = Origin portal block
+	
+		//Side view:
+		// AOA
+		// AOA
+		// AOA
+		// AOA
+		// OOO
+		// A = Air
+		
+		//Top frame
+		new SchematicBlock(-1, 3, 0, Material.OBSIDIAN),
+		new SchematicBlock(0, 3, 0, Material.OBSIDIAN),
+		new SchematicBlock(1, 3, 0, Material.OBSIDIAN),
+		new SchematicBlock(2, 3, 0, Material.OBSIDIAN),
+		
+		//Bottom frame
+		new SchematicBlock(-1, -1, 0, Material.OBSIDIAN),
+		new SchematicBlock(0, -1, 0, Material.OBSIDIAN),
+		new SchematicBlock(1, -1, 0, Material.OBSIDIAN),
+		new SchematicBlock(2, -1, 0, Material.OBSIDIAN),
+		
+		//Left side
+		new SchematicBlock(-1, -1, 0, Material.OBSIDIAN),
+		new SchematicBlock(-1, 0, 0, Material.OBSIDIAN),
+		new SchematicBlock(-1, 1, 0, Material.OBSIDIAN),
+		new SchematicBlock(-1, 2, 0, Material.OBSIDIAN),
+
+		//Right side
+		new SchematicBlock(2, -1, 0, Material.OBSIDIAN),
+		new SchematicBlock(2, 0, 0, Material.OBSIDIAN),
+		new SchematicBlock(2, 1, 0, Material.OBSIDIAN),
+		new SchematicBlock(2, 2, 0, Material.OBSIDIAN),
+		
+		//Obsidian ledge
+		new SchematicBlock(0, -1, 1, Material.OBSIDIAN, true),
+		new SchematicBlock(1, -1, 1, Material.OBSIDIAN, true),
+		new SchematicBlock(0, -1, -1, Material.OBSIDIAN, true),
+		new SchematicBlock(1, -1, -1, Material.OBSIDIAN, true),
+		
+		//Portal blocks
+		new SchematicBlock(0, 0, 0, Material.PORTAL),
+		new SchematicBlock(0, 1, 0, Material.PORTAL),
+		new SchematicBlock(0, 2, 0, Material.PORTAL),
+		new SchematicBlock(1, 0, 0, Material.PORTAL),
+		new SchematicBlock(1, 1, 0, Material.PORTAL),
+		new SchematicBlock(1, 2, 0, Material.PORTAL),
+		
+		//Air pockets around portal
+		new SchematicBlock(0, 0, 1, Material.AIR),
+		new SchematicBlock(0, 1, 1, Material.AIR),
+		new SchematicBlock(0, 2, 1, Material.AIR),
+		new SchematicBlock(1, 0, 1, Material.AIR),
+		new SchematicBlock(1, 1, 1, Material.AIR),
+		new SchematicBlock(1, 2, 1, Material.AIR),
+		new SchematicBlock(0, 0, -1, Material.AIR),
+		new SchematicBlock(0, 1, -1, Material.AIR),
+		new SchematicBlock(0, 2, -1, Material.AIR),
+		new SchematicBlock(1, 0, -1, Material.AIR),
+		new SchematicBlock(1, 1, -1, Material.AIR),
+		new SchematicBlock(1, 2, -1, Material.AIR)
+
+	};
+	public static void buildPortal(Block startingBlock, int rotation)
 	{
-		Block baseBlock = location.getBlock();
-		
-		//Build top and bottom frame
-		for (int x = -1; x < 3; x++)
-		{
-			baseBlock.getRelative(x, -1, 0).setType(Material.OBSIDIAN);
-			baseBlock.getRelative(x, 3, 0).setType(Material.OBSIDIAN);
-		}
-
-		//Build side frame
-		for (int y = -1; y < 3; y++)
-		{
-			baseBlock.getRelative(-1, y, 0).setType(Material.OBSIDIAN);
-			baseBlock.getRelative(2, y, 0).setType(Material.OBSIDIAN);
-
-		}
-
-
-		//Place portals and clear space
-		for (int x = 0; x < 2; x++)
-		{
-			for (int y = 0; y < 3; y++)
-			{
-				Block block = baseBlock.getRelative(x, y, -1);
-				if (block.getType() != Material.BEDROCK)
-					block.setType(Material.AIR);
-				block = baseBlock.getRelative(x, y, 1);
-				if (block.getType() != Material.BEDROCK)
-					block.setType(Material.AIR);
-				
-				baseBlock.getRelative(x, y, 0).setTypeId(Material.PORTAL.getId(), false);
-			}
-		}
-
-		if (!baseBlock.getRelative(0, -2, 0).getType().isSolid())
-		{
-			//Overhang
-			for (int x = 0; x < 2; x++)
-			{
-				baseBlock.getRelative(x, -1, -1).setType(Material.OBSIDIAN);
-				baseBlock.getRelative(x, -1, 1).setType(Material.OBSIDIAN);
-
-			}
-		}
-		
+		SchematicBlock[] rotatedPortal = SchematicBlock.getRotatedSchematic(portal, rotation);
+		SchematicBlock.placeSchematic(rotatedPortal, startingBlock);
+ 		
 		//Clear out nearby lava
-		
 		for (int x = -2; x < 4; x++)
 		{
 			for (int y = 0; y < 5; y++)
 			{
-				for (int z = -2; z < 3; z++)
+				for (int z = -2; z < 4; z++)
 				{
-					Block block = baseBlock.getRelative(x, y, z);
+					Block block = startingBlock.getRelative(x, y, z);
 					
 					if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA)
 						block.setType(Material.AIR);
-
 				}
 			}
 		}
@@ -305,4 +332,60 @@ public class PortalUtil {
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
+	public static Block getPortalBlock(Location location)
+	{
+		Block block = location.getBlock();
+		if (block.getType() != Material.PORTAL)
+		{
+			double diffX = location.getX() - Math.floor(location.getX());
+			
+			if (diffX < 0.5)
+			{
+				Block newBlock = block.getRelative(-1, 0, 0);
+				if (newBlock.getType() == Material.PORTAL)
+					block = newBlock;
+			}
+			else
+			{
+				Block newBlock = block.getRelative(1, 0, 0);
+				if (newBlock.getType() == Material.PORTAL)
+					block = newBlock;
+			}
+			
+			if (block.getType() != Material.PORTAL)
+			{
+				double diffZ = location.getZ() - Math.floor(location.getZ());
+				
+				if (diffZ < 0.5)
+				{
+					Block newBlock = block.getRelative(0, 0, -1);
+					if (newBlock.getType() == Material.PORTAL)
+						block = newBlock;
+				}
+				else
+				{
+					Block newBlock = block.getRelative(0, 0, 1);
+					if (newBlock.getType() == Material.PORTAL)
+						block = newBlock;				}
+
+			}
+
+		}		
+		
+		if (block.getType()  != Material.PORTAL)
+		{
+			MLog.severe("Unable to find portal block at " + block.toString());
+			return block;
+		}
+		
+		//Always pick northest, westest,lowest portal block
+		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.NORTH);
+		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.NORTH);
+		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.WEST);
+				
+		return block;
+	}
 }
