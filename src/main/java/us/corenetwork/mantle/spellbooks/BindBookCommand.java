@@ -26,22 +26,81 @@ public class BindBookCommand extends BaseMantleCommand {
 		
 		Player player = (Player) sender;
 		
-		ItemStack item = player.getItemInHand();
-		
-		if (item == null || item.getType() != Material.ENCHANTED_BOOK)
+		String owner = null;
+		if (args.length > 0 && !args[0].equals("all"))
 		{
-			Util.Message("You need to have enchanted book in hand!", sender);
-			return;
+			owner = args[0];
 		}
 		
-		ItemMeta meta = item.getItemMeta();
+		if ((args.length > 0 && args[0].equals("all") || (args.length > 1 && args[1].equals("all")) ))
+		{
+			for (int i = 0; i < player.getInventory().getSize(); i++)
+			{
+				ItemStack item = player.getInventory().getItem(i);
+				if (item == null || item.getType() != Material.ENCHANTED_BOOK)
+				{
+					continue;
+				}
 
-		if (!meta.hasLore())
-		{
-			Util.Message("Book needs to have lore!", sender);
-			return;
-		}
+				ItemMeta meta = item.getItemMeta();
+
+				if (!meta.hasLore())
+				{
+					continue;
+				}
+				
+				bind(meta, owner);
+				
+				item.setItemMeta(meta);
+				player.getInventory().setItem(i, item);
+
+			}
 			
+			if (owner != null)
+			{
+				Util.Message("All books are now bound to " + owner + ".", sender);
+			}
+			else
+			{
+				Util.Message("Binding removed from all books.", sender);
+			}
+		}
+		else
+		{
+			ItemStack item = player.getItemInHand();
+			if (item == null || item.getType() != Material.ENCHANTED_BOOK)
+			{
+				Util.Message("You need to have enchanted book in hand!", sender);
+				return;
+			}
+
+			ItemMeta meta = item.getItemMeta();
+
+			if (!meta.hasLore())
+			{
+				Util.Message("Book needs to have lore!", sender);
+				return;
+			}
+			
+			bind(meta, owner);
+			
+			item.setItemMeta(meta);
+			player.setItemInHand(item);
+			
+			if (owner != null)
+			{
+				Util.Message("Book is now bound to " + owner + ".", sender);
+			}
+			else
+			{
+				Util.Message("Binding removed.", sender);
+			}
+		}
+				
+	}	
+	
+	private static void bind(ItemMeta meta, String owner)
+	{
 		List<String> loreList = meta.getLore();
 		
 		for (int i = 0; i < loreList.size(); i++)
@@ -53,10 +112,9 @@ public class BindBookCommand extends BaseMantleCommand {
 			}
 		}
 		
-		if (args.length > 0)
+		if (owner != null)
 		{
-			String owner = args[0];
-			String line = ChatColor.COLOR_CHAR + "bSoulbound to " + owner;
+			String line = ChatColor.COLOR_CHAR + "8Soulbound to " + owner;
 			
 			boolean ownershipSet = false;
 			
@@ -73,15 +131,8 @@ public class BindBookCommand extends BaseMantleCommand {
 			if (!ownershipSet)
 				loreList.add(line);
 						
-			Util.Message("Book is now bound to " + owner + ".", sender);
-		}
-		else
-		{
-			Util.Message("Binding removed.", sender);
 		}
 		
 		meta.setLore(loreList);
-		item.setItemMeta(meta);
-		player.setItemInHand(item);
-	}	
+	}
 }
