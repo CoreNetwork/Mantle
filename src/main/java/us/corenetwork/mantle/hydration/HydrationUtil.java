@@ -29,8 +29,10 @@ public class HydrationUtil {
 		if (neededHydrationToStop == 0)
 			neededHydrationToStop++;
 		
+		//Player is on low hydration
 		if (playerData.hydrationLevel < neededHydrationToStop)
 		{
+			//1. Player's effect did not wore off yet
 			long timePassed = System.currentTimeMillis() - playerData.fatigueEffectStart;
 			if (timePassed < HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer() * 1000)
 			{
@@ -49,9 +51,10 @@ public class HydrationUtil {
 					player.addPotionEffect(effect, true);
 				}
 			}
+			// 2. Player's effect either wore off or he did not receive one yet, but he is at zero hydration
+			// Let's give him some effects
 			else if (playerData.hydrationLevel == 0)
 			{
-				//Player did not drink anything and effect passed. Lets give him higher level
 				if (layer == null)
 					layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
 				
@@ -71,6 +74,7 @@ public class HydrationUtil {
 				
 				return true;
 			}
+			// 3. Player's effect has worn off, he does not have it anymore.
 			else
 			{
 				playerData.fatigueEffectStart = 0;
@@ -80,7 +84,8 @@ public class HydrationUtil {
 
 			}
 		}
-		else
+		//Player has OK hydration - remove it if needed
+		else if (playerData.fatigueLevel > 0)
 		{
 			player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
 			player.removePotionEffect(PotionEffectType.SLOW);
