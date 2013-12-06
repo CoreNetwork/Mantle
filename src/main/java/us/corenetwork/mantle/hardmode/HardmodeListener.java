@@ -96,7 +96,7 @@ public class HardmodeListener implements Listener {
 			Entity damager = entityEvent.getDamager();
 			Entity victim = entityEvent.getEntity();
 
-			//Teleporting player away from enderman
+			//Teleporting player to the enderman
 			if (victim instanceof Enderman && damager instanceof Player)
 			{
 				//Only perform teleporting if enderman cannot move to the player
