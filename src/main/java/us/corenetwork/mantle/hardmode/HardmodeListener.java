@@ -551,10 +551,12 @@ public class HardmodeListener implements Listener {
 				double value = HorseSpeed.getOriginalHorseSpeed(id);
 				if (value < 0)
 				{
-					MLog.severe("Horse speed not saved!");
-					value = 1.0;
+					MLog.warning("Horse speed not saved!");
 				}
-				attributes.setValue(value);
+				else
+				{
+					attributes.setValue(value);
+				}
 			}
 		}
 	}
