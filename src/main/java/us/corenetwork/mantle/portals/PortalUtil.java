@@ -366,7 +366,8 @@ public class PortalUtil {
 				{
 					Block newBlock = block.getRelative(0, 0, 1);
 					if (newBlock.getType() == Material.PORTAL)
-						block = newBlock;				}
+						block = newBlock;				
+				}
 
 			}
 
@@ -380,7 +381,7 @@ public class PortalUtil {
 		
 		//Always pick northest, westest,lowest portal block
 		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.NORTH);
+			block = block.getRelative(BlockFace.DOWN);
 		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
 			block = block.getRelative(BlockFace.NORTH);
 		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
