@@ -6,6 +6,7 @@ import org.bukkit.Sound;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -42,6 +43,14 @@ public class GameTweaksListener implements Listener {
 				}
 			}
 		}		
+	}
+	
+	@EventHandler(ignoreCancelled = true)
+	public void onBlockBreak(BlockBreakEvent event)
+	{
+		//Huge mushrooms should only drop sponge part.
+		if (event.getBlock().getType() == Material.HUGE_MUSHROOM_1 || event.getBlock().getType() == Material.HUGE_MUSHROOM_2)
+			event.getBlock().setData((byte) 0);
 	}
 
 }
