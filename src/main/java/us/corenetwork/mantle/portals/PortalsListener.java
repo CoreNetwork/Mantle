@@ -259,13 +259,23 @@ public class PortalsListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onEntityPortalFinal(final EntityPortalEvent event)
 	{
-		Util.safeTeleport(event.getEntity(), event.getTo());
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+			@Override
+			public void run() {
+				event.getEntity().teleport(event.getTo());
+			}
+		}, 10);	
 	}
 	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onPlayerPortalFinal(final PlayerPortalEvent event)
 	{
-		Util.safeTeleport(event.getPlayer(), event.getTo());
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+			@Override
+			public void run() {
+				event.getPlayer().teleport(event.getTo());
+			}
+		}, 10);
 		
 		//Enable going back instantly
 		if (event.getPlayer().getGameMode() != GameMode.CREATIVE)

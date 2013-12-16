@@ -88,7 +88,7 @@ public class HardmodeListener implements Listener {
 		//Do not apply anything to End or void
 		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
 			return;
-		
+
 		if (event instanceof EntityDamageByEntityEvent)
 		{
 			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
@@ -201,13 +201,13 @@ public class HardmodeListener implements Listener {
 				if (lastWitherHit == null || lastWitherHit < System.currentTimeMillis() - 20000)
 				{
 					Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
-						
+
 						@Override
 						public void run() {
 							player.removePotionEffect(PotionEffectType.WITHER);
 						}
 					});
-					
+
 					event.setCancelled(true);
 					return;
 				}
@@ -368,11 +368,11 @@ public class HardmodeListener implements Listener {
 		Entity entity = event.getRightClicked();
 		if (entity == null)
 			return;
-		
+
 		ItemStack handItem = event.getPlayer().getItemInHand();
-		
+
 		if (entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER && 
-			handItem != null && handItem.getType() == Material.BUCKET)
+				handItem != null && handItem.getType() == Material.BUCKET)
 		{
 			event.setCancelled(true);
 			event.getPlayer().updateInventory();
@@ -508,7 +508,7 @@ public class HardmodeListener implements Listener {
 				event.setCancelled(true);
 				return;
 			}
-			
+
 			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
 
 			entity.getEquipment().clear();
@@ -617,17 +617,17 @@ public class HardmodeListener implements Listener {
 						Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
 						if (aboveBlock.getType().isOccluding())
 							continue;
-						
+
 						Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
 						if (minion == null)
 							continue;
-						
-						
+
+
 						minion.setHealth(HardmodeSettings.WITHER_MINION_HEALTH.doubleNumber());
 
 						minion.setCustomName("Wither Minion");
 						minion.setCustomNameVisible(false);
-						
+
 					}
 				}
 			}, 5); //Spawn minions after 5 ticks to ensure they won't be hit by explosion
@@ -636,7 +636,7 @@ public class HardmodeListener implements Listener {
 		{
 			event.setFire(true);
 			event.setRadius(HardmodeSettings.WITHER_EXPLOSION_RADIUS.integer());
-			
+
 			//Clear up some obsidian.
 			Location wither = event.getEntity().getLocation();
 			Block witherBlock = wither.getBlock();
@@ -646,15 +646,15 @@ public class HardmodeListener implements Listener {
 				{
 					for (int z = -8; z <= 8; z++)
 					{
-						
+
 						Block nBlock = witherBlock.getRelative(x, y, z);
 						if (nBlock == null || !(nBlock.getType() == Material.OBSIDIAN || nBlock.getType() == Material.ENDER_CHEST || nBlock.getType() == Material.ANVIL || nBlock.getType() == Material.ENCHANTMENT_TABLE))
-								continue;
-						
+							continue;
+
 						int range = (int) nBlock.getLocation().distanceSquared(wither);
 						if (range > 32 * 32)
 							continue;
-						
+
 						if (MantlePlugin.random.nextInt(32 * 32 * 100 / 20) > range)
 						{
 							nBlock.breakNaturally(new ItemStack(Material.AIR));
@@ -673,14 +673,14 @@ public class HardmodeListener implements Listener {
 			}
 		}
 	}
-	
+
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent event)
 	{
 		if (event.getEntityType() == EntityType.WITHER)
 		{
 			event.setYield(0);
-			
+
 		}
 	}
 
