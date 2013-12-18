@@ -84,7 +84,6 @@ public class SaveCommand extends NanobotBaseCommand {
 		try {
 			yaml.save(new File(NanobotModule.folder, args[0] + ".yml"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

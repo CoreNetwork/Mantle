@@ -287,7 +287,6 @@ public class CachedSchematic {
 		{
 			e.printStackTrace();
 		} catch (DataException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -381,16 +380,12 @@ public class CachedSchematic {
 			localSession.clearHistory();
 
 		} catch (MaxChangedBlocksException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (EmptyClipboardException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

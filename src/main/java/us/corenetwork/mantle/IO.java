@@ -62,13 +62,10 @@ public class IO {
 	    	saveConfig();
 	    	
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -78,7 +75,6 @@ public class IO {
     	try {
 			config.save(new File(MantlePlugin.instance.getDataFolder(),"config.yml"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }

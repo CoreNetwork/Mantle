@@ -101,7 +101,6 @@ public class RestockableChest {
 			statement.close();
 			return rChest;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -346,7 +345,6 @@ public class RestockableChest {
 				return restock(player, restocks, interval < 0);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -493,7 +491,6 @@ public class RestockableChest {
 			
 			return inventory;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -694,7 +691,6 @@ public class RestockableChest {
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
