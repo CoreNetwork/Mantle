@@ -1,9 +1,9 @@
 package us.corenetwork.mantle.generation;
 
 
-import net.minecraft.server.v1_6_R3.Block;
-import net.minecraft.server.v1_6_R3.Material;
-import net.minecraft.server.v1_6_R3.MaterialMapColor;
+import net.minecraft.server.v1_7_R1.Block;
+import net.minecraft.server.v1_7_R1.Material;
+import net.minecraft.server.v1_7_R1.MaterialMapColor;
 
 public class MapColors {
 	
@@ -31,11 +31,11 @@ public class MapColors {
 		if (cColor != 0)
 			return cColor;
 		
-		Block block = Block.byId[id];
-		Material material = block.material;
-		MaterialMapColor color = material.H;
+		Block block = Block.e(id); // NEEDS TESTING
+		Material material = block.getMaterial();
+		MaterialMapColor color = material.r();
 		
-		return color.p;
+		return color.L;
 
 	}
 }

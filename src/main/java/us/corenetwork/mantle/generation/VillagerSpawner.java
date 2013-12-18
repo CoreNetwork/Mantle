@@ -2,7 +2,7 @@ package us.corenetwork.mantle.generation;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

@@ -2,12 +2,10 @@ package us.corenetwork.mantle.portals;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import net.minecraft.server.v1_6_R3.EntityPlayer;
-import net.minecraft.server.v1_6_R3.PortalTravelAgent;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,8 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +23,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -276,7 +273,7 @@ public class PortalsListener implements Listener {
 					
 					try
 					{
-						Field portalCounterField = net.minecraft.server.v1_6_R3.Entity.class.getDeclaredField("aq");
+						Field portalCounterField = net.minecraft.server.v1_7_R1.Entity.class.getDeclaredField("aq");
 						portalCounterField.setAccessible(true);
 						
 						portalCounterField.set(nmsPlayer, 0);

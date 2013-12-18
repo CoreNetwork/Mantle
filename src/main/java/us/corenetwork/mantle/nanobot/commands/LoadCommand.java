@@ -8,19 +8,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.NBTBase;
-import net.minecraft.server.v1_6_R3.NBTTagByte;
-import net.minecraft.server.v1_6_R3.NBTTagByteArray;
-import net.minecraft.server.v1_6_R3.NBTTagCompound;
-import net.minecraft.server.v1_6_R3.NBTTagDouble;
-import net.minecraft.server.v1_6_R3.NBTTagFloat;
-import net.minecraft.server.v1_6_R3.NBTTagInt;
-import net.minecraft.server.v1_6_R3.NBTTagIntArray;
-import net.minecraft.server.v1_6_R3.NBTTagList;
-import net.minecraft.server.v1_6_R3.NBTTagLong;
-import net.minecraft.server.v1_6_R3.NBTTagShort;
-import net.minecraft.server.v1_6_R3.NBTTagString;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.NBTBase;
+import net.minecraft.server.v1_7_R1.NBTTagByte;
+import net.minecraft.server.v1_7_R1.NBTTagByteArray;
+import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R1.NBTTagDouble;
+import net.minecraft.server.v1_7_R1.NBTTagFloat;
+import net.minecraft.server.v1_7_R1.NBTTagInt;
+import net.minecraft.server.v1_7_R1.NBTTagIntArray;
+import net.minecraft.server.v1_7_R1.NBTTagList;
+import net.minecraft.server.v1_7_R1.NBTTagLong;
+import net.minecraft.server.v1_7_R1.NBTTagShort;
+import net.minecraft.server.v1_7_R1.NBTTagString;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,7 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.MLog;
@@ -103,12 +103,13 @@ public class LoadCommand extends NanobotBaseCommand {
 	{
 		NBTTagCompound newTag = new NBTTagCompound();
 		
-		for (Entry<?, ?> e : section.entrySet())
-		{
-			NBTBase tag =  loadTag(e.getValue(), e.getKey().equals("compound"));
-			tag.setName((String) e.getKey());
-			newTag.set((String) e.getKey(), tag);
-		}
+		// TODO
+//		for (Entry<?, ?> e : section.entrySet())
+//		{
+//			NBTBase tag =  loadTag(e.getValue(), e.getKey().equals("compound"));
+//			tag.setName((String) e.getKey());
+//			newTag.set((String) e.getKey(), tag);
+//		}
 			
 		return newTag;
 	}
@@ -120,105 +121,106 @@ public class LoadCommand extends NanobotBaseCommand {
 	
 	public static NBTBase loadTag(Object tag, boolean isCompound)
 	{
-		if (tag instanceof String)
-		{
-			return new NBTTagString(null, NanobotUtil.fixFormatting((String) tag));
-		}
-		else if (tag instanceof ArrayList)
-		{
-			NBTTagList list = new NBTTagList(null);
-			for (Object o : (ArrayList) tag)
-				list.add(loadTag(o));
-			
-			return list;
-		}
-		else if (tag instanceof MemorySection || tag instanceof LinkedHashMap)
-		{
-			Map<String, Object> map;
-			
-			if (tag instanceof MemorySection)
-			{
-				MemorySection section = (MemorySection) tag;
-				map = section.getValues(false);
-			}
-			else
-				map = (Map) tag;
-			
-			if (isCompound)
-			{
-				NBTTagCompound compound = new NBTTagCompound(null);
-								
-				for (Entry<String, Object> ee : map.entrySet())
-				{
-					Bukkit.getServer().broadcastMessage("ee - " + ee.getKey());
-
-					NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
-					eTag.setName(ee.getKey());
-					compound.set(ee.getKey(), eTag);
-				}
-				
-				return compound;
-			}
-			
-			for (Entry<String, Object> e : map.entrySet())
-			{
-				if (e.getKey().equals("byte"))
-				{
-					return new NBTTagByte(null, (byte) (int) (Integer) e.getValue());
-				}
-				else if (e.getKey().equals("short"))
-				{
-					return new NBTTagShort(null, (short) (int) (Integer) e.getValue());
-				}
-				else if (e.getKey().equals("int"))
-				{
-					return new NBTTagInt(null, (Integer) e.getValue());
-				}
-				else if (e.getKey().equals("long"))
-				{
-					return new NBTTagLong(null, (long) (int) (Integer) e.getValue());
-				}
-				else if (e.getKey().equals("float"))
-				{
-					return new NBTTagFloat(null, (float) (int) (Integer) e.getValue());
-				}
-				else if (e.getKey().equals("double"))
-				{
-					return new NBTTagDouble(null, (double) (int) (Integer) e.getValue());
-				}
-				else if (e.getKey().equals("byteArray"))
-				{
-					return new NBTTagByteArray(null, ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Byte[0])));
-				}
-				else if (e.getKey().equals("intArray"))
-				{
-					return new NBTTagIntArray(null, ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Integer[0])));
-				}
-				else if (e.getKey().equals("compound"))
-				{
-					NBTTagCompound compound = new NBTTagCompound(null);
-					
-					Map<String, Object> inMap = null;
-					
-					if (e.getValue() instanceof MemorySection)
-					{
-						MemorySection section = (MemorySection) e.getValue();
-						inMap = section.getValues(false);
-					}
-					else
-						inMap = (Map) e.getValue();
-					
-					for (Entry<String, Object> ee : inMap.entrySet())
-					{
-						NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
-						eTag.setName(ee.getKey());
-						compound.set(ee.getKey(), eTag);
-					}
-					
-					return compound;
-				}
-			}
-		}
+		// TODO
+//		if (tag instanceof String)
+//		{
+//			return new NBTTagString(null, NanobotUtil.fixFormatting((String) tag));
+//		}
+//		else if (tag instanceof ArrayList)
+//		{
+//			NBTTagList list = new NBTTagList(null);
+//			for (Object o : (ArrayList) tag)
+//				list.add(loadTag(o));
+//			
+//			return list;
+//		}
+//		else if (tag instanceof MemorySection || tag instanceof LinkedHashMap)
+//		{
+//			Map<String, Object> map;
+//			
+//			if (tag instanceof MemorySection)
+//			{
+//				MemorySection section = (MemorySection) tag;
+//				map = section.getValues(false);
+//			}
+//			else
+//				map = (Map) tag;
+//			
+//			if (isCompound)
+//			{
+//				NBTTagCompound compound = new NBTTagCompound(null);
+//								
+//				for (Entry<String, Object> ee : map.entrySet())
+//				{
+//					Bukkit.getServer().broadcastMessage("ee - " + ee.getKey());
+//
+//					NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
+//					eTag.setName(ee.getKey());
+//					compound.set(ee.getKey(), eTag);
+//				}
+//				
+//				return compound;
+//			}
+//			
+//			for (Entry<String, Object> e : map.entrySet())
+//			{
+//				if (e.getKey().equals("byte"))
+//				{
+//					return new NBTTagByte(null, (byte) (int) (Integer) e.getValue());
+//				}
+//				else if (e.getKey().equals("short"))
+//				{
+//					return new NBTTagShort(null, (short) (int) (Integer) e.getValue());
+//				}
+//				else if (e.getKey().equals("int"))
+//				{
+//					return new NBTTagInt(null, (Integer) e.getValue());
+//				}
+//				else if (e.getKey().equals("long"))
+//				{
+//					return new NBTTagLong(null, (long) (int) (Integer) e.getValue());
+//				}
+//				else if (e.getKey().equals("float"))
+//				{
+//					return new NBTTagFloat(null, (float) (int) (Integer) e.getValue());
+//				}
+//				else if (e.getKey().equals("double"))
+//				{
+//					return new NBTTagDouble(null, (double) (int) (Integer) e.getValue());
+//				}
+//				else if (e.getKey().equals("byteArray"))
+//				{
+//					return new NBTTagByteArray(null, ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Byte[0])));
+//				}
+//				else if (e.getKey().equals("intArray"))
+//				{
+//					return new NBTTagIntArray(null, ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Integer[0])));
+//				}
+//				else if (e.getKey().equals("compound"))
+//				{
+//					NBTTagCompound compound = new NBTTagCompound(null);
+//					
+//					Map<String, Object> inMap = null;
+//					
+//					if (e.getValue() instanceof MemorySection)
+//					{
+//						MemorySection section = (MemorySection) e.getValue();
+//						inMap = section.getValues(false);
+//					}
+//					else
+//						inMap = (Map) e.getValue();
+//					
+//					for (Entry<String, Object> ee : inMap.entrySet())
+//					{
+//						NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
+//						eTag.setName(ee.getKey());
+//						compound.set(ee.getKey(), eTag);
+//					}
+//					
+//					return compound;
+//				}
+//			}
+//		}
 				
 		return null;
 	}

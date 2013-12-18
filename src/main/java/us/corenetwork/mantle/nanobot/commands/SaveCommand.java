@@ -6,25 +6,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.NBTBase;
-import net.minecraft.server.v1_6_R3.NBTTagByte;
-import net.minecraft.server.v1_6_R3.NBTTagByteArray;
-import net.minecraft.server.v1_6_R3.NBTTagCompound;
-import net.minecraft.server.v1_6_R3.NBTTagDouble;
-import net.minecraft.server.v1_6_R3.NBTTagFloat;
-import net.minecraft.server.v1_6_R3.NBTTagInt;
-import net.minecraft.server.v1_6_R3.NBTTagIntArray;
-import net.minecraft.server.v1_6_R3.NBTTagList;
-import net.minecraft.server.v1_6_R3.NBTTagLong;
-import net.minecraft.server.v1_6_R3.NBTTagShort;
-import net.minecraft.server.v1_6_R3.NBTTagString;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.NBTBase;
+import net.minecraft.server.v1_7_R1.NBTTagByte;
+import net.minecraft.server.v1_7_R1.NBTTagByteArray;
+import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R1.NBTTagDouble;
+import net.minecraft.server.v1_7_R1.NBTTagFloat;
+import net.minecraft.server.v1_7_R1.NBTTagInt;
+import net.minecraft.server.v1_7_R1.NBTTagIntArray;
+import net.minecraft.server.v1_7_R1.NBTTagList;
+import net.minecraft.server.v1_7_R1.NBTTagLong;
+import net.minecraft.server.v1_7_R1.NBTTagShort;
+import net.minecraft.server.v1_7_R1.NBTTagString;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
@@ -92,101 +92,103 @@ public class SaveCommand extends NanobotBaseCommand {
 	}
 
 	public static void addTag(ConfigurationSection yaml, NBTBase tag) {
-		switch (tag.getTypeId()) {
-		case 1: // Byte
-			yaml.set(tag.getName() + ".byte", ((NBTTagByte) tag).data);
-			break;
-		case 2: // Short
-			yaml.set(tag.getName() + ".short", ((NBTTagShort) tag).data);
-			break;
-		case 3: // Integer
-			yaml.set(tag.getName() + ".int", ((NBTTagInt) tag).data);
-			break;
-		case 4: // Long
-			yaml.set(tag.getName() + ".long", ((NBTTagLong) tag).data);
-			break;
-		case 5: // Float
-			yaml.set(tag.getName() + ".float", ((NBTTagFloat) tag).data);
-			break;
-		case 6: // Double
-			yaml.set(tag.getName() + ".double", ((NBTTagDouble) tag).data);
-			break;
-		case 7: // Byte Array
-			yaml.set(tag.getName() + ".byteArray", ArrayConvert.convert(((NBTTagByteArray) tag).data));
-			break;
-		case 11: // Int array
-			yaml.set(tag.getName() + ".intArray", ArrayConvert.convert(((NBTTagIntArray) tag).data));
-			break;
-		case 8: // String
-			yaml.set(tag.getName(), ((NBTTagString) tag).data);
-			break;
-		case 9: // List
-			NBTTagList listTag = (NBTTagList) tag;
-			List list = new ArrayList();
-			if (listTag.get(0).getTypeId() == 8)
-			{
-				for (int i = 0; i < listTag.size(); i++) {
-					list.add(((NBTTagString)listTag.get(i)).data);
-				}
-			}
-			else
-			{
-				for (int i = 0; i < listTag.size(); i++) {
-					ConfigurationSection listSection = new YamlConfiguration()
-							.createSection("foo");
-					addTagWithoutName(listSection, listTag.get(i));
-					list.add(listSection);
-				}
-			}
-			
-
-			yaml.set(tag.getName(), list.toArray());
-			break;
-		case 10: // Compound
-			ConfigurationSection newSection = yaml.createSection(tag.getName()).createSection("compound");
-
-			Collection<NBTBase> tags = ((NBTTagCompound) tag).c();
-			for (NBTBase base : tags) {
-				addTag(newSection, base);
-			}
-
-		}
+		// TODO
+//		switch (tag.getTypeId()) {
+//		case 1: // Byte
+//			yaml.set(tag.getName() + ".byte", ((NBTTagByte) tag).data);
+//			break;
+//		case 2: // Short
+//			yaml.set(tag.getName() + ".short", ((NBTTagShort) tag).data);
+//			break;
+//		case 3: // Integer
+//			yaml.set(tag.getName() + ".int", ((NBTTagInt) tag).data);
+//			break;
+//		case 4: // Long
+//			yaml.set(tag.getName() + ".long", ((NBTTagLong) tag).data);
+//			break;
+//		case 5: // Float
+//			yaml.set(tag.getName() + ".float", ((NBTTagFloat) tag).data);
+//			break;
+//		case 6: // Double
+//			yaml.set(tag.getName() + ".double", ((NBTTagDouble) tag).data);
+//			break;
+//		case 7: // Byte Array
+//			yaml.set(tag.getName() + ".byteArray", ArrayConvert.convert(((NBTTagByteArray) tag).data));
+//			break;
+//		case 11: // Int array
+//			yaml.set(tag.getName() + ".intArray", ArrayConvert.convert(((NBTTagIntArray) tag).data));
+//			break;
+//		case 8: // String
+//			yaml.set(tag.getName(), ((NBTTagString) tag).data);
+//			break;
+//		case 9: // List
+//			NBTTagList listTag = (NBTTagList) tag;
+//			List list = new ArrayList();
+//			if (listTag.get(0).getTypeId() == 8)
+//			{
+//				for (int i = 0; i < listTag.size(); i++) {
+//					list.add(((NBTTagString)listTag.get(i)).data);
+//				}
+//			}
+//			else
+//			{
+//				for (int i = 0; i < listTag.size(); i++) {
+//					ConfigurationSection listSection = new YamlConfiguration()
+//							.createSection("foo");
+//					addTagWithoutName(listSection, listTag.get(i));
+//					list.add(listSection);
+//				}
+//			}
+//			
+//
+//			yaml.set(tag.getName(), list.toArray());
+//			break;
+//		case 10: // Compound
+//			ConfigurationSection newSection = yaml.createSection(tag.getName()).createSection("compound");
+//
+//			Collection<NBTBase> tags = ((NBTTagCompound) tag).c();
+//			for (NBTBase base : tags) {
+//				addTag(newSection, base);
+//			}
+//
+//		}
 	}
 
 	public static void addTagWithoutName(ConfigurationSection yaml, NBTBase tag) {
-		switch (tag.getTypeId()) {
-		case 1: // Byte
-			yaml.set("byte", ((NBTTagByte) tag).data);
-			break;
-		case 2: // Short
-			yaml.set("short", ((NBTTagShort) tag).data);
-			break;
-		case 3: // Integer
-			yaml.set("int", ((NBTTagInt) tag).data);
-			break;
-		case 4: // Long
-			yaml.set("long", ((NBTTagLong) tag).data);
-			break;
-		case 5: // Float
-			yaml.set("float", ((NBTTagFloat) tag).data);
-			break;
-		case 6: // Double
-			yaml.set("double", ((NBTTagDouble) tag).data);
-			break;
-		case 7: // Byte Array
-			yaml.set("byteArray",  ArrayConvert.convert(((NBTTagByteArray) tag).data));
-			break;
-		case 11: // Int array
-			yaml.set("intArray", ArrayConvert.convert(((NBTTagIntArray) tag).data));
-			break;
-		case 10: // Compound
-			ConfigurationSection newSection = yaml.createSection("compound");
-
-			Collection<NBTBase> tags = ((NBTTagCompound) tag).c();
-			for (NBTBase base : tags) {
-				addTag(newSection, base);
-			}
-
-		}
+		// TODO
+//		switch (tag.getTypeId()) {
+//		case 1: // Byte
+//			yaml.set("byte", ((NBTTagByte) tag).data);
+//			break;
+//		case 2: // Short
+//			yaml.set("short", ((NBTTagShort) tag).data);
+//			break;
+//		case 3: // Integer
+//			yaml.set("int", ((NBTTagInt) tag).data);
+//			break;
+//		case 4: // Long
+//			yaml.set("long", ((NBTTagLong) tag).data);
+//			break;
+//		case 5: // Float
+//			yaml.set("float", ((NBTTagFloat) tag).data);
+//			break;
+//		case 6: // Double
+//			yaml.set("double", ((NBTTagDouble) tag).data);
+//			break;
+//		case 7: // Byte Array
+//			yaml.set("byteArray",  ArrayConvert.convert(((NBTTagByteArray) tag).data));
+//			break;
+//		case 11: // Int array
+//			yaml.set("intArray", ArrayConvert.convert(((NBTTagIntArray) tag).data));
+//			break;
+//		case 10: // Compound
+//			ConfigurationSection newSection = yaml.createSection("compound");
+//
+//			Collection<NBTBase> tags = ((NBTTagCompound) tag).c();
+//			for (NBTBase base : tags) {
+//				addTag(newSection, base);
+//			}
+//
+//		}
 	}
 }

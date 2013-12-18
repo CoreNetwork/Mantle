@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.gametweaks;
 
-import net.minecraft.server.v1_6_R3.Block;
-import net.minecraft.server.v1_6_R3.StepSound;
+import net.minecraft.server.v1_7_R1.Block;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -42,12 +41,13 @@ public class GameTweaksModule extends MantleModule {
 	{
 		MLog.info("Enabling sound hack...");
 
-		Block.CROPS.stepSound = new SilentPlaceProxy(Block.CROPS.stepSound);
-		Block.POTATOES.stepSound = new SilentPlaceProxy(Block.POTATOES.stepSound);
-		Block.CARROTS.stepSound = new SilentPlaceProxy(Block.CARROTS.stepSound);
-		Block.MELON_STEM.stepSound = new SilentPlaceProxy(Block.MELON_STEM.stepSound);
-		Block.PUMPKIN_STEM.stepSound = new SilentPlaceProxy(Block.PUMPKIN_STEM.stepSound);
-		Block.NETHER_WART.stepSound = new SilentPlaceProxy(Block.NETHER_WART.stepSound);
+		//TODO
+//		Block.CROPS.stepSound = new SilentPlaceProxy(Block.CROPS.stepSound);
+//		Block.POTATOES.stepSound = new SilentPlaceProxy(Block.POTATOES.stepSound);
+//		Block.CARROTS.stepSound = new SilentPlaceProxy(Block.CARROTS.stepSound);
+//		Block.MELON_STEM.stepSound = new SilentPlaceProxy(Block.MELON_STEM.stepSound);
+//		Block.PUMPKIN_STEM.stepSound = new SilentPlaceProxy(Block.PUMPKIN_STEM.stepSound);
+//		Block.NETHER_WART.stepSound = new SilentPlaceProxy(Block.NETHER_WART.stepSound);
 		
 		MLog.info("Sound hack enabled!");
 	}
