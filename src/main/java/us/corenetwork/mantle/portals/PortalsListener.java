@@ -232,8 +232,7 @@ public class PortalsListener implements Listener {
 		{
 			Location destination = PortalUtil.processTeleport(event.getPlayer());
 			event.setTo(destination);
-			event.getPortalTravelAgent().setCanCreatePortal(false);
-			event.getPortalTravelAgent().setSearchRadius(0);			
+			event.useTravelAgent(false);
 		}
 	}
 
@@ -252,21 +251,9 @@ public class PortalsListener implements Listener {
 		
 		Location destination = PortalUtil.processTeleport(event.getEntity());
 		event.setTo(destination);
-		event.getPortalTravelAgent().setCanCreatePortal(false);
-		event.getPortalTravelAgent().setSearchRadius(0);
+		event.useTravelAgent(false);
 	}
-	
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-	public void onEntityPortalFinal(final EntityPortalEvent event)
-	{
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
-			@Override
-			public void run() {
-				event.getEntity().teleport(event.getTo());
-			}
-		}, 10);	
-	}
-	
+		
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onPlayerPortalFinal(final PlayerPortalEvent event)
 	{
