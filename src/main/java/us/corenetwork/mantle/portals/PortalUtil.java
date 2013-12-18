@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.portals;
 
-import net.minecraft.server.v1_6_R3.AxisAlignedBB;
+import net.minecraft.server.v1_7_R1.AxisAlignedBB;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,7 +9,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
 import us.corenetwork.mantle.MLog;
@@ -337,7 +337,7 @@ public class PortalUtil {
 
 	public static Block getPortalBlock(Entity entity)
 	{
-		net.minecraft.server.v1_6_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_7_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 		AxisAlignedBB boundingBox = nmsEntity.boundingBox;
 				
 		// Need to check this after every NMS update, letters might change.

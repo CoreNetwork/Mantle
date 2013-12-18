@@ -7,15 +7,14 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.server.v1_6_R3.Packet54PlayNoteBlock;
-import net.minecraft.server.v1_6_R3.TileEntity;
-import net.minecraft.server.v1_6_R3.TileEntityBeacon;
-import net.minecraft.server.v1_6_R3.TileEntityBrewingStand;
-import net.minecraft.server.v1_6_R3.TileEntityChest;
-import net.minecraft.server.v1_6_R3.TileEntityDispenser;
-import net.minecraft.server.v1_6_R3.TileEntityDropper;
-import net.minecraft.server.v1_6_R3.TileEntityFurnace;
-import net.minecraft.server.v1_6_R3.TileEntityHopper;
+import net.minecraft.server.v1_7_R1.TileEntity;
+import net.minecraft.server.v1_7_R1.TileEntityBeacon;
+import net.minecraft.server.v1_7_R1.TileEntityBrewingStand;
+import net.minecraft.server.v1_7_R1.TileEntityChest;
+import net.minecraft.server.v1_7_R1.TileEntityDispenser;
+import net.minecraft.server.v1_7_R1.TileEntityDropper;
+import net.minecraft.server.v1_7_R1.TileEntityFurnace;
+import net.minecraft.server.v1_7_R1.TileEntityHopper;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,10 +23,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -221,22 +220,23 @@ public class RestockableChest {
 		openedNumber.put(chestBlock, currentAmountOfOpened);
 
 		//Chest animation
-		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
-		{
-			Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
-
-			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
-			nearbyEntities.add(player);
-			for (Entity e : nearbyEntities)
-			{
-				if (e.getType() != EntityType.PLAYER)
-					continue;
-
-				((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
-			}
-
-			chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
-		}
+		// TODO
+//		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
+//		{
+//			Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
+//
+//			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+//			nearbyEntities.add(player);
+//			for (Entity e : nearbyEntities)
+//			{
+//				if (e.getType() != EntityType.PLAYER)
+//					continue;
+//
+//				((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
+//			}
+//
+//			chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
+//		}
 
 		return true;
 	}
@@ -266,22 +266,25 @@ public class RestockableChest {
 				openedNumber.put(chest.chestBlock, currentAmountOfOpened);
 
 				//Chest animation
-				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
-				{
-					Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), chest.chestBlock.getTypeId(), 1, 0);
-
-					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
-					nearbyEntities.add(player);
-					for (Entity e : nearbyEntities)
-					{
-						if (e.getType() != EntityType.PLAYER)
-							continue;
-
-						((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
-					}
-
-					chest.chestBlock.getWorld().playSound(chest.chestBlock.getLocation(), Sound.CHEST_CLOSE, 1f, 1f);
-				}
+				// TODO
+//				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
+//				{
+//					Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), chest.chestBlock.getTypeId(), 1, 0);
+//
+//					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+//					nearbyEntities.add(player);
+//					for (Entity e : nearbyEntities)
+//					{
+//						if (e.getType() != EntityType.PLAYER)
+//							continue;
+//
+//						((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
+//					}
+//
+//					
+//					
+//					chest.chestBlock.getWorld().playSound(chest.chestBlock.getLocation(), Sound.CHEST_CLOSE, 1f, 1f);
+//				}
 
 			}
 
@@ -585,37 +588,37 @@ public class RestockableChest {
 		if (tEntity instanceof TileEntityChest)
 		{
 			TileEntityChest container = (TileEntityChest) tEntity;
-			return container.c() ? container.getName() : "Chest";
+			return container.k_() ? container.getInventoryName() : "Chest";
 		}
 		else if (tEntity instanceof TileEntityDispenser)
 		{
 			TileEntityDispenser container = (TileEntityDispenser) tEntity;
-			return container.c() ? container.getName() : "Dispenser";
+			return container.k_() ? container.getInventoryName() : "Dispenser";
 		}
 		else if (tEntity instanceof TileEntityFurnace)
 		{
 			TileEntityFurnace container = (TileEntityFurnace) tEntity;
-			return container.c() ? container.getName() : "Furnace";
+			return container.k_() ? container.getInventoryName() : "Furnace";
 		}
 		else if (tEntity instanceof TileEntityHopper)
 		{
 			TileEntityHopper container = (TileEntityHopper) tEntity;
-			return container.c() ? container.getName() : "Hopper";
+			return container.k_() ? container.getInventoryName() : "Hopper";
 		}
 		else if (tEntity instanceof TileEntityDropper)
 		{
 			TileEntityDropper container = (TileEntityDropper) tEntity;
-			return container.c() ? container.getName() : "Dropper";
+			return container.k_() ? container.getInventoryName() : "Dropper";
 		}
 		else if (tEntity instanceof TileEntityBeacon)
 		{
 			TileEntityBeacon container = (TileEntityBeacon) tEntity;
-			return container.c() ? container.getName() : "Beacon";
+			return container.k_() ? container.getInventoryName() : "Beacon";
 		}
 		else if (tEntity instanceof TileEntityBrewingStand)
 		{
 			TileEntityBrewingStand container = (TileEntityBrewingStand) tEntity;
-			return container.c() ? container.getName() : "Brewing Stand";
+			return container.k_() ? container.getInventoryName() : "Brewing Stand";
 		}
 
 		return Util.getMaterialName(chestBlock.getType());
@@ -676,7 +679,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_6_R3.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventoryCustom$MinecraftInventory");
 
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);
