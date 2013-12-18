@@ -92,6 +92,16 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 			case REDWOOD:
 				tree = TreeType.REDWOOD;
 				break;
+			case ACACIA:
+				tree = TreeType.ACACIA;
+				break;
+			case DARK_OAK:
+				tree = TreeType.DARK_OAK;
+				break;
+			case GENERIC:
+				tree = TreeType.TREE;
+				break;
+
 			default:
 				tree = TreeType.BIG_TREE;
 			}
