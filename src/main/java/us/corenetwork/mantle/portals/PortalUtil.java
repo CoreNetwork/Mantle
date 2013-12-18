@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.portals;
 
+import net.minecraft.server.v1_6_R3.AxisAlignedBB;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -7,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
 import us.corenetwork.mantle.MLog;
@@ -14,7 +17,7 @@ import us.corenetwork.mantle.MLog;
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{
-		Block portalBlock = getPortalBlock(entity.getLocation());
+		Block portalBlock = getPortalBlock(entity);
 		Block destination = getOtherSide(portalBlock);
 				
 		
@@ -332,61 +335,95 @@ public class PortalUtil {
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
-	public static Block getPortalBlock(Location location)
+	public static Block getPortalBlock(Entity entity)
 	{
-		Block block = location.getBlock();
-		if (block.getType() != Material.PORTAL)
-		{
-			double diffX = location.getX() - Math.floor(location.getX());
-			
-			if (diffX < 0.5)
-			{
-				Block newBlock = block.getRelative(-1, 0, 0);
-				if (newBlock.getType() == Material.PORTAL)
-					block = newBlock;
-			}
-			else
-			{
-				Block newBlock = block.getRelative(1, 0, 0);
-				if (newBlock.getType() == Material.PORTAL)
-					block = newBlock;
-			}
-			
-			if (block.getType() != Material.PORTAL)
-			{
-				double diffZ = location.getZ() - Math.floor(location.getZ());
+		net.minecraft.server.v1_6_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+		AxisAlignedBB boundingBox = nmsEntity.boundingBox;
 				
-				if (diffZ < 0.5)
-				{
-					Block newBlock = block.getRelative(0, 0, -1);
-					if (newBlock.getType() == Material.PORTAL)
-						block = newBlock;
-				}
-				else
-				{
-					Block newBlock = block.getRelative(0, 0, 1);
-					if (newBlock.getType() == Material.PORTAL)
-						block = newBlock;				
-				}
+		// Need to check this after every NMS update, letters might change.
+		int minX = (int) Math.floor(boundingBox.a);
+		int minY = (int) Math.floor(boundingBox.b);
+		int minZ = (int) Math.floor(boundingBox.c);
+		int maxX = (int) Math.floor(boundingBox.d);
+		int maxY = (int) Math.floor(boundingBox.e);
+		int maxZ = (int) Math.floor(boundingBox.f);
 
-			}
-
-		}		
-		
-		if (block.getType()  != Material.PORTAL)
+		for (int x = minX; x <= maxX; x++)
 		{
-			MLog.severe("Unable to find portal block at " + block.toString());
-			return block;
+			for (int y = minY; y <= maxY; y++)
+			{
+				for (int z = minZ; z <= maxZ; z++)
+				{
+					int blockType = entity.getWorld().getBlockTypeIdAt(x, y, z);
+					if (blockType == Material.PORTAL.getId())
+					{
+						return entity.getWorld().getBlockAt(x, y, z);
+					}
+				}
+			}
 		}
-		
-		//Always pick northest, westest,lowest portal block
-		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.DOWN);
-		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.NORTH);
-		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.WEST);
-				
+
+		Block block = entity.getLocation().getBlock();
+		MLog.severe("Unable to find portal block at " + block.toString());
 		return block;
+
 	}
+	
+//	public static Block getPortalBlock(Location location)
+//	{
+//		Block block = location.getBlock();
+//		if (block.getType() != Material.PORTAL)
+//		{
+//			double diffX = location.getX() - Math.floor(location.getX());
+//			
+//			if (diffX < 0.5)
+//			{
+//				Block newBlock = block.getRelative(-1, 0, 0);
+//				if (newBlock.getType() == Material.PORTAL)
+//					block = newBlock;
+//			}
+//			else
+//			{
+//				Block newBlock = block.getRelative(1, 0, 0);
+//				if (newBlock.getType() == Material.PORTAL)
+//					block = newBlock;
+//			}
+//			
+//			if (block.getType() != Material.PORTAL)
+//			{
+//				double diffZ = location.getZ() - Math.floor(location.getZ());
+//				
+//				if (diffZ < 0.5)
+//				{
+//					Block newBlock = block.getRelative(0, 0, -1);
+//					if (newBlock.getType() == Material.PORTAL)
+//						block = newBlock;
+//				}
+//				else
+//				{
+//					Block newBlock = block.getRelative(0, 0, 1);
+//					if (newBlock.getType() == Material.PORTAL)
+//						block = newBlock;				
+//				}
+//
+//			}
+//
+//		}		
+//		
+//		if (block.getType()  != Material.PORTAL)
+//		{
+//			MLog.severe("Unable to find portal block at " + block.toString());
+//			return block;
+//		}
+//		
+//		//Always pick northest, westest,lowest portal block
+//		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
+//			block = block.getRelative(BlockFace.DOWN);
+//		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
+//			block = block.getRelative(BlockFace.NORTH);
+//		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
+//			block = block.getRelative(BlockFace.WEST);
+//				
+//		return block;
+//	}
 }

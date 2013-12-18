@@ -7,6 +7,7 @@ import java.util.HashSet;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.minecraft.server.v1_6_R3.EntityPlayer;
+import net.minecraft.server.v1_6_R3.PortalTravelAgent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -252,6 +253,7 @@ public class PortalsListener implements Listener {
 		Location destination = PortalUtil.processTeleport(event.getEntity());
 		event.setTo(destination);
 		event.useTravelAgent(false);
+		
 	}
 		
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
