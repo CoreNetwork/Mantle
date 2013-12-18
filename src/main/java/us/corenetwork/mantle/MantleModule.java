@@ -20,6 +20,7 @@ import us.corenetwork.mantle.netherspawning.NetherSpawningModule;
 import us.corenetwork.mantle.portals.PortalsModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;
 import us.corenetwork.mantle.restockablechests.RChestsModule;
+import us.corenetwork.mantle.slimespawning.SlimeSpawningModule;
 import us.corenetwork.mantle.spellbooks.SpellbooksModule;
 
 
@@ -277,6 +278,14 @@ public abstract class MantleModule implements CommandExecutor {
         
         //Game Tweaks
         module = new GameTweaksModule();
+        if (module.loadModuleInternal())
+        {
+            module.active = true;
+            modules.add(module);
+        }        
+        
+        //Slime spawning
+        module = new SlimeSpawningModule();
         if (module.loadModuleInternal())
         {
             module.active = true;

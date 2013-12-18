@@ -146,7 +146,7 @@ public class NetherSpawner {
 		return skeleton;
 	}
 
-	private static Location getLocation(Block block)
+	public static Location getLocation(Block block)
 	{
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
