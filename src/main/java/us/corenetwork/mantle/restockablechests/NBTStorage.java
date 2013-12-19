@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import net.minecraft.server.v1_7_R1.NBTBase;
@@ -48,9 +49,9 @@ public class NBTStorage {
 
 			ConfigurationSection section = configuration.createSection(Integer.toString(i));
 			
-			Collection<NBTBase> c = tag.c();
-			for (NBTBase base : c) {
-				us.corenetwork.mantle.nanobot.commands.SaveCommand.addTag(section, base);
+			Set<String> tagKeys = tag.c();
+			for (String key : tagKeys) {
+				us.corenetwork.mantle.nanobot.commands.SaveCommand.addTag(section, key, tag.get(key));
 			}
 			
 			nbtItems++;
