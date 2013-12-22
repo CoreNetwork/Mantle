@@ -42,7 +42,7 @@ public class GameTweaksModule extends MantleModule {
 		MLog.info("Enabling sound hack...");
 
 		SilentPlaceProxy.apply(Block.b("wheat"));
-		SilentPlaceProxy.apply(Block.b("potato"));
+		SilentPlaceProxy.apply(Block.b("potatoes"));
 		SilentPlaceProxy.apply(Block.b("carrots"));
 		SilentPlaceProxy.apply(Block.b("melon_stem"));
 		SilentPlaceProxy.apply(Block.b("pumpkin_stem"));
