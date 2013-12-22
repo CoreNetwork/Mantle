@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
+import net.minecraft.server.v1_7_R1.PacketPlayOutBlockAction;
 import net.minecraft.server.v1_7_R1.TileEntity;
 import net.minecraft.server.v1_7_R1.TileEntityBeacon;
 import net.minecraft.server.v1_7_R1.TileEntityBrewingStand;
@@ -24,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.block.CraftBlock;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftInventoryCustom;
@@ -219,24 +221,24 @@ public class RestockableChest {
 		currentAmountOfOpened++;
 		openedNumber.put(chestBlock, currentAmountOfOpened);
 
+		
 		//Chest animation
-		// TODO
-//		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
-//		{
-//			Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), chestBlock.getTypeId() , 1, 1);
-//
-//			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
-//			nearbyEntities.add(player);
-//			for (Entity e : nearbyEntities)
-//			{
-//				if (e.getType() != EntityType.PLAYER)
-//					continue;
-//
-//				((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
-//			}
-//
-//			chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
-//		}
+		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
+		{
+			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), net.minecraft.server.v1_7_R1.Block.e(chestBlock.getTypeId()), 1, 1);
+
+			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+			nearbyEntities.add(player);
+			for (Entity e : nearbyEntities)
+			{
+				if (e.getType() != EntityType.PLAYER)
+					continue;
+
+				((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
+			}
+
+			chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
+		}
 
 		return true;
 	}
@@ -266,25 +268,24 @@ public class RestockableChest {
 				openedNumber.put(chest.chestBlock, currentAmountOfOpened);
 
 				//Chest animation
-				// TODO
-//				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
-//				{
-//					Packet54PlayNoteBlock chestOpenPacket = new Packet54PlayNoteBlock(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), chest.chestBlock.getTypeId(), 1, 0);
-//
-//					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
-//					nearbyEntities.add(player);
-//					for (Entity e : nearbyEntities)
-//					{
-//						if (e.getType() != EntityType.PLAYER)
-//							continue;
-//
-//						((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestOpenPacket);
-//					}
-//
-//					
-//					
-//					chest.chestBlock.getWorld().playSound(chest.chestBlock.getLocation(), Sound.CHEST_CLOSE, 1f, 1f);
-//				}
+				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
+				{
+					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), net.minecraft.server.v1_7_R1.Block.e(chest.chestBlock.getTypeId()), 1, 0);
+					
+					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
+					nearbyEntities.add(player);
+					for (Entity e : nearbyEntities)
+					{
+						if (e.getType() != EntityType.PLAYER)
+							continue;
+
+						((CraftPlayer) e).getHandle().playerConnection.sendPacket(chestClosePacket);
+					}
+
+					
+					
+					chest.chestBlock.getWorld().playSound(chest.chestBlock.getLocation(), Sound.CHEST_CLOSE, 1f, 1f);
+				}
 
 			}
 
