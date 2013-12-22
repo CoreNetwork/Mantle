@@ -41,14 +41,13 @@ public class GameTweaksModule extends MantleModule {
 	{
 		MLog.info("Enabling sound hack...");
 
-		//TODO
-//		Block.CROPS.stepSound = new SilentPlaceProxy(Block.CROPS.stepSound);
-//		Block.POTATOES.stepSound = new SilentPlaceProxy(Block.POTATOES.stepSound);
-//		Block.CARROTS.stepSound = new SilentPlaceProxy(Block.CARROTS.stepSound);
-//		Block.MELON_STEM.stepSound = new SilentPlaceProxy(Block.MELON_STEM.stepSound);
-//		Block.PUMPKIN_STEM.stepSound = new SilentPlaceProxy(Block.PUMPKIN_STEM.stepSound);
-//		Block.NETHER_WART.stepSound = new SilentPlaceProxy(Block.NETHER_WART.stepSound);
+		SilentPlaceProxy.apply(Block.b("wheat"));
+		SilentPlaceProxy.apply(Block.b("potato"));
+		SilentPlaceProxy.apply(Block.b("carrots"));
+		SilentPlaceProxy.apply(Block.b("melon_stem"));
+		SilentPlaceProxy.apply(Block.b("pumpkin_stem"));
+		SilentPlaceProxy.apply(Block.b("nether_wart"));
 		
 		MLog.info("Sound hack enabled!");
-	}
+	}	
 }

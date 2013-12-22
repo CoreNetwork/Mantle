@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.gametweaks;
 
+import net.minecraft.server.v1_7_R1.Block;
 import net.minecraft.server.v1_7_R1.StepSound;
 
 public class SilentPlaceProxy extends StepSound {
@@ -30,6 +31,11 @@ public class SilentPlaceProxy extends StepSound {
 	@Override
 	public float getVolume2() {
 		return parent.getVolume2();
+	}
+	
+	public static void apply(Block block)
+	{
+		block.stepSound = new SilentPlaceProxy(block.stepSound);
 	}
 
 }
