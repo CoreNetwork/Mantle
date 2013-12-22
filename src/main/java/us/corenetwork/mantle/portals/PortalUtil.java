@@ -17,29 +17,28 @@ import us.corenetwork.mantle.MLog;
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{
-		Block portalBlock = getPortalBlock(entity);
+		Block portalBlock = getLowestNorthestWestestPortalBlock(getPortalBlock(entity));
 		Block destination = getOtherSide(portalBlock);
-				
+
 		
 		destination.getChunk().load();
 		
 		if (destination.getType() != Material.PORTAL)
 		{
 			int orientation = 0;
-			BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH };
-			for (int i = 0; i < 4 ; i++)
+			if (portalBlock.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL)
 			{
-				if (portalBlock.getRelative(faces[i]).getType() == Material.PORTAL)
-				{
-					orientation = i;
-					break;
-				}
+				orientation = 1;
 			}
 			
 			buildPortal(destination, orientation);
 		}
 				
-		return getLocation(destination);		
+		Location blockLocation = getLocation(destination);
+		blockLocation.setPitch(entity.getLocation().getPitch());
+		blockLocation.setYaw(entity.getLocation().getYaw());
+
+		return blockLocation;		
 	}
 
 	public static Block getOtherSide(Block block)
@@ -200,7 +199,7 @@ public class PortalUtil {
 			{
 				break;
 			}
-			
+						
 			for (int h = minY; h < maxY; h++)
 			{
 				Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
@@ -341,13 +340,13 @@ public class PortalUtil {
 		AxisAlignedBB boundingBox = nmsEntity.boundingBox;
 				
 		// Need to check this after every NMS update, letters might change.
-		int minX = (int) Math.floor(boundingBox.a);
-		int minY = (int) Math.floor(boundingBox.b);
-		int minZ = (int) Math.floor(boundingBox.c);
-		int maxX = (int) Math.floor(boundingBox.d);
-		int maxY = (int) Math.floor(boundingBox.e);
-		int maxZ = (int) Math.floor(boundingBox.f);
-
+		int minX = (int) Math.floor(boundingBox.a + 0.001D);
+		int minY = (int) Math.floor(boundingBox.b + 0.001D);
+		int minZ = (int) Math.floor(boundingBox.c + 0.001D);
+		int maxX = (int) Math.floor(boundingBox.d - 0.001D);
+		int maxY = (int) Math.floor(boundingBox.e - 0.001D);
+		int maxZ = (int) Math.floor(boundingBox.f - 0.001D);
+		
 		for (int x = minX; x <= maxX; x++)
 		{
 			for (int y = minY; y <= maxY; y++)
@@ -367,6 +366,18 @@ public class PortalUtil {
 		MLog.severe("Unable to find portal block at " + block.toString());
 		return block;
 
+	}
+	
+	public static Block getLowestNorthestWestestPortalBlock(Block block)
+	{
+		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.DOWN);
+		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.NORTH);
+		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.WEST);
+
+		return block;
 	}
 	
 //	public static Block getPortalBlock(Location location)

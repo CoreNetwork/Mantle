@@ -256,10 +256,23 @@ public class PortalsListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onPlayerPortalFinal(final PlayerPortalEvent event)
 	{
+		final Location to = event.getTo().clone();
+		
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
-				event.getPlayer().teleport(event.getTo());
+				Location loc = event.getPlayer().getLocation();
+				loc.setYaw(to.getYaw());
+				
+				event.getPlayer().teleport(to);
+			}
+		}, 1);
+
+		
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+			@Override
+			public void run() {
+				event.getPlayer().teleport(to);
 			}
 		}, 10);
 		
@@ -273,7 +286,7 @@ public class PortalsListener implements Listener {
 					
 					try
 					{
-						Field portalCounterField = net.minecraft.server.v1_7_R1.Entity.class.getDeclaredField("aq");
+						Field portalCounterField = net.minecraft.server.v1_7_R1.Entity.class.getDeclaredField("ap");
 						portalCounterField.setAccessible(true);
 						
 						portalCounterField.set(nmsPlayer, 0);
