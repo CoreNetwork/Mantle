@@ -2,7 +2,10 @@ package us.corenetwork.mantle;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.server.v1_7_R1.PacketPlayOutWorldParticles;
+
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public enum ParticleLibrary {
@@ -49,25 +52,24 @@ public enum ParticleLibrary {
     }
  
     public void sendToPlayer(Player player, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) {
-    	// TODO
-//    	try
-//        {
-//        	Packet63WorldParticles packet = new Packet63WorldParticles();
-//            ReflectionUtilities.setValue(packet, "a", particleName);
-//            ReflectionUtilities.setValue(packet, "b", (float) location.getX());
-//            ReflectionUtilities.setValue(packet, "c", (float) location.getY());
-//            ReflectionUtilities.setValue(packet, "d", (float) location.getZ());
-//            ReflectionUtilities.setValue(packet, "e", offsetX);
-//            ReflectionUtilities.setValue(packet, "f", offsetY);
-//            ReflectionUtilities.setValue(packet, "g", offsetZ);
-//            ReflectionUtilities.setValue(packet, "h", speed);
-//            ReflectionUtilities.setValue(packet, "i", count);
-//            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
-//        }
-//        catch (Exception e)
-//        {
-//        	e.printStackTrace();
-//        }
+    	try
+        {
+        	PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
+            ReflectionUtilities.setValue(packet, "a", particleName);
+            ReflectionUtilities.setValue(packet, "b", (float) location.getX());
+            ReflectionUtilities.setValue(packet, "c", (float) location.getY());
+            ReflectionUtilities.setValue(packet, "d", (float) location.getZ());
+            ReflectionUtilities.setValue(packet, "e", offsetX);
+            ReflectionUtilities.setValue(packet, "f", offsetY);
+            ReflectionUtilities.setValue(packet, "g", offsetZ);
+            ReflectionUtilities.setValue(packet, "h", speed);
+            ReflectionUtilities.setValue(packet, "i", count);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
+        }
+        catch (Exception e)
+        {
+        	e.printStackTrace();
+        }
     }
    
     private static class ReflectionUtilities {
