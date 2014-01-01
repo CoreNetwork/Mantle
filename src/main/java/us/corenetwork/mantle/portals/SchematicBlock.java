@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.portals;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -70,7 +71,7 @@ public class SchematicBlock {
 			SchematicBlock[] schematic = new SchematicBlock[original.length];
 			for (int i = 0; i < original.length; i++)
 			{
-				schematic[i] = new SchematicBlock(original[i].modZ, original[i].modY, original[i].modX, original[i].material, original[i].onlyInAir);
+				schematic[i] = new SchematicBlock(-original[i].modZ, original[i].modY, original[i].modX, original[i].material, original[i].onlyInAir);
 			}
 			return schematic;
 		}
@@ -79,7 +80,7 @@ public class SchematicBlock {
 			SchematicBlock[] schematic = new SchematicBlock[original.length];
 			for (int i = 0; i < original.length; i++)
 			{
-				schematic[i] = new SchematicBlock(-original[i].modX, original[i].modY, -original[i].modZ, original[i].material, original[i].onlyInAir);
+				schematic[i] = new SchematicBlock(original[i].modZ, original[i].modY, -original[i].modX, original[i].material, original[i].onlyInAir);
 			}
 			return schematic;
 		}
@@ -88,7 +89,7 @@ public class SchematicBlock {
 			SchematicBlock[] schematic = new SchematicBlock[original.length];
 			for (int i = 0; i < original.length; i++)
 			{
-				schematic[i] = new SchematicBlock(-original[i].modZ, original[i].modY, -original[i].modX, original[i].material, original[i].onlyInAir);
+				schematic[i] = new SchematicBlock(-original[i].modZ, original[i].modY, original[i].modX, original[i].material, original[i].onlyInAir);
 			}
 			return schematic;
 		}

@@ -8,19 +8,19 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.minecraft.server.v1_6_R3.ItemStack;
-import net.minecraft.server.v1_6_R3.NBTBase;
-import net.minecraft.server.v1_6_R3.NBTTagByte;
-import net.minecraft.server.v1_6_R3.NBTTagByteArray;
-import net.minecraft.server.v1_6_R3.NBTTagCompound;
-import net.minecraft.server.v1_6_R3.NBTTagDouble;
-import net.minecraft.server.v1_6_R3.NBTTagFloat;
-import net.minecraft.server.v1_6_R3.NBTTagInt;
-import net.minecraft.server.v1_6_R3.NBTTagIntArray;
-import net.minecraft.server.v1_6_R3.NBTTagList;
-import net.minecraft.server.v1_6_R3.NBTTagLong;
-import net.minecraft.server.v1_6_R3.NBTTagShort;
-import net.minecraft.server.v1_6_R3.NBTTagString;
+import net.minecraft.server.v1_7_R1.ItemStack;
+import net.minecraft.server.v1_7_R1.NBTBase;
+import net.minecraft.server.v1_7_R1.NBTTagByte;
+import net.minecraft.server.v1_7_R1.NBTTagByteArray;
+import net.minecraft.server.v1_7_R1.NBTTagCompound;
+import net.minecraft.server.v1_7_R1.NBTTagDouble;
+import net.minecraft.server.v1_7_R1.NBTTagFloat;
+import net.minecraft.server.v1_7_R1.NBTTagInt;
+import net.minecraft.server.v1_7_R1.NBTTagIntArray;
+import net.minecraft.server.v1_7_R1.NBTTagList;
+import net.minecraft.server.v1_7_R1.NBTTagLong;
+import net.minecraft.server.v1_7_R1.NBTTagShort;
+import net.minecraft.server.v1_7_R1.NBTTagString;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,7 +28,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.MLog;
@@ -106,7 +106,6 @@ public class LoadCommand extends NanobotBaseCommand {
 		for (Entry<?, ?> e : section.entrySet())
 		{
 			NBTBase tag =  loadTag(e.getValue(), e.getKey().equals("compound"));
-			tag.setName((String) e.getKey());
 			newTag.set((String) e.getKey(), tag);
 		}
 			
@@ -122,11 +121,11 @@ public class LoadCommand extends NanobotBaseCommand {
 	{
 		if (tag instanceof String)
 		{
-			return new NBTTagString(null, NanobotUtil.fixFormatting((String) tag));
+			return new NBTTagString(NanobotUtil.fixFormatting((String) tag));
 		}
 		else if (tag instanceof ArrayList)
 		{
-			NBTTagList list = new NBTTagList(null);
+			NBTTagList list = new NBTTagList();
 			for (Object o : (ArrayList) tag)
 				list.add(loadTag(o));
 			
@@ -146,14 +145,13 @@ public class LoadCommand extends NanobotBaseCommand {
 			
 			if (isCompound)
 			{
-				NBTTagCompound compound = new NBTTagCompound(null);
+				NBTTagCompound compound = new NBTTagCompound();
 								
 				for (Entry<String, Object> ee : map.entrySet())
 				{
 					Bukkit.getServer().broadcastMessage("ee - " + ee.getKey());
 
 					NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
-					eTag.setName(ee.getKey());
 					compound.set(ee.getKey(), eTag);
 				}
 				
@@ -164,39 +162,39 @@ public class LoadCommand extends NanobotBaseCommand {
 			{
 				if (e.getKey().equals("byte"))
 				{
-					return new NBTTagByte(null, (byte) (int) (Integer) e.getValue());
+					return new NBTTagByte((byte) (int) (Integer) e.getValue());
 				}
 				else if (e.getKey().equals("short"))
 				{
-					return new NBTTagShort(null, (short) (int) (Integer) e.getValue());
+					return new NBTTagShort((short) (int) (Integer) e.getValue());
 				}
 				else if (e.getKey().equals("int"))
 				{
-					return new NBTTagInt(null, (Integer) e.getValue());
+					return new NBTTagInt((Integer) e.getValue());
 				}
 				else if (e.getKey().equals("long"))
 				{
-					return new NBTTagLong(null, (long) (int) (Integer) e.getValue());
+					return new NBTTagLong((long) (int) (Integer) e.getValue());
 				}
 				else if (e.getKey().equals("float"))
 				{
-					return new NBTTagFloat(null, (float) (int) (Integer) e.getValue());
+					return new NBTTagFloat((float) (int) (Integer) e.getValue());
 				}
 				else if (e.getKey().equals("double"))
 				{
-					return new NBTTagDouble(null, (double) (int) (Integer) e.getValue());
+					return new NBTTagDouble((double) (int) (Integer) e.getValue());
 				}
 				else if (e.getKey().equals("byteArray"))
 				{
-					return new NBTTagByteArray(null, ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Byte[0])));
+					return new NBTTagByteArray(ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Byte[0])));
 				}
 				else if (e.getKey().equals("intArray"))
 				{
-					return new NBTTagIntArray(null, ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Integer[0])));
+					return new NBTTagIntArray(ArrayConvert.convert(((ArrayList<Integer>) e.getValue()).toArray(new Integer[0])));
 				}
 				else if (e.getKey().equals("compound"))
 				{
-					NBTTagCompound compound = new NBTTagCompound(null);
+					NBTTagCompound compound = new NBTTagCompound();
 					
 					Map<String, Object> inMap = null;
 					
@@ -211,7 +209,6 @@ public class LoadCommand extends NanobotBaseCommand {
 					for (Entry<String, Object> ee : inMap.entrySet())
 					{
 						NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
-						eTag.setName(ee.getKey());
 						compound.set(ee.getKey(), eTag);
 					}
 					

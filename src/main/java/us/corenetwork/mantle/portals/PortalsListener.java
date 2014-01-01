@@ -2,12 +2,10 @@ package us.corenetwork.mantle.portals;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import net.minecraft.server.v1_6_R3.EntityPlayer;
-import net.minecraft.server.v1_6_R3.PortalTravelAgent;
+import net.minecraft.server.v1_7_R1.EntityPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,8 +14,8 @@ import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +23,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -139,21 +136,21 @@ public class PortalsListener implements Listener {
 			{
 				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
 
 					event.setCancelled(true);
 					return;
 				}
 				if (b.getY() < minY)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
 
 					event.setCancelled(true);
 					return;
 				}
 				if  (b.getY() > maxY)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
 
 					event.setCancelled(true);
 					return;
@@ -205,7 +202,7 @@ public class PortalsListener implements Listener {
 
 				if (creator == null)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
 					return;
@@ -215,7 +212,7 @@ public class PortalsListener implements Listener {
 
 				if (player == null || claim.allowBuild(player) != null)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
 					return;
@@ -259,10 +256,23 @@ public class PortalsListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onPlayerPortalFinal(final PlayerPortalEvent event)
 	{
+		final Location to = event.getTo().clone();
+		
 		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
-				event.getPlayer().teleport(event.getTo());
+				Location loc = event.getPlayer().getLocation();
+				loc.setYaw(to.getYaw());
+				
+				event.getPlayer().teleport(to);
+			}
+		}, 1);
+
+		
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+			@Override
+			public void run() {
+				event.getPlayer().teleport(to);
 			}
 		}, 10);
 		
@@ -276,7 +286,7 @@ public class PortalsListener implements Listener {
 					
 					try
 					{
-						Field portalCounterField = net.minecraft.server.v1_6_R3.Entity.class.getDeclaredField("aq");
+						Field portalCounterField = net.minecraft.server.v1_7_R1.Entity.class.getDeclaredField("ap");
 						portalCounterField.setAccessible(true);
 						
 						portalCounterField.set(nmsPlayer, 0);

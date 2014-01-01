@@ -1,6 +1,8 @@
 package us.corenetwork.mantle.portals;
 
-import net.minecraft.server.v1_6_R3.AxisAlignedBB;
+import java.util.ArrayList;
+
+import net.minecraft.server.v1_7_R1.AxisAlignedBB;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -9,7 +11,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
 import us.corenetwork.mantle.MLog;
@@ -17,29 +19,28 @@ import us.corenetwork.mantle.MLog;
 public class PortalUtil {	
 	public static Location processTeleport(final Entity entity)
 	{
-		Block portalBlock = getPortalBlock(entity);
+		Block portalBlock = getLowestNorthestWestestPortalBlock(getPortalBlock(entity));
 		Block destination = getOtherSide(portalBlock);
-				
+
 		
 		destination.getChunk().load();
 		
 		if (destination.getType() != Material.PORTAL)
 		{
 			int orientation = 0;
-			BlockFace[] faces = new BlockFace[] { BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST, BlockFace.NORTH };
-			for (int i = 0; i < 4 ; i++)
+			if (portalBlock.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL)
 			{
-				if (portalBlock.getRelative(faces[i]).getType() == Material.PORTAL)
-				{
-					orientation = i;
-					break;
-				}
+				orientation = 1;
 			}
 			
 			buildPortal(destination, orientation);
 		}
 				
-		return getLocation(destination);		
+		Location blockLocation = getLocation(destination);
+		blockLocation.setPitch(entity.getLocation().getPitch());
+		blockLocation.setYaw(entity.getLocation().getYaw());
+
+		return blockLocation;		
 	}
 
 	public static Block getOtherSide(Block block)
@@ -200,7 +201,7 @@ public class PortalUtil {
 			{
 				break;
 			}
-			
+						
 			for (int h = minY; h < maxY; h++)
 			{
 				Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
@@ -337,17 +338,17 @@ public class PortalUtil {
 
 	public static Block getPortalBlock(Entity entity)
 	{
-		net.minecraft.server.v1_6_R3.Entity nmsEntity = ((CraftEntity) entity).getHandle();
+		net.minecraft.server.v1_7_R1.Entity nmsEntity = ((CraftEntity) entity).getHandle();
 		AxisAlignedBB boundingBox = nmsEntity.boundingBox;
 				
 		// Need to check this after every NMS update, letters might change.
-		int minX = (int) Math.floor(boundingBox.a);
-		int minY = (int) Math.floor(boundingBox.b);
-		int minZ = (int) Math.floor(boundingBox.c);
-		int maxX = (int) Math.floor(boundingBox.d);
-		int maxY = (int) Math.floor(boundingBox.e);
-		int maxZ = (int) Math.floor(boundingBox.f);
-
+		int minX = (int) Math.floor(boundingBox.a + 0.001D);
+		int minY = (int) Math.floor(boundingBox.b + 0.001D);
+		int minZ = (int) Math.floor(boundingBox.c + 0.001D);
+		int maxX = (int) Math.floor(boundingBox.d - 0.001D);
+		int maxY = (int) Math.floor(boundingBox.e - 0.001D);
+		int maxZ = (int) Math.floor(boundingBox.f - 0.001D);
+		
 		for (int x = minX; x <= maxX; x++)
 		{
 			for (int y = minY; y <= maxY; y++)
@@ -367,6 +368,70 @@ public class PortalUtil {
 		MLog.severe("Unable to find portal block at " + block.toString());
 		return block;
 
+	}
+	
+	public static Block getLowestNorthestWestestPortalBlock(Block block)
+	{
+		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.DOWN);
+		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.NORTH);
+		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
+			block = block.getRelative(BlockFace.WEST);
+
+		return block;
+	}
+	
+	public static Block findBestSignLocation(ArrayList<Block> blocks)
+	{
+		//Try to find block that has something on the opposite side (for example two sides of portal frame). 
+		// That ensures sign will be inside portal
+		for (Block b : blocks)
+		{
+			if (!b.getType().isSolid())
+				continue;
+
+			for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+			{
+				Block neighbour = b.getRelative(face);
+				if (!neighbour.isEmpty())
+					continue;
+				
+				for (Block potentialFacingBlock : blocks)
+				{
+					if (potentialFacingBlock == b)
+						continue;
+					
+					if (b.getY() == potentialFacingBlock.getY() &&
+						(face.getModX() != 0 || potentialFacingBlock.getX() == b.getX()) && 
+						(face.getModZ() != 0 || potentialFacingBlock.getZ() == b.getZ())&& 
+						face.getModX() < 0 == potentialFacingBlock.getX() < b.getX() &&
+						face.getModZ() < 0 == potentialFacingBlock.getZ() < b.getZ())
+					{
+						return neighbour;
+					}
+				}
+			}
+		}
+
+		for (Block b : blocks)
+		{
+			if (!b.getType().isSolid())
+				continue;
+
+			Block upperBlock = b.getRelative(BlockFace.UP);
+
+			if (upperBlock != null && upperBlock.isEmpty())
+				return upperBlock;
+		}
+
+		for (Block b : blocks)
+		{
+			if (b.isEmpty())
+				return b;			
+		}
+
+		return blocks.get(0);
 	}
 	
 //	public static Block getPortalBlock(Location location)

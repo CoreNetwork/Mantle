@@ -1,6 +1,4 @@
 package us.corenetwork.mantle;
-import java.util.ArrayList;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -12,8 +10,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftFirework;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftFirework;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -21,39 +19,34 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 public class Util {
 
-	public static void placeSign(Block block, String message)
+	public static void placeSign(final Block block, final String message)
 	{
-		Block belowBlock = block.getRelative(BlockFace.DOWN);
-		if (belowBlock != null && belowBlock.getType().isSolid())
+		org.bukkit.material.Sign signData = new org.bukkit.material.Sign();
+		for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 		{
-			block.setType(Material.SIGN_POST);
-		}
-		else
-		{
-			block.setType(Material.WALL_SIGN);
-
-		}
-
-		Sign sign = (Sign) block.getState();
-		if (block.getType() == Material.WALL_SIGN)
-		{
-			//Rotate sign so it will be on wall
-			org.bukkit.material.Sign data = (org.bukkit.material.Sign) sign.getData();
-			for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+			Block nextBlock = block.getRelative(face);
+			if (nextBlock != null && nextBlock.getType().isSolid())
 			{
-				Block nextBlock = block.getRelative(face);
-				if (nextBlock != null && nextBlock.getType().isSolid())
-				{
-					data.setFacingDirection(face.getOppositeFace());
-					sign.setData(data);
+				signData.setFacingDirection(face.getOppositeFace());
 
-					break;
-				}
+				break;
 			}
 		}
 
+		Block belowBlock = block.getRelative(BlockFace.DOWN);
+		if (belowBlock != null && belowBlock.getType().isSolid())
+		{
+			block.setTypeIdAndData(Material.SIGN_POST.getId(), signData.getData(), true);
+		}
+		else
+		{
+			block.setTypeIdAndData(Material.WALL_SIGN.getId(), signData.getData(), true);
+		}
+						
+		Sign sign = (Sign) block.getState();
+		//Rotate sign so it will be facing away from the wall
+		
 		populateSign(message, sign);
-
 
 		sign.update();
 	}
@@ -68,50 +61,6 @@ public class Util {
 		{
 			sign.setLine(i, lines[i]);
 		}
-	}
-
-	public static Block findBestSignLocation(ArrayList<Block> blocks)
-	{
-		for (Block b : blocks)
-		{
-			if (!b.isEmpty())
-				continue;
-
-			Block upperBlock = b.getRelative(BlockFace.UP);
-
-			if (upperBlock != null && upperBlock.isEmpty())
-				return b;
-		}
-
-		for (Block b : blocks)
-		{
-			if (!b.isEmpty())
-				continue;
-
-			Block upperBlock = b.getRelative(BlockFace.UP);
-
-			if (upperBlock != null && upperBlock.isEmpty())
-				return b;
-		}
-
-		for (Block b : blocks)
-		{
-			if (!b.isEmpty())
-				continue;
-
-			Block lowerBlock = b.getRelative(BlockFace.DOWN);
-
-			if (lowerBlock != null && lowerBlock.getType().isSolid())
-				return b;
-		}
-
-		for (Block b : blocks)
-		{
-			if (b.isEmpty())
-				return b;			
-		}
-
-		return blocks.get(0);
 	}
 
 	public static void Message(String message, CommandSender sender)
@@ -195,8 +144,8 @@ public class Util {
 		meta.setPower(0);
 		firework.setFireworkMeta(meta);
 
-		net.minecraft.server.v1_6_R3.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
-		net.minecraft.server.v1_6_R3.World world = ((CraftWorld) location.getWorld()).getHandle();
+		net.minecraft.server.v1_7_R1.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
+		net.minecraft.server.v1_7_R1.World world = ((CraftWorld) location.getWorld()).getHandle();
 
 		world.broadcastEntityEffect(nmsFirework, (byte) 17);
 
