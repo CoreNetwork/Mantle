@@ -33,7 +33,11 @@ public class SlimeSpawner {
 		
 		SlimeSpawningHelper.spawningMob = true;
 		
-		Slime slime = block.getWorld().spawn(NetherSpawner.getLocation(block), Slime.class);
+		Location location = NetherSpawner.getLocation(block);
+		//Bug in bukkit swaps yaw and pitch when spawning
+		location.setPitch(MantlePlugin.random.nextFloat() * 360);
+		
+		Slime slime = block.getWorld().spawn(location, Slime.class);
 		if (slime.isValid())
 		{
 			slime.setSize(size);
