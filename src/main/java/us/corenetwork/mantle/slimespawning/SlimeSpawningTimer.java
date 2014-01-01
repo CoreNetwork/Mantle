@@ -21,7 +21,7 @@ public class SlimeSpawningTimer implements Runnable {
         for (Chunk c : overworld.getLoadedChunks()) {
             int randomX = MantlePlugin.random.nextInt(16);
             int randomZ = MantlePlugin.random.nextInt(16);
-            int randomY = MantlePlugin.random.nextInt(128);
+            int randomY = MantlePlugin.random.nextInt(40);
 
             Block block = c.getBlock(randomX, randomY, randomZ);
             

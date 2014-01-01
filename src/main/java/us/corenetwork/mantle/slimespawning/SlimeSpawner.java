@@ -15,10 +15,7 @@ import us.corenetwork.mantle.netherspawning.NetherSpawner;
 public class SlimeSpawner {
 
 	public static void spawn(Block block)
-	{
-		if (block.getY() > 40)
-			return;
-		
+	{		
 		if (block.getLightLevel() < 8)
 			return;
 		
