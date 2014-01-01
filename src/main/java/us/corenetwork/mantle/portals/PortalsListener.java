@@ -136,21 +136,21 @@ public class PortalsListener implements Listener {
 			{
 				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
 
 					event.setCancelled(true);
 					return;
 				}
 				if (b.getY() < minY)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
 
 					event.setCancelled(true);
 					return;
 				}
 				if  (b.getY() > maxY)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
 
 					event.setCancelled(true);
 					return;
@@ -202,7 +202,7 @@ public class PortalsListener implements Listener {
 
 				if (creator == null)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
 					return;
@@ -212,7 +212,7 @@ public class PortalsListener implements Listener {
 
 				if (player == null || claim.allowBuild(player) != null)
 				{
-					Util.placeSign(Util.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
 					return;

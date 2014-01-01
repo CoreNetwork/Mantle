@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.portals;
 
+import java.util.ArrayList;
+
 import net.minecraft.server.v1_7_R1.AxisAlignedBB;
 
 import org.bukkit.Bukkit;
@@ -378,6 +380,58 @@ public class PortalUtil {
 			block = block.getRelative(BlockFace.WEST);
 
 		return block;
+	}
+	
+	public static Block findBestSignLocation(ArrayList<Block> blocks)
+	{
+		//Try to find block that has something on the opposite side (for example two sides of portal frame). 
+		// That ensures sign will be inside portal
+		for (Block b : blocks)
+		{
+			if (!b.getType().isSolid())
+				continue;
+
+			for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+			{
+				Block neighbour = b.getRelative(face);
+				if (!neighbour.isEmpty())
+					continue;
+				
+				for (Block potentialFacingBlock : blocks)
+				{
+					if (potentialFacingBlock == b)
+						continue;
+					
+					if (b.getY() == potentialFacingBlock.getY() &&
+						(face.getModX() != 0 || potentialFacingBlock.getX() == b.getX()) && 
+						(face.getModZ() != 0 || potentialFacingBlock.getZ() == b.getZ())&& 
+						face.getModX() < 0 == potentialFacingBlock.getX() < b.getX() &&
+						face.getModZ() < 0 == potentialFacingBlock.getZ() < b.getZ())
+					{
+						return neighbour;
+					}
+				}
+			}
+		}
+
+		for (Block b : blocks)
+		{
+			if (!b.getType().isSolid())
+				continue;
+
+			Block upperBlock = b.getRelative(BlockFace.UP);
+
+			if (upperBlock != null && upperBlock.isEmpty())
+				return upperBlock;
+		}
+
+		for (Block b : blocks)
+		{
+			if (b.isEmpty())
+				return b;			
+		}
+
+		return blocks.get(0);
 	}
 	
 //	public static Block getPortalBlock(Location location)
