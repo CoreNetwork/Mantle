@@ -365,7 +365,7 @@ public class PortalUtil {
 		}
 
 		Block block = entity.getLocation().getBlock();
-		MLog.severe("Unable to find portal block at " + block.toString());
+		MLog.severe("Unable to find portal block at " + block.toString() + " - Entity: " + entity.getType().toString());
 		return block;
 
 	}
