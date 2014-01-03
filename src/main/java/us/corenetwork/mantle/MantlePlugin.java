@@ -11,6 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
+import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
 
 
@@ -47,6 +48,7 @@ public class MantlePlugin extends JavaPlugin {
 		//Admin commands
 		adminCommands.put("help", new AdminHelpCommand());		
 		adminCommands.put("reload", new ReloadCommand());
+		adminCommands.put("dumpchunks", new DumpChunksCommand());
 
 		MantleModule.loadModules();
 
