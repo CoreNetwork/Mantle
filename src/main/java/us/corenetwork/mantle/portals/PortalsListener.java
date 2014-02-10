@@ -13,6 +13,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
@@ -93,7 +94,7 @@ public class PortalsListener implements Listener {
 			FlintSteelData data = new FlintSteelData();
 			data.timestamp = System.currentTimeMillis();
 			data.player = player.getName();
-
+			
 			flintSteelUsage.put(clicked, data);
 		}
 	}
@@ -161,7 +162,7 @@ public class PortalsListener implements Listener {
 			//Prevent creating portals into other claims
 			Location destination = PortalUtil.getOtherSide(event.getBlocks().get(0)).getLocation();
 			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
-			
+						
 			if (claim == null)
 			{
 				Block portalBlock = destination.getBlock();
@@ -189,19 +190,28 @@ public class PortalsListener implements Listener {
 			{
 				FlintSteelData creator = null;
 
+				//Search a bit for possible flint and steel spot - this event now only works with "pillars" of portal, top and bottom is not included.
 				for (Block b : event.getBlocks())
 				{
-					FlintSteelData data = flintSteelUsage.get(b);
-					if (data != null && System.currentTimeMillis() - data.timestamp < 1000)
+					for (BlockFace face : new BlockFace[] { BlockFace.SELF, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST} )
 					{
-						creator = data;
-						break;
+						for (int y = -1; y <= 1; y++)
+						{
+							Block neighbour = b.getRelative(face).getRelative(0, y, 0);
+							FlintSteelData data = flintSteelUsage.get(neighbour);
+							if (data != null && System.currentTimeMillis() - data.timestamp < 1000)
+							{
+								creator = data;
+								break;
+							}
+						}
+						
 					}
 				}
-
-
+				
 				if (creator == null)
 				{
+					
 					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
