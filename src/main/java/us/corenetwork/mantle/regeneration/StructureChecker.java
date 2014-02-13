@@ -56,7 +56,7 @@ public class StructureChecker implements Runnable {
 
 			try
 			{
-				PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM regeneration_structures WHERE StructureName = ? ORDER BY LastCheck ASC LIMIT ?");
+				PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM regeneration_structures WHERE InspectionStatus <= 0 AND StructureName = ? ORDER BY LastCheck ASC LIMIT ?");
 				statement.setString(1, structure.getName());
 				statement.setInt(2, structure.getNumberToGenerateAtOnce());
 
@@ -86,7 +86,7 @@ public class StructureChecker implements Runnable {
 					{
 						generated++;
 
-						RegenerationUtil.regenerateStructure(id, now);
+						RegenerationUtil.regenerateStructure(id, now, false);
 						MLog.info("Restored!");
 					}		
 					else

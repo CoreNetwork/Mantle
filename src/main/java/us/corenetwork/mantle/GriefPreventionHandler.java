@@ -3,6 +3,7 @@ package us.corenetwork.mantle;
 import java.awt.Rectangle;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 import me.ryanhamshire.GriefPrevention.Claim;
@@ -15,7 +16,6 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
 
 public class GriefPreventionHandler {
 
@@ -117,6 +117,40 @@ public class GriefPreventionHandler {
 		}
 
 		return false;		
+	}
+	
+	public static void deleteClaimsInside(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
+	{		
+		List<Claim> deletableClaims = new LinkedList<Claim>();
+		
+		Rectangle villageRectangle = new Rectangle(x, z, xSize + padding, zSize + padding);
+
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		for (int i = 0; i < ca.size(); i++)
+		{
+			Claim claim = ca.get(i);
+			
+			if (adminOnly && !claim.isAdminClaim())
+				continue;
+			
+			if (claim.getLesserBoundaryCorner().getWorld() != world)
+				continue;
+			
+			if (player != null && (claim.allowAccess(player) == null))
+				continue;
+			
+			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
+			int claimMaxX = Math.max(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
+			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
+			int claimMaxZ = Math.max(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
+
+			Rectangle claimRectangle = new Rectangle(claimMinX, claimMinZ, claimMaxX - claimMinX, claimMaxZ - claimMinZ);
+			if (villageRectangle.intersects(claimRectangle))
+				deletableClaims.add(claim);
+		}
+		
+		for (Claim claim : deletableClaims)
+			GriefPrevention.instance.dataStore.deleteClaim(claim);
 	}
 	
 	public static Deque<Location> getAllClaims()

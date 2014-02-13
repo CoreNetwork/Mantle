@@ -86,7 +86,7 @@ public class IO {
         try {
             conn = IO.getConnection();//            {
         	st = conn.createStatement();
-        	st.executeUpdate("CREATE TABLE IF NOT EXISTS regeneration_structures (ID INTEGER PRIMARY KEY NOT NULL, StructureName STRING NOT NULL, Schematic STRING NOT NULL, World STRING, CornerX INTEGER, CornerZ INTEGER, PastingY INTEGER, SizeX INTEGER, SizeZ INTEGER, LastCheck INTEGER DEFAULT 0, LastRestore INTEGER DEFAULT 0)");
+        	st.executeUpdate("CREATE TABLE IF NOT EXISTS regeneration_structures (ID INTEGER PRIMARY KEY NOT NULL, StructureName STRING NOT NULL, Schematic STRING NOT NULL, World STRING, CornerX INTEGER, CornerZ INTEGER, PastingY INTEGER, SizeX INTEGER, SizeZ INTEGER, LastCheck INTEGER DEFAULT 0, LastRestore INTEGER DEFAULT 0, InspectionStatus INTEGER DEFAULT 0)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS chests (ID INTEGER PRIMARY KEY NOT NULL, LootTable STRING, Interval INTEGER, PerPlayer INTEGER, World STRING, X INTEGER, Y INTEGER, Z INTEGER)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS playerChests (ID INTEGER, Player STRING, LastAccess INTEGER, Restocks INTEGER)");
         	st.executeUpdate("CREATE TABLE IF NOT EXISTS chestInventory (ID INTEGER, Player STRING, Slot INTEGER, ItemID INTEGER, Damage INTEGER, Amount INTEGER)");
@@ -103,9 +103,10 @@ public class IO {
     
     public static void UpdateDB()
     {
+    	Update("SELECT InspectionStatus FROM regeneration_structures LIMIT 1", "ALTER TABLE regeneration_structures ADD InspectionStatus INTEGER DEFAULT 0");
     }
         
-    public void Update(String check, String sql)
+    public static void Update(String check, String sql)
     {
     	try
     	{

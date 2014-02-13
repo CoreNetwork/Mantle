@@ -9,7 +9,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import us.corenetwork.mantle.CachedSchematic;
+import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.generation.VillagerSpawner;
 
@@ -18,14 +20,14 @@ public class RegenerationUtil {
 
 	public static void regenerateStructure(int id)
 	{
-		regenerateStructure(id, (int) (System.currentTimeMillis() / 1000));
+		regenerateStructure(id, (int) (System.currentTimeMillis() / 1000), false);
 	}
 	
-	public static void regenerateStructure(int id, int time)
+	public static void regenerateStructure(int id, int time, boolean clearClaims)
 	{
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT StructureName, Schematic, World, CornerX, CornerZ, PastingY FROM regeneration_structures WHERE id = ? LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT StructureName, Schematic, World, CornerX, CornerZ, SizeX, SizeZ, PastingY FROM regeneration_structures WHERE id = ? LIMIT 1");
 			statement.setInt(1, id);
 
 			ResultSet set = statement.executeQuery();
@@ -38,11 +40,19 @@ public class RegenerationUtil {
 				String worldName = set.getString("World");
 				int cornerX = set.getInt("CornerX");
 				int cornerZ = set.getInt("CornerZ");
+				final int xSize = set.getInt("SizeX");
+				final int zSize = set.getInt("SizeZ");
 				int pastingY = set.getInt("PastingY");
-
+				
 				final CachedSchematic schematic = new CachedSchematic(schematicName);
 				World world = Bukkit.getWorld(worldName);
 
+				if (clearClaims)
+				{
+					int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
+					GriefPreventionHandler.deleteClaimsInside(world, cornerX, cornerZ, xSize, zSize, padding, false, null);
+				}
+				
 				final Location pastingLocation = new Location(world, cornerX, pastingY, cornerZ);
 				RegStructure structure = RegenerationModule.instance.structures.get(structureName);
 
@@ -124,5 +134,4 @@ public class RegenerationUtil {
 
 		return null;
 	}
-
 }

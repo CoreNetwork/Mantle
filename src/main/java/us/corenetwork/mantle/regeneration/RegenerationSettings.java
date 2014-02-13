@@ -8,7 +8,9 @@ public enum RegenerationSettings {
 	
 	MESSAGE_ANALYZING("Messages.Analyzing", "Analyzing regenerative structures. Please wait..."),
 	MESSAGE_ANALYZE_HEADER("Messages.AnalyzeHeader", "Status of regeneration:"),
-	MESSAGE_ANALYZE_LINE("Messages.VillageStatus", "<Structure>: [NEWLINE] Total: <Total> [NEWLINE] Claimed: <Claimed> (<ClaimedPercent>%) [NEWLINE] Empty: <Empty> (<EmptyPercent>%) [NEWLINE] [NEWLINE]"),
+	MESSAGE_ANALYZE_LINE("Messages.StructureeStatus", "<Structure>: [NEWLINE] Total: <Total> [NEWLINE] Claimed: <Claimed> (<ClaimedPercent>%) [NEWLINE] Empty: <Empty> (<EmptyPercent>%) <PostponedApproved> [NEWLINE] [NEWLINE]"),
+	MESSAGE_POSTPONED_INSERT("Messages.PostponedInsert", "[NEWLINE] Postponed: <Postponed>"),
+	MESSAGE_APPROVED_INSERT("Messages.ApprovedInsert", "[NEWLINE] Approved: <Approved>"),
 	MESSAGE_RESPAWNED("Messages.Respawned", "Nearby structure (Center is <Distance> blocks away) has been respawned."),
 	MESSAGE_NO_STRUCTURES("Messages.NoStructures", "You have no respawnable structures on this server!"),
 	MESSAGE_LOGIN_WARN("Messages.LoginWarn", "Warning! <Claimed> of <Total> (<Percentage>%) positions of structure <Structure> are already claimed!"),

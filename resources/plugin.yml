@@ -9,3 +9,5 @@ commands:
         description: Main command    
     nbt:
         description: Nanobot
+    inspect:
+        description: Structure inspector

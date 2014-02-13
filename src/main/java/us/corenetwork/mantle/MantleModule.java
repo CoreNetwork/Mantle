@@ -15,6 +15,7 @@ import us.corenetwork.mantle.gametweaks.GameTweaksModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.hydration.HydrationModule;
+import us.corenetwork.mantle.inspector.InspectorModule;
 import us.corenetwork.mantle.nanobot.NanobotModule;
 import us.corenetwork.mantle.netherspawning.NetherSpawningModule;
 import us.corenetwork.mantle.portals.PortalsModule;
@@ -34,7 +35,7 @@ public abstract class MantleModule implements CommandExecutor {
 
 	public YamlConfiguration config;
 	public YamlConfiguration storageConfig;
-	
+
 	protected MantleModule(String name, String[] commands, String configName)
 	{
 		this.moduleName = name;
@@ -133,7 +134,7 @@ public abstract class MantleModule implements CommandExecutor {
 		File storageFolder = new File(MantlePlugin.instance.getDataFolder(), "storage");
 		if (!storageFolder.exists())
 			storageFolder.mkdir();
-		
+
 		File configFile = new File(storageFolder, configName.concat(".yml"));
 
 		storageConfig = new YamlConfiguration();
@@ -227,7 +228,7 @@ public abstract class MantleModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}
-		
+
 		//Regeneration
 		module = new RegenerationModule();
 		if (module.loadModuleInternal())
@@ -235,7 +236,7 @@ public abstract class MantleModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}	
-		
+
 		//Regeneration
 		module = new HydrationModule();
 		if (module.loadModuleInternal())
@@ -243,7 +244,7 @@ public abstract class MantleModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}		
-		
+
 		//Animal spawning
 		module = new AnimalSpawningModule();
 		if (module.loadModuleInternal())
@@ -252,45 +253,53 @@ public abstract class MantleModule implements CommandExecutor {
 			modules.add(module);
 		}
 
-        //Nether spawning
-        module = new NetherSpawningModule();
-        if (module.loadModuleInternal())
-        {
-            module.active = true;
-            modules.add(module);
-        }
-        
-        //Spellbooks
-        module = new SpellbooksModule();
-        if (module.loadModuleInternal())
-        {
-            module.active = true;
-            modules.add(module);
-        }
+		//Nether spawning
+		module = new NetherSpawningModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
 
-        //Nanobot
-        module = new NanobotModule();
-        if (module.loadModuleInternal())
-        {
-            module.active = true;
-            modules.add(module);
-        }        
-        
-        //Game Tweaks
-        module = new GameTweaksModule();
-        if (module.loadModuleInternal())
-        {
-            module.active = true;
-            modules.add(module);
-        }        
-        
-        //Slime spawning
-        module = new SlimeSpawningModule();
-        if (module.loadModuleInternal())
-        {
-            module.active = true;
-            modules.add(module);
-        }        
+		//Spellbooks
+		module = new SpellbooksModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
+
+		//Nanobot
+		module = new NanobotModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}        
+
+		//Game Tweaks
+		module = new GameTweaksModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}        
+
+		//Slime spawning
+		module = new SlimeSpawningModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
+
+		//Inspector
+		module = new InspectorModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}        
 
 	}
 

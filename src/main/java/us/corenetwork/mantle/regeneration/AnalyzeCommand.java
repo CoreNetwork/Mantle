@@ -37,11 +37,13 @@ public class AnalyzeCommand extends BaseMantleCommand {
 				{
 					int claimed = 0;
 					int empty = 0;
+					int approved = 0;
+					int postponed = 0;
 
 
 					try
 					{
-						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ,World FROM regeneration_structures WHERE StructureName = ?");
+						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ,World,InspectionStatus FROM regeneration_structures WHERE StructureName = ?");
 						statement.setString(1, structure.getName());
 
 						ResultSet set = statement.executeQuery();
@@ -54,6 +56,11 @@ public class AnalyzeCommand extends BaseMantleCommand {
 							int zSize = set.getInt("SizeZ");
 							String worldName = set.getString("World");
 							World world = Bukkit.getWorld(worldName);
+							int inspectionStatus = set.getInt("InspectionStatus");
+							if (inspectionStatus < 0)
+								postponed++;
+							else if (inspectionStatus == 1)
+								approved++;
 							
 							int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 							
@@ -78,6 +85,13 @@ public class AnalyzeCommand extends BaseMantleCommand {
 					int claimedPercent = total == 0 ? 0 : (claimed * 100 / total);
 					int emptyPercent = total == 0 ? 0 : (empty * 100 / total);
 
+					String postponedApproved = "";
+					if (approved > 0)
+						postponedApproved += RegenerationSettings.MESSAGE_APPROVED_INSERT.string().replace("<Approved>", Integer.toString(approved));
+					
+					if (postponed > 0)
+						postponedApproved += RegenerationSettings.MESSAGE_POSTPONED_INSERT.string().replace("<Postponed>", Integer.toString(postponed));
+					
 					String message = RegenerationSettings.MESSAGE_ANALYZE_LINE.string();
 					message = message.replace("<Structure>", structure.getName().replace('_', ' '));
 					message = message.replace("<Total>", Integer.toString(total));
@@ -85,7 +99,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 					message = message.replace("<ClaimedPercent>", Integer.toString(claimedPercent));
 					message = message.replace("<Empty>", Integer.toString(empty));
 					message = message.replace("<EmptyPercent>", Integer.toString(emptyPercent));
-
+					message = message.replace("<PostponedApproved>", postponedApproved);
 					Util.Message(message, sender);
 				}
 			}
