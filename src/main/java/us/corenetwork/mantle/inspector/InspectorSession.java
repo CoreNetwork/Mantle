@@ -51,7 +51,11 @@ public class InspectorSession {
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET InspectionStatus = ? WHERE ID = ?");
 			if (state == 2)
-				statement.setInt(1, (int) -(System.currentTimeMillis() / 1000));
+			{
+				int time = (int) (System.currentTimeMillis() / 1000);
+				time += InspectorSettings.POSTPONE_TIME.integer();
+				statement.setInt(1, -time);
+			}
 			else
 				statement.setInt(1, state);
 			
