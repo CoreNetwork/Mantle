@@ -43,7 +43,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 
 					try
 					{
-						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ,World,InspectionStatus FROM regeneration_structures WHERE StructureName = ?");
+						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ,World,InspectionStatus FROM regeneration_structures WHERE InspectionStatus <= 0 AND StructureName = ?");
 						statement.setString(1, structure.getName());
 
 						ResultSet set = statement.executeQuery();

@@ -25,7 +25,7 @@ public class RegenerationListener implements Listener {
 				
 				try
 				{
-					PreparedStatement statement = IO.getConnection().prepareStatement("SELECT (SELECT COUNT(*) FROM regeneration_structures WHERE lastCheck <> lastRestore AND StructureName = ?) AS claimed, (SELECT COUNT(*) FROM regeneration_structures  WHERE StructureName = ?) AS every");
+					PreparedStatement statement = IO.getConnection().prepareStatement("SELECT (SELECT COUNT(*) FROM regeneration_structures WHERE InspectionStatus <= 0 AND lastCheck <> lastRestore AND StructureName = ?) AS claimed, (SELECT COUNT(*) FROM regeneration_structures  WHERE InspectionStatus <= 0 AND StructureName = ?) AS every");
 					statement.setString(1, structure.getName());
 					statement.setString(2, structure.getName());
 
