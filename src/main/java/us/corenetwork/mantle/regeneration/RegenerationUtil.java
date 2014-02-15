@@ -84,9 +84,10 @@ public class RegenerationUtil {
 			
 			statement.close();
 			
-			statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET LastRestore = ? WHERE ID = ?");
+			statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
 			statement.setInt(1, time);
-			statement.setInt(2, id);
+			statement.setInt(2, time);
+			statement.setInt(3, id);
 			statement.executeUpdate();
 			IO.getConnection().commit();
 			statement.close();
