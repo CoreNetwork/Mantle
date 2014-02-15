@@ -126,9 +126,11 @@ public class InspectorSession {
 			int z = set.getInt("CornerZ") + set.getInt("SizeZ") / 2;
 			World world = Bukkit.getWorld(set.getString("World"));
 			
+			int y = Math.max(InspectorSettings.MINIMUM_TELEPORT_Y.integer(), world.getHighestBlockYAt(x, z) + 1);
+			
 			structure = new StructureData();
 			structure.id = set.getInt("ID");
-			structure.teleport = new Location(world, x + 0.5, world.getHighestBlockYAt(x, z) + 1, z + 0.5);
+			structure.teleport = new Location(world, x + 0.5, y, z + 0.5);
 			
 			statement.close();
 		}

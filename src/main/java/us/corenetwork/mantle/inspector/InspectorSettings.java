@@ -4,7 +4,8 @@ package us.corenetwork.mantle.inspector;
 
 public enum InspectorSettings {
 	POSTPONE_TIME("PostponeTimeSeconds", 3600 * 24 * 14),
-	
+	MINIMUM_TELEPORT_Y("MinimumTeleportY", 10),
+
 	MESSAGE_COMMAND_SYNTAX("Messages.CommandSyntax", "Usage: /inspect start|stop|approve|postpone|reject|skip"),
 	MESSAGE_SESSION_ALREADY_ACTIVE("Messages.SessionAlreadyActive", "Inspection is already started!"),
 	MESSAGE_SESSION_NOT_ACTIVE("Messages.SessionNotActive", "You must first start inspection using /inspect start"),
