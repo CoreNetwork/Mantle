@@ -541,10 +541,11 @@ public class HardmodeListener implements Listener {
 
 			if (event.getTo().getWorld().getEnvironment() == Environment.NETHER)
 			{
-				double originalSpeed = attributes.getValue();
-				HorseSpeed.setOriginalHorseSpeed(id, originalSpeed);
+				//Horse slowing down disabled
+				//double originalSpeed = attributes.getValue();
+				//HorseSpeed.setOriginalHorseSpeed(id, originalSpeed);
 
-				attributes.setValue(HardmodeSettings.NETHER_HORSE_SPEED.doubleNumber());
+				//attributes.setValue(HardmodeSettings.NETHER_HORSE_SPEED.doubleNumber());
 			}
 			else
 			{
