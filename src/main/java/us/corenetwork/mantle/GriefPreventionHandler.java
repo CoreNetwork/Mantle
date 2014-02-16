@@ -119,9 +119,9 @@ public class GriefPreventionHandler {
 		return false;		
 	}
 	
-	public static void deleteClaimsInside(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
-	{		
-		List<Claim> deletableClaims = new LinkedList<Claim>();
+	public static List<Claim> getClaimsInside(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
+	{
+		List<Claim> claims = new LinkedList<Claim>();
 		
 		Rectangle villageRectangle = new Rectangle(x, z, xSize + padding, zSize + padding);
 
@@ -146,10 +146,18 @@ public class GriefPreventionHandler {
 
 			Rectangle claimRectangle = new Rectangle(claimMinX, claimMinZ, claimMaxX - claimMinX, claimMaxZ - claimMinZ);
 			if (villageRectangle.intersects(claimRectangle))
-				deletableClaims.add(claim);
+				claims.add(claim);
 		}
 		
-		for (Claim claim : deletableClaims)
+		return claims;
+	}
+	
+	public static void deleteClaimsInside(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
+	{		
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		List<Claim> claimsToDelete = getClaimsInside(world, x, z, xSize, zSize, padding, adminOnly, player);
+		
+		for (Claim claim : claimsToDelete)
 			GriefPrevention.instance.dataStore.deleteClaim(claim);
 	}
 	

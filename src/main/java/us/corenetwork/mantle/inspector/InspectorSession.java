@@ -5,14 +5,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+
+import me.ryanhamshire.GriefPrevention.Claim;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.regeneration.RegenerationSettings;
 import us.corenetwork.mantle.regeneration.RegenerationUtil;
 
 
@@ -34,8 +39,28 @@ public class InspectorSession {
 		
 		current = nextStructure.id;
 		Util.safeTeleport(player, nextStructure.teleport);
+		
+		String owners = "";
+		int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
+
+		List<Claim> claims = GriefPreventionHandler.getClaimsInside(nextStructure.teleport.getWorld(), nextStructure.corner.getBlockX(), nextStructure.corner.getBlockZ(), nextStructure.size.getBlockX(), nextStructure.size.getBlockZ(), padding,  false, null);
+		for (Claim claim : claims)
+		{
+			String owner =  claim.getOwnerName();
+			if (owners.contains(owner + ", "))
+				continue;
+			owners += claim.getOwnerName() + ", ";
+		}
+		
+		if (owners.isEmpty())
+			owners = InspectorSettings.MESSAGE_NO_CLAIMS.string();
+		else
+			owners = owners.substring(0, owners.length() - 2);
+		
 		String message = InspectorSettings.MESSAGE_TELEPORTED.string();
 		message = message.replace("<ID>", Integer.toString(current));
+		message = message.replace("<Owners>", owners);
+
 		Util.Message(message, player);
 	}
 	
@@ -122,14 +147,21 @@ public class InspectorSession {
 				return null;
 			}
 			
-			int x = set.getInt("CornerX") + set.getInt("SizeX") / 2;
-			int z = set.getInt("CornerZ") + set.getInt("SizeZ") / 2;
+			int x1 = set.getInt("CornerX");
+			int z1 = set.getInt("CornerZ");
+			int sizeX = set.getInt("SizeX");
+			int sizeZ = set.getInt("SizeZ");
+			
+			int x = x1 + sizeX / 2;
+			int z = z1 + sizeZ / 2;
 			World world = Bukkit.getWorld(set.getString("World"));
 			
 			int y = Math.max(InspectorSettings.MINIMUM_TELEPORT_Y.integer(), world.getHighestBlockYAt(x, z) + 1);
 			
 			structure = new StructureData();
 			structure.id = set.getInt("ID");
+			structure.corner = new Location(null, x1, 0, z1);
+			structure.size = new Location(null, sizeX, 0, sizeZ);
 			structure.teleport = new Location(world, x + 0.5, y, z + 0.5);
 			
 			statement.close();
@@ -144,6 +176,8 @@ public class InspectorSession {
 	
 	private static class StructureData
 	{
+		public Location corner;
+		public Location size;
 		public Location teleport;
 		public int id;
 		
