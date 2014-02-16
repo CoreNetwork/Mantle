@@ -43,7 +43,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 
 					try
 					{
-						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ,World,InspectionStatus FROM regeneration_structures WHERE InspectionStatus <= 0 AND StructureName = ?");
+						PreparedStatement statement = IO.getConnection().prepareStatement("SELECT CornerX,CornerZ,SizeX,SizeZ,World,InspectionStatus FROM regeneration_structures WHERE StructureName = ?");
 						statement.setString(1, structure.getName());
 
 						ResultSet set = statement.executeQuery();
@@ -56,6 +56,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 							int zSize = set.getInt("SizeZ");
 							String worldName = set.getString("World");
 							World world = Bukkit.getWorld(worldName);
+							
 							int inspectionStatus = set.getInt("InspectionStatus");
 							if (inspectionStatus < 0)
 								postponed++;
@@ -64,13 +65,16 @@ public class AnalyzeCommand extends BaseMantleCommand {
 							
 							int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 							
-							if (GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false, null))
+							if (inspectionStatus <= 0)
 							{
-								claimed++;
-							}		
-							else
-							{
-								empty++;
+								if (GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false, null))
+								{
+									claimed++;
+								}		
+								else
+								{
+									empty++;
+								}
 							}
 						}
 
@@ -84,7 +88,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 					int total = claimed + empty;
 					int claimedPercent = total == 0 ? 0 : (claimed * 100 / total);
 					int emptyPercent = total == 0 ? 0 : (empty * 100 / total);
-
+					
 					String postponedApproved = "";
 					if (approved > 0)
 						postponedApproved += RegenerationSettings.MESSAGE_APPROVED_INSERT.string().replace("<Approved>", Integer.toString(approved));
