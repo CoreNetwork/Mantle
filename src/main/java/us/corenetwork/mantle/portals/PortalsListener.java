@@ -2,6 +2,7 @@ package us.corenetwork.mantle.portals;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.List;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
@@ -11,9 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
@@ -91,11 +92,17 @@ public class PortalsListener implements Listener {
 		//Flint and steel detection for portals
 		if (hand != null && hand.getType() == Material.FLINT_AND_STEEL)
 		{
-			FlintSteelData data = new FlintSteelData();
-			data.timestamp = System.currentTimeMillis();
-			data.player = player.getName();
+			Block target = getLastBlock(player);
+			if (target != null)
+			{
+				FlintSteelData data = new FlintSteelData();
+				data.timestamp = System.currentTimeMillis();
+				data.player = player.getName();
+				
+				
+				flintSteelUsage.put(target, data);
+			}
 			
-			flintSteelUsage.put(clicked, data);
 		}
 	}
 
@@ -191,22 +198,51 @@ public class PortalsListener implements Listener {
 				FlintSteelData creator = null;
 
 				//Search a bit for possible flint and steel spot - this event now only works with "pillars" of portal, top and bottom is not included.
+					// Figure out where is portal oriented
+				int obsidianMinX = Integer.MAX_VALUE;
+				int obsidianMinZ = Integer.MAX_VALUE;
+				int obsidianMinY = Integer.MAX_VALUE;
+				int obsidianMaxX = Integer.MIN_VALUE;
+				int obsidianMaxZ = Integer.MIN_VALUE;
+				int obsidianMaxY = Integer.MIN_VALUE;
+				
 				for (Block b : event.getBlocks())
+				{					
+					if (b.getX() < obsidianMinX)
+						obsidianMinX = b.getX();
+					else if (b.getX() > obsidianMaxX)
+						obsidianMaxX = b.getX();
+					
+					if (b.getY() < obsidianMinY)
+						obsidianMinY = b.getY();
+					else if (b.getY() > obsidianMaxY)
+						obsidianMaxY = b.getY();
+					
+					if (b.getZ() < obsidianMinZ)
+						obsidianMinZ = b.getZ();
+					else if (b.getZ() > obsidianMaxZ)
+						obsidianMaxZ = b.getZ();
+				}
+				
+				World world = event.getBlocks().get(0).getWorld();
+				for (int x = obsidianMinX; x <= obsidianMaxX; x++)
 				{
-					for (BlockFace face : new BlockFace[] { BlockFace.SELF, BlockFace.NORTH, BlockFace.SOUTH, BlockFace.WEST, BlockFace.EAST} )
+					for (int y = obsidianMinY; y <= obsidianMaxY; y++)
 					{
-						for (int y = -1; y <= 1; y++)
+						for (int z = obsidianMinZ; z <= obsidianMaxZ; z++)
 						{
-							Block neighbour = b.getRelative(face).getRelative(0, y, 0);
-							FlintSteelData data = flintSteelUsage.get(neighbour);
-							if (data != null && System.currentTimeMillis() - data.timestamp < 1000)
-							{
-								creator = data;
+							creator = flintSteelUsage.get(world.getBlockAt(x, y, z));
+							
+							if (creator != null)
 								break;
-							}
 						}
 						
+						if (creator != null)
+							break;
 					}
+					
+					if (creator != null)
+						break;
 				}
 				
 				if (creator == null)
@@ -334,5 +370,13 @@ public class PortalsListener implements Listener {
 				}
 			}
 		} 
+	}
+	
+	private static Block getLastBlock(Player player)
+	{
+		List<Block> blocks = player.getLastTwoTargetBlocks(null, 10);
+		if (blocks.size() == 0)
+			return null;
+		return blocks.get(0);
 	}
 }
