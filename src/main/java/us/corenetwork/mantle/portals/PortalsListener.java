@@ -50,8 +50,7 @@ public class PortalsListener implements Listener {
 
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK)
 		{
-			if (event.isCancelled())
-				return;
+			return;
 		}
 		else if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return;
