@@ -9,6 +9,8 @@ public enum RChestSettings {
 	MESSAGE_CHEST_CREATED("Messages.ChestCreated", "Restockable chest created."),
 	MESSAGE_CHEST_EXISTS("Messages.ChestExists", "Chest already exists! Break it to delete it."),
 	MESSAGE_CHEST_DELETED("Messages.ChestDeleted", "Restockable chest deleted."),
+	MESSAGE_CHEST_INVISIBLE("Messages.ChestInvisible", "Sorry, you can't use this chest while invisible"),
+	MESSAGE_CHEST_INVINCIBLE("Messages.ChestInvicible", "Sorry, you can't use this chest while invincible. Use /RiddleFillThisInIforgotCommandName to disable your invincibility."),
 	MESSAGE_CHESTS_RESTOCKED("Messages.ChestsRestocked", "Chests Restocked");
 
 	

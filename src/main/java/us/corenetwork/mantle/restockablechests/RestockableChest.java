@@ -39,7 +39,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
 
+import us.corenetwork.core.respawn.ProtectTimer;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -190,6 +192,19 @@ public class RestockableChest {
 			message = message.replace("<TimeLeft>", Util.printTimeHours(timerLeft));
 			Util.Message(message, player);
 			
+			return true;
+		}
+		
+		if (player.hasPotionEffect(PotionEffectType.INVISIBILITY))
+		{
+			Util.Message(RChestSettings.MESSAGE_CHEST_INVISIBLE.string(), player);
+			return true;
+		}
+		
+		//Is player invincible (Core, respawn module)
+		if (ProtectTimer.protectedPlayers.containsKey(player.getName()))
+		{
+			Util.Message(RChestSettings.MESSAGE_CHEST_INVINCIBLE.string(), player);
 			return true;
 		}
 
