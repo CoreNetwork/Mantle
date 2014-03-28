@@ -6,7 +6,7 @@ import java.util.List;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import net.minecraft.server.v1_7_R1.EntityPlayer;
+import net.minecraft.server.v1_7_R2.EntityPlayer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -16,8 +16,8 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftVillager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -331,7 +331,7 @@ public class PortalsListener implements Listener {
 					
 					try
 					{
-						Field portalCounterField = net.minecraft.server.v1_7_R1.Entity.class.getDeclaredField("ap");
+						Field portalCounterField = net.minecraft.server.v1_7_R2.Entity.class.getDeclaredField("ap");
 						portalCounterField.setAccessible(true);
 						
 						portalCounterField.set(nmsPlayer, 0);
