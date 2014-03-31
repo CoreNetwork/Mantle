@@ -45,8 +45,8 @@
       <url>http://maven.sk89q.com/repo/</url>
     </repository>
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/content/groups/public</url>
+        <id>bukkit-repo</id>
+        <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
   </repositories>
 
@@ -55,31 +55,28 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.2-R0.2</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/bukkit-1.7.2-R0.2.jar</systemPath>
+      <version>1.7.5-R0.1-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
-      <version>1.7.2-R0.2</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/craftbukkit-1.7.2-R0.2.jar</systemPath>
+      <version>1.7.5-R0.1-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>com.sk89q</groupId>
-      <artifactId>WorldEdit</artifactId>
-      <version>5.5.9</version>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/WorldEdit-5.5.9-SNAPSHOT.jar</systemPath>
+      <artifactId>worldedit</artifactId>
+      <version>5.5.9-SNAPSHOT</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldguard</artifactId>
-      <version>5.7.3</version>
+      <version>5.8.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     
