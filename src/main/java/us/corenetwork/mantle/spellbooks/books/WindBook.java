@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -122,6 +123,11 @@ public class WindBook extends Spellbook implements Listener {
 			if (sprinting.contains(name))
 				sprintFinished(name);
 		}
+	}
+
+	@Override
+	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return false;
 	}
 
 }

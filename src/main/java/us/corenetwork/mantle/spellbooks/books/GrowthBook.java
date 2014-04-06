@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
@@ -125,5 +126,10 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 				ageable.setAdult();
 			}
 		}
+	}
+
+	@Override
+	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return false;
 	}
 }

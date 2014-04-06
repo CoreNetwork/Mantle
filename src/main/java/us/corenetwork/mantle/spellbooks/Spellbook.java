@@ -3,6 +3,8 @@ package us.corenetwork.mantle.spellbooks;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import us.corenetwork.mantle.MLog;
@@ -23,7 +25,8 @@ public abstract class Spellbook {
 		return name;
 	}
 	
-	public void activate(SpellbookItem item, PlayerInteractEvent event)
+	
+	public void activate(SpellbookItem item, PlayerEvent event)
 	{
 		long start = System.nanoTime();
 		
@@ -33,7 +36,13 @@ public abstract class Spellbook {
 			return;
 		}
 		
-		if (onActivate(item, event))
+		boolean activated = false;
+		if (event instanceof PlayerInteractEntityEvent)
+			activated = onActivateEntity(item, (PlayerInteractEntityEvent) event);
+		else if (event instanceof PlayerInteractEvent)
+			activated = onActivate(item, (PlayerInteractEvent) event);
+		
+		if (activated)
 		{
 			Player player = event.getPlayer();
 			if (player.getGameMode() != GameMode.CREATIVE)
@@ -58,4 +67,6 @@ public abstract class Spellbook {
 	}
 	
 	protected abstract boolean onActivate(SpellbookItem item, PlayerInteractEvent event);
+	protected abstract boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event);
+
 }
