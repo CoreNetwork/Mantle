@@ -322,7 +322,7 @@ public class PortalsListener implements Listener {
 		}, 10);
 		
 		//Enable going back instantly
-		if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
+		/*if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
 		{
 			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
 				@Override
@@ -345,7 +345,7 @@ public class PortalsListener implements Listener {
 					nmsPlayer.portalCooldown = 0;
 				}
 			});
-		}
+		}*/
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
