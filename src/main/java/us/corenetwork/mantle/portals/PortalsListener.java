@@ -322,7 +322,7 @@ public class PortalsListener implements Listener {
 		}, 10);
 		
 		//Enable going back instantly
-		/*if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
+		if (event.getPlayer().getGameMode() != GameMode.CREATIVE)
 		{
 			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
 				@Override
@@ -331,7 +331,7 @@ public class PortalsListener implements Listener {
 					
 					try
 					{
-						Field portalCounterField = net.minecraft.server.v1_7_R2.Entity.class.getDeclaredField("ap");
+						Field portalCounterField = net.minecraft.server.v1_7_R2.Entity.class.getDeclaredField("ao");
 						portalCounterField.setAccessible(true);
 						
 						portalCounterField.set(nmsPlayer, 0);
@@ -345,7 +345,7 @@ public class PortalsListener implements Listener {
 					nmsPlayer.portalCooldown = 0;
 				}
 			});
-		}*/
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
