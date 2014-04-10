@@ -19,7 +19,7 @@ public class SpellbooksListener implements Listener {
 		if (item != null)
 		{
 			SpellbookItem spellbookItem = SpellbookItem.parseSpellbook(item);
-			if (item != null)
+			if (spellbookItem != null)
 			{
 				spellbookItem.getSpellbook().activate(spellbookItem, event);
 				
@@ -37,10 +37,10 @@ public class SpellbooksListener implements Listener {
 		
 		if (event.getAction() == Action.RIGHT_CLICK_AIR && event.getItem() != null )
 		{
-			SpellbookItem item = SpellbookItem.parseSpellbook(event.getItem());
-			if (item != null)
+			SpellbookItem spellbookItem = SpellbookItem.parseSpellbook(event.getItem());
+			if (spellbookItem != null)
 			{
-				item.getSpellbook().activate(item, event);
+				spellbookItem.getSpellbook().activate(spellbookItem, event);
 				
 				event.setCancelled(true);
 				return;
