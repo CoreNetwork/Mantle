@@ -42,7 +42,7 @@ public class NetherSpawningTimer implements Runnable {
             Block aboveBlock = block.getRelative(BlockFace.UP);
             if (aboveBlock == null || aboveBlock.getY() < block.getY())
                 continue;
-            if (!aboveBlock.getType().isTransparent())
+            if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
                 continue;
 
             if (getDistanceToNearestPlayer(block.getLocation()) < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer())

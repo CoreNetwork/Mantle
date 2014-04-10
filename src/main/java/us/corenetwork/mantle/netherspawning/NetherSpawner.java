@@ -61,7 +61,7 @@ public class NetherSpawner {
 			Block aboveBlock = newBlock.getRelative(BlockFace.UP);
 			if (aboveBlock == null || aboveBlock.getY() < newBlock.getY())
 				continue;
-			if (!aboveBlock.getType().isTransparent())
+			if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
 				continue;
 
 			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
@@ -86,7 +86,7 @@ public class NetherSpawner {
 	public static Skeleton spawnWitherSkeleton(Block block, SpawnReason reason)
 	{
 		Block thirdBlock = block.getRelative(BlockFace.UP, 2);
-		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !thirdBlock.getType().isTransparent())
+		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !(thirdBlock.getType().isTransparent() && thirdBlock.getType() != Material.CARPET))
 			return null;
 
 		boolean rareSpawn = MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_SPAWN_CHANCE.doubleNumber() && block.getY() <= NetherSpawningSettings.WITHER_SKELETON_RARE_MAX_SPAWN_Y.integer();
