@@ -19,9 +19,10 @@ public class NetherSpawningHelper implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
-		if (!spawningMob)
+		if (!spawningMob && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
 		{
-			if (!spawningMob || (event.getEntityType() == EntityType.CHICKEN && event.getLocation().getWorld().getEnvironment() == Environment.NETHER))
+			SpawnReason reason = event.getSpawnReason();
+			if (reason == SpawnReason.NATURAL || reason == SpawnReason.DEFAULT || reason == SpawnReason.REINFORCEMENTS)
 			{
 				String type = event.getEntityType().toString();
 				for (String rejectedType : NetherSpawningSettings.PREVENT_SPAWNING_NETHER.stringList())
@@ -33,9 +34,9 @@ public class NetherSpawningHelper implements Listener {
 					}
 				}
 			}
-			
+
 			return;
-		}		
+		}	
 		try
 		{			
 			Field reasonField = CreatureSpawnEvent.class.getDeclaredField("spawnReason");
