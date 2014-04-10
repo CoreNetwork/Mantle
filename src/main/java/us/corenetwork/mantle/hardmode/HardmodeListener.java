@@ -679,10 +679,14 @@ public class HardmodeListener implements Listener {
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
 	public void onEntityExplode(EntityExplodeEvent event)
 	{
+		if (event.getEntity() == null)
+		{
+			return;
+		}
+		
 		if (event.getEntityType() == EntityType.WITHER)
 		{
 			event.setYield(0);
-
 		}
 	}
 
