@@ -19,7 +19,6 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -166,11 +165,6 @@ public class TimeTravelBook extends Spellbook implements CircleIterator.EntityRe
     	
     	xpTable.put(enchantment, parameters);
     }
-
-	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
-	}
     
 
 }

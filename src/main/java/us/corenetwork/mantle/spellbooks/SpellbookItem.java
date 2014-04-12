@@ -36,10 +36,9 @@ public class SpellbookItem {
 		return spellbook;
 	}
 	
-	
 	public static SpellbookItem parseSpellbook(ItemStack itemStack)
 	{
-		if (itemStack.getType() != Material.ENCHANTED_BOOK && itemStack.getType() != Material.WRITTEN_BOOK)
+		if (itemStack.getType() != Material.ENCHANTED_BOOK)
 			return null;
 		
 		ItemMeta meta = itemStack.getItemMeta();
@@ -54,16 +53,13 @@ public class SpellbookItem {
 			return null;
 		
 		String owner = null;
-		if (meta.getLore() != null)
+		for (String s : meta.getLore())
 		{
-			for (String s : meta.getLore())
+			s = ChatColor.stripColor(s);
+			if (s.startsWith("Soulbound to "))
 			{
-				s = ChatColor.stripColor(s);
-				if (s.startsWith("Soulbound to "))
-				{
-					owner = s.substring(13);
-					break;
-				}
+				owner = s.substring(13);
+				break;
 			}
 		}
 		

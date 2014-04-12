@@ -8,7 +8,6 @@ import org.bukkit.event.Listener;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.spellbooks.books.DeadweightBook;
 import us.corenetwork.mantle.spellbooks.books.DecayBook;
-import us.corenetwork.mantle.spellbooks.books.FusingBook;
 import us.corenetwork.mantle.spellbooks.books.GrowthBook;
 import us.corenetwork.mantle.spellbooks.books.TimeTravelBook;
 import us.corenetwork.mantle.spellbooks.books.WindBook;
@@ -24,7 +23,6 @@ public class SpellbookManager {
 		addSpellbook(new DeadweightBook());
 		addSpellbook(new WindBook());
 		addSpellbook(new DecayBook());
-		addSpellbook(new FusingBook());
 	}	
 
 	

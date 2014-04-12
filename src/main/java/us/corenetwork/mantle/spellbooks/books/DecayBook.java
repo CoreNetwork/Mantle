@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
@@ -63,10 +62,5 @@ public class DecayBook extends Spellbook implements CircleIterator.BlockReceiver
 			block.breakNaturally();
 		else if (block.getType() == Material.GRASS)
 			block.setType(Material.DIRT);
-	}
-
-	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
 	}
 }
