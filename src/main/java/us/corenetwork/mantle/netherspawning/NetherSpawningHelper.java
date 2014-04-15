@@ -19,21 +19,25 @@ public class NetherSpawningHelper implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
-		if (!spawningMob && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
+		if (!spawningMob)
 		{
-			SpawnReason reason = event.getSpawnReason();
-			if (reason == SpawnReason.NATURAL || reason == SpawnReason.DEFAULT || reason == SpawnReason.REINFORCEMENTS)
+			if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
 			{
-				String type = event.getEntityType().toString();
-				for (String rejectedType : NetherSpawningSettings.PREVENT_SPAWNING_NETHER.stringList())
+				SpawnReason reason = event.getSpawnReason();
+				if (reason == SpawnReason.NATURAL || reason == SpawnReason.DEFAULT || reason == SpawnReason.REINFORCEMENTS)
 				{
-					if (type.equalsIgnoreCase(rejectedType))
+					String type = event.getEntityType().toString();
+					for (String rejectedType : NetherSpawningSettings.PREVENT_SPAWNING_NETHER.stringList())
 					{
-						event.setCancelled(true);
-						break;
+						if (type.equalsIgnoreCase(rejectedType))
+						{
+							event.setCancelled(true);
+							break;
+						}
 					}
 				}
 			}
+			
 
 			return;
 		}	
