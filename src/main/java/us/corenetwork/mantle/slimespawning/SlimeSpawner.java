@@ -19,7 +19,8 @@ public class SlimeSpawner {
 		if (block.getLightLevel() < 8)
 			return;
 		
-		if (!isSlimeChunk(block.getChunk()))
+		Chunk chunk = block.getChunk();
+		if (IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()) || !isSlimeChunk(chunk))
 			return;
 		
 		int size = MantlePlugin.random.nextInt(3);
@@ -43,8 +44,8 @@ public class SlimeSpawner {
 		}
 	}
 
-	private static boolean isSlimeChunk(Chunk chunk)
-	{
+	public static boolean isSlimeChunk(Chunk chunk)
+	{	
 		long seed = chunk.getWorld().getSeed();
 		
 		Random rnd = new Random(seed + 
