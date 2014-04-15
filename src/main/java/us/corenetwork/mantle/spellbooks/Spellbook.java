@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.spellbooks;
 
+import java.util.HashMap;
+
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -14,6 +16,7 @@ import us.corenetwork.mantle.Util;
 
 public abstract class Spellbook {	
 	private String name;
+	private HashMap<String, Long> lastBroadcastTime = new HashMap<String, Long>();
 	
 	public Spellbook(String name)
 	{
@@ -25,6 +28,11 @@ public abstract class Spellbook {
 		return name;
 	}
 	
+	
+	protected boolean providesOwnMessage()
+	{
+		return false;
+	}
 	
 	public void activate(SpellbookItem item, PlayerEvent event)
 	{
@@ -50,14 +58,36 @@ public abstract class Spellbook {
 				player.sendMessage("Book time: " + (end - start) / 1000000.0);
 			}
 			
-			String message = SpellbooksSettings.MESSAGE_USED.string();
-			message = message.replace("<Player>", player.getName());
-			message = message.replace("<Spellbook>", getName());
-			Util.Broadcast(message);
+			if (!providesOwnMessage())
+			{
+				String message = SpellbooksSettings.MESSAGE_YOU_USED.string();
+				message = message.replace("<Spellbook>", getName());
+				Util.Message(message, player);
+			}
+			messageEverybody(player);
 			
 			Location playerLoc = player.getLocation();
 			MLog.info("Player " + player.getName() + " used " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());
 		}
+	}
+	
+	private void messageEverybody(Player player)
+	{
+		Long lastBroadcast = lastBroadcastTime.get(player.getName());
+		if (lastBroadcast == null)
+			lastBroadcast = 0L;
+		
+		if (System.currentTimeMillis() - lastBroadcast > SpellbooksSettings.USED_BROADCAST_MINIMUM_DELAY_SECONDS.integer() * 1000)
+		{
+			String message = SpellbooksSettings.MESSAGE_USED.string();
+			message = message.replace("<Player>", player.getName());
+			message = message.replace("<Spellbook>", getName());
+			Util.Broadcast(message, player.getName());
+
+			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
+		}
+		
+		
 	}
 	
 	protected abstract boolean onActivate(SpellbookItem item, PlayerInteractEvent event);

@@ -42,5 +42,12 @@ public class UnslimingBook extends Spellbook {
 	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return false;
 	}
+	
+	@Override
+	protected boolean providesOwnMessage()
+	{
+		return true;
+	}
+
 
 }
