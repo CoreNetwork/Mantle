@@ -1,10 +1,13 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+
 import org.bukkit.Chunk;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
 import us.corenetwork.mantle.slimespawning.SlimeSpawner;
@@ -22,8 +25,16 @@ public class UnslimingBook extends Spellbook {
 	@Override
 	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		Chunk chunk = player.getLocation().getBlock().getChunk();
 		
+		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
+		if (claim != null && claim.allowAccess(player) != null)
+		{
+			Util.Message(SpellbooksSettings.MESSAGE_NO_BUILD_PERMISSION.string(), event.getPlayer());
+			return false;
+		}
+
+		
+		Chunk chunk = player.getLocation().getBlock().getChunk();		
 		if (SlimeSpawner.isSlimeChunk(chunk) && !IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()))
 		{
 			Util.Message(SpellbooksSettings.MESSAGE_UNSLIMING_SLIME_CHUNK.string(), player);
