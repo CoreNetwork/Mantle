@@ -27,6 +27,7 @@ public class FusingBook extends Spellbook {
 		
 		FUSEITEMS.put(new ItemStack(Material.COAL, 9), new ItemStack(Material.COAL_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.IRON_INGOT, 9), new ItemStack(Material.IRON_BLOCK, 1));
+		FUSEITEMS.put(new ItemStack(Material.GOLD_NUGGET, 9), new ItemStack(Material.GOLD_INGOT, 1));
 		FUSEITEMS.put(new ItemStack(Material.GOLD_INGOT, 9), new ItemStack(Material.GOLD_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.REDSTONE, 9), new ItemStack(Material.REDSTONE_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.EMERALD, 9), new ItemStack(Material.EMERALD_BLOCK, 1));
