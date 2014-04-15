@@ -59,7 +59,7 @@ public class ItemProtocolListener extends PacketAdapter {
 				nmsStack.tag = new NBTTagCompound();
 			}
 			
-			if (nmsStack.tag.get("ench") != null)
+			if (nmsStack.tag.get("ench") == null)
 			{
 				nmsStack.tag.set("ench", new NBTTagList());
 			}
