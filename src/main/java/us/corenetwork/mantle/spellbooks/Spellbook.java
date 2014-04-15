@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Setting;
@@ -49,7 +50,17 @@ public abstract class Spellbook {
 			Player player = event.getPlayer();
 			if (player.getGameMode() != GameMode.CREATIVE)
 			{
-				player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
+				int heldBookSlot = player.getInventory().getHeldItemSlot();
+				ItemStack heldBook = player.getInventory().getItem(heldBookSlot);
+				if (heldBook.getAmount() >  1)
+				{
+					heldBook.setAmount(heldBook.getAmount() - 1);
+					player.getInventory().setItem(player.getInventory().getHeldItemSlot(), heldBook);
+				}
+				else
+				{
+					player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
+				}
 			}
 			
 			long end = System.nanoTime();
