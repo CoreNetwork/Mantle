@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.spellbooks;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -24,7 +26,6 @@ public class SpellbooksListener implements Listener {
 				spellbookItem.getSpellbook().activate(spellbookItem, event);
 				
 				event.setCancelled(true);
-				return;
 			}
 		}
 	}
@@ -35,29 +36,18 @@ public class SpellbooksListener implements Listener {
 		if (event.isCancelled() && event.getAction() != Action.RIGHT_CLICK_AIR)
 			return;
 		
-		if (event.getAction() == Action.RIGHT_CLICK_AIR && event.getItem() != null )
+		if (event.getItem() != null )
 		{
 			SpellbookItem spellbookItem = SpellbookItem.parseSpellbook(event.getItem());
 			if (spellbookItem != null)
 			{
-				spellbookItem.getSpellbook().activate(spellbookItem, event);
+				if (event.getAction() == Action.RIGHT_CLICK_AIR) //Prevent accidentally activating something when right clicking
+				{
+					spellbookItem.getSpellbook().activate(spellbookItem, event);
+				}
 				
 				event.setCancelled(true);
-				return;
 			}
 		}
 	}
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerJoin(PlayerJoinEvent event)
-	{
-		
-	}
-	
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerItemConsumed(PlayerItemConsumeEvent event)
-	{
-		
-	}
-
 }

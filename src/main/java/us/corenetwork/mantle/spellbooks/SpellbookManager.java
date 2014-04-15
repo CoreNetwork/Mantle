@@ -45,7 +45,7 @@ public class SpellbookManager {
 	{
 		return books.get(name);
 	}
-	
+		
 	private static void addSpellbook(Spellbook book)
 	{
 		books.put(book.getName(), book);
