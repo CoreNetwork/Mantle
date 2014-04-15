@@ -16,17 +16,7 @@ public class SpellbookItem {
 	{
 		owner = null;
 	}
-	
-	public boolean isSoulbound()
-	{
-		return owner != null;
-	}
-	
-	public String getSoulboundOwner()
-	{
-		return owner;
-	}
-	
+		
 	public ItemStack getBookItem()
 	{
 		return item;

@@ -29,13 +29,7 @@ public abstract class Spellbook {
 	public void activate(SpellbookItem item, PlayerEvent event)
 	{
 		long start = System.nanoTime();
-		
-		if (item.isSoulbound() && !event.getPlayer().getName().equalsIgnoreCase(item.getSoulboundOwner()))
-		{
-			Util.Message(SpellbooksSettings.MESSAGE_NOT_AUTHORIZED.string(), event.getPlayer());
-			return;
-		}
-		
+				
 		boolean activated = false;
 		if (event instanceof PlayerInteractEntityEvent)
 			activated = onActivateEntity(item, (PlayerInteractEntityEvent) event);
