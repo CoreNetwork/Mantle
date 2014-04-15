@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.spellbooks;
 
+import net.minecraft.server.v1_7_R2.ItemPotion;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -39,6 +41,7 @@ public class SpellbooksModule extends MantleModule {
 		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new SpellbooksTimer(), 20, 20);
 		
 		SpellbookManager.init();
+		ItemProtocolListener.init();
 		
 		return true;
 	}

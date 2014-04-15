@@ -47,6 +47,10 @@
         <id>bukkit-repo</id>
         <url>http://repo.bukkit.org/content/groups/public/</url>
     </repository>
+   <repository>
+        <id>comphenix-releases</id>
+        <url>http://repo.comphenix.net/content/repositories/releases/</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -80,6 +84,13 @@
     </dependency>
     
     <dependency>
+      <groupId>com.comphenix.protocol</groupId>
+      <artifactId>ProtocolLib</artifactId>
+      <version>3.2.0</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
       <groupId>me.ryanhamshire</groupId>
       <artifactId>GriefPrevention</artifactId>
       <version>7.8-SNAPSHOT</version>
@@ -102,6 +113,8 @@
       <scope>system</scope>
       <systemPath>${basedir}/lib/Core.jar</systemPath>
     </dependency>
+    
+    
     
   </dependencies>
 
