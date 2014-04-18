@@ -9,6 +9,10 @@ public enum SpellbooksSettings {
 	MESSAGE_UNSLIMING_NOT_SLIME_CHUNK("Messages.Unsliming.NotSlimeChunk", "Your current chunk is not slimed!"),
 	MESSAGE_UNSLIMING_SLIME_CHUNK("Messages.Unsliming.SlimeChunk", "That slime chunk has been purged! Those little bastards won't bugger you anymore."),
 
+	MESSAGE_RESLIME_SUCCESS("Messages.ReslimeSuccess", "No-slime spell was successfully lifted from this chunk!"),
+	MESSAGE_RESLIME_FAIL("Messages.ReslimeFail", "This chunk is not under unsliming spell!"),
+
+	
 	MESSAGE_NOT_AUTHORIZED("Messages.NotAuthorized", "Sorry, you can't use spellbook bound to someone else!"),
 	MESSAGE_USED("Messages.Used", "Player <Player> used <Spellbook>."),
 	MESSAGE_YOU_USED("Messages.YouUsed", "You used <Spellbook>."),

@@ -52,6 +52,27 @@ public class IgnoredSlimeChunks {
 		}
 	}
 	
+	public static void removeChunk(int x, int y)
+	{
+		chunks.remove(getCombinedLong(x,y));
+		
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM ignoredSlimeChunks WHERE X=? AND Y=?");
+			statement.setInt(1, x);
+			statement.setInt(2, y);
+			statement.executeUpdate();
+
+			IO.getConnection().commit();
+			
+			statement.close();
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public static boolean isIgnored(int x, int y)
 	{
 		return chunks.contains(getCombinedLong(x, y));
