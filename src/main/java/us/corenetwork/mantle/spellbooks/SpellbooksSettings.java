@@ -12,12 +12,13 @@ public enum SpellbooksSettings {
 	MESSAGE_RESLIME_SUCCESS("Messages.ReslimeSuccess", "No-slime spell was successfully lifted from this chunk!"),
 	MESSAGE_RESLIME_FAIL("Messages.ReslimeFail", "This chunk is not under unsliming spell!"),
 
-	
-	MESSAGE_NOT_AUTHORIZED("Messages.NotAuthorized", "Sorry, you can't use spellbook bound to someone else!"),
+	MESSAGE_PEDDLING_NOTHING_TO_SELL("Messages.Peddling.NothingToSell", "You have nothing to sell to this villager!"),
+	MESSAGE_PEDDLING_NOT_ENOUGH_TO_SELL("Messages.Peddling.NotEnoughToSell", "You don't have enough items to sell to this villager!"),
+
 	MESSAGE_USED("Messages.Used", "Player <Player> used <Spellbook>."),
 	MESSAGE_YOU_USED("Messages.YouUsed", "You used <Spellbook>."),
 
-	MESSAGE_NO_BUILD_PERMISSION("Messages.NoBuildPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
+	MESSAGE_NO_PERMISSION("Messages.NoPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
 	
 	protected String string;
 	protected Object def;

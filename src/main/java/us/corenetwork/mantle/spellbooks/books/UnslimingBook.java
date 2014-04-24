@@ -29,7 +29,7 @@ public class UnslimingBook extends Spellbook {
 		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 		if (claim != null && claim.allowBuild(player) != null)
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_NO_BUILD_PERMISSION.string(), event.getPlayer());
+			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 			return false;
 		}
 

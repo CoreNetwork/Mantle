@@ -10,6 +10,7 @@ import us.corenetwork.mantle.spellbooks.books.DeadweightBook;
 import us.corenetwork.mantle.spellbooks.books.DecayBook;
 import us.corenetwork.mantle.spellbooks.books.FusingBook;
 import us.corenetwork.mantle.spellbooks.books.GrowthBook;
+import us.corenetwork.mantle.spellbooks.books.PeddlingBook;
 import us.corenetwork.mantle.spellbooks.books.TimeTravelBook;
 import us.corenetwork.mantle.spellbooks.books.UnslimingBook;
 import us.corenetwork.mantle.spellbooks.books.WindBook;
@@ -27,6 +28,7 @@ public class SpellbookManager {
 		addSpellbook(new DecayBook());
 		addSpellbook(new FusingBook());
 		addSpellbook(new UnslimingBook());
+		addSpellbook(new PeddlingBook());
 	}	
 
 	

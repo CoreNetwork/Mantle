@@ -33,7 +33,7 @@ public class DecayBook extends Spellbook implements CircleIterator.BlockReceiver
 		
 		if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX(), playerLoc.getBlockZ(), 0, 0, EFFECT_RADIUS, false, event.getPlayer()))
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_NO_BUILD_PERMISSION.string(), event.getPlayer());
+			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 			return false;
 		}
 		
