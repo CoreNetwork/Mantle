@@ -7,15 +7,15 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.server.v1_7_R2.PacketPlayOutBlockAction;
-import net.minecraft.server.v1_7_R2.TileEntity;
-import net.minecraft.server.v1_7_R2.TileEntityBeacon;
-import net.minecraft.server.v1_7_R2.TileEntityBrewingStand;
-import net.minecraft.server.v1_7_R2.TileEntityChest;
-import net.minecraft.server.v1_7_R2.TileEntityDispenser;
-import net.minecraft.server.v1_7_R2.TileEntityDropper;
-import net.minecraft.server.v1_7_R2.TileEntityFurnace;
-import net.minecraft.server.v1_7_R2.TileEntityHopper;
+import net.minecraft.server.v1_7_R3.PacketPlayOutBlockAction;
+import net.minecraft.server.v1_7_R3.TileEntity;
+import net.minecraft.server.v1_7_R3.TileEntityBeacon;
+import net.minecraft.server.v1_7_R3.TileEntityBrewingStand;
+import net.minecraft.server.v1_7_R3.TileEntityChest;
+import net.minecraft.server.v1_7_R3.TileEntityDispenser;
+import net.minecraft.server.v1_7_R3.TileEntityDropper;
+import net.minecraft.server.v1_7_R3.TileEntityFurnace;
+import net.minecraft.server.v1_7_R3.TileEntityHopper;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -24,10 +24,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -239,7 +239,7 @@ public class RestockableChest {
 		//Chest animation
 		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
 		{
-			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), net.minecraft.server.v1_7_R2.Block.e(chestBlock.getTypeId()), 1, 1);
+			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), net.minecraft.server.v1_7_R3.Block.e(chestBlock.getTypeId()), 1, 1);
 
 			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 			nearbyEntities.add(player);
@@ -284,7 +284,7 @@ public class RestockableChest {
 				//Chest animation
 				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
 				{
-					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), net.minecraft.server.v1_7_R2.Block.e(chest.chestBlock.getTypeId()), 1, 0);
+					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), net.minecraft.server.v1_7_R3.Block.e(chest.chestBlock.getTypeId()), 1, 0);
 					
 					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 					nearbyEntities.add(player);
@@ -694,7 +694,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_7_R2.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_7_R3.inventory.CraftInventoryCustom$MinecraftInventory");
 
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);

@@ -58,14 +58,14 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.7.5-R0.1-SNAPSHOT</version>
+      <version>1.7.9-R0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>craftbukkit</artifactId>
-      <version>1.7.5-R0.1-SNAPSHOT</version>
+      <version>1.7.9-R0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     
@@ -80,6 +80,13 @@
       <groupId>com.sk89q</groupId>
       <artifactId>worldguard</artifactId>
       <version>5.8.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.comphenix.protocol</groupId>
+      <artifactId>ProtocolLib</artifactId>
+      <version>3.2.0</version>
       <scope>compile</scope>
     </dependency>
     
@@ -119,3 +126,4 @@
   </dependencies>
 
 </project>
+
