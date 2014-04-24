@@ -15,8 +15,8 @@ public enum SpellbooksSettings {
 	MESSAGE_PEDDLING_NOTHING_TO_SELL("Messages.Peddling.NothingToSell", "You have nothing to sell to this villager!"),
 	MESSAGE_PEDDLING_NOT_ENOUGH_TO_SELL("Messages.Peddling.NotEnoughToSell", "You don't have enough items to sell to this villager!"),
 
-	MESSAGE_USED("Messages.Used", "Player <Player> used <Spellbook>."),
-	MESSAGE_YOU_USED("Messages.YouUsed", "You used <Spellbook>."),
+	MESSAGE_USED("Messages.Used", "Player <Player> used Spell of <Spellbook>."),
+	MESSAGE_YOU_USED("Messages.YouUsed", "You used Spell of <Spellbook>."),
 
 	MESSAGE_NO_PERMISSION("Messages.NoPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
 	
