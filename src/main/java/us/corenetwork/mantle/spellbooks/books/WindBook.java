@@ -33,7 +33,7 @@ public class WindBook extends Spellbook implements Listener {
 	private HashSet<String> sprinting = new HashSet<String>();
 
 	public WindBook() {
-		super("Spellbook of Wind");
+		super("Wind");
 	}
 		
 	@Override

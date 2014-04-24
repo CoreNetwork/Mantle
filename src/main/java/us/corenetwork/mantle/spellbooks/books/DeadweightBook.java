@@ -36,7 +36,7 @@ public class DeadweightBook extends Spellbook implements Listener {
 	private HashSet<String> hardenedPlayers = new HashSet<String>();
 	
 	public DeadweightBook() {
-		super("Spellbook of Deadweight");
+		super("Deadweight");
 	}
 		
 	@Override

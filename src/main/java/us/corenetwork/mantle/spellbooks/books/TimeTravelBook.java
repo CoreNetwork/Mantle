@@ -34,7 +34,7 @@ import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 public class TimeTravelBook extends Spellbook implements CircleIterator.EntityReceiver {
 
 	public TimeTravelBook() {
-		super("Spellbook of Time Travel");
+		super("Time Travel");
 		
 		initEnchants();
 	}

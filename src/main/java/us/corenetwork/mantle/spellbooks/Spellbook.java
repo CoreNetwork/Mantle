@@ -97,8 +97,6 @@ public abstract class Spellbook {
 
 			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
 		}
-		
-		
 	}
 	
 	protected abstract boolean onActivate(SpellbookItem item, PlayerInteractEvent event);

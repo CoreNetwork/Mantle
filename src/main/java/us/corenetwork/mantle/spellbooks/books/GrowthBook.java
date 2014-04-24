@@ -25,7 +25,7 @@ import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 public class GrowthBook extends Spellbook implements CircleIterator.BlockReceiver, CircleIterator.EntityReceiver {
 
 	public GrowthBook() {
-		super("Spellbook of Growth");
+		super("Growth");
 	}
 
 	@Override

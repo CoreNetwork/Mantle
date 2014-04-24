@@ -23,7 +23,7 @@ public class FusingBook extends Spellbook {
 	
 	@SuppressWarnings("deprecation") //Screw you mojang, damage values are not going anywhere
 	public FusingBook() {
-		super("Spellbook of Fusing");
+		super("Fusing");
 		
 		FUSEITEMS.put(new ItemStack(Material.COAL, 9), new ItemStack(Material.COAL_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.IRON_INGOT, 9), new ItemStack(Material.IRON_BLOCK, 1));

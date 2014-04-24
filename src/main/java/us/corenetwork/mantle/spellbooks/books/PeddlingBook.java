@@ -37,7 +37,7 @@ public class PeddlingBook extends Spellbook {
 	
 	@SuppressWarnings("deprecation") //Screw you mojang, damage values are not going anywhere
 	public PeddlingBook() {
-		super("Spellbook of Peddling");
+		super("Peddling");
 	}	
 		
 	@Override

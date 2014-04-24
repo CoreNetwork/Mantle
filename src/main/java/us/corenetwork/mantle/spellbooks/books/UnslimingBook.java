@@ -19,7 +19,7 @@ import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 public class UnslimingBook extends Spellbook {	
 	@SuppressWarnings("deprecation")
 	public UnslimingBook() {
-		super("Spellbook of Unsliming");		
+		super("Unsliming");		
 	}
 		
 	@Override

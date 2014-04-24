@@ -24,7 +24,7 @@ public class DecayBook extends Spellbook implements CircleIterator.BlockReceiver
 	private static int EFFECT_RADIUS = 32 / 2;
 	
 	public DecayBook() {
-		super("Spellbook of Decay");
+		super("Decay");
 	}
 
 	@Override
