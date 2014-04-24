@@ -1,7 +1,5 @@
 package us.corenetwork.mantle.spellbooks;
 
-import net.minecraft.server.v1_7_R2.ItemPotion;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
