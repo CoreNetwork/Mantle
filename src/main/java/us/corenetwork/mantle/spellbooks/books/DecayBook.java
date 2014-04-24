@@ -5,23 +5,21 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.spellbooks.CircleIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
-public class DecayBook extends Spellbook implements CircleIterator.BlockReceiver {
+public class DecayBook extends Spellbook {
 
-	private static int EFFECT_RADIUS = 32 / 2;
+	private static final int EFFECT_RADIUS = 32 / 2;
 	
 	public DecayBook() {
 		super("Decay");
@@ -43,20 +41,23 @@ public class DecayBook extends Spellbook implements CircleIterator.BlockReceiver
 		
 		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);
 		
-		CircleIterator.iterateCircleBlocks(this, event.getPlayer().getLocation(), EFFECT_RADIUS);
+		Block baseBlock = event.getPlayer().getLocation().getBlock();
+		
+		for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
+		{
+			for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
+			{
+				for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+				{
+					Block block = baseBlock.getRelative(x, y, z);
+					processBlock(block);
+				}
+			}
+		}
+		
 		
 		return true;
 	}
-
-	@Override
-	public void onCircleColumnFound(World world, int x, int z) {
-		for (int y = 0; y < 256; y++)
-		{
-			Block block = world.getBlockAt(x, y, z);
-			processBlock(block);
-		}
-	}
-
 	private void processBlock(Block block)
 	{
 		if (block.getType() == Material.LEAVES)
