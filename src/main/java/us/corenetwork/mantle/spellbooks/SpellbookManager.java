@@ -12,6 +12,7 @@ import us.corenetwork.mantle.spellbooks.books.FusingBook;
 import us.corenetwork.mantle.spellbooks.books.GrowthBook;
 import us.corenetwork.mantle.spellbooks.books.PeddlingBook;
 import us.corenetwork.mantle.spellbooks.books.TimeBook;
+import us.corenetwork.mantle.spellbooks.books.TimeTravelBook;
 import us.corenetwork.mantle.spellbooks.books.UnslimingBook;
 import us.corenetwork.mantle.spellbooks.books.WindBook;
 
@@ -22,6 +23,7 @@ public class SpellbookManager {
 	public static void init()
 	{
 		addSpellbook(new GrowthBook());
+		addSpellbook(new TimeTravelBook()); //Duplicate book used for backwards compatibility. Remove on next map
 		addSpellbook(new TimeBook());
 		addSpellbook(new DeadweightBook());
 		addSpellbook(new WindBook());
