@@ -196,54 +196,13 @@ public class PortalsListener implements Listener {
 			{
 				FlintSteelData creator = null;
 
-				//Search a bit for possible flint and steel spot - this event now only works with "pillars" of portal, top and bottom is not included.
-					// Figure out where is portal oriented
-				int obsidianMinX = Integer.MAX_VALUE;
-				int obsidianMinZ = Integer.MAX_VALUE;
-				int obsidianMinY = Integer.MAX_VALUE;
-				int obsidianMaxX = Integer.MIN_VALUE;
-				int obsidianMaxZ = Integer.MIN_VALUE;
-				int obsidianMaxY = Integer.MIN_VALUE;
-				
 				for (Block b : event.getBlocks())
 				{					
-					if (b.getX() < obsidianMinX)
-						obsidianMinX = b.getX();
-					else if (b.getX() > obsidianMaxX)
-						obsidianMaxX = b.getX();
-					
-					if (b.getY() < obsidianMinY)
-						obsidianMinY = b.getY();
-					else if (b.getY() > obsidianMaxY)
-						obsidianMaxY = b.getY();
-					
-					if (b.getZ() < obsidianMinZ)
-						obsidianMinZ = b.getZ();
-					else if (b.getZ() > obsidianMaxZ)
-						obsidianMaxZ = b.getZ();
-				}
-				
-				World world = event.getBlocks().get(0).getWorld();
-				for (int x = obsidianMinX; x <= obsidianMaxX; x++)
-				{
-					for (int y = obsidianMinY; y <= obsidianMaxY; y++)
-					{
-						for (int z = obsidianMinZ; z <= obsidianMaxZ; z++)
-						{
-							creator = flintSteelUsage.get(world.getBlockAt(x, y, z));
-							
-							if (creator != null)
-								break;
-						}
-						
-						if (creator != null)
-							break;
-					}
-					
+					creator = flintSteelUsage.get(b);
 					if (creator != null)
 						break;
 				}
-				
+								
 				if (creator == null)
 				{
 					
