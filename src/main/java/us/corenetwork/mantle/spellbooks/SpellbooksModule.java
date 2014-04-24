@@ -38,9 +38,7 @@ public class SpellbooksModule extends MantleModule {
 		MantlePlugin.adminCommands.put("reslime", new ReslimeCommand());
 
 		Bukkit.getServer().getPluginManager().registerEvents(new SpellbooksListener(), MantlePlugin.instance);
-		
-		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new SpellbooksTimer(), 20, 20);
-		
+				
 		SpellbookManager.init();
 		ItemProtocolListener.init();
 		
