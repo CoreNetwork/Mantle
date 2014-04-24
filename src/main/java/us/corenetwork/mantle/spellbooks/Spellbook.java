@@ -78,7 +78,7 @@ public abstract class Spellbook {
 			messageEverybody(player);
 			
 			Location playerLoc = player.getLocation();
-			MLog.info("Player " + player.getName() + " used " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());
+			MLog.info("Player " + player.getName() + " used spell of " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());
 		}
 	}
 	
