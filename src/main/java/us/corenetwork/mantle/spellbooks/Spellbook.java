@@ -29,8 +29,12 @@ public abstract class Spellbook {
 		return name;
 	}
 	
-	
 	protected boolean providesOwnMessage()
+	{
+		return false;
+	}
+	
+	protected boolean usesContainers()
 	{
 		return false;
 	}

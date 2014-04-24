@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
+import us.corenetwork.mantle.Util;
+
 public class SpellbooksListener implements Listener {
 	
 	@EventHandler(ignoreCancelled = true)
@@ -41,7 +43,8 @@ public class SpellbooksListener implements Listener {
 			SpellbookItem spellbookItem = SpellbookItem.parseSpellbook(event.getItem());
 			if (spellbookItem != null)
 			{
-				if (event.getAction() == Action.RIGHT_CLICK_AIR) //Prevent accidentally activating something when right clicking
+				if  (event.getAction() == Action.RIGHT_CLICK_AIR || //Prevent accidentally activating something when right clicking, unless that is container block
+					(spellbookItem.getSpellbook().usesContainers() && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))) 
 				{
 					spellbookItem.getSpellbook().activate(spellbookItem, event);
 				}

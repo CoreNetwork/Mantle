@@ -1,21 +1,27 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
+import me.ryanhamshire.GriefPrevention.Claim;
+
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
+import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
+import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
 public class FusingBook extends Spellbook {
@@ -39,19 +45,44 @@ public class FusingBook extends Spellbook {
 		FUSEITEMS.put(new ItemStack(Material.MELON, 9), new ItemStack(Material.MELON_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.NETHER_BRICK_ITEM, 4), new ItemStack(Material.NETHER_BRICK, 1));
 	}
+	
+	@Override
+	protected boolean usesContainers() {
+		return true;
+	}
 		
 	@Override
 	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		
-		int freeInventorySlots = getFreeInventorySlots(player.getInventory());
+		Inventory inventory;
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
+		{
+			//Check for claim if clicking on chest
+			Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
+			if (claim != null && claim.allowContainers(player) != null)
+			{
+				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+				return false;
+			}
+
+			
+			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
+			inventory = container.getInventory();
+		}
+		else
+		{
+			inventory = player.getInventory();
+		}
+		
+		int freeInventorySlots = getFreeInventorySlots(inventory);
 		
 		for (Entry<ItemStack, ItemStack> entry : FUSEITEMS.entrySet())
 		{			
 			int amountSource = 0;
 			int existingTargetItemsFree = 0; //How many target items can we fit into existing stacks
 
-			for (ItemStack stack : player.getInventory().getContents())
+			for (ItemStack stack : inventory.getContents())
 			{
 				if (stack == null)
 					continue;
@@ -78,13 +109,13 @@ public class FusingBook extends Spellbook {
 			if (stacksRemoved + freeInventorySlots < stacksAdded)
 				continue;
 					
-			removeItem(player.getInventory(), entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
+			removeItem(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
 						
 			while (amountTarget > 0)
 			{
 				int addAmount = Math.min(amountTarget, entry.getValue().getMaxStackSize());
 				amountTarget -= addAmount;
-				HashMap<Integer, ItemStack> invalidItems = player.getInventory().addItem(new ItemStack(entry.getValue().getType(), addAmount, entry.getValue().getDurability()));
+				HashMap<Integer, ItemStack> invalidItems = inventory.addItem(new ItemStack(entry.getValue().getType(), addAmount, entry.getValue().getDurability()));
 				//Just in case
 				if (invalidItems.size() > 0)
 				{
@@ -98,7 +129,8 @@ public class FusingBook extends Spellbook {
 			freeInventorySlots -= stacksAdded;
 		}
 		
-		player.updateInventory();
+		if (inventory.getType() == InventoryType.PLAYER)
+			player.updateInventory();
 		
 		return true;
 	}
