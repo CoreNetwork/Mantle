@@ -24,7 +24,7 @@ public class NetherSpawningHelper implements Listener {
 			if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
 			{
 				SpawnReason reason = event.getSpawnReason();
-				if (reason == SpawnReason.NATURAL || reason == SpawnReason.DEFAULT || reason == SpawnReason.REINFORCEMENTS || reason == SpawnReason.MOUNT)
+				if (reason == SpawnReason.NATURAL || reason == SpawnReason.REINFORCEMENTS || reason == SpawnReason.MOUNT)
 				{
 					String type = event.getEntityType().toString();
 					for (String rejectedType : NetherSpawningSettings.PREVENT_SPAWNING_NETHER.stringList())
