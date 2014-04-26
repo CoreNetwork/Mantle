@@ -28,64 +28,67 @@ public class MakeCommand extends NanobotBaseCommand {
 
 		int i = 0;
 		String itemName = args[0];
-		if (itemName.startsWith("\"")) {
+		if (itemName.startsWith("\""))
+		{
 			itemName = itemName.substring(1);
-			while (!itemName.endsWith("\"")) {
+			while (!itemName.endsWith("\""))
+			{
 				i++;
-
-				if (args.length - 2 < i) {
+				
+				if (args.length - 2 < i)
+				{
 					sender.sendMessage("Syntax: /nbt make [item name/id] [tag] (slot) (silent)");
 					return;
 				}
-
+				
 				itemName += " " + args[i];
 			}
 			itemName = itemName.substring(0, itemName.length() - 1);
 		}
-
+		
 		i++;
 		String tag = args[i];
 		Integer invSlot = null;
 		i++;
-
+		
 		if (i < args.length && Util.isInteger(args[i]))
 			invSlot = Integer.parseInt(args[i]);
-
-		org.bukkit.inventory.ItemStack stack = NanobotUtil
-				.getMaterialFromItem(itemName);
-
-		if (stack == null) {
+		
+		org.bukkit.inventory.ItemStack stack = NanobotUtil.getMaterialFromItem(itemName);
+		
+		if (stack == null)
+		{
 			sender.sendMessage("Item name/id not recognized!");
 			return;
-		}
-
+		}		
+		
 		Player player = (Player) sender;
 		ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
 		NBTTagCompound newTag = LoadCommand.load(tag);
-
-		if (newTag == null) {
+		
+		if (newTag == null)
+		{
 			sender.sendMessage("Tag with that name was not found!");
 			return;
 		}
-
+		
 		nmsStack.tag = newTag;
 
-		if (invSlot == null) {
-			player.getInventory().addItem(
-					CraftItemStack.asCraftMirror(nmsStack));
-		} else {
-			if (player.getInventory().getItem(invSlot) != null)
-				player.getWorld().dropItem(player.getLocation(),
-						player.getInventory().getItem(invSlot));
-
-			player.getInventory().setItem(invSlot,
-					CraftItemStack.asCraftMirror(nmsStack));
+		if (invSlot == null)
+		{
+			player.getInventory().addItem(CraftItemStack.asCraftMirror(nmsStack));
 		}
-
-		if (!(i < args.length && args[i].equals("silent"))
-				&& !(i + 1 < args.length && args[i + 1].equals("silent")))
+		else
+		{
+			if (player.getInventory().getItem(invSlot) != null)
+				player.getWorld().dropItem(player.getLocation(), player.getInventory().getItem(invSlot));
+			
+			player.getInventory().setItem(invSlot, CraftItemStack.asCraftMirror(nmsStack));
+		}
+		
+		if (!(i < args.length && args[i].equals("silent")) && !(i + 1 < args.length && args[i + 1].equals("silent")) )
 			sender.sendMessage("Item with tag was made sucessfully!");
-
+		
 	}
 }
