@@ -1,13 +1,23 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Wool;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
@@ -28,38 +38,82 @@ public class DecayBook extends Spellbook {
 	}
 
 	@Override
+	protected boolean usesContainers() {
+		return true;
+	}
+	
+	@Override
 	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
-		Location playerLoc = event.getPlayer().getLocation();
 		
-		if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX(), playerLoc.getBlockZ(), 0, 0, EFFECT_RADIUS, false, event.getPlayer()))
+		Player player = event.getPlayer();
+		
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-			return false;
-		}
-		
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.OLIVE).withFade(Color.OLIVE).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
-		
-		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);
-		
-		Block baseBlock = event.getPlayer().getLocation().getBlock();
-		
-		for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
-		{
-			for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
+			//Check for claim if clicking on chest
+			Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
+			if (claim != null && claim.allowContainers(player) != null)
 			{
-				for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+				return false;
+			}
+
+			//Only clean wool colors
+			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
+			removeWoolColors(container.getInventory());
+		}
+		else
+		{
+			Location playerLoc = player.getLocation();
+			//Check for claims in effect area
+			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX(), playerLoc.getBlockZ(), 0, 0, EFFECT_RADIUS, false, event.getPlayer()))
+			{
+				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+				return false;
+			}
+			
+			//Decay world around
+			Block baseBlock = player.getLocation().getBlock();
+			
+			for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
+			{
+				for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
 				{
-					Block block = baseBlock.getRelative(x, y, z);
-					processBlock(block);
+					for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+					{
+						Block block = baseBlock.getRelative(x, y, z);
+						processBlock(block);
+					}
 				}
 			}
+			
+			removeWoolColors(player.getInventory());
+			player.updateInventory();
 		}
-		
+
+		FireworkEffect effect = FireworkEffect.builder().withColor(Color.OLIVE).withFade(Color.OLIVE).build();
+		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
+		Util.showFirework(effectLoc, effect);			
+		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);		
 		
 		return true;
 	}
+	
+	private void removeWoolColors(Inventory inventory)
+	{
+		for (int i = 0; i < inventory.getSize(); i++)
+		{
+			ItemStack stack = inventory.getItem(i);
+			if (stack != null && stack.getType() == Material.WOOL)
+			{
+				Wool materialData = (Wool) stack.getData();
+				materialData.setColor(DyeColor.WHITE);
+				stack.setDurability(materialData.getData());
+
+				inventory.setItem(i, stack);
+			}
+		}
+	}
+	
 	private void processBlock(Block block)
 	{
 		if (block.getType() == Material.LEAVES)
