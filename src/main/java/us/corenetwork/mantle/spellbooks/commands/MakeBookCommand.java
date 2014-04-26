@@ -67,7 +67,7 @@ public class MakeBookCommand extends BaseMantleCommand {
 			
 			net.minecraft.server.v1_7_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 			nmsStack.tag = newTag;
-			stack = CraftItemStack.asBukkitCopy(nmsStack);
+			stack = CraftItemStack.asCraftMirror(nmsStack);
 
 			HashMap<Integer, ItemStack> overflowItems = player.getInventory().addItem(stack);
 			if (overflowItems.size() > 0) //Drop books on the ground if inventory is full

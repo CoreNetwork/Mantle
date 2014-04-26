@@ -114,7 +114,7 @@ public class LootTableNodeParser extends NodeParser {
 			{
 				net.minecraft.server.v1_7_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
 				nmsStack.tag = newTag;
-				curItemStack = CraftItemStack.asBukkitCopy(nmsStack);
+				curItemStack = CraftItemStack.asCraftMirror(nmsStack);
 			}
 			
 		}
