@@ -52,6 +52,7 @@ public class SpellbookManager {
 		
 	private static void addSpellbook(Spellbook book)
 	{
+		books.put(book.getName(), book);
 		books.put("Spell of " + book.getName(), book);
 		books.put("Spellbook of " + book.getName(), book); //Compatibility reasons, remove on new map
 

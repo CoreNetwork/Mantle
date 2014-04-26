@@ -28,6 +28,8 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 	
 	public GrowthBook() {
 		super("Growth");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-growth");
 	}
 
 	@Override

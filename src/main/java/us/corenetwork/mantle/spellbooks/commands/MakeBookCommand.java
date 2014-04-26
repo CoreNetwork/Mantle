@@ -16,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
+import us.corenetwork.mantle.spellbooks.Spellbook;
+import us.corenetwork.mantle.spellbooks.SpellbookManager;
 
 
 public class MakeBookCommand extends BaseMantleCommand {	
@@ -29,11 +31,19 @@ public class MakeBookCommand extends BaseMantleCommand {
 
 	public void run(final CommandSender sender, String[] args) {
 		if (args.length < 1) {
-			sender.sendMessage("Syntax: /mantle makebook [nanobot tag] (number)");
+			sender.sendMessage("Syntax: /mantle makebook [spell name] (number)");
 			return;
 		}
 
-		String tag = args[0];
+		String spellName = args[0];
+		Spellbook spell = SpellbookManager.getBook(spellName);
+		if (spell == null)
+		{
+			sender.sendMessage("Spell with that name was not found! Message moderators about that issue!");
+			return;
+
+		}
+		
 		int amount = 1;
 		if (args.length > 1 && Util.isInteger(args[1]))
 		{
@@ -42,6 +52,7 @@ public class MakeBookCommand extends BaseMantleCommand {
 		
 		Player player = (Player) sender;
 
+		String tag = spell.settings.getString(Spellbook.SETTING_TEMPLATE);
 		NBTTagCompound newTag = LoadCommand.load(tag);
 		
 		if (newTag == null)

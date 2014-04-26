@@ -34,6 +34,8 @@ public class WindBook extends Spellbook implements Listener {
 
 	public WindBook() {
 		super("Wind");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-wind");
 	}
 		
 	@Override

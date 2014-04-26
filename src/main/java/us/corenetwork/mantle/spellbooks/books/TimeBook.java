@@ -40,6 +40,8 @@ public class TimeBook extends Spellbook {
 		super("Time");
 		
 		initEnchants();		
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-time");
 	}
 	
 	private Player curPlayer;

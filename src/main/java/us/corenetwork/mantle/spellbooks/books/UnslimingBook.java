@@ -20,6 +20,8 @@ public class UnslimingBook extends Spellbook {
 	@SuppressWarnings("deprecation")
 	public UnslimingBook() {
 		super("Unsliming");		
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-unsliming");
 	}
 		
 	@Override

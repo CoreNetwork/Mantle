@@ -37,6 +37,8 @@ public class DeadweightBook extends Spellbook implements Listener {
 	
 	public DeadweightBook() {
 		super("Deadweight");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-deadweight");
 	}
 		
 	@Override

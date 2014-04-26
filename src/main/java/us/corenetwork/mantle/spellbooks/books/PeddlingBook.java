@@ -38,6 +38,8 @@ public class PeddlingBook extends Spellbook {
 	@SuppressWarnings("deprecation") //Screw you mojang, damage values are not going anywhere
 	public PeddlingBook() {
 		super("Peddling");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-peddling");
 	}	
 		
 	@Override

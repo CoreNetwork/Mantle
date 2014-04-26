@@ -23,6 +23,8 @@ public class DecayBook extends Spellbook {
 	
 	public DecayBook() {
 		super("Decay");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-decay");
 	}
 
 	@Override
