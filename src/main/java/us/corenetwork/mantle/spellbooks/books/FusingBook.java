@@ -138,7 +138,7 @@ public class FusingBook extends Spellbook {
 	}
 	
 
-	private static int getFreeInventorySlots(Inventory inventory)
+	public static int getFreeInventorySlots(Inventory inventory)
 	{
 		int slots = 0;
 		
@@ -152,12 +152,12 @@ public class FusingBook extends Spellbook {
 		return slots;
 	}
 	
-	private static void removeItem(Inventory inventory, Material material, short durability, int amount)
+	public static void removeItem(Inventory inventory, Material material, short durability, int amount)
 	{
 		for (int i = 0; i < inventory.getSize(); i++)
 		{
 			ItemStack stack = inventory.getItem(i);
-			if (stack != null && material == stack.getType() && durability == stack.getDurability())
+			if (stack != null && material == stack.getType() && (durability == stack.getDurability() || durability == 32767))
 			{
 				int stackAmount = stack.getAmount();
 				if (amount >= stackAmount)
