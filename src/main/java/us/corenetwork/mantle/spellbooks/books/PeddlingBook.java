@@ -12,6 +12,8 @@ import net.minecraft.server.v1_7_R3.MerchantRecipe;
 import net.minecraft.server.v1_7_R3.MerchantRecipeList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,6 +28,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
@@ -150,11 +154,11 @@ public class PeddlingBook extends Spellbook {
 			targetAmount -= stackAmount;
 		}
 		
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
-		Vector direction = event.getPlayer().getLocation().getDirection();
-
-		ParticleLibrary.MOB_SPELL.sendToPlayer(event.getPlayer(), effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10);
-		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
+		Color effectColor = Color.fromRGB(0xcd5cab);
+		FireworkEffect effect = FireworkEffect.builder().withColor(effectColor).withFade(effectColor).build();
+		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
+		Util.showFirework(effectLoc, effect);
+		event.getPlayer().playSound(effectLoc, Sound.VILLAGER_YES, 1.0f, 1.0f);
 		
 		return true;
 

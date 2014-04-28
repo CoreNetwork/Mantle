@@ -5,8 +5,12 @@ import java.util.Map.Entry;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 
+import org.bukkit.Color;
 import org.bukkit.DyeColor;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryType;
@@ -21,6 +25,7 @@ import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
+import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
@@ -133,6 +138,11 @@ public class FusingBook extends Spellbook {
 		
 		if (inventory.getType() == InventoryType.PLAYER)
 			player.updateInventory();
+		
+		FireworkEffect effect = FireworkEffect.builder().withColor(Color.SILVER).withFade(Color.SILVER).build();
+		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
+		Util.showFirework(effectLoc, effect);
+		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
 		
 		return true;
 	}

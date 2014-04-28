@@ -102,7 +102,6 @@ public class CachedSchematic {
 						BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
 						if (Util.isInventoryContainer(baseBlock.getType()))
 						{
-							MLog.info("Found chest! " + baseBlock.getType());
 							Vector chest = vector;
 							for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 							{
@@ -119,8 +118,6 @@ public class CachedSchematic {
 
 								if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 								{
-									MLog.info("Found sign!");
-
 									try
 									{
 										SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
@@ -130,8 +127,6 @@ public class CachedSchematic {
 										
 										if (sign.getText()[0].trim().startsWith("[loot]"))
 										{
-											MLog.info("Found loot sign!");
-
 											ChestInfo info = new ChestInfo();
 											info.restockable = true;
 											info.lootTable = sign.getText()[1];

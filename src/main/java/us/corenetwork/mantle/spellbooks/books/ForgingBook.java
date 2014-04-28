@@ -11,7 +11,11 @@ import net.minecraft.server.v1_7_R3.RecipesFurnace;
 
 import org.bukkit.Bukkit;
 import org.bukkit.CoalType;
+import org.bukkit.Color;
+import org.bukkit.FireworkEffect;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -27,6 +31,7 @@ import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
+import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
@@ -42,7 +47,6 @@ public class ForgingBook extends Spellbook {
 		for (Object recipeO : RecipesFurnace.getInstance().recipes.entrySet())
 		{
 			Entry<net.minecraft.server.v1_7_R3.ItemStack, net.minecraft.server.v1_7_R3.ItemStack> recipe = (Entry<net.minecraft.server.v1_7_R3.ItemStack, net.minecraft.server.v1_7_R3.ItemStack>) recipeO;
-			MLog.info(recipe.getKey().getItem().toString() + " " + recipe.getKey().getData());
 			FORGEITEMS.put(CraftItemStack.asCraftMirror(recipe.getKey()), CraftItemStack.asCraftMirror(recipe.getValue()));
 		}
 		
@@ -209,6 +213,11 @@ public class ForgingBook extends Spellbook {
 		
 		if (inventory.getType() == InventoryType.PLAYER)
 			player.updateInventory();
+				
+		FireworkEffect effect = FireworkEffect.builder().withColor(Color.ORANGE).withFade(Color.ORANGE).build();
+		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
+		Util.showFirework(effectLoc, effect);
+		effectLoc.getWorld().playSound(effectLoc, Sound.FIRE, 1f, 1f);
 		
 		return true;
 	}
