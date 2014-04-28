@@ -3,7 +3,9 @@ package us.corenetwork.mantle.inspector;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
+import us.corenetwork.mantle.regeneration.RegenerationModule;
 
 
 public class InspectorModule extends MantleModule {
@@ -24,6 +26,12 @@ public class InspectorModule extends MantleModule {
 	@Override
 	protected boolean loadModule() {
 
+		if (!RegenerationModule.instance.active)
+		{
+			MLog.warning("Cannot use Inspector module without regeneration module! Skipping...");
+			return false;
+		}
+		
 		for (InspectorSettings setting : InspectorSettings.values())
 		{
 			if (config.get(setting.string) == null)
