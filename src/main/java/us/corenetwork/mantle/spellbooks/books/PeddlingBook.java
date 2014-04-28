@@ -12,7 +12,9 @@ import net.minecraft.server.v1_7_R3.MerchantRecipe;
 import net.minecraft.server.v1_7_R3.MerchantRecipeList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
@@ -24,8 +26,10 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -146,6 +150,11 @@ public class PeddlingBook extends Spellbook {
 			targetAmount -= stackAmount;
 		}
 		
+		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
+		Vector direction = event.getPlayer().getLocation().getDirection();
+
+		ParticleLibrary.MOB_SPELL.sendToPlayer(event.getPlayer(), effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10);
+		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		return true;
 
