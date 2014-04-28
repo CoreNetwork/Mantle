@@ -245,8 +245,7 @@ public class CachedSchematic {
 							{
 								String line = sign.getText()[i];
 								String lineS[] = line.split(" ");
-								if (lineS.length < 2 || !Util.isInteger(lineS[1]))
-									continue;
+								int amount = 1;
 
 								int type = -1;
 								if (lineS[0].trim().equalsIgnoreCase("farmer"))
@@ -266,8 +265,9 @@ public class CachedSchematic {
 
 								villagerSign = true;
 
-								int amount = Integer.parseInt(lineS[1]);
-
+								if (lineS.length >= 2 && Util.isInteger(lineS[1]))
+									amount = Integer.parseInt(lineS[1]);
+								
 								VillagerInfo villager = new VillagerInfo();
 								villager.id = type;
 								villager.amount = amount;
