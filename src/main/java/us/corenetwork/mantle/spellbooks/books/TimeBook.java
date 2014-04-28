@@ -32,10 +32,7 @@ import us.corenetwork.mantle.spellbooks.SpellbookManager;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
-public class TimeBook extends Spellbook {
-
-	private static final int EFFECT_RADIUS = 8 / 2;
-	
+public class TimeBook extends Spellbook {	
 	public TimeBook() {
 		super("Time");
 		
@@ -60,60 +57,61 @@ public class TimeBook extends Spellbook {
 			ItemStack stack = curPlayer.getInventory().getItem(i);
 			if (stack != null)
 			{
-				int addedExp = 0;
+				int addedLevels = 0;
 				List<Enchantment> enchantmentTypes = new ArrayList<Enchantment>(stack.getEnchantments().size());
 				
 				for (Entry<Enchantment, Integer> e : stack.getEnchantments().entrySet())
 				{
-					addedExp += getEnchantmentWorth(e.getKey(), e.getValue());
+					addedLevels += getEnchantmentValue(e.getKey(), e.getValue());
 					enchantmentTypes.add(e.getKey());
 				}
 				
 				for (Enchantment e : enchantmentTypes)
 					stack.removeEnchantment(e);
 							
-				if (addedExp > 25)
-					addedExp = 25;
-				curPlayer.giveExpLevels(addedExp);
+				if (addedLevels > 25)
+					addedLevels = 25;
 				
-				curPlayer.updateInventory();
+				for (int level = 0; level < addedLevels; level++)
+				{
+					curPlayer.giveExp(expCost(level + 1));
+				}
 				
 				if (enchantmentTypes.size() > 0)
 					break;
 			}
 		}
 		
+		curPlayer.updateInventory();
+
+		
 		return true;
 	}
 	
-    private static int removalMinimum = 2;
-    private static int removalMaximum = 13;
+    private static Map<Enchantment, Integer[]> levelTable;
     
-    private static int maxUses() {
-        int firstDice = (removalMaximum - removalMinimum)/2 + 1;
-        int secondDice = removalMaximum - removalMinimum - firstDice + 2;
-        
-        //Insurance if either value came out invalid.
-        firstDice = (firstDice < 1) ? 1 : firstDice;
-        secondDice = (secondDice < 1) ? 1 : secondDice;
-
-        return MantlePlugin.random.nextInt(firstDice) + MantlePlugin.random.nextInt(secondDice) + removalMinimum;
-    }
-    
-    private static Map<Enchantment, Integer[]> xpTable;
-    
-    private static int getEnchantmentWorth(Enchantment enchantment, int level)
+    private static int getEnchantmentValue(Enchantment enchantment, int level)
     {
-    	Integer[] enchantmentLevels = xpTable.get(enchantment);
+    	Integer[] enchantmentLevels = levelTable.get(enchantment);
     	if (enchantmentLevels == null)
     		return 8;
     	
     	return enchantmentLevels[0] * --level + enchantmentLevels[1];
     }
 
+    int expCost(int currentLevel) {
+        if (currentLevel >= 30) {
+            return 62 + (currentLevel - 30) * 7;
+        } else if (currentLevel >= 15) {
+            return 17 + (currentLevel - 15) * 3;
+        } else {
+            return 17;
+        }
+    }
+    
     private static void initEnchants()
     {
-    	xpTable = new HashMap<Enchantment, Integer[]>();
+    	levelTable = new HashMap<Enchantment, Integer[]>();
     	
     	//Armor
     	addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 11, 1);
@@ -153,7 +151,7 @@ public class TimeBook extends Spellbook {
     	parameters[0] = k;
     	parameters[1] = m;
     	
-    	xpTable.put(enchantment, parameters);
+    	levelTable.put(enchantment, parameters);
     }
 
 	@Override
