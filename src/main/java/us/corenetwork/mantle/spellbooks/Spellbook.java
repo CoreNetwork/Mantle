@@ -94,7 +94,6 @@ public abstract class Spellbook {
 			if (positiveEffectNode != null)
 			{
 				String effectName = (String) positiveEffectNode;
-				Bukkit.broadcastMessage(effectName);
 				for (Player onlinePlayer : Bukkit.getOnlinePlayers())
 				{
 					HardmodeModule.applyDamageNode(onlinePlayer, effectName);
