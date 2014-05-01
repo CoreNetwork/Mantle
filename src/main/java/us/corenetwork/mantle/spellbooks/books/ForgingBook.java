@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -108,7 +109,7 @@ public class ForgingBook extends Spellbook {
 			}
 		}
 		
-		availableFuel.sort(new Comparator<ItemStack>() {
+		Collections.sort(availableFuel, new Comparator<ItemStack>() {
 			@Override
 			public int compare(ItemStack arg0, ItemStack arg1) {
 				int efficiencyFirst = 0;
