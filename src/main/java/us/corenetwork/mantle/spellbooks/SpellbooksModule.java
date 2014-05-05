@@ -35,7 +35,7 @@ public class SpellbooksModule extends MantleModule {
 		saveConfig();
 		
 		MantlePlugin.adminCommands.put("makebook", new MakeBookCommand());
-		MantlePlugin.adminCommands.put("reslime", new ReslimeCommand());
+		MantlePlugin.adminCommands.put("reslime", new ReslimeCommand()); 
 
 		Bukkit.getServer().getPluginManager().registerEvents(new SpellbooksListener(), MantlePlugin.instance);
 				
