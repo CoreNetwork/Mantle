@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -70,6 +71,8 @@ public class DecayBook extends Spellbook {
 				return false;
 			}
 			
+			boolean removeGrass = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS;
+			
 			//Decay world around
 			Block baseBlock = player.getLocation().getBlock();
 			
@@ -80,7 +83,13 @@ public class DecayBook extends Spellbook {
 					for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
 					{
 						Block block = baseBlock.getRelative(x, y, z);
-						processBlock(block);
+						
+						if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2))
+							block.breakNaturally();
+						else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
+							block.setType(Material.AIR);
+						else if (block.getType() == Material.GRASS && removeGrass)
+							block.setType(Material.DIRT);
 					}
 				}
 			}
@@ -113,14 +122,6 @@ public class DecayBook extends Spellbook {
 		}
 	}
 	
-	private void processBlock(Block block)
-	{
-		if (block.getType() == Material.LEAVES)
-			block.breakNaturally();
-		else if (block.getType() == Material.GRASS)
-			block.setType(Material.DIRT);
-	}
-
 	@Override
 	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return false;
