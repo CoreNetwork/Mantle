@@ -97,18 +97,7 @@ public abstract class Spellbook {
 			messageEverybody(player);
 			
 			Location playerLoc = player.getLocation();
-			MLog.info("Player " + player.getName() + " used spell of " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());
-		
-			Object positiveEffectNode = settings.getProperty(SETTING_BOOST_ON_BROADCAST, false);
-			if (positiveEffectNode != null)
-			{
-				String effectName = (String) positiveEffectNode;
-				for (Player onlinePlayer : Bukkit.getOnlinePlayers())
-				{
-					HardmodeModule.applyDamageNode(onlinePlayer, effectName);
-
-				}
-			}
+			MLog.info("Player " + player.getName() + " used spell of " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());		
 		}
 		
 		long end = System.nanoTime();
@@ -124,6 +113,7 @@ public abstract class Spellbook {
 		if (lastBroadcast == null)
 			lastBroadcast = 0L;
 		
+		
 		if (System.currentTimeMillis() - lastBroadcast > settings.getInt(SETTING_BROADCAST_COOLDOWN_SECONDS) * 1000)
 		{
 			for (String message : settings.getStringList(SETTING_BROADCAST_MESSAGES))
@@ -134,9 +124,21 @@ public abstract class Spellbook {
 			}
 
 			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
+			
+			Object positiveEffectNode = settings.getProperty(SETTING_BOOST_ON_BROADCAST, false);
+			if (positiveEffectNode != null)
+			{
+				String effectName = (String) positiveEffectNode;
+				for (Player onlinePlayer : Bukkit.getOnlinePlayers())
+				{
+					HardmodeModule.applyDamageNode(onlinePlayer, effectName);
+
+				}
+			}
+			
+			Util.Message(settings.getString(SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE), player);
 		}
 		
-		Util.Message(settings.getString(SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE), player);
 
 	}
 	
