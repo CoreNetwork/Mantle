@@ -124,7 +124,7 @@ public class PeddlingBook extends Spellbook {
 		int targetAmount = (int) Math.floor(winningRecipe.amountPlayerHave / winningRecipe.itemsPerEmerald);
 		int sourceAmount = (int) Math.floor(targetAmount * winningRecipe.itemsPerEmerald);
 		int restocks = (int) Math.max(0, Math.ceil(sourceAmount / winningRecipe.sellItem.count / 8.0) - 1);
-		targetAmount -= restocks; //Reduce payment by amounts of emeralds needed to restock
+		targetAmount -= restocks * 2; //Reduce payment by amounts of emeralds needed to restock
 				
 		if (targetAmount == 0)
 		{
