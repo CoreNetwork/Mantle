@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
@@ -129,9 +131,13 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		{
 			Ageable ageable = (Ageable) entity;
 			if (!ageable.isAdult())
-			{
 				ageable.setAdult();
-			}
+		}
+		else if (entity instanceof Zombie)
+		{
+			Zombie zombie = (Zombie) entity;
+			if (zombie.isBaby())
+				zombie.setBaby(false);
 		}
 	}
 
