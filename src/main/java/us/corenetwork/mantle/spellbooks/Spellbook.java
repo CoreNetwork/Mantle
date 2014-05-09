@@ -25,6 +25,7 @@ public abstract class Spellbook {
 	public static final String SETTING_BROADCAST_COOLDOWN_SECONDS = "BroadcastCooldownSeconds";
 	public static final String SETTING_BOOST_ON_BROADCAST = "BoostOnBroadcast";
 	public static final String SETTING_USE_MESSAGE = "Messages.Use";
+	public static final String SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE = "Messages.HintToCasterWhenBroadcasted";
 	public static final String SETTING_BROADCAST_MESSAGES = "Messages.Broadcast";
 
 	private String name;
@@ -39,6 +40,7 @@ public abstract class Spellbook {
 		settings.setDefault(SETTING_BROADCAST_COOLDOWN_SECONDS, 5);
 		if (!providesOwnMessage()) settings.setDefault(SETTING_USE_MESSAGE,  "You used Spell of " + name + "!");
 		settings.setDefault(SETTING_BROADCAST_MESSAGES, Arrays.asList(new String[] { "Player <Player> used Spell of " + name + "!" }));
+		settings.setDefault(SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE, "You just gave everybody some magic spell!");
 
 	}
 	
@@ -133,6 +135,9 @@ public abstract class Spellbook {
 
 			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
 		}
+		
+		Util.Message(settings.getString(SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE), player);
+
 	}
 	
 	protected abstract boolean onActivate(SpellbookItem item, PlayerInteractEvent event);
