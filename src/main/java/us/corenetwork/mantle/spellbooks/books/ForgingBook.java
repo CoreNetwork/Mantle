@@ -93,7 +93,7 @@ public class ForgingBook extends Spellbook {
 		LinkedList<ItemStack> availableFuel = new LinkedList<ItemStack>();
 		int totalAvailableFuel = 0;
 		
-		for (ItemStack item : inventory.getContents())
+		for (ItemStack item : player.getInventory().getContents())
 		{
 			if (item == null || item.getType() == Material.AIR)
 				continue;
@@ -199,7 +199,7 @@ public class ForgingBook extends Spellbook {
 
 			int amountToRemove = Math.min(fuelStack.getAmount(), (int) Math.ceil(totalConsumedFuel / (double) efficiency));
 
-			FusingBook.removeItem(inventory, fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
+			FusingBook.removeItem(player.getInventory(), fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
 			
 			if (amountToRemove >= fuelStack.getAmount())
 				availableFuel.removeFirst();
@@ -212,8 +212,7 @@ public class ForgingBook extends Spellbook {
 			totalConsumedFuel -= amountToRemove * efficiency;
 		}
 		
-		if (inventory.getType() == InventoryType.PLAYER)
-			player.updateInventory();
+		player.updateInventory();
 				
 		FireworkEffect effect = FireworkEffect.builder().withColor(Color.ORANGE).withFade(Color.ORANGE).build();
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
