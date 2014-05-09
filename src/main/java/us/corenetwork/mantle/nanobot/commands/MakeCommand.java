@@ -80,10 +80,7 @@ public class MakeCommand extends NanobotBaseCommand {
 			player.getInventory().addItem(CraftItemStack.asCraftMirror(nmsStack));
 		}
 		else
-		{
-			if (player.getInventory().getItem(invSlot) != null)
-				player.getWorld().dropItem(player.getLocation(), player.getInventory().getItem(invSlot));
-			
+		{			
 			player.getInventory().setItem(invSlot, CraftItemStack.asCraftMirror(nmsStack));
 		}
 		
