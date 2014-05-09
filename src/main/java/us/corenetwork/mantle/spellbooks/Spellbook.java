@@ -128,7 +128,7 @@ public abstract class Spellbook {
 			{
 				message = message.replace("<Player>", player.getName());
 				message = message.replace("<Spellbook>", getName());
-				Util.Broadcast(message, player.getName() + "a");
+				Util.Broadcast(message, player.getName());
 			}
 
 			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
