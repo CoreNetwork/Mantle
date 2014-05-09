@@ -22,11 +22,18 @@ import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
 public class UnslimingBook extends Spellbook {	
+
+	private static final String SETTING_MESSAGE_NOT_SLIME_CHUNK = "Messages.UseNotSlimeChunk";
+	private static final String SETTING_MESSAGE_SLIME_CHUNK = "Messages.UseSlimeChunk";
+
+	
 	@SuppressWarnings("deprecation")
 	public UnslimingBook() {
 		super("Unsliming");		
 		
 		settings.setDefault(SETTING_TEMPLATE, "spell-unsliming");
+		settings.setDefault(SETTING_MESSAGE_NOT_SLIME_CHUNK, "Your current chunk is not slimed!");
+		settings.setDefault(SETTING_MESSAGE_SLIME_CHUNK, "That slime chunk has been purged! Those little bastards won't bugger you anymore.");
 	}
 		
 	@Override
@@ -44,12 +51,12 @@ public class UnslimingBook extends Spellbook {
 		Chunk chunk = player.getLocation().getBlock().getChunk();		
 		if (SlimeSpawner.isSlimeChunk(chunk) && !IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()))
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_UNSLIMING_SLIME_CHUNK.string(), player);
+			Util.Message(settings.getString(SETTING_MESSAGE_SLIME_CHUNK), player);
 			IgnoredSlimeChunks.addChunk(chunk.getX(), chunk.getZ());
 		}
 		else
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_UNSLIMING_NOT_SLIME_CHUNK.string(), player);
+			Util.Message(settings.getString(SETTING_MESSAGE_NOT_SLIME_CHUNK), player);
 		}
 		
 		Color slimeColor = Color.fromRGB(0x8bbb79);

@@ -43,11 +43,17 @@ import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 public class PeddlingBook extends Spellbook {
 	
+	private static final String SETTING_MESSAGE_NOTHING_TO_SELL = "Messages.NothingToSell";
+	private static final String SETTING_MESSAGE_NOT_ENOUGH_TO_SELL = "Messages.NotEnoughToSell";
+
 	@SuppressWarnings("deprecation") //Screw you mojang, damage values are not going anywhere
 	public PeddlingBook() {
 		super("Peddling");
 		
 		settings.setDefault(SETTING_TEMPLATE, "spell-peddling");
+		settings.setDefault(SETTING_MESSAGE_NOTHING_TO_SELL, "You have nothing to sell to this villager!");
+		settings.setDefault(SETTING_MESSAGE_NOT_ENOUGH_TO_SELL, "You don't have enough items to sell to this villager!");
+
 	}	
 		
 	@Override
@@ -117,7 +123,7 @@ public class PeddlingBook extends Spellbook {
 		
 		if (winningRecipe == null || winningRecipe.amountPlayerHave == 0)
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_PEDDLING_NOTHING_TO_SELL.string(), event.getPlayer());
+			Util.Message(settings.getString(SETTING_MESSAGE_NOTHING_TO_SELL), event.getPlayer());
 			return false;
 		}
 		
@@ -128,7 +134,7 @@ public class PeddlingBook extends Spellbook {
 				
 		if (targetAmount == 0)
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_PEDDLING_NOT_ENOUGH_TO_SELL.string(), event.getPlayer());
+			Util.Message(settings.getString(SETTING_MESSAGE_NOT_ENOUGH_TO_SELL), event.getPlayer());
 			return false;
 		}
 		

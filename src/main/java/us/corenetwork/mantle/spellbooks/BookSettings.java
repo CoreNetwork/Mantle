@@ -66,6 +66,11 @@ public class BookSettings {
 		return 	(String) getProperty(setting);
 	}	
 	
+	public List<String> getStringList(String setting)
+	{
+		return 	(List<String>) getProperty(setting);
+	}
+	
 	public List<?> getList(String setting)
 	{
 		return 	(List<?>) getProperty(setting);

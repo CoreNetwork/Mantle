@@ -1,6 +1,8 @@
 package us.corenetwork.mantle.spellbooks;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -19,9 +21,11 @@ import us.corenetwork.mantle.hardmode.HardmodeModule;
 
 public abstract class Spellbook {	
 	
-	public static final String SETTING_TEMPLATE = "template";
-	public static final String SETTING_BROADCAST_COOLDOWN_SECONDS = "broadcastCooldownSeconds";
-	public static final String SETTING_BOOST_ON_BROADCAST = "boostOnBroadcast";
+	public static final String SETTING_TEMPLATE = "Template";
+	public static final String SETTING_BROADCAST_COOLDOWN_SECONDS = "BroadcastCooldownSeconds";
+	public static final String SETTING_BOOST_ON_BROADCAST = "BoostOnBroadcast";
+	public static final String SETTING_USE_MESSAGE = "Messages.Use";
+	public static final String SETTING_BROADCAST_MESSAGES = "Messages.Broadcast";
 
 	private String name;
 	private HashMap<String, Long> lastBroadcastTime = new HashMap<String, Long>();
@@ -33,6 +37,9 @@ public abstract class Spellbook {
 		this.settings = new BookSettings(name);
 		
 		settings.setDefault(SETTING_BROADCAST_COOLDOWN_SECONDS, 5);
+		if (!providesOwnMessage()) settings.setDefault(SETTING_USE_MESSAGE,  "You used Spell of " + name + "!");
+		settings.setDefault(SETTING_BROADCAST_MESSAGES, Arrays.asList(new String[] { "Player <Player> used Spell of " + name + "!" }));
+
 	}
 	
 	public String getName()
@@ -81,7 +88,7 @@ public abstract class Spellbook {
 						
 			if (!providesOwnMessage())
 			{
-				String message = SpellbooksSettings.MESSAGE_YOU_USED.string();
+				String message = settings.getString(SETTING_USE_MESSAGE);
 				message = message.replace("<Spellbook>", getName());
 				Util.Message(message, player);
 			}
@@ -117,10 +124,12 @@ public abstract class Spellbook {
 		
 		if (System.currentTimeMillis() - lastBroadcast > settings.getInt(SETTING_BROADCAST_COOLDOWN_SECONDS) * 1000)
 		{
-			String message = SpellbooksSettings.MESSAGE_USED.string();
-			message = message.replace("<Player>", player.getName());
-			message = message.replace("<Spellbook>", getName());
-			Util.Broadcast(message, player.getName());
+			for (String message : settings.getStringList(SETTING_BROADCAST_MESSAGES))
+			{
+				message = message.replace("<Player>", player.getName());
+				message = message.replace("<Spellbook>", getName());
+				Util.Broadcast(message, player.getName() + "a");
+			}
 
 			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
 		}
