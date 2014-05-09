@@ -34,29 +34,17 @@ public class SpellbookManager {
 		addSpellbook(new PeddlingBook());
 		addSpellbook(new ForgingBook());
 	}	
-
-	
-	public static Spellbook getBook(Class<? extends Spellbook> type)
-	{
-		for (Spellbook book : books.values())
-		{
-			if (book.getClass() == type)
-				return book;
-		}
-		
-		return null;
-	}
 	
 	public static Spellbook getBook(String name)
-	{
-		return books.get(name);
+	{		
+		return books.get(name.toLowerCase());
 	}
 		
 	private static void addSpellbook(Spellbook book)
 	{
-		books.put(book.getName(), book);
-		books.put("Spell of " + book.getName(), book);
-		books.put("Spellbook of " + book.getName(), book); //Compatibility reasons, remove on new map
+		books.put(book.getName().toLowerCase(), book);
+		books.put(("Spell of " + book.getName()).toLowerCase(), book);
+		books.put(("Spellbook of " + book.getName()).toLowerCase(), book); //Compatibility reasons, remove on new map
 
 		if (book instanceof Listener)
 			Bukkit.getPluginManager().registerEvents((Listener) book, MantlePlugin.instance);
