@@ -26,8 +26,8 @@ import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
 public class WindBook extends Spellbook implements Listener {
-	private static int EFFECT_DURATION = 20 * 10;
-	private static int HUNGER_DURATION = 20 * 5;
+	private static int EFFECT_DURATION = 20 * 20;
+	//private static int HUNGER_DURATION = 20 * 5;
 
 	private HashSet<String> finishedSprinting = new HashSet<String>();
 	private HashSet<String> sprinting = new HashSet<String>();
@@ -92,10 +92,11 @@ public class WindBook extends Spellbook implements Listener {
 		sprinting.remove(name);
 		finishedSprinting.remove(name);
 		
-		int hungerBurning = (int) (18 + Math.ceil(player.getSaturation()));
-		hungerBurning *= 4;
-		int level = (int) Math.ceil(hungerBurning / 0.025 / HUNGER_DURATION) - 1;
-		player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, HUNGER_DURATION, level));
+		player.setFoodLevel(2);
+		//int hungerBurning = (int) (18 + Math.ceil(player.getSaturation()));
+		//hungerBurning *= 4;
+		//int level = (int) Math.ceil(hungerBurning / 0.025 / HUNGER_DURATION) - 1;
+		//player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, HUNGER_DURATION, level));
 	}
 	
 	private void sprintFinished(String name)
