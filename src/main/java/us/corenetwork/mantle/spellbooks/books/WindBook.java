@@ -93,6 +93,7 @@ public class WindBook extends Spellbook implements Listener {
 		finishedSprinting.remove(name);
 		
 		player.setFoodLevel(2);
+		player.setSaturation(0);
 		//int hungerBurning = (int) (18 + Math.ceil(player.getSaturation()));
 		//hungerBurning *= 4;
 		//int level = (int) Math.ceil(hungerBurning / 0.025 / HUNGER_DURATION) - 1;
