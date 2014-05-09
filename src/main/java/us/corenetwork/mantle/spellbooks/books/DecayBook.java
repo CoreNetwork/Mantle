@@ -84,7 +84,7 @@ public class DecayBook extends Spellbook {
 					{
 						Block block = baseBlock.getRelative(x, y, z);
 						
-						if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2))
+						if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2) || block.getType() == Material.HUGE_MUSHROOM_1 || block.getType() == Material.HUGE_MUSHROOM_2)
 							block.breakNaturally();
 						else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
 							block.setType(Material.AIR);
