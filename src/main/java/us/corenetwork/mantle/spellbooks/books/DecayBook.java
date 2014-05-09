@@ -64,7 +64,7 @@ public class DecayBook extends Spellbook {
 		{
 			Location playerLoc = player.getLocation();
 			//Check for claims in effect area
-			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX(), playerLoc.getBlockZ(), 0, 0, EFFECT_RADIUS, false, event.getPlayer()))
+			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_RADIUS, playerLoc.getBlockZ() - EFFECT_RADIUS, 0, 0, EFFECT_RADIUS * 2, false, event.getPlayer()))
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return false;
