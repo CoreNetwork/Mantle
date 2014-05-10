@@ -29,8 +29,8 @@ public class WindBook extends Spellbook implements Listener {
 	private static int EFFECT_DURATION = 20 * 20;
 	//private static int HUNGER_DURATION = 20 * 5;
 
-	private HashSet<String> finishedSprinting = new HashSet<String>();
-	private HashSet<String> sprinting = new HashSet<String>();
+	private HashSet<String> finishedSprinting = new HashSet<String>(); //List of players under hunger effect at the end (currently unused)
+	private HashSet<String> sprinting = new HashSet<String>(); // List of players under sprinting effect
 
 	public WindBook() {
 		super("Wind");
@@ -60,8 +60,15 @@ public class WindBook extends Spellbook implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerItemConsumed(PlayerItemConsumeEvent event)
 	{
+		
 		if (event.getItem().getType() == Material.MILK_BUCKET)
 		{
+			String name = event.getPlayer().getName();
+			if (!sprinting.contains(name))
+			{
+				return;
+			}
+
 			sprintFinished(event.getPlayer(), false);
 		}
 	}
