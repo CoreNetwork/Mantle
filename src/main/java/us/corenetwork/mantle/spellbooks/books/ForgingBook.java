@@ -72,7 +72,7 @@ public class ForgingBook extends Spellbook {
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest
-			Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
+			Claim claim = GriefPreventionHandler.getClaimAt(event.getClickedBlock().getLocation());
 			if (claim != null && claim.allowContainers(player) != null)
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
