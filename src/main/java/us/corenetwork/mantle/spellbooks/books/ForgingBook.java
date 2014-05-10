@@ -146,7 +146,7 @@ public class ForgingBook extends Spellbook {
 				if (stack.getType() == entry.getValue().getType() && (stack.getDurability() == entry.getValue().getDurability() || entry.getValue().getDurability() == 32767))
 					existingTargetItemsFree += stack.getMaxStackSize() - stack.getAmount();
 			}
-						
+									
 			amountSource = Math.min(amountSource, totalAvailableFuel - totalConsumedFuel);
 			
 			int divider = entry.getKey().getAmount() / entry.getValue().getAmount();
@@ -155,12 +155,12 @@ public class ForgingBook extends Spellbook {
 			
 			if (amountTarget < 1)
 				continue;
-			
+						
 			totalConsumedFuel += amountSource;
 			
 			int stacksRemoved = amountSource / entry.getKey().getMaxStackSize();
 			int stacksAdded = (int) Math.ceil((double) (amountTarget - existingTargetItemsFree) / entry.getValue().getMaxStackSize());
-			
+						
 			if (stacksRemoved + freeInventorySlots < stacksAdded)
 				continue;
 					
@@ -181,7 +181,7 @@ public class ForgingBook extends Spellbook {
 
 			}
 
-			freeInventorySlots -= stacksAdded;
+			freeInventorySlots -= stacksAdded - stacksRemoved;
 		}
 		
 		
