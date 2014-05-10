@@ -37,19 +37,20 @@ public class UnslimingBook extends Spellbook {
 	}
 		
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		
 		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 		if (claim != null && claim.allowBuild(player) != null)
 		{
 			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-			return false;
+			return BookFinishAction.NOTHING;
 		}
 
 		
 		Chunk chunk = player.getLocation().getBlock().getChunk();		
-		if (SlimeSpawner.isSlimeChunk(chunk) && !IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()))
+		boolean slimeChunk = SlimeSpawner.isSlimeChunk(chunk) && !IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()); 
+		if (!slimeChunk)
 		{
 			Util.Message(settings.getString(SETTING_MESSAGE_SLIME_CHUNK), player);
 			IgnoredSlimeChunks.addChunk(chunk.getX(), chunk.getZ());
@@ -65,13 +66,16 @@ public class UnslimingBook extends Spellbook {
 		Util.showFirework(effectLoc, effect);
 		effectLoc.getWorld().playSound(effectLoc, Sound.SLIME_WALK2, 2f, 1f);
 		
-		return true;
+		if (slimeChunk)
+			return BookFinishAction.BROADCAST_AND_CONSUME;
+		else
+			return BookFinishAction.CONSUME;
 		
 	}
 	
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 	
 	@Override

@@ -44,7 +44,7 @@ public class TimeBook extends Spellbook {
 	private Player curPlayer;
 	
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		curPlayer = event.getPlayer();
 
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(curPlayer.getEyeLocation(), 2);
@@ -85,7 +85,7 @@ public class TimeBook extends Spellbook {
 		curPlayer.updateInventory();
 
 		
-		return true;
+		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 	
     private static Map<Enchantment, Integer[]> levelTable;
@@ -155,8 +155,8 @@ public class TimeBook extends Spellbook {
     }
 
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
     
 

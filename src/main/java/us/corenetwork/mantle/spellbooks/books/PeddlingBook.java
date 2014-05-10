@@ -57,10 +57,10 @@ public class PeddlingBook extends Spellbook {
 	}	
 		
 	@Override
-	protected boolean onActivateEntity(SpellbookItem spellbookItem, PlayerInteractEntityEvent event) {
+	protected BookFinishAction onActivateEntity(SpellbookItem spellbookItem, PlayerInteractEntityEvent event) {
 		Entity entity = event.getRightClicked();
 		if (entity.getType() != EntityType.VILLAGER)
-			return false;
+			return BookFinishAction.NOTHING;
 		
 		Player player = event.getPlayer();
 		
@@ -68,7 +68,7 @@ public class PeddlingBook extends Spellbook {
 		if (claim != null && claim.allowContainers(player) != null)
 		{
 			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-			return false;
+			return BookFinishAction.NOTHING;
 		}
 		
 		EntityVillager nmsVillager = (EntityVillager) ((CraftEntity) entity).getHandle();
@@ -124,7 +124,7 @@ public class PeddlingBook extends Spellbook {
 		if (winningRecipe == null || winningRecipe.amountPlayerHave == 0)
 		{
 			Util.Message(settings.getString(SETTING_MESSAGE_NOTHING_TO_SELL), event.getPlayer());
-			return false;
+			return BookFinishAction.NOTHING;
 		}
 		
 		int targetAmount = (int) Math.floor(winningRecipe.amountPlayerHave / winningRecipe.itemsPerEmerald);
@@ -135,7 +135,7 @@ public class PeddlingBook extends Spellbook {
 		if (targetAmount == 0)
 		{
 			Util.Message(settings.getString(SETTING_MESSAGE_NOT_ENOUGH_TO_SELL), event.getPlayer());
-			return false;
+			return BookFinishAction.NOTHING;
 		}
 		
 		//Remove items to sell
@@ -166,7 +166,7 @@ public class PeddlingBook extends Spellbook {
 		Util.showFirework(effectLoc, effect);
 		event.getPlayer().playSound(effectLoc, Sound.VILLAGER_YES, 1.0f, 1.0f);
 		
-		return true;
+		return BookFinishAction.BROADCAST_AND_CONSUME;
 
 	}
 	
@@ -200,8 +200,8 @@ public class PeddlingBook extends Spellbook {
 
 
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
-		return false;
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 	
 	private static class RecipeData

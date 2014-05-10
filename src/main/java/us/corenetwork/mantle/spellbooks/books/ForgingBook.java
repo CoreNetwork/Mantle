@@ -65,7 +65,7 @@ public class ForgingBook extends Spellbook {
 	}
 		
 	@Override
-	public boolean onActivate(SpellbookItem spellbookItem, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem spellbookItem, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		
 		Inventory inventory;
@@ -76,7 +76,7 @@ public class ForgingBook extends Spellbook {
 			if (claim != null && claim.allowContainers(player) != null)
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-				return false;
+				return BookFinishAction.NOTHING;
 			}
 
 			
@@ -184,6 +184,7 @@ public class ForgingBook extends Spellbook {
 			freeInventorySlots -= stacksAdded - stacksRemoved;
 		}
 		
+		boolean anythingSmelted = totalConsumedFuel > 0;
 		
 		//Remove fuel
 		while (totalConsumedFuel > 0)
@@ -219,12 +220,15 @@ public class ForgingBook extends Spellbook {
 		Util.showFirework(effectLoc, effect);
 		effectLoc.getWorld().playSound(effectLoc, Sound.FIRE, 1f, 1f);
 		
-		return true;
+		if (anythingSmelted)
+			return BookFinishAction.BROADCAST_AND_CONSUME;
+		else
+			return BookFinishAction.CONSUME;
 	}
 		
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 
 }

@@ -42,7 +42,7 @@ public class DeadweightBook extends Spellbook implements Listener {
 	}
 		
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		String name = player.getName();
 		
@@ -61,7 +61,7 @@ public class DeadweightBook extends Spellbook implements Listener {
 		
 		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_LAND, 1f, 1f);
 		
-		return true;
+		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 	
 	@EventHandler
@@ -126,8 +126,8 @@ public class DeadweightBook extends Spellbook implements Listener {
 	}
 
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 
 }

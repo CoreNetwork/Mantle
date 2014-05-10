@@ -59,7 +59,7 @@ public class FusingBook extends Spellbook {
 	}
 		
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		
 		Inventory inventory;
@@ -70,7 +70,7 @@ public class FusingBook extends Spellbook {
 			if (claim != null && claim.allowContainers(player) != null)
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-				return false;
+				return BookFinishAction.NOTHING;
 			}
 
 			
@@ -83,6 +83,7 @@ public class FusingBook extends Spellbook {
 		}
 		
 		int freeInventorySlots = getFreeInventorySlots(inventory);
+		boolean fusedSomething = false;
 		
 		for (Entry<ItemStack, ItemStack> entry : FUSEITEMS.entrySet())
 		{			
@@ -116,6 +117,8 @@ public class FusingBook extends Spellbook {
 			if (stacksRemoved + freeInventorySlots < stacksAdded)
 				continue;
 					
+			fusedSomething = true;
+			
 			removeItem(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
 						
 			while (amountTarget > 0)
@@ -144,7 +147,10 @@ public class FusingBook extends Spellbook {
 		Util.showFirework(effectLoc, effect);
 		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
 		
-		return true;
+		if (fusedSomething)
+			return BookFinishAction.BROADCAST_AND_CONSUME;
+		else
+			return BookFinishAction.CONSUME;
 	}
 	
 
@@ -187,8 +193,8 @@ public class FusingBook extends Spellbook {
 	}
 	
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 
 }

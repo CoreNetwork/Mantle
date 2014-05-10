@@ -2,7 +2,6 @@ package us.corenetwork.mantle.spellbooks;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -18,6 +17,7 @@ import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
+import us.corenetwork.mantle.spellbooks.books.BookFinishAction;
 
 public abstract class Spellbook {	
 	
@@ -63,15 +63,15 @@ public abstract class Spellbook {
 	{
 		long start = System.nanoTime();
 				
-		boolean activated = false;
+		BookFinishAction action = BookFinishAction.NOTHING;
 		if (event instanceof PlayerInteractEntityEvent)
-			activated = onActivateEntity(item, (PlayerInteractEntityEvent) event);
+			action = onActivateEntity(item, (PlayerInteractEntityEvent) event);
 		else if (event instanceof PlayerInteractEvent)
-			activated = onActivate(item, (PlayerInteractEvent) event);
+			action = onActivate(item, (PlayerInteractEvent) event);
 		
 		Player player = event.getPlayer();
 		
-		if (activated)
+		if (action == BookFinishAction.CONSUME || action == BookFinishAction.BROADCAST_AND_CONSUME)
 		{
 			if (player.getGameMode() != GameMode.CREATIVE)
 			{
@@ -86,6 +86,9 @@ public abstract class Spellbook {
 				{
 					player.getInventory().setItem(player.getInventory().getHeldItemSlot(), null);
 				}
+				
+				if (action == BookFinishAction.BROADCAST_AND_CONSUME)
+					messageEverybody(player);
 			}
 						
 			if (!providesOwnMessage())
@@ -94,8 +97,7 @@ public abstract class Spellbook {
 				message = message.replace("<Spellbook>", getName());
 				Util.Message(message, player);
 			}
-			messageEverybody(player);
-			
+							
 			Location playerLoc = player.getLocation();
 			MLog.info("Player " + player.getName() + " used spell of " + getName() + " in " + playerLoc.getWorld().getName() + " at " + playerLoc.getBlockX() + ", " + playerLoc.getBlockY() + ", " + playerLoc.getBlockZ());		
 		}
@@ -142,7 +144,7 @@ public abstract class Spellbook {
 
 	}
 	
-	protected abstract boolean onActivate(SpellbookItem item, PlayerInteractEvent event);
-	protected abstract boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event);
+	protected abstract BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event);
+	protected abstract BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event);
 
 }

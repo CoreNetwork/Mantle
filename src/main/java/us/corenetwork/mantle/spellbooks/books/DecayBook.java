@@ -43,7 +43,7 @@ public class DecayBook extends Spellbook {
 	}
 	
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		
 		Player player = event.getPlayer();
 		
@@ -54,7 +54,7 @@ public class DecayBook extends Spellbook {
 			if (claim != null && claim.allowContainers(player) != null)
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-				return false;
+				return BookFinishAction.NOTHING;
 			}
 
 			//Only clean wool colors
@@ -68,7 +68,7 @@ public class DecayBook extends Spellbook {
 			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_RADIUS, playerLoc.getBlockZ() - EFFECT_RADIUS, 0, 0, EFFECT_RADIUS * 2, false, event.getPlayer()))
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
-				return false;
+				return BookFinishAction.NOTHING;
 			}
 			
 			boolean removeGrass = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS;
@@ -103,7 +103,7 @@ public class DecayBook extends Spellbook {
 		Util.showFirework(effectLoc, effect);			
 		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);		
 		
-		return true;
+		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 	
 	private void removeWoolColors(Inventory inventory)
@@ -123,7 +123,7 @@ public class DecayBook extends Spellbook {
 	}
 	
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 }

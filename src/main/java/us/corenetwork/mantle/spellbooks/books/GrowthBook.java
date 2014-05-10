@@ -35,7 +35,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 	}
 
 	@Override
-	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
+	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
 		Vector direction = event.getPlayer().getLocation().getDirection();
@@ -58,7 +58,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		
 		EntityIterator.iterateEntitiesInCube(this, event.getPlayer().getLocation(), EFFECT_RADIUS);
 		
-		return true;
+		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 
 	private void processBlock(Block block)
@@ -142,7 +142,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 	}
 
 	@Override
-	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
-		return false;
+	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return BookFinishAction.NOTHING;
 	}
 }
