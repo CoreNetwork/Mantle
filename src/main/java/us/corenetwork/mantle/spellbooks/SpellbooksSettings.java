@@ -2,11 +2,11 @@ package us.corenetwork.mantle.spellbooks;
 
 import java.util.List;
 
-public enum SpellbooksSettings {
+public enum SpellbooksSettings {	
+	MESSAGE_RESLIME_SUCCESS("Messages.ReslimeSuccess", "No-slime spell was successfully lifted from this chunk!"),
+	MESSAGE_RESLIME_FAIL("Messages.ReslimeFail", "This chunk is not under unsliming spell!"),
 
-	MESSAGE_NOT_AUTHORIZED("Messages.NotAuthorized", "Sorry, you can't use spellbook bound to someone else!"),
-	MESSAGE_USED("Messages.Used", "Player <Player> used <Spellbook>."),
-	NO_BUILD_PERMISSION("Messages.NoBuildPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
+	MESSAGE_NO_PERMISSION("Messages.NoPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
 	
 	protected String string;
 	protected Object def;

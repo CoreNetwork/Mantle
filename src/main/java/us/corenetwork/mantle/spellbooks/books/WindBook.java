@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -25,14 +26,16 @@ import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
 public class WindBook extends Spellbook implements Listener {
-	private static int EFFECT_DURATION = 20 * 10;
-	private static int HUNGER_DURATION = 20 * 5;
+	private static int EFFECT_DURATION = 20 * 20;
+	//private static int HUNGER_DURATION = 20 * 5;
 
 	private HashSet<String> finishedSprinting = new HashSet<String>();
 	private HashSet<String> sprinting = new HashSet<String>();
 
 	public WindBook() {
-		super("Spellbook of Wind");
+		super("Wind");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-wind");
 	}
 		
 	@Override
@@ -89,10 +92,12 @@ public class WindBook extends Spellbook implements Listener {
 		sprinting.remove(name);
 		finishedSprinting.remove(name);
 		
-		int hungerBurning = (int) (18 + Math.ceil(player.getSaturation()));
-		hungerBurning *= 4;
-		int level = (int) Math.ceil(hungerBurning / 0.025 / HUNGER_DURATION) - 1;
-		player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, HUNGER_DURATION, level));
+		player.setFoodLevel(2);
+		player.setSaturation(0);
+		//int hungerBurning = (int) (18 + Math.ceil(player.getSaturation()));
+		//hungerBurning *= 4;
+		//int level = (int) Math.ceil(hungerBurning / 0.025 / HUNGER_DURATION) - 1;
+		//player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, HUNGER_DURATION, level));
 	}
 	
 	private void sprintFinished(String name)
@@ -122,6 +127,11 @@ public class WindBook extends Spellbook implements Listener {
 			if (sprinting.contains(name))
 				sprintFinished(name);
 		}
+	}
+
+	@Override
+	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return false;
 	}
 
 }

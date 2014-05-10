@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import net.minecraft.server.v1_7_R3.PacketPlayOutWorldParticles;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_7_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
@@ -51,7 +52,15 @@ public enum ParticleLibrary {
         this.particleName = particleName;
     }
  
-    public void sendToPlayer(Player player, Location location, float offsetX, float offsetY, float offsetZ, float speed, int count) {
+    public void broadcastParticle(Location location, float offsetX, float offsetY, float offsetZ, float data, int count)
+    {
+    	for (Player player : Bukkit.getOnlinePlayers())
+    	{
+    		sendToPlayer(player, location, offsetX, offsetY, offsetZ, data, count);
+    	}
+    }
+    
+    public void sendToPlayer(Player player, Location location, float offsetX, float offsetY, float offsetZ, float data, int count) {
     	try
         {
         	PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
@@ -62,7 +71,7 @@ public enum ParticleLibrary {
             ReflectionUtilities.setValue(packet, "e", offsetX);
             ReflectionUtilities.setValue(packet, "f", offsetY);
             ReflectionUtilities.setValue(packet, "g", offsetZ);
-            ReflectionUtilities.setValue(packet, "h", speed);
+            ReflectionUtilities.setValue(packet, "h", data);
             ReflectionUtilities.setValue(packet, "i", count);
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }

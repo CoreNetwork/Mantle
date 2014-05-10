@@ -38,6 +38,8 @@ public class SlimeSpawningModule extends MantleModule {
 		SlimeSpawningTimer.timerSingleton = new SlimeSpawningTimer();
 		SlimeKillTimer.timerSingleton = new SlimeKillTimer();
 
+		IgnoredSlimeChunks.load();
+		
 		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, SlimeSpawningTimer.timerSingleton, 20, SlimeSpawningSettings.SPAWNING_INTERVAL_TICKS.integer());
 		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, SlimeKillTimer.timerSingleton, 20, 5 * 20);
 

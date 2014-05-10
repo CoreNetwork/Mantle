@@ -591,7 +591,7 @@ public class RestockableChest {
 		World world = location.getWorld();
 
 		world.playSound(location, Sound.GLASS, 1f, 1f);
-		ParticleLibrary.SPELL.sendToPlayer(player, location, 0, 0, 0, 0, 3);
+		ParticleLibrary.SPELL.broadcastParticle(location, 0, 0, 0, 0, 3);
 	}
 	private String getCustomName()
 	{

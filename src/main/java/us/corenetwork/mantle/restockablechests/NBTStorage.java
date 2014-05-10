@@ -114,7 +114,7 @@ public class NBTStorage {
 			
 			net.minecraft.server.v1_7_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(inventory.getItem(slot));
 			nmsStack.tag = tag;
-			inventory.setItem(slot, CraftItemStack.asBukkitCopy(nmsStack));
+			inventory.setItem(slot, CraftItemStack.asCraftMirror(nmsStack));
 
 		}
 	}

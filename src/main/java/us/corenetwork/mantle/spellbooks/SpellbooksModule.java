@@ -6,6 +6,8 @@ import org.bukkit.command.CommandSender;
 
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.spellbooks.commands.MakeBookCommand;
+import us.corenetwork.mantle.spellbooks.commands.ReslimeCommand;
 
 
 public class SpellbooksModule extends MantleModule {
@@ -32,13 +34,13 @@ public class SpellbooksModule extends MantleModule {
 		}
 		saveConfig();
 		
-		MantlePlugin.adminCommands.put("bindbook", new BindBookCommand());
-		
+		MantlePlugin.adminCommands.put("makebook", new MakeBookCommand());
+		MantlePlugin.adminCommands.put("reslime", new ReslimeCommand());
+
 		Bukkit.getServer().getPluginManager().registerEvents(new SpellbooksListener(), MantlePlugin.instance);
-		
-		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new SpellbooksTimer(), 20, 20);
-		
+				
 		SpellbookManager.init();
+		ItemProtocolListener.init();
 		
 		return true;
 	}

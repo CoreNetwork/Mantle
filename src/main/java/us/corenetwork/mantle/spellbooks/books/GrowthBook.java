@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -10,21 +11,27 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Zombie;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
 
 import us.corenetwork.mantle.ParticleLibrary;
-import us.corenetwork.mantle.spellbooks.CircleIterator;
+import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
-public class GrowthBook extends Spellbook implements CircleIterator.BlockReceiver, CircleIterator.EntityReceiver {
+public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiver {
 
+	private static final int EFFECT_RADIUS = 32 / 2;
+	
 	public GrowthBook() {
-		super("Spellbook of Growth");
+		super("Growth");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-growth");
 	}
 
 	@Override
@@ -33,22 +40,25 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
 		Vector direction = event.getPlayer().getLocation().getDirection();
 
-		ParticleLibrary.HAPPY_VILLAGER.sendToPlayer(event.getPlayer(), effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10);
+		ParticleLibrary.HAPPY_VILLAGER.broadcastParticle(effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10);
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
-		CircleIterator.iterateCircleBlocks(this, event.getPlayer().getLocation(), 32 / 2);
-		CircleIterator.iterateCircleEntities(this, event.getPlayer().getLocation(), 32 / 2);
+		Block baseBlock = event.getPlayer().getLocation().getBlock();
+		for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
+		{
+			for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
+			{
+				for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+				{
+					Block block = baseBlock.getRelative(x, y, z);
+					processBlock(block);
+				}
+			}
+		}
+		
+		EntityIterator.iterateEntitiesInCube(this, event.getPlayer().getLocation(), EFFECT_RADIUS);
 		
 		return true;
-	}
-
-	@Override
-	public void onCircleColumnFound(World world, int x, int z) {
-		for (int y = 0; y < 256; y++)
-		{
-			Block block = world.getBlockAt(x, y, z);
-			processBlock(block);
-		}
 	}
 
 	private void processBlock(Block block)
@@ -116,14 +126,23 @@ public class GrowthBook extends Spellbook implements CircleIterator.BlockReceive
 	}
 
 	@Override
-	public void onCircleEntity(Entity entity) {
+	public void onEntityFound(Entity entity) {
 		if (entity instanceof Ageable)
 		{
 			Ageable ageable = (Ageable) entity;
 			if (!ageable.isAdult())
-			{
 				ageable.setAdult();
-			}
 		}
+		else if (entity instanceof Zombie)
+		{
+			Zombie zombie = (Zombie) entity;
+			if (zombie.isBaby())
+				zombie.setBaby(false);
+		}
+	}
+
+	@Override
+	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return false;
 	}
 }

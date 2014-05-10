@@ -1,66 +1,129 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.material.Wool;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.spellbooks.CircleIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
-public class DecayBook extends Spellbook implements CircleIterator.BlockReceiver {
+public class DecayBook extends Spellbook {
 
-	private static int EFFECT_RADIUS = 32 / 2;
+	private static final int EFFECT_RADIUS = 32 / 2;
 	
 	public DecayBook() {
-		super("Spellbook of Decay");
+		super("Decay");
+		
+		settings.setDefault(SETTING_TEMPLATE, "spell-decay");
 	}
 
 	@Override
+	protected boolean usesContainers() {
+		return true;
+	}
+	
+	@Override
 	public boolean onActivate(SpellbookItem item, PlayerInteractEvent event) {
-		Location playerLoc = event.getPlayer().getLocation();
 		
-		if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX(), playerLoc.getBlockZ(), 0, 0, EFFECT_RADIUS, false, event.getPlayer()))
+		Player player = event.getPlayer();
+		
+		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
-			Util.Message(SpellbooksSettings.NO_BUILD_PERMISSION.string(), event.getPlayer());
-			return false;
+			//Check for claim if clicking on chest
+			Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
+			if (claim != null && claim.allowContainers(player) != null)
+			{
+				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+				return false;
+			}
+
+			//Only clean wool colors
+			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
+			removeWoolColors(container.getInventory());
 		}
-		
+		else
+		{
+			Location playerLoc = player.getLocation();
+			//Check for claims in effect area
+			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_RADIUS, playerLoc.getBlockZ() - EFFECT_RADIUS, 0, 0, EFFECT_RADIUS * 2, false, event.getPlayer()))
+			{
+				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+				return false;
+			}
+			
+			boolean removeGrass = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS;
+			
+			//Decay world around
+			Block baseBlock = player.getLocation().getBlock();
+			
+			for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
+			{
+				for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
+				{
+					for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+					{
+						Block block = baseBlock.getRelative(x, y, z);
+						
+						if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2) || block.getType() == Material.HUGE_MUSHROOM_1 || block.getType() == Material.HUGE_MUSHROOM_2)
+							block.breakNaturally();
+						else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
+							block.setType(Material.AIR);
+						else if (block.getType() == Material.GRASS && removeGrass)
+							block.setType(Material.DIRT);
+					}
+				}
+			}
+			
+			removeWoolColors(player.getInventory());
+			player.updateInventory();
+		}
+
 		FireworkEffect effect = FireworkEffect.builder().withColor(Color.OLIVE).withFade(Color.OLIVE).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
-		
-		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);
-		
-		CircleIterator.iterateCircleBlocks(this, event.getPlayer().getLocation(), EFFECT_RADIUS);
+		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
+		Util.showFirework(effectLoc, effect);			
+		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);		
 		
 		return true;
 	}
-
-	@Override
-	public void onCircleColumnFound(World world, int x, int z) {
-		for (int y = 0; y < 256; y++)
+	
+	private void removeWoolColors(Inventory inventory)
+	{
+		for (int i = 0; i < inventory.getSize(); i++)
 		{
-			Block block = world.getBlockAt(x, y, z);
-			processBlock(block);
+			ItemStack stack = inventory.getItem(i);
+			if (stack != null && stack.getType() == Material.WOOL)
+			{
+				Wool materialData = (Wool) stack.getData();
+				materialData.setColor(DyeColor.WHITE);
+				stack.setDurability(materialData.getData());
+
+				inventory.setItem(i, stack);
+			}
 		}
 	}
-
-	private void processBlock(Block block)
-	{
-		if (block.getType() == Material.LEAVES)
-			block.breakNaturally();
-		else if (block.getType() == Material.GRASS)
-			block.setType(Material.DIRT);
+	
+	@Override
+	protected boolean onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
+		return false;
 	}
 }

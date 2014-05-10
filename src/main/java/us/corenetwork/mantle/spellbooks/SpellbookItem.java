@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,17 +16,7 @@ public class SpellbookItem {
 	{
 		owner = null;
 	}
-	
-	public boolean isSoulbound()
-	{
-		return owner != null;
-	}
-	
-	public String getSoulboundOwner()
-	{
-		return owner;
-	}
-	
+		
 	public ItemStack getBookItem()
 	{
 		return item;
@@ -36,9 +27,10 @@ public class SpellbookItem {
 		return spellbook;
 	}
 	
+	
 	public static SpellbookItem parseSpellbook(ItemStack itemStack)
 	{
-		if (itemStack.getType() != Material.ENCHANTED_BOOK)
+		if (itemStack.getType() != Material.ENCHANTED_BOOK && itemStack.getType() != Material.BOOK)
 			return null;
 		
 		ItemMeta meta = itemStack.getItemMeta();
@@ -53,13 +45,16 @@ public class SpellbookItem {
 			return null;
 		
 		String owner = null;
-		for (String s : meta.getLore())
+		if (meta.getLore() != null)
 		{
-			s = ChatColor.stripColor(s);
-			if (s.startsWith("Soulbound to "))
+			for (String s : meta.getLore())
 			{
-				owner = s.substring(13);
-				break;
+				s = ChatColor.stripColor(s);
+				if (s.startsWith("Soulbound to "))
+				{
+					owner = s.substring(13);
+					break;
+				}
 			}
 		}
 		
@@ -69,6 +64,5 @@ public class SpellbookItem {
 		item.owner = owner;
 		
 		return item;
-	}
-	
+	}	
 }
