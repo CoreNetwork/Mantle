@@ -285,16 +285,6 @@ public class HardmodeListener implements Listener {
 			}
 		}
 
-		//Do not drop ghast tear if killed by bow
-		if (event.getEntityType() == EntityType.GHAST && event.getEntity().getLastDamageCause().getCause() == DamageCause.PROJECTILE)
-		{
-			for (ItemStack stack : event.getDrops().toArray(new ItemStack[0]))
-			{
-				if (stack.getType() == Material.GHAST_TEAR)
-					event.getDrops().remove(stack);
-			}
-		}		
-
 		//Wither skeleton only dropping stuff if he has iron sword
 		if (event.getEntityType() == EntityType.SKELETON && ((Skeleton) entity).getSkeletonType() == SkeletonType.WITHER)
 		{
