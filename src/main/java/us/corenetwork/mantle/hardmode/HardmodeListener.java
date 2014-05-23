@@ -391,24 +391,6 @@ public class HardmodeListener implements Listener {
 		if (block == null)
 			return false;
 
-		//Don't drop seeds if not fully grown
-		if ((block.getType() == Material.PUMPKIN_STEM || block.getType() == Material.MELON_STEM || block.getType() == Material.CROPS || block.getType() == Material.POTATO || block.getType() == Material.CARROT) && block.getData() < 7)
-		{
-			block.setType(Material.AIR);
-			return true;
-		}
-
-		//Drop sticks when destroying dead shrub
-		if (block.getType() == Material.LONG_GRASS && block.getData() == GrassSpecies.DEAD.getData())
-		{
-			int sticksDropped = MantlePlugin.random.nextInt(3);
-			if (sticksDropped > 0)
-				block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.STICK, sticksDropped));
-			block.setType(Material.AIR);
-
-			return true;
-		}
-
 		return false;
 	}
 
