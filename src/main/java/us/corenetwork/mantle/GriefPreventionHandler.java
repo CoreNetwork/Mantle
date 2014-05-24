@@ -89,7 +89,7 @@ public class GriefPreventionHandler {
 	
 	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
-		Rectangle villageRectangle = new Rectangle(x, z, xSize + padding, zSize + padding);
+		Rectangle villageRectangle = new Rectangle(x - padding, z - padding, xSize + padding, zSize + padding);
 
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
@@ -123,7 +123,7 @@ public class GriefPreventionHandler {
 	{
 		List<Claim> claims = new LinkedList<Claim>();
 		
-		Rectangle villageRectangle = new Rectangle(x, z, xSize + padding, zSize + padding);
+		Rectangle villageRectangle = new Rectangle(x - padding, z - padding, xSize + padding, zSize + padding);
 
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
