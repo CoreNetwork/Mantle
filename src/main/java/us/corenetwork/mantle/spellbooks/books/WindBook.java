@@ -52,8 +52,7 @@ public class WindBook extends Spellbook implements Listener {
 		FireworkEffect effect = FireworkEffect.builder().withColor(Color.WHITE).withFade(Color.WHITE).build();
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
 		Util.showFirework(effectLoc, effect);
-//		
-//		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_LAND, 1f, 1f);
+
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 	
