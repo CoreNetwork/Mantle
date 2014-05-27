@@ -29,7 +29,6 @@ public class WindBook extends Spellbook implements Listener {
 	private static int EFFECT_DURATION = 20 * 20;
 	//private static int HUNGER_DURATION = 20 * 5;
 
-	private HashSet<String> finishedSprinting = new HashSet<String>(); //List of players under hunger effect at the end (currently unused)
 	private HashSet<String> sprinting = new HashSet<String>(); // List of players under sprinting effect
 
 	public WindBook() {
@@ -69,14 +68,14 @@ public class WindBook extends Spellbook implements Listener {
 				return;
 			}
 
-			sprintFinished(event.getPlayer(), false);
+			finishSprint(event.getPlayer());
 		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoined(PlayerJoinEvent event)
 	{
-		sprintFinished(event.getPlayer(), true);
+		finishSprint(event.getPlayer());
 	}
 	
 	@EventHandler(ignoreCancelled = true)
@@ -85,41 +84,21 @@ public class WindBook extends Spellbook implements Listener {
 		String name = event.getEntity().getName();
 		if (sprinting.contains(name))
 		{
-			event.setCancelled(true);
+			event.setCancelled(true); //Don't drain hunger when sprinting
 		}
 	}
 		
 	
-	private void sprintFinished(Player player, boolean check)
+	private void finishSprint(Player player)
 	{
 		String name = player.getName();
-		if (check && !finishedSprinting.contains(name))
-			return;
 		
 		sprinting.remove(name);
-		finishedSprinting.remove(name);
 		
 		player.setFoodLevel(2);
 		player.setSaturation(0);
-		//int hungerBurning = (int) (18 + Math.ceil(player.getSaturation()));
-		//hungerBurning *= 4;
-		//int level = (int) Math.ceil(hungerBurning / 0.025 / HUNGER_DURATION) - 1;
-		//player.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER, HUNGER_DURATION, level));
 	}
-	
-	private void sprintFinished(String name)
-	{
-		Player player = Bukkit.getPlayer(name);
-		if (player != null)
-		{
-			sprintFinished(player, false);
-			return;
-		}
-		
-		sprinting.remove(name);
-		finishedSprinting.add(name);
-	}
-			
+				
 	private class SprintingTimer implements Runnable
 	{
 		private String name;
@@ -132,7 +111,14 @@ public class WindBook extends Spellbook implements Listener {
 		@Override
 		public void run() {
 			if (sprinting.contains(name))
-				sprintFinished(name);
+			{
+				Player player = Bukkit.getPlayer(name);
+				if (player != null)
+				{
+					finishSprint(player);
+				}
+
+			}
 		}
 	}
 
