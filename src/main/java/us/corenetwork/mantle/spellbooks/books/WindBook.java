@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -29,7 +30,7 @@ public class WindBook extends Spellbook implements Listener {
 	private static int EFFECT_DURATION = 20 * 20;
 	//private static int HUNGER_DURATION = 20 * 5;
 
-	private HashSet<String> sprinting = new HashSet<String>(); // List of players under sprinting effect
+	private HashSet<UUID> sprinting = new HashSet<UUID>(); // List of players under sprinting effect
 
 	public WindBook() {
 		super("Wind");
@@ -40,13 +41,13 @@ public class WindBook extends Spellbook implements Listener {
 	@Override
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		String name = player.getName();
+		UUID uuid = player.getUniqueId();
 		
-		sprinting.add(name);
+		sprinting.add(uuid);
 		
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 49));
 
-		Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(name), EFFECT_DURATION);
+		Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(uuid), EFFECT_DURATION);
 		
 		FireworkEffect effect = FireworkEffect.builder().withColor(Color.WHITE).withFade(Color.WHITE).build();
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
@@ -62,8 +63,7 @@ public class WindBook extends Spellbook implements Listener {
 		
 		if (event.getItem().getType() == Material.MILK_BUCKET)
 		{
-			String name = event.getPlayer().getName();
-			if (!sprinting.contains(name))
+			if (!sprinting.contains(event.getPlayer().getUniqueId()))
 			{
 				return;
 			}
@@ -81,8 +81,7 @@ public class WindBook extends Spellbook implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onHungerChange(FoodLevelChangeEvent event)
 	{
-		String name = event.getEntity().getName();
-		if (sprinting.contains(name))
+		if (sprinting.contains(event.getEntity().getUniqueId()))
 		{
 			event.setCancelled(true); //Don't drain hunger when sprinting
 		}
@@ -90,10 +89,8 @@ public class WindBook extends Spellbook implements Listener {
 		
 	
 	private void finishSprint(Player player)
-	{
-		String name = player.getName();
-		
-		sprinting.remove(name);
+	{		
+		sprinting.remove(player.getUniqueId());
 		
 		player.setFoodLevel(2);
 		player.setSaturation(0);
@@ -101,18 +98,18 @@ public class WindBook extends Spellbook implements Listener {
 				
 	private class SprintingTimer implements Runnable
 	{
-		private String name;
+		private UUID uuid;
 		
-		public SprintingTimer(String name)
+		public SprintingTimer(UUID uuid)
 		{
-			this.name = name;
+			this.uuid = uuid;
 		}
 
 		@Override
 		public void run() {
-			if (sprinting.contains(name))
+			if (sprinting.contains(uuid))
 			{
-				Player player = Bukkit.getPlayer(name);
+				Player player = Bukkit.getPlayer(uuid);
 				if (player != null)
 				{
 					finishSprint(player);
