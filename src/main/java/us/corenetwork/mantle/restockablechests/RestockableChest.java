@@ -184,7 +184,7 @@ public class RestockableChest {
 			}
 		}
 		
-		int timerLeft = ChestTimeout.getRemainingTime(lootTable, player.getName(), chestBlock);
+		int timerLeft = ChestTimeout.getRemainingTime(lootTable, player.getUniqueId(), chestBlock);
 		if (timerLeft >= 0)
 		{
 			String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Message", "Admin of this server is too lazy to enter message!");
@@ -381,7 +381,7 @@ public class RestockableChest {
 
 		Integer timeoutMinutes = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Timeout", 0);
 		if (timeoutMinutes > 0)
-			ChestTimeout.addTimer(lootTable, player.getName(), timeoutMinutes, chestBlock);
+			ChestTimeout.addTimer(lootTable, player.getUniqueId(), timeoutMinutes, chestBlock);
 		
 		String numberDisplay = "";
 		int maxNumber = RChestsModule.instance.config.getInt("LootTables." + lootTable + ".PlayerControl.MaximumDisplayedAccessNumber", Integer.MAX_VALUE);

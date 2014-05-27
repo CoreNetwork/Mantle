@@ -40,13 +40,13 @@ public class InspectCommand {
 			return;
 		}
 		
-		if (!InspectorSession.sessions.containsKey(player.getName()))
+		if (!InspectorSession.sessions.containsKey(player.getUniqueId()))
 		{
 			Util.Message(InspectorSettings.MESSAGE_SESSION_NOT_ACTIVE.string(), sender);
 			return;
 		}
 		
-		InspectorSession session = InspectorSession.sessions.get(player.getName());
+		InspectorSession session = InspectorSession.sessions.get(player.getUniqueId());
 		
 		if (action.equals("stop"))
 		{
@@ -83,17 +83,15 @@ public class InspectCommand {
 	}
 	
 	private static void start(Player player)
-	{
-		String name = player.getName();
-		
-		if (InspectorSession.sessions.containsKey(name))
+	{		
+		if (InspectorSession.sessions.containsKey(player.getUniqueId()))
 		{
 			Util.Message(InspectorSettings.MESSAGE_SESSION_ALREADY_ACTIVE.string(), player);
 			return;
 		}
 		
 		InspectorSession session = new InspectorSession();
-		InspectorSession.sessions.put(name, session);
+		InspectorSession.sessions.put(player.getUniqueId(), session);
 		
 		session.teleportToNext(player);
 	}
@@ -101,7 +99,7 @@ public class InspectCommand {
 	private static void stop(Player player)
 	{
 		Util.Message(InspectorSettings.MESSAGE_STOP.string(), player);
-		InspectorSession.sessions.remove(player.getName());
+		InspectorSession.sessions.remove(player.getUniqueId());
 	}
 	
 	private static void approve(Player player, InspectorSession session)

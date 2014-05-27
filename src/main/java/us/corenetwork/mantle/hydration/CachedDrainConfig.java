@@ -54,10 +54,10 @@ public class CachedDrainConfig {
 	{
 		public double getDrain(Player player)
 		{
-			Long lastLavaDamage = HydrationListener.lavaPlayer.get(player.getName());
+			Long lastLavaDamage = HydrationListener.lavaPlayer.get(player.getUniqueId());
 			if (lastLavaDamage != null && lastLavaDamage > System.currentTimeMillis() - 2000)
 			{
-				HydrationListener.lavaPlayer.remove(player.getName());
+				HydrationListener.lavaPlayer.remove(player.getUniqueId());
 				return lavaDrain;
 			}
 			

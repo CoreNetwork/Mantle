@@ -1,7 +1,9 @@
 package us.corenetwork.mantle.portals;
 
+import java.util.UUID;
+
 
 public class FlintSteelData {
-	public String player;
+	public UUID player;
 	public long timestamp;
 }

@@ -1,20 +1,19 @@
 package us.corenetwork.mantle.restockablechests;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.block.Block;
 
-import us.corenetwork.mantle.MLog;
-
 public class ChestTimeout {
-	private static HashMap<String, HashMap<String, ChestTimer>> timers = new HashMap<String, HashMap<String, ChestTimer>>();
+	private static HashMap<String, HashMap<UUID, ChestTimer>> timers = new HashMap<String, HashMap<UUID, ChestTimer>>();
 	
-	public static void addTimer(String table, String player, int time, Block chest)
+	public static void addTimer(String table, UUID player, int time, Block chest)
 	{
-		HashMap<String, ChestTimer> tableTimers = timers.get(table);
+		HashMap<UUID, ChestTimer> tableTimers = timers.get(table);
 		if (tableTimers == null)
 		{
-			tableTimers = new HashMap<String, ChestTimer>();
+			tableTimers = new HashMap<UUID, ChestTimer>();
 			timers.put(table, tableTimers);
 		}
 		
@@ -25,9 +24,9 @@ public class ChestTimeout {
 		tableTimers.put(player, timer);
 	}
 	
-	public static int getRemainingTime(String table, String player, Block chest)
+	public static int getRemainingTime(String table, UUID player, Block chest)
 	{
-		HashMap<String, ChestTimer> tableTimers = timers.get(table);
+		HashMap<UUID, ChestTimer> tableTimers = timers.get(table);
 		
 		if (tableTimers == null)
 			return -1;

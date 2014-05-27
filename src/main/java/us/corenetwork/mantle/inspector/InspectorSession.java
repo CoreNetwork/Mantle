@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.UUID;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 
@@ -22,7 +23,7 @@ import us.corenetwork.mantle.regeneration.RegenerationUtil;
 
 
 public class InspectorSession {
-	public static HashMap<String, InspectorSession> sessions = new HashMap<String, InspectorSession>();
+	public static HashMap<UUID, InspectorSession> sessions = new HashMap<UUID, InspectorSession>();
 	
 	public int current = -1;
 	public HashSet<Integer> skipped = new HashSet<Integer>();

@@ -96,7 +96,7 @@ public class PortalsListener implements Listener {
 			{
 				FlintSteelData data = new FlintSteelData();
 				data.timestamp = System.currentTimeMillis();
-				data.player = player.getName();
+				data.player = player.getUniqueId();
 				
 				
 				flintSteelUsage.put(target, data);
@@ -212,7 +212,7 @@ public class PortalsListener implements Listener {
 					return;
 				}
 
-				Player player = Bukkit.getServer().getPlayerExact(creator.player);
+				Player player = Bukkit.getServer().getPlayer(creator.player);
 
 				if (player == null || claim.allowBuild(player) != null)
 				{

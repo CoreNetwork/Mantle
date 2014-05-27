@@ -3,6 +3,7 @@ package us.corenetwork.mantle.hardmode;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.UUID;
 
 import net.minecraft.server.v1_7_R3.AttributeInstance;
 import net.minecraft.server.v1_7_R3.EntityInsentient;
@@ -12,7 +13,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.FireworkEffect.Builder;
-import org.bukkit.GrassSpecies;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -73,7 +73,7 @@ import us.corenetwork.mantle.netherspawning.NetherSpawner;
 public class HardmodeListener implements Listener {
 
 	private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
-	protected static HashMap<String, Long> lastWitherHits = new HashMap<String, Long>();
+	protected static HashMap<UUID, Long> lastWitherHits = new HashMap<UUID, Long>();
 
 	static
 	{
@@ -136,13 +136,13 @@ public class HardmodeListener implements Listener {
 					//Remember last wither skeleton attack 
 					if (weapon != null && weapon.getType() == Material.IRON_SWORD)
 					{
-						lastWitherHits.put(((Player) victim).getName(), System.currentTimeMillis());
+						lastWitherHits.put(victim.getUniqueId(), System.currentTimeMillis());
 					}
 				}
 			}
 			else if (victim instanceof Player && (damager instanceof WitherSkull || damager instanceof Wither))
 			{
-				lastWitherHits.put(((Player) victim).getName(), System.currentTimeMillis());
+				lastWitherHits.put(victim.getUniqueId(), System.currentTimeMillis());
 			}
 			//Preventing minions from being damaged by wither
 			else if ((damager instanceof Wither || damager instanceof WitherSkull) && victim instanceof LivingEntity)
@@ -197,7 +197,7 @@ public class HardmodeListener implements Listener {
 			//Remove wither if inflicted by invalid skeleton
 			if (event.getCause() == DamageCause.WITHER)
 			{
-				Long lastWitherHit = lastWitherHits.get(player.getName());
+				Long lastWitherHit = lastWitherHits.get(player.getUniqueId());
 				if (lastWitherHit == null || lastWitherHit < System.currentTimeMillis() - 20000)
 				{
 					Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {

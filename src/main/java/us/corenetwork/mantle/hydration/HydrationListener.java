@@ -2,7 +2,7 @@ package us.corenetwork.mantle.hydration;
 
 
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -20,7 +20,7 @@ import us.corenetwork.mantle.MantlePlugin;
 
 public class HydrationListener implements Listener {
 	
-	public static HashMap<String, Long> lavaPlayer = new HashMap<String, Long>();
+	public static HashMap<UUID, Long> lavaPlayer = new HashMap<UUID, Long>();
 	
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
@@ -69,8 +69,7 @@ public class HydrationListener implements Listener {
 	{
 		if (event.getCause() == DamageCause.LAVA && event.getEntityType() == EntityType.PLAYER)
 		{
-			Player player = (Player) event.getEntity();
-			lavaPlayer.put(player.getName(), System.currentTimeMillis());
+			lavaPlayer.put(event.getEntity().getUniqueId(), System.currentTimeMillis());
 		}
 	}
 }
