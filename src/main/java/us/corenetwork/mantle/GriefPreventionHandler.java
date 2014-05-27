@@ -13,6 +13,7 @@ import me.ryanhamshire.GriefPrevention.CreateClaimResult;
 import me.ryanhamshire.GriefPrevention.CreateClaimResult.Result;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -90,7 +91,7 @@ public class GriefPreventionHandler {
 	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
 		Rectangle villageRectangle = new Rectangle(x - padding, z - padding, xSize + padding, zSize + padding);
-
+		
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		for (int i = 0; i < ca.size(); i++)
 		{
@@ -110,7 +111,7 @@ public class GriefPreventionHandler {
 			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
 			int claimMaxZ = Math.max(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
 
-			Rectangle claimRectangle = new Rectangle(claimMinX, claimMinZ, claimMaxX - claimMinX, claimMaxZ - claimMinZ);
+			Rectangle claimRectangle = new Rectangle(claimMinX, claimMinZ, claimMaxX - claimMinX + 1, claimMaxZ - claimMinZ + 1);
 			if (villageRectangle.intersects(claimRectangle))
 				return true;
 
