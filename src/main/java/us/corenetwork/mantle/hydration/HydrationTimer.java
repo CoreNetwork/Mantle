@@ -18,12 +18,12 @@ public class HydrationTimer implements Runnable {
 
 		try
 		{
-			PreparedStatement delStatement = IO.getConnection().prepareStatement("DELETE FROM hydration WHERE Player = ?");
-			PreparedStatement insertStatement = IO.getConnection().prepareStatement("INSERT INTO hydration (Player, Hydration, Saturation, FatigueLevel, FatigueLevelStart, DeliveredMessages) VALUES (?,?,?,?,?,?)");
+			PreparedStatement delStatement = IO.getConnection().prepareStatement("DELETE FROM hydration WHERE PlayerUUID = ?");
+			PreparedStatement insertStatement = IO.getConnection().prepareStatement("INSERT INTO hydration (PlayerUUID, Hydration, Saturation, FatigueLevel, FatigueLevelStart, DeliveredMessages) VALUES (?,?,?,?,?,?)");
 
 			for (Player player : Bukkit.getServer().getOnlinePlayers())
 			{
-				PlayerData playerData = PlayerData.getPlayer(player.getName());
+				PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 				boolean playerUpdated = playerData.waitingToSave;
 
 				int oldHydration = (int) Math.round(playerData.hydrationLevel);

@@ -337,9 +337,9 @@ public class RestockableChest {
 	{				
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM playerChests WHERE ID = ? AND Player = ? LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM playerChests WHERE ID = ? AND PlayerUUID = ? LIMIT 1");
 			statement.setInt(1, id);
-			statement.setString(2, player == null ? "[CHEST]" : player.getName());
+			statement.setString(2, player == null ? "[CHEST]" : player.getUniqueId().toString());
 			ResultSet set = statement.executeQuery();
 
 			int lastAccess;
@@ -440,9 +440,9 @@ public class RestockableChest {
 			statement.executeUpdate();
 			statement.close();
 
-			statement = IO.getConnection().prepareStatement("INSERT INTO playerChests (ID,Player, LastAccess, Restocks) VALUES (?,?,?,?)");
+			statement = IO.getConnection().prepareStatement("INSERT INTO playerChests (ID,PlayerUUID, LastAccess, Restocks) VALUES (?,?,?,?)");
 			statement.setInt(1, id);
-			statement.setString(2, player == null ? "[CHEST]" : player.getName());
+			statement.setString(2, player == null ? "[CHEST]" : player.getUniqueId().toString());
 			statement.setInt(3, finiteChest ? -1 : (int) (System.currentTimeMillis() / 1000));
 			statement.setInt(4, restocks);
 			statement.executeUpdate();
@@ -520,9 +520,9 @@ public class RestockableChest {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM chestInventory WHERE ID = ? AND Player = ?");
+			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM chestInventory WHERE ID = ? AND PlayerUUID = ?");
 			statement.setInt(1, id);
-			statement.setString(2, player.getName());
+			statement.setString(2, player.getUniqueId().toString());
 			statement.executeUpdate();
 			statement.close();
 
@@ -532,7 +532,7 @@ public class RestockableChest {
 				return;
 			}
 
-			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, Player, Slot, ItemID, Damage, Amount) VALUES (?,?,?,?,?,?)");
+			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, PlayerUUID, Slot, ItemID, Damage, Amount) VALUES (?,?,?,?,?,?)");
 
 			int size = inventory.getSize();
 			for (int i = 0; i < size; i++)
@@ -542,7 +542,7 @@ public class RestockableChest {
 					continue;
 
 				statement.setInt(1, id);
-				statement.setString(2, player.getName());
+				statement.setString(2, player.getUniqueId().toString());
 				statement.setInt(3, i);
 				statement.setInt(4, stack.getTypeId());
 				statement.setInt(5, stack.getDurability());

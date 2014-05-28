@@ -31,7 +31,7 @@ public class SetCommand extends BaseHydrationCommand {
 			saturation = Double.parseDouble(args[1]);
 		
 		
-		PlayerData playerData = PlayerData.getPlayer(player.getName());
+		PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 		playerData.hydrationLevel = hydration;
 		playerData.saturationLevel = saturation;
 		playerData.save();

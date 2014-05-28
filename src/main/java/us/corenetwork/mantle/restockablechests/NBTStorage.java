@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import net.minecraft.server.v1_7_R3.NBTTagCompound;
 

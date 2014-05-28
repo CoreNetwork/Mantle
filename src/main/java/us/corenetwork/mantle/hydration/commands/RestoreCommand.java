@@ -20,7 +20,7 @@ public class RestoreCommand extends BaseHydrationCommand {
 		
 		Player player = (Player) sender;
 		
-		PlayerData playerData = PlayerData.getPlayer(player.getName());
+		PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 		playerData.hydrationLevel = 100;
 		playerData.saturationLevel = 50;
 		playerData.fatigueEffectStart = 0;

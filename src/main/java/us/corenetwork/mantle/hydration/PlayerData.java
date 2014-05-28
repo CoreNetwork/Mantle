@@ -6,13 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import us.corenetwork.mantle.IO;
 
 public class PlayerData {	
-	private static HashMap<String, PlayerData> pendingSaves = new HashMap<String, PlayerData>();
+	private static HashMap<UUID, PlayerData> pendingSaves = new HashMap<UUID, PlayerData>();
 	
-	private String playerName;
+	private UUID playerUUID;
 	
 	public int fatigueLevel;
 	public long fatigueEffectStart;
@@ -21,26 +22,24 @@ public class PlayerData {
 	public List<Integer> deliveredMessages;
 	public boolean waitingToSave;
 	
-	public static PlayerData getPlayer(String name)
-	{
-		name = name.toLowerCase();
-		
-		PlayerData data = pendingSaves.get(name);
+	public static PlayerData getPlayer(UUID uuid)
+	{		
+		PlayerData data = pendingSaves.get(uuid);
 		if (data != null)
 			return data;
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM hydration WHERE Player = ? LIMIT 1");
-			statement.setString(1, name);
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM hydration WHERE PlayerUUID = ? LIMIT 1");
+			statement.setString(1, uuid.toString());
 			ResultSet set = statement.executeQuery();
 			if (set.next())
 			{
-				data = new PlayerData(name, set);
+				data = new PlayerData(uuid, set);
 			}
 			else
 			{
-				data = new PlayerData(name);
+				data = new PlayerData(uuid);
 			}
 			
 			statement.close();
@@ -56,7 +55,7 @@ public class PlayerData {
 	public void save()
 	{
 		waitingToSave = true;
-		pendingSaves.put(playerName, this);
+		pendingSaves.put(playerUUID, this);
 //		try
 //		{
 //			PreparedStatement delStatement = IO.getConnection().prepareStatement("DELETE FROM hydration WHERE Player = ?");
@@ -80,9 +79,9 @@ public class PlayerData {
 	
 	public void save(PreparedStatement delStatement, PreparedStatement insertStatement) throws SQLException
 	{
-		delStatement.setString(1, playerName);
+		delStatement.setString(1, playerUUID.toString());
 		
-		insertStatement.setString(1, playerName);
+		insertStatement.setString(1, playerUUID.toString());
 		insertStatement.setDouble(2, hydrationLevel);
 		insertStatement.setDouble(3, saturationLevel);
 		insertStatement.setInt(4, fatigueLevel);
@@ -90,12 +89,12 @@ public class PlayerData {
 		insertStatement.setString(6, serializeIntegerList(deliveredMessages));
 		
 		waitingToSave = false;
-		pendingSaves.remove(playerName);
+		pendingSaves.remove(playerUUID);
 	}
 	
-	private PlayerData(String name)
+	private PlayerData(UUID uuid)
 	{
-		playerName = name;
+		playerUUID = uuid;
 		fatigueLevel = 0;
 		fatigueEffectStart = 0;
 		hydrationLevel = 100;
@@ -103,9 +102,9 @@ public class PlayerData {
 		deliveredMessages = new ArrayList<Integer>();
 	}
 	
-	private PlayerData(String name, ResultSet set) throws SQLException
+	private PlayerData(UUID uuid, ResultSet set) throws SQLException
 	{
-		playerName = name;
+		playerUUID = uuid;
 		hydrationLevel = set.getDouble("Hydration");
 		saturationLevel = set.getDouble("Saturation");
 		fatigueLevel = set.getInt("FatigueLevel");

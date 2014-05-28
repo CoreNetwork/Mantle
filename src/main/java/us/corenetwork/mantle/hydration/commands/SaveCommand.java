@@ -1,17 +1,16 @@
 package us.corenetwork.mantle.hydration.commands;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.hydration.HydrationUtil;
 import us.corenetwork.mantle.hydration.PlayerData;
 
 
 public class SaveCommand extends BaseHydrationCommand {	
-	public static HashMap<String, HydrationState> savedHydration = new HashMap<String, HydrationState>();
+	public static HashMap<UUID, HydrationState> savedHydration = new HashMap<UUID, HydrationState>();
 	
 	public SaveCommand()
 	{
@@ -25,13 +24,13 @@ public class SaveCommand extends BaseHydrationCommand {
 		
 		
 		Player player = (Player) sender;
-		PlayerData playerData = PlayerData.getPlayer(player.getName());
+		PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 
 		HydrationState state = new HydrationState();
 		state.hydration = playerData.hydrationLevel;
 		state.saturation = playerData.saturationLevel;
 				
-		savedHydration.put(player.getName(), state);
+		savedHydration.put(player.getUniqueId(), state);
 	}	
 	
 	public static class HydrationState

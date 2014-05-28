@@ -21,11 +21,11 @@ public class LoadCommand extends BaseHydrationCommand {
 	public void run(final CommandSender sender, String[] args) {
 				
 		Player player = (Player) sender;
-		HydrationState state = SaveCommand.savedHydration.get(player.getName());
+		HydrationState state = SaveCommand.savedHydration.get(player.getUniqueId());
 		if (state == null)
 			return;		
 		
-		PlayerData playerData = PlayerData.getPlayer(player.getName());
+		PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 		playerData.hydrationLevel = state.hydration;
 		playerData.saturationLevel = state.saturation;
 		playerData.save();
