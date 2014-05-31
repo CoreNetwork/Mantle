@@ -12,7 +12,9 @@ import java.util.UUID;
 
 import net.minecraft.server.v1_7_R3.NBTTagCompound;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -130,15 +132,19 @@ public class NBTStorage {
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT playerChests.ID,Player FROM playerChests LEFT JOIN chests ON playerChests.ID = chests.ID WHERE (strftime('%s', 'now') - lastAccess > interval * 3600)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT playerChests.ID,PlayerUUID FROM playerChests LEFT JOIN chests ON playerChests.ID = chests.ID WHERE (strftime('%s', 'now') - lastAccess > interval * 3600)");
 			ResultSet set = statement.executeQuery();
 			
 			while (set.next())
 			{
 				int id = set.getInt("ID");
-				String player = set.getString("Player");
+				String uuid = set.getString("PlayerUUID");
 				
-				File file = new File(dataFolder, id + "_" + player + ".yml");
+				OfflinePlayer offline = Bukkit.getOfflinePlayer(UUID.fromString(uuid));
+				if (offline == null || !offline.hasPlayedBefore())
+					continue;
+				
+				File file = new File(dataFolder, id + "_" + offline.getName() + ".yml");
 				if (file.exists())
 					file.delete();
 			}
