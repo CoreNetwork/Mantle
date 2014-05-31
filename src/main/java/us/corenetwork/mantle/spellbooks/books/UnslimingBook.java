@@ -50,7 +50,7 @@ public class UnslimingBook extends Spellbook {
 		
 		Chunk chunk = player.getLocation().getBlock().getChunk();		
 		boolean slimeChunk = SlimeSpawner.isSlimeChunk(chunk) && !IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()); 
-		if (!slimeChunk)
+		if (slimeChunk)
 		{
 			Util.Message(settings.getString(SETTING_MESSAGE_SLIME_CHUNK), player);
 			IgnoredSlimeChunks.addChunk(chunk.getX(), chunk.getZ());
