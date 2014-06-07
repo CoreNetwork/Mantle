@@ -155,15 +155,15 @@ public class ForgingBook extends Spellbook {
 			
 			if (amountTarget < 1)
 				continue;
-						
-			totalConsumedFuel += amountSource;
-			
+									
 			int stacksRemoved = amountSource / entry.getKey().getMaxStackSize();
 			int stacksAdded = (int) Math.ceil((double) (amountTarget - existingTargetItemsFree) / entry.getValue().getMaxStackSize());
 						
 			if (stacksRemoved + freeInventorySlots < stacksAdded)
 				continue;
-					
+								
+			totalConsumedFuel += amountSource;
+			
 			FusingBook.removeItem(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
 						
 			while (amountTarget > 0)
