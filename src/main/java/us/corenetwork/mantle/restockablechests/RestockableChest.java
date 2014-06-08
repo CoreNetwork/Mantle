@@ -434,9 +434,9 @@ public class RestockableChest {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM playerChests WHERE ID = ? AND Player = ?");
+			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM playerChests WHERE ID = ? AND PlayerUUID = ?");
 			statement.setInt(1, id);
-			statement.setString(2, player == null ? "[CHEST]" : player.getName());
+			statement.setString(2, player == null ? "[CHEST]" : player.getUniqueId().toString());
 			statement.executeUpdate();
 			statement.close();
 
@@ -464,9 +464,9 @@ public class RestockableChest {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT Restocks FROM playerChests WHERE ID = ? AND Player = ? LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT Restocks FROM playerChests WHERE ID = ? AND PlayerUUID = ? LIMIT 1");
 			statement.setInt(1, id);
-			statement.setString(2, player == null ? "[CHEST]" : player.getName());
+			statement.setString(2, player == null ? "[CHEST]" : player.getUniqueId().toString());
 			ResultSet set = statement.executeQuery();
 
 			int restocks = 0;
@@ -486,9 +486,9 @@ public class RestockableChest {
 
 			Inventory inventory = createEmptyInventory(numberDisplay);
 
-			statement = IO.getConnection().prepareStatement("SELECT * FROM chestInventory WHERE ID = ? AND Player = ?");
+			statement = IO.getConnection().prepareStatement("SELECT * FROM chestInventory WHERE ID = ? AND PlayerUUID = ?");
 			statement.setInt(1, id);
-			statement.setString(2, player.getName());
+			statement.setString(2, player.getUniqueId().toString());
 			set = statement.executeQuery();
 
 			while (set.next())
