@@ -131,45 +131,64 @@ public class ForgingBook extends Spellbook {
 		
 		for (Entry<ItemStack, ItemStack> entry : FORGEITEMS.entrySet())
 		{			
-			int amountSource = 0;
-			int existingTargetItemsFree = 0; //How many target items can we fit into existing stacks
+			ItemStack inputItemType = entry.getKey();
+			ItemStack outputItemType = entry.getValue();
 			
+			int existingTargetItemsFree = 0; //How many target items can we fit into existing stacks
 			for (ItemStack stack : inventory.getContents())
 			{
 				if (stack == null)
 					continue;
-				
-				if (stack.getType() == entry.getKey().getType() && (stack.getDurability() == entry.getKey().getDurability() || entry.getKey().getDurability() == 32767)) //Apparently 32767 means ignore data value
-					amountSource += stack.getAmount();
-				
-				if (stack.getType() == entry.getValue().getType() && (stack.getDurability() == entry.getValue().getDurability() || entry.getValue().getDurability() == 32767))
+								
+				if (stack.getType() == outputItemType.getType() && (stack.getDurability() == outputItemType.getDurability() || outputItemType.getDurability() == 32767))
 					existingTargetItemsFree += stack.getMaxStackSize() - stack.getAmount();
 			}
-									
-			amountSource = Math.min(amountSource, totalAvailableFuel - totalConsumedFuel);
+															
+			int amountFree = freeInventorySlots * outputItemType.getMaxStackSize() + existingTargetItemsFree;
+			int amountToSmelt = 0;
+			int fuelToSpend = totalAvailableFuel - totalConsumedFuel;
+			if (fuelToSpend < 1)
+				break;
 			
-			int divider = entry.getKey().getAmount() / entry.getValue().getAmount();
-			int amountTarget = amountSource / divider;
-			amountSource = amountTarget * divider;
-			
-			if (amountTarget < 1)
-				continue;
-									
-			int amountFree = amountTarget + existingTargetItemsFree + freeInventorySlots * entry.getValue().getMaxStackSize(); //How many target items can we fit into inventory
-			amountTarget = Math.min(amountSource, amountFree);
-												
-			if (amountTarget < 1)
-				continue;								
-			
-			totalConsumedFuel += amountSource;
-			
-			FusingBook.removeItem(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
-						
-			while (amountTarget > 0)
+			for (int i = 0; i < inventory.getSize(); i++)
 			{
-				int addAmount = Math.min(amountTarget, entry.getValue().getMaxStackSize());
-				amountTarget -= addAmount;
-				HashMap<Integer, ItemStack> invalidItems = inventory.addItem(new ItemStack(entry.getValue().getType(), addAmount, entry.getValue().getDurability()));
+				ItemStack stack = inventory.getItem(i);
+				if (stack != null && inputItemType.getType() == stack.getType() && (inputItemType.getDurability() == stack.getDurability() || inputItemType.getDurability()  == 32767))
+				{
+					int stackAmount = stack.getAmount();
+					if (fuelToSpend >= stackAmount && stackAmount <= amountFree + outputItemType.getMaxStackSize())
+					{
+						inventory.setItem(i, null);
+						fuelToSpend -= stackAmount;
+						amountToSmelt += stackAmount;
+						amountFree += outputItemType.getMaxStackSize() - stackAmount;
+						
+						if (fuelToSpend == 0)
+							break;
+					}
+					else
+					{
+						int amountToRemove = Math.min(fuelToSpend, amountFree);
+						stack.setAmount(stackAmount - amountToRemove);
+						fuelToSpend -= amountToRemove;
+						amountToSmelt += amountToRemove;
+						amountFree -= amountToRemove;
+						
+						break;
+					}
+				}
+			}
+			
+			if (amountToSmelt < 1)
+				continue;
+			
+			totalConsumedFuel += amountToSmelt;
+									
+			while (amountToSmelt > 0)
+			{
+				int addAmount = Math.min(amountToSmelt, outputItemType.getMaxStackSize());
+				amountToSmelt -= addAmount;
+				HashMap<Integer, ItemStack> invalidItems = inventory.addItem(new ItemStack(outputItemType.getType(), addAmount, outputItemType.getDurability()));
 				//Just in case
 				if (invalidItems.size() > 0)
 				{
@@ -180,7 +199,7 @@ public class ForgingBook extends Spellbook {
 
 			}
 
-			freeInventorySlots -= Math.ceil((amountFree - amountTarget) / (double) entry.getValue().getMaxStackSize());
+			freeInventorySlots -= Math.ceil(amountToSmelt / (double) entry.getValue().getMaxStackSize());
 		}
 		
 		boolean anythingSmelted = totalConsumedFuel > 0;

@@ -111,11 +111,11 @@ public class FusingBook extends Spellbook {
 			if (amountTarget < 1)
 				continue;
 			
-			int amountFree = amountTarget + existingTargetItemsFree + freeInventorySlots * entry.getValue().getMaxStackSize(); //How many target items can we fit into inventory
-			amountTarget = Math.min(amountSource, amountFree);
-												
-			if (amountTarget < 1)
-				continue;								
+			int stacksRemoved = (int) Math.ceil((double) amountSource / entry.getKey().getMaxStackSize());
+			int stacksAdded = (int) Math.ceil((double) (amountTarget - existingTargetItemsFree) / entry.getValue().getMaxStackSize());
+			
+			if (stacksRemoved + freeInventorySlots < stacksAdded)
+				continue;
 					
 			fusedSomething = true;
 			
@@ -136,7 +136,7 @@ public class FusingBook extends Spellbook {
 
 			}
 
-			freeInventorySlots -= Math.ceil((amountFree - amountTarget) / (double) entry.getValue().getMaxStackSize());
+			freeInventorySlots -= stacksAdded;
 		}
 		
 		if (inventory.getType() == InventoryType.PLAYER)
