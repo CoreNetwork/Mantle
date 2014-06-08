@@ -79,7 +79,6 @@ public class ForgingBook extends Spellbook {
 				return BookFinishAction.NOTHING;
 			}
 
-			
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
 		}
@@ -156,12 +155,12 @@ public class ForgingBook extends Spellbook {
 			if (amountTarget < 1)
 				continue;
 									
-			int stacksRemoved = amountSource / entry.getKey().getMaxStackSize();
-			int stacksAdded = (int) Math.ceil((double) (amountTarget - existingTargetItemsFree) / entry.getValue().getMaxStackSize());
-						
-			if (stacksRemoved + freeInventorySlots < stacksAdded)
-				continue;
-								
+			int amountFree = amountTarget + existingTargetItemsFree + freeInventorySlots * entry.getValue().getMaxStackSize(); //How many target items can we fit into inventory
+			amountTarget = Math.min(amountSource, amountFree);
+												
+			if (amountTarget < 1)
+				continue;								
+			
 			totalConsumedFuel += amountSource;
 			
 			FusingBook.removeItem(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
@@ -181,7 +180,7 @@ public class ForgingBook extends Spellbook {
 
 			}
 
-			freeInventorySlots -= stacksAdded - stacksRemoved;
+			freeInventorySlots -= Math.ceil((amountFree - amountTarget) / (double) entry.getValue().getMaxStackSize());
 		}
 		
 		boolean anythingSmelted = totalConsumedFuel > 0;
