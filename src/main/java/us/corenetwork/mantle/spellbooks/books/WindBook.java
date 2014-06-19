@@ -89,10 +89,12 @@ public class WindBook extends Spellbook implements Listener {
 	
 	private void finishSprint(Player player)
 	{		
-		sprinting.remove(player.getUniqueId());
-		
-		player.setFoodLevel(2);
-		player.setSaturation(0);
+		if(sprinting.contains(player.getUniqueId()))
+		{
+			player.setFoodLevel(2);
+			player.setSaturation(0);
+			sprinting.remove(player.getUniqueId());
+		}
 	}
 				
 	private class SprintingTimer implements Runnable
