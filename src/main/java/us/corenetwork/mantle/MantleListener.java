@@ -3,11 +3,12 @@ package us.corenetwork.mantle;
 import java.util.HashSet;
 
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MantleListener implements Listener {	
 
@@ -40,6 +41,15 @@ public class MantleListener implements Listener {
 			if (godEntities.contains(event.getEntity().getEntityId()))
 			{
 				event.setCancelled(true);
+			}
+		}
+		
+		@EventHandler(priority = EventPriority.MONITOR)
+		public void onChunkUnload(ChunkUnloadEvent event)
+		{
+			if (event.isCancelled())
+			{
+				MLog.info("Something cancelled chunk unload!");
 			}
 		}
 }
