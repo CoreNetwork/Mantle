@@ -172,6 +172,11 @@ public class NetherSpawner {
 			return new Stairs(block.getType(), block.getData()).isInverted();
 
 		}
+
+		if (block.getType() == Material.HOPPER)
+		{
+			return true;
+		}
 		
 		return false;
 	}
