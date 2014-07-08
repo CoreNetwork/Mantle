@@ -99,7 +99,7 @@ public class GriefPreventionHandler {
 			if (adminOnly && !claim.isAdminClaim())
 				continue;
 			
-			if (claim.getLesserBoundaryCorner().getWorld() != world)
+			if (claim.getClaimWorldName() != world.getName())
 				continue;
 			
 			if (player != null && (claim.allowAccess(player) == null))
@@ -133,7 +133,7 @@ public class GriefPreventionHandler {
 			if (adminOnly && !claim.isAdminClaim())
 				continue;
 			
-			if (claim.getLesserBoundaryCorner().getWorld() != world)
+			if (claim.getClaimWorldName() != world.getName())
 				continue;
 			
 			if (player != null && (claim.allowAccess(player) == null))

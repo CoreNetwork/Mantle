@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -29,7 +28,7 @@ public class TestRespawnCommand extends BaseMantleCommand {
 	public void run(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
 		Location location = player.getLocation();
-		World firstWorld = Bukkit.getWorlds().get(0);
+		World world = player.getWorld();
 		
 		int x = location.getBlockX();
 		int z = location.getBlockZ();
@@ -56,7 +55,7 @@ public class TestRespawnCommand extends BaseMantleCommand {
 				int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 				
 				String message;
-				if (GriefPreventionHandler.containsClaim(firstWorld, villageX, villageZ, xSize, zSize, padding, false, null))
+				if (GriefPreventionHandler.containsClaim(world, villageX, villageZ, xSize, zSize, padding, false, null))
 				{
 					message = RegenerationSettings.MESSAGE_STRUCTURE_WILL_NOT_BE_RESTORED.string();
 				}		
