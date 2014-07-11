@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 
 import me.ryanhamshire.GriefPrevention.Claim;
@@ -30,7 +31,7 @@ import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 
 public class FusingBook extends Spellbook {
-	private final HashMap<ItemStack, ItemStack> FUSEITEMS = new HashMap<ItemStack, ItemStack>();
+	private final LinkedHashMap<ItemStack, ItemStack> FUSEITEMS = new LinkedHashMap<ItemStack, ItemStack>();
 	
 	@SuppressWarnings("deprecation") //Screw you mojang, damage values are not going anywhere
 	public FusingBook() {
