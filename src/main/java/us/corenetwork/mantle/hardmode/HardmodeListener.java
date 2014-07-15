@@ -64,6 +64,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
 
+import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -458,7 +459,8 @@ public class HardmodeListener implements Listener {
 
 		//Wither timer
 		if (event.getEntityType() == EntityType.WITHER)
-		{
+		{			
+			GriefPreventionHandler.enableExplosions(event.getLocation().getWorld());
 			int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
 			MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
 			entity.setMetadata("DespawningTime", value);

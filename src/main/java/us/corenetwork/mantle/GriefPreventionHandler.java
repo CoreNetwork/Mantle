@@ -185,7 +185,19 @@ public class GriefPreventionHandler {
 		return list;
 	}
 	
-	public static Deque<Location> getPlayerClaims(String player, boolean inverse)
+	public static void enableExplosions(World world)
+	{
+		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		for(Claim claim : ca)
+		{
+			if (claim.getClaimWorldName() != world.getName())
+				continue;
+			
+			claim.areExplosivesAllowed = true;
+		}
+	}
+	
+ 	public static Deque<Location> getPlayerClaims(String player, boolean inverse)
 	{
 		ArrayDeque<Location> list = new ArrayDeque<Location>();
 		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
