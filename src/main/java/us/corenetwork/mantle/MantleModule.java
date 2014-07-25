@@ -23,6 +23,7 @@ import us.corenetwork.mantle.regeneration.RegenerationModule;
 import us.corenetwork.mantle.restockablechests.RChestsModule;
 import us.corenetwork.mantle.slimespawning.SlimeSpawningModule;
 import us.corenetwork.mantle.spellbooks.SpellbooksModule;
+import us.corenetwork.mantle.treasurehunt.THuntModule;
 
 
 public abstract class MantleModule implements CommandExecutor {
@@ -301,6 +302,13 @@ public abstract class MantleModule implements CommandExecutor {
 			modules.add(module);
 		}        
 
+		//Treasure hunt
+		module = new THuntModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
 	}
 
 	public static void reloadConfigs()
