@@ -23,7 +23,6 @@ public class THuntModule extends MantleModule {
 	@Override
 	public boolean onCommand(CommandSender arg0, Command arg1, String arg2, String[] arg3)
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -43,7 +42,9 @@ public class THuntModule extends MantleModule {
 		MantlePlugin.adminCommands.put("buyhunt", new BuyHuntCommand());
 
 		Bukkit.getServer().getPluginManager().registerEvents(new THuntListener(), MantlePlugin.instance);
-				
+		
+		MantlePlugin.instance.getServer().getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, new THuntTimer(), 0, 200);
+		
 		return true;
 	}
 

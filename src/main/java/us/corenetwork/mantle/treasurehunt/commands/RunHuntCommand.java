@@ -7,6 +7,7 @@ import us.corenetwork.core.PlayerUtils;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
+import us.corenetwork.mantle.treasurehunt.THuntSettings;
 
 public class RunHuntCommand extends BaseMantleCommand {
 
@@ -34,7 +35,7 @@ public class RunHuntCommand extends BaseMantleCommand {
 		}
 		else
 		{
-			Util.Message("You have no hunt to run!", player);
+			Util.Message(THuntSettings.MESSAGE_NO_HUNT.string(), player);
 		}
 	}
 	
