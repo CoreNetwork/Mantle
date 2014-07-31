@@ -16,7 +16,7 @@ public class THuntModule extends MantleModule {
 	
 	public THuntModule()
 	{
-		super("Treasure Hunt", null, "treasurehunt");
+		super("Treasure Hunt", null, "treasureraid");
 		instance = this;
 	}
 
@@ -29,8 +29,7 @@ public class THuntModule extends MantleModule {
 	@Override
 	protected boolean loadModule()
 	{
-		manager = new THuntManager();
-		
+
 		for (THuntSettings setting : THuntSettings.values())
 		{
 			if (config.get(setting.string) == null)
@@ -41,6 +40,8 @@ public class THuntModule extends MantleModule {
 		MantlePlugin.adminCommands.put("runhunt", new RunHuntCommand());
 		MantlePlugin.adminCommands.put("buyhunt", new BuyHuntCommand());
 
+		manager = new THuntManager();
+		
 		Bukkit.getServer().getPluginManager().registerEvents(new THuntListener(), MantlePlugin.instance);
 		
 		MantlePlugin.instance.getServer().getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, new THuntTimer(), 0, 200);

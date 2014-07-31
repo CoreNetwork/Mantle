@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.UUID;
 
 import net.minecraft.server.v1_7_R3.EntityItem;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.restockablechests.LootTableNodeParser;
+import us.corenetwork.mantle.restockablechests.RChestsModule;
 
 
 
@@ -33,6 +35,8 @@ public class THuntManager {
 	private List<Player> alreadyClicked;
 	
 	private int wave;
+	private int lootTableToUse;
+	private int lootTableCount;
 	
 	public THuntManager()
 	{
@@ -40,6 +44,9 @@ public class THuntManager {
 		huntQueue = Collections.synchronizedList(new ArrayList<String>());
 		chestList = new ArrayList<Location>();
 		alreadyClicked = new ArrayList<Player>();
+		ArrayList<String> list = (ArrayList<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(0).get("LootTables");
+		
+		lootTableCount = list.size();
 		load();
 	}
 	
@@ -85,9 +92,9 @@ public class THuntManager {
 		THuntModule.instance.saveStorageYaml();
 	}
 	
-	public void addToQueue(String uuid)
+	public void addToQueue(String playerName)
 	{
-		huntQueue.add(uuid);
+		huntQueue.add(playerName);
 		save();
 		
 		if(canStart())
@@ -96,7 +103,7 @@ public class THuntManager {
 		}
 		else
 		{
-			Player player = MantlePlugin.instance.getServer().getPlayer(UUID.fromString(uuid));
+			Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
 			if(player != null)
 				Util.Message(THuntSettings.MESSAGE_ADDED_TO_QUEUE.string(), player);
 		}
@@ -143,6 +150,7 @@ public class THuntManager {
 		
 		int delay = 0;
 		wave = 0;
+		lootTableToUse = (new Random()).nextInt(lootTableCount);
 		for(Map<?, ?> waveMap : waveList)
 		{
 			final int distance = (Integer) waveMap.get("Distance");
@@ -231,12 +239,38 @@ public class THuntManager {
 	
 	private void announceChest(Map<Player, Location> playerChestsLocations)	
 	{
+		//tan (22.5 degrees)
+		double magicValue = 0.41421;
+		double magicValue2 = 2.41421;
 		for(Entry<Player, Location> entry : playerChestsLocations.entrySet())
 		{
-			Location loc = entry.getValue();
-			String message = THuntSettings.MESSAGE_DISTANCE.string();
-			int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(loc, entry.getKey().getLocation())));
-			message = message.replace("<Distance>", distance+"").replace("<X>", loc.getBlockX() + "").replace("<Z>", loc.getBlockZ() + "");
+			Location playerLoc = entry.getKey().getLocation();
+			Location chestLoc = entry.getValue();
+			/* One day, not today
+			double aaa = (chestLoc.getBlockX() - playerLoc.getBlockX()) / (chestLoc.getBlockZ() - playerLoc.getBlockZ());
+			
+			String direction = "woo";
+			if(aaa >= magicValue && aaa < magicValue2)
+				direction = "SouthEast";
+			if(aaa >= magicValue2 && aaa < -magicValue2)
+				direction = "East";
+			if(aaa < -magicValue && aaa >= -magicValue2)
+				direction = "NorthEast";
+			if(aaa >= -magicValue && aaa < magicValue)
+				direction = "North";
+			if(aaa >= magicValue && aaa < magicValue2)
+				direction = "NorthWest";
+			if(aaa >= magicValue2 && aaa < -magicValue2)
+				direction = "West";
+			if(aaa <= -magicValue2 && aaa > -magicValue)
+				direction = "SouthWest";
+			if(aaa >= -magicValue && aaa < magicValue)
+				direction = "South";
+			*/
+			String message = (String) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Message");
+			int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
+			message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "");
+					//.replace("<Direction>", direction);
 			Util.Message(message, entry.getKey());
 		}
 	}
@@ -281,9 +315,9 @@ public class THuntManager {
 	
 	private void dropLoot(Player player)
 	{
-		String lootTable = "Wave"+wave;
+		String lootTable = ((ArrayList<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("LootTables")).get(lootTableToUse);
 		
-		LootTableNodeParser parser = new LootTableNodeParser(lootTable, 1, 0, THuntModule.instance.config);
+		LootTableNodeParser parser = new LootTableNodeParser(lootTable, 1, 0, RChestsModule.instance.config);
 		List<ItemStack> items = parser.parse();
 		
 		for(ItemStack itemToDrop : items)

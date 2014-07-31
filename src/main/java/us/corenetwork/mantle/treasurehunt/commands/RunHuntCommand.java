@@ -23,7 +23,7 @@ public class RunHuntCommand extends BaseMantleCommand {
 	{
 		Player player = (Player) sender;
 		
-		String path = "Amount."+player.getUniqueId().toString();
+		String path = "Amount."+player.getName().toLowerCase();
 		int amountLeft = THuntModule.instance.storageConfig.getInt(path);
 		
 		if(amountLeft > 0)
@@ -31,7 +31,7 @@ public class RunHuntCommand extends BaseMantleCommand {
 			THuntModule.instance.storageConfig.set(path, amountLeft - 1);
 
 			THuntModule.instance.saveStorageYaml();
-			THuntModule.manager.addToQueue(player.getUniqueId().toString());
+			THuntModule.manager.addToQueue(player.getName());
 		}
 		else
 		{

@@ -18,22 +18,26 @@ public enum THuntSettings {
 	START_PERIOD_BEG("StartPeriodBeginning", 200),
 	START_PERIOD_END("StartPeriodEnd", 2000),
 	
-	WAVES("Waves", new ArrayList<Map<String, Integer>>(){{
-		add(new HashMap<String, Integer>(){{
+	WAVES("Waves", new ArrayList<Map<String, Object>>(){{
+		add(new HashMap<String, Object>(){{
 			put("Distance", 250);
 			put("TimeLimit", 50);
+			put("Message", "Message wave 01 Your chest is <Distance> meters away, at <X>,  <Z>.");
+			put("LootTables", new ArrayList<String>(){{add("wave1-1");add("wave1-2");add("wave1-3");}});
 		}});
-		add(new HashMap<String, Integer>(){{
+		add(new HashMap<String, Object>(){{
 			put("Distance", 500);
 			put("TimeLimit", 50);
+			put("Message", "Message wave 02 Your chest is <Distance> meters away, at <X>,  <Z>.");
+			put("LootTables", new ArrayList<String>(){{add("wave2-1");add("wave2-2");add("wave2-3");}});
 		}});
-		add(new HashMap<String, Integer>(){{
+		add(new HashMap<String, Object>(){{
 			put("Distance", 750);
 			put("TimeLimit", 50);
+			put("Message", "Message wave 03 Your chest is <Distance> meters away, at <X>,  <Z>.");
+			put("LootTables", new ArrayList<String>(){{add("wave3-1");add("wave3-2");add("wave3-3");}});
 		}});
 	}}),
-	
-	
 	MESSAGE_ADDED_TO_QUEUE("Messages.AddedToQueue", "Your treasure hunt has been added to queue. It will start when the day breaks."),
 	MESSAGE_NO_HUNT("Messages.NoHunt", "You have no hunts to run"),
 	MESSAGE_HUNT_BOUGHT("Messages.HuntBought","You have bought a Treasure Hunt!"),
@@ -50,8 +54,6 @@ public enum THuntSettings {
 	
 	MESSAGE_RIGHT_CLICK("Messages.RightClick", "You cannot open this chest, left click it to get the rewards."),
 	MESSAGE_ONE_PER_WAVE("Messages.OnePerWave", "You can loot only one chest per wave!"),
-	
-	MESSAGE_DISTANCE("Messages.Distance", "Your chest is <Distance> meters away, at <X>,  <Z>.")
 	;
 	protected String string;
 	protected Object def;

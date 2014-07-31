@@ -15,23 +15,30 @@ public class BuyHuntCommand extends BaseMantleCommand {
 	{
 		permission = "buyhunt";
 		desc = "Adds one hunt to callers pool, run later with /mantle runhunt";
-		needPlayer = true;
+		needPlayer = false;
 	}
 	
 	@Override
 	public void run(CommandSender sender, String[] args)
 	{
+		if(args.length != 1)
+		{
+			Util.Message("Usage: /mantle buyhunt <playerName>", sender);
+			return;
+		}
+		String playerName = args[0]; 
 		
-		Player player = (Player) sender;
-		
-		String path = "Amount."+player.getUniqueId().toString();
-		
+		String path = "Amount."+playerName.toLowerCase();
 		int amountLeft = THuntModule.instance.storageConfig.getInt(path);
 		
 		THuntModule.instance.storageConfig.set(path, amountLeft + 1);
 		THuntModule.instance.saveStorageYaml();
 		
-		Util.Message(THuntSettings.MESSAGE_HUNT_BOUGHT.string(), player);
+		Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
+		if(player != null)
+		{
+			Util.Message(THuntSettings.MESSAGE_HUNT_BOUGHT.string(), player);
+		}
 	}
 
 }
