@@ -1,8 +1,17 @@
 *.class
 
-.settings/
-doc/*
-bin/
+# Package Files #
+*.war
+*.ear
+
+# idea project files
+.idea/
+*.iml
+*.eml
+out/
+/target
 .classpath
 .project
-/target
+.settings/
+
+bin/
