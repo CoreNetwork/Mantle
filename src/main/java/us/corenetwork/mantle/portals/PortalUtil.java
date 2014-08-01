@@ -1,9 +1,5 @@
 package us.corenetwork.mantle.portals;
 
-import java.util.ArrayList;
-
-import net.minecraft.server.v1_7_R4.AxisAlignedBB;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,15 +7,14 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 
-import us.corenetwork.mantle.MLog;
+import java.util.ArrayList;
 
 public class PortalUtil {	
-	public static Location processTeleport(final Entity entity)
+	public static Location processTeleport(Entity entity, Block currentPortalBlock)
 	{
-		Block portalBlock = getLowestNorthestWestestPortalBlock(getPortalBlock(entity));
+		Block portalBlock = getLowestNorthestWestestPortalBlock(currentPortalBlock);
 		Block destination = getOtherSide(portalBlock);
 
 		
@@ -336,40 +331,6 @@ public class PortalUtil {
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
-	public static Block getPortalBlock(Entity entity)
-	{
-		net.minecraft.server.v1_7_R4.Entity nmsEntity = ((CraftEntity) entity).getHandle();
-		AxisAlignedBB boundingBox = nmsEntity.boundingBox;
-				
-		// Need to check this after every NMS update, letters might change.
-		int minX = (int) Math.floor(boundingBox.a + 0.001D);
-		int minY = (int) Math.floor(boundingBox.b + 0.001D);
-		int minZ = (int) Math.floor(boundingBox.c + 0.001D);
-		int maxX = (int) Math.floor(boundingBox.d - 0.001D);
-		int maxY = (int) Math.floor(boundingBox.e - 0.001D);
-		int maxZ = (int) Math.floor(boundingBox.f - 0.001D);
-		
-		for (int x = minX; x <= maxX; x++)
-		{
-			for (int y = minY; y <= maxY; y++)
-			{
-				for (int z = minZ; z <= maxZ; z++)
-				{
-					int blockType = entity.getWorld().getBlockTypeIdAt(x, y, z);
-					if (blockType == Material.PORTAL.getId())
-					{
-						return entity.getWorld().getBlockAt(x, y, z);
-					}
-				}
-			}
-		}
-
-		Block block = entity.getLocation().getBlock();
-		MLog.severe("Unable to find portal block at " + block.toString() + " - Entity: " + entity.getType().toString() + " " + entity.getLocation().toString());
-		return block;
-
-	}
-	
 	public static Block getLowestNorthestWestestPortalBlock(Block block)
 	{
 		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)

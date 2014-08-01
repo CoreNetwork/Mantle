@@ -1,13 +1,8 @@
 package us.corenetwork.mantle.portals;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.minecraft.server.v1_7_R4.EntityPlayer;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -24,6 +19,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityPortalEnterEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -31,14 +27,19 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 
 public class PortalsListener implements Listener {
 	private HashMap<Block, FlintSteelData> flintSteelUsage = new HashMap<Block, FlintSteelData>();
+    private HashMap<UUID, Block> lastPortalBlocks = new HashMap<UUID, Block>(); //In which portal block is entity currently located
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event)
@@ -231,7 +232,10 @@ public class PortalsListener implements Listener {
 		//Controlled nether portals
 		if (event.getCause() == TeleportCause.NETHER_PORTAL)
 		{
-			Location destination = PortalUtil.processTeleport(event.getPlayer());
+            Block portalBlock = lastPortalBlocks.get(event.getPlayer().getUniqueId());
+            lastPortalBlocks.remove(event.getPlayer().getUniqueId());
+
+			Location destination = PortalUtil.processTeleport(event.getPlayer(), portalBlock);
 			event.setTo(destination);
 			event.useTravelAgent(false);
 		}
@@ -249,8 +253,12 @@ public class PortalsListener implements Listener {
 				return;
 			}
 		}
-		
-		Location destination = PortalUtil.processTeleport(event.getEntity());
+
+        Block portalBlock = lastPortalBlocks.get(event.getEntity().getUniqueId());
+        lastPortalBlocks.remove(event.getEntity().getUniqueId());
+
+
+        Location destination = PortalUtil.processTeleport(event.getEntity(), portalBlock);
 		event.setTo(destination);
 		event.useTravelAgent(false);
 		
@@ -305,6 +313,12 @@ public class PortalsListener implements Listener {
 			});
 		}
 	}
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityEnterPortal(EntityPortalEnterEvent event)
+    {
+        lastPortalBlocks.put(event.getEntity().getUniqueId(), event.getLocation().getBlock());
+    }
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onBlockBreak(final BlockBreakEvent event)
@@ -328,7 +342,7 @@ public class PortalsListener implements Listener {
 			}
 		} 
 	}
-	
+
 	private static Block getLastBlock(Player player)
 	{
 		List<Block> blocks = player.getLastTwoTargetBlocks(null, 10);
