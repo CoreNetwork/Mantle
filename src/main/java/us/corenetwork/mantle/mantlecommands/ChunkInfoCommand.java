@@ -3,7 +3,6 @@ package us.corenetwork.mantle.mantlecommands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
 
 import java.lang.reflect.Field;
@@ -44,10 +43,6 @@ public class ChunkInfoCommand extends BaseMantleCommand {
 
 			Util.Message("Loaded chunks: " + loadedChunks, sender);
 			Util.Message("Elapsed Chunk GC tick count: " + chunkGCTickCount, sender);
-
-
-			MLog.info(loadedChunks + " " + chunkGCTickCount);
-
 		}
 		catch (Exception e)
 		{

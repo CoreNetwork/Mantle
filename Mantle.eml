@@ -2,4 +2,27 @@
 <component inheritJdk="true">
 	<exclude-output/>
 	<contentEntry url="file://$MODULE_DIR$"/>
+	<lib name="GriefPrevention-7.8-SNAPSHOT.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/GriefPrevention-7.8-SNAPSHOT.jar!/"/>
+	</lib>
+	<lib name="JExel-1_0_0-beta_13.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/JExel-1_0_0-beta_13.jar!/"/>
+	</lib>
+	<lib name="Core.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/Core.jar!/"/>
+	</lib>
+	<levels>
+		<level name="Maven: org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT" value="project"/>
+		<level name="Maven: org.bukkit:craftbukkit:1.7.9-R0.1-SNAPSHOT" value="project"/>
+		<level name="Maven: com.sk89q:worldedit:5.5.9-SNAPSHOT" value="project"/>
+		<level name="Maven: de.schlichtherle:truezip:6.8.3" value="project"/>
+		<level name="Maven: rhino:js:1.7R2" value="project"/>
+		<level name="Maven: com.sk89q:worldguard:5.8.1-SNAPSHOT" value="project"/>
+		<level name="Maven: com.sk89q:commandbook:2.3" value="project"/>
+		<level name="Maven: net.sf.opencsv:opencsv:2.0" value="project"/>
+		<level name="Maven: com.nijikokun:iconomy:5.0" value="project"/>
+		<level name="Maven: com.comphenix.protocol:ProtocolLib:3.2.0" value="project"/>
+		<level name="Maven: cglib:cglib-nodep:2.2.2" value="project"/>
+		<level name="Maven: com.comphenix.executors:BukkitExecutors:1.0.0" value="project"/>
+	</levels>
 </component>

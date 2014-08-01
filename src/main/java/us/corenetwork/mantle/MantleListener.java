@@ -1,7 +1,5 @@
 package us.corenetwork.mantle;
 
-import java.util.HashSet;
-
 import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +7,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+
+import java.util.HashSet;
 
 public class MantleListener implements Listener {	
 
@@ -44,7 +44,7 @@ public class MantleListener implements Listener {
 			}
 		}
 		
-		@EventHandler(priority = EventPriority.MONITOR)
+		@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = false)
 		public void onChunkUnload(ChunkUnloadEvent event)
 		{
 			if (event.isCancelled())

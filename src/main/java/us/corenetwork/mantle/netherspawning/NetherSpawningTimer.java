@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.netherspawning;
 
+import net.minecraft.server.v1_7_R3.ChunkProviderServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -7,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.MantlePlugin;
@@ -15,14 +17,18 @@ public class NetherSpawningTimer implements Runnable {
     public static NetherSpawningTimer timerSingleton;
 
     private static World nether;
-
+    private static ChunkProviderServer netherCps;
     public NetherSpawningTimer() {
         nether = Bukkit.getWorld(NetherSpawningSettings.NETHER_WORLD.string());
+        netherCps = ((CraftWorld) nether).getHandle().chunkProviderServer;
     }
 
     @Override
     public void run() {
         for (Chunk c : nether.getLoadedChunks()) {
+            if (netherCps.unloadQueue.contains(c.getX(), c.getZ())) //Don't spawn on unloading chunk
+                continue;
+
             int randomX = MantlePlugin.random.nextInt(16);
             int randomZ = MantlePlugin.random.nextInt(16);
             int randomY = MantlePlugin.random.nextInt(128);

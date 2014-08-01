@@ -1,19 +1,14 @@
 package us.corenetwork.mantle;
 
-import java.util.HashMap;
-import java.util.Random;
-import java.util.logging.Logger;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import us.corenetwork.mantle.mantlecommands.*;
 
-import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
-import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
-import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
-import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
-import us.corenetwork.mantle.mantlecommands.ReloadCommand;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.logging.Logger;
 
 
 public class MantlePlugin extends JavaPlugin {

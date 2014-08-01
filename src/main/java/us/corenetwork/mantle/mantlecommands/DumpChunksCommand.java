@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.mantlecommands;
 
+import net.minecraft.server.v1_7_R3.ChunkProviderServer;
 import net.minecraft.server.v1_7_R3.EntityPlayer;
 import net.minecraft.server.v1_7_R3.PlayerChunkMap;
 import net.minecraft.server.v1_7_R3.WorldServer;
@@ -43,58 +44,64 @@ public class DumpChunksCommand extends BaseMantleCommand {
 
 		Util.Message("Dumping chunk debug data...", sender);
 
-		File file = new File(MantlePlugin.instance.getDataFolder(), "chunkdata.txt");
-
-
-		WorldServer nmsWorld = world.getHandle();
-		PlayerChunkMap map = nmsWorld.getPlayerChunkMap();
-
-		try
-		{
-			Method methodGetPlayerChunk = map.getClass().getDeclaredMethod("a", int.class, int.class, boolean.class);
-			methodGetPlayerChunk.setAccessible(true);
-
-			Class playerChunkClass = Class.forName("net.minecraft.server.v1_7_R3.PlayerChunk");
-			Field fieldPlayerList = playerChunkClass.getDeclaredField("b");
-			fieldPlayerList.setAccessible(true);
-			
-			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-			for (Chunk chunk : world.getLoadedChunks())
-			{
-				writer.write(Integer.toString(chunk.getX()));
-				writer.write(" ");
-				writer.write(Integer.toString(chunk.getZ()));
-				writer.write(" ");
-
-				Object pChunk = methodGetPlayerChunk.invoke(map, chunk.getX(), chunk.getZ(), false);
-				if (pChunk == null)
-					writer.write("0");
-				else
-				{
-					List<EntityPlayer> playerList = (List<EntityPlayer>) fieldPlayerList.get(pChunk);
-					writer.write(Integer.toString(playerList.size()));
-					writer.write(" ");
-					writer.write("[ ");
-					for (EntityPlayer playerInChunk : playerList)
-					{
-						writer.write(playerInChunk.getName());
-						writer.write(", ");
-					}
-					writer.write("]");
-
-				}
-				writer.newLine();
-			}
-			writer.close();
-		}
-		catch (Exception e)
-		{
-			Util.Message("Something went wrong!", sender);
-			e.printStackTrace();
-			return;
-		}
-
+        dumpChunks(world);
 
 		Util.Message("Chunks dumped.", sender);
-	}	
+	}
+
+    public static void dumpChunks(CraftWorld world)
+    {
+        File file = new File(MantlePlugin.instance.getDataFolder(), "chunkdata.txt");
+
+
+        WorldServer nmsWorld = world.getHandle();
+        PlayerChunkMap map = nmsWorld.getPlayerChunkMap();
+
+        try
+        {
+            Method methodGetPlayerChunk = map.getClass().getDeclaredMethod("a", int.class, int.class, boolean.class);
+            methodGetPlayerChunk.setAccessible(true);
+
+            Class playerChunkClass = Class.forName("net.minecraft.server.v1_7_R3.PlayerChunk");
+            Field fieldPlayerList = playerChunkClass.getDeclaredField("b");
+            fieldPlayerList.setAccessible(true);
+
+            ChunkProviderServer cps = nmsWorld.chunkProviderServer;
+
+            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            for (Chunk chunk : world.getLoadedChunks())
+            {
+                writer.write(Integer.toString(chunk.getX()));
+                writer.write(" ");
+                writer.write(Integer.toString(chunk.getZ()));
+                writer.write(" ");
+
+                Object pChunk = methodGetPlayerChunk.invoke(map, chunk.getX(), chunk.getZ(), false);
+
+                writer.write(" ");
+                writer.write("[ ");
+                writer.write("InUse: " + world.isChunkInUse(chunk.getX(), chunk.getZ()));
+                writer.write(",Unloading: " + cps.unloadQueue.contains(chunk.getX(), chunk.getZ()) + ", ");
+
+                if (pChunk != null)
+                {
+                    List<EntityPlayer> playerList = (List<EntityPlayer>) fieldPlayerList.get(pChunk);
+                    for (EntityPlayer playerInChunk : playerList)
+                    {
+                        writer.write(playerInChunk.getName());
+                        writer.write(", ");
+                    }
+                }
+
+                writer.write("]");
+                writer.newLine();
+            }
+            writer.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return;
+        }
+    }
 }
