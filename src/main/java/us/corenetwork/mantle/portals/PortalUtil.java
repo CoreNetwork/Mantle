@@ -70,7 +70,7 @@ public class PortalUtil {
 			}
 		}
 
-		Location destination = new Location(destWorld, Math.floor(currentSide.getBlockX() * modifier), currentSide.getBlockY(), Math.floor(currentSide.getBlockZ() * modifier));
+		Location destination = new Location(destWorld, (int) (currentSide.getBlockX() * modifier), currentSide.getBlockY(), (int) (currentSide.getBlockZ() * modifier));
 
 		if (destination.getY() > maxY)
 			destination.setY(maxY);
