@@ -10,7 +10,9 @@ public enum AnimalSpawningSettings {
 	CHUNK_MIN_Z("Chunks.MinZ", -500),
 	CHUNK_MAX_X("Chunks.MaxX", 500),
 	CHUNK_MAX_Z("Chunks.MaxZ", 500),
-	
+
+    SPAWNING_WORLD("AnimalSpawningWorld", "world"),
+
 	PREVENT_SPAWNING_ANIMALS("PreventSpawningAnimals", Arrays.asList("Cow", "Horse", "Pig", "Sheep")),
 
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),

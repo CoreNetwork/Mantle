@@ -1,10 +1,5 @@
 package us.corenetwork.mantle.animalspawning;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayDeque;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -13,9 +8,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayDeque;
 
 public class AnimalSpawningTimer implements Runnable {
 	public static AnimalSpawningTimer timerSingleton;
@@ -24,7 +23,7 @@ public class AnimalSpawningTimer implements Runnable {
 	
 	public AnimalSpawningTimer()
 	{
-		overworld = Bukkit.getWorlds().get(0);
+		overworld = Bukkit.getWorld(AnimalSpawningSettings.SPAWNING_WORLD.string());
 	}
 	
 	@Override
