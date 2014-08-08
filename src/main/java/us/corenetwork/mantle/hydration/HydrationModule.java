@@ -10,9 +10,7 @@ import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.hydration.commands.BaseHydrationCommand;
 import us.corenetwork.mantle.hydration.commands.MantleHydrationCommand;
-import us.corenetwork.mantle.hydration.commands.RestoreCommand;
 
 
 public class HydrationModule extends MantleModule {

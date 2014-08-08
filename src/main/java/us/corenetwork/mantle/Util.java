@@ -10,8 +10,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftFirework;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftFirework;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -144,8 +144,8 @@ public class Util {
 		meta.setPower(0);
 		firework.setFireworkMeta(meta);
 
-		net.minecraft.server.v1_7_R3.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
-		net.minecraft.server.v1_7_R3.World world = ((CraftWorld) location.getWorld()).getHandle();
+		net.minecraft.server.v1_7_R4.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
+		net.minecraft.server.v1_7_R4.World world = ((CraftWorld) location.getWorld()).getHandle();
 
 		world.broadcastEntityEffect(nmsFirework, (byte) 17);
 

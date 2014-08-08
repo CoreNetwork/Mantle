@@ -2,10 +2,10 @@ package us.corenetwork.mantle.spellbooks;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.server.v1_7_R3.NBTTagCompound;
-import net.minecraft.server.v1_7_R3.NBTTagList;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_7_R4.NBTTagList;
 
-import org.bukkit.craftbukkit.v1_7_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import us.corenetwork.mantle.MantlePlugin;
@@ -52,7 +52,7 @@ public class ItemProtocolListener extends PacketAdapter {
 			Field handleField = CraftItemStack.class.getDeclaredField("handle");
 			handleField.setAccessible(true);
 			
-			net.minecraft.server.v1_7_R3.ItemStack nmsStack = (net.minecraft.server.v1_7_R3.ItemStack) handleField.get(stack);
+			net.minecraft.server.v1_7_R4.ItemStack nmsStack = (net.minecraft.server.v1_7_R4.ItemStack) handleField.get(stack);
 			if (nmsStack.tag == null)
 			{
 				nmsStack.tag = new NBTTagCompound();

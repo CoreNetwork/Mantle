@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.netherspawning;
 
-import net.minecraft.server.v1_7_R3.ChunkProviderServer;
+import net.minecraft.server.v1_7_R4.ChunkProviderServer;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -8,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.MantlePlugin;

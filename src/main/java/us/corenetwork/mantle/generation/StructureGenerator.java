@@ -1,17 +1,5 @@
 package us.corenetwork.mantle.generation;
 
-import me.ryanhamshire.GriefPrevention.Claim;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.configuration.MemorySection;
-import us.corenetwork.mantle.*;
-import us.corenetwork.mantle.CachedSchematic.ChestInfo;
-import us.corenetwork.mantle.generation.StructureData.Protection;
-import us.corenetwork.mantle.restockablechests.RestockableChest;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +7,25 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+
+import me.ryanhamshire.GriefPrevention.Claim;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.configuration.MemorySection;
+
+import us.corenetwork.mantle.CachedSchematic;
+import us.corenetwork.mantle.CachedSchematic.ChestInfo;
+import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.generation.StructureData.Protection;
+import us.corenetwork.mantle.restockablechests.RestockableChest;
 
 
 public class StructureGenerator {

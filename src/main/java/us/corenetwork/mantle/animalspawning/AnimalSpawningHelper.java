@@ -4,9 +4,7 @@ package us.corenetwork.mantle.animalspawning;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import org.bukkit.Bukkit;
 import org.bukkit.World.Environment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

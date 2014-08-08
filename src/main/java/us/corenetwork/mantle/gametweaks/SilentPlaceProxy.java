@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.gametweaks;
 
-import net.minecraft.server.v1_7_R3.Block;
-import net.minecraft.server.v1_7_R3.StepSound;
+import net.minecraft.server.v1_7_R4.Block;
+import net.minecraft.server.v1_7_R4.StepSound;
 
 public class SilentPlaceProxy extends StepSound {
 

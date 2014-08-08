@@ -5,8 +5,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
-import us.corenetwork.mantle.Util;
-
 public class EntityIterator {
 	
 	public static void iterateEntitiesInCube(EntityIterator.EntityReceiver entityReceiver, Location center, int radius)

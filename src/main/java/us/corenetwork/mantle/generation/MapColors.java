@@ -1,9 +1,10 @@
 package us.corenetwork.mantle.generation;
 
 
-import net.minecraft.server.v1_7_R3.Block;
-import net.minecraft.server.v1_7_R3.Material;
-import net.minecraft.server.v1_7_R3.MaterialMapColor;
+import net.minecraft.server.v1_7_R4.Block;
+import net.minecraft.server.v1_7_R4.MaterialMapColor;
+
+import org.bukkit.Material;
 
 public class MapColors {
 	
@@ -31,8 +32,8 @@ public class MapColors {
 		if (cColor != 0)
 			return cColor;
 		
-		Block block = Block.e(id); // NEEDS TESTING
-		Material material = block.getMaterial();
+		Block block = Block.getById(id); // NEEDS TESTING
+		net.minecraft.server.v1_7_R4.Material material = block.getMaterial();
 		MaterialMapColor color = material.r();
 		
 		return color.L;

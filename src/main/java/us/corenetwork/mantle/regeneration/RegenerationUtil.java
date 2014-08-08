@@ -11,7 +11,6 @@ import org.bukkit.World;
 import us.corenetwork.mantle.CachedSchematic;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.generation.VillagerSpawner;
 

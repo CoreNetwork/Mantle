@@ -8,10 +8,8 @@ import java.util.Map.Entry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
 
 public class HydrationHelpCommand extends BaseHydrationCommand {

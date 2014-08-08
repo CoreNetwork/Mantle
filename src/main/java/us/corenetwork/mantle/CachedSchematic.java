@@ -7,14 +7,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.server.v1_7_R3.EntityVillager;
+import net.minecraft.server.v1_7_R4.EntityVillager;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftVillager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 

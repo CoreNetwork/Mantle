@@ -1,22 +1,24 @@
 package us.corenetwork.mantle.mantlecommands;
 
-import net.minecraft.server.v1_7_R3.ChunkProviderServer;
-import net.minecraft.server.v1_7_R3.EntityPlayer;
-import net.minecraft.server.v1_7_R3.PlayerChunkMap;
-import net.minecraft.server.v1_7_R3.WorldServer;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R3.CraftWorld;
-import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.Util;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+
+import net.minecraft.server.v1_7_R4.ChunkProviderServer;
+import net.minecraft.server.v1_7_R4.EntityPlayer;
+import net.minecraft.server.v1_7_R4.PlayerChunkMap;
+import net.minecraft.server.v1_7_R4.WorldServer;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+
+import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.Util;
 
 
 public class DumpChunksCommand extends BaseMantleCommand {	
