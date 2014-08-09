@@ -1,22 +1,6 @@
 package us.corenetwork.mantle.restockablechests;
 
-import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-
-import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
-import net.minecraft.server.v1_7_R4.TileEntity;
-import net.minecraft.server.v1_7_R4.TileEntityBeacon;
-import net.minecraft.server.v1_7_R4.TileEntityBrewingStand;
-import net.minecraft.server.v1_7_R4.TileEntityChest;
-import net.minecraft.server.v1_7_R4.TileEntityDispenser;
-import net.minecraft.server.v1_7_R4.TileEntityDropper;
-import net.minecraft.server.v1_7_R4.TileEntityFurnace;
-import net.minecraft.server.v1_7_R4.TileEntityHopper;
-
+import net.minecraft.server.v1_7_R4.*;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -33,20 +17,19 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.DoubleChestInventory;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.InventoryView;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
-
 import us.corenetwork.core.respawn.ProtectTimer;
-import us.corenetwork.mantle.IO;
-import us.corenetwork.mantle.MLog;
-import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.ParticleLibrary;
-import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.*;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
+
+import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class RestockableChest {
@@ -694,7 +677,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_7_R3.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventoryCustom$MinecraftInventory");
 
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);

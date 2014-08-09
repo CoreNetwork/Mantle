@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component inheritJdk="true">
-	<exclude-output/>
-	<contentEntry url="file://$MODULE_DIR$"/>
+<component LANGUAGE_LEVEL="JDK_1_7" inheritJdk="true">
+	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
+	<contentEntry url="file://$MODULE_DIR$">
+		<excludeFolder url="file://$MODULE_DIR$/target"/>
+	</contentEntry>
 	<lib name="GriefPrevention-7.8-SNAPSHOT.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/GriefPrevention-7.8-SNAPSHOT.jar!/"/>
 	</lib>
@@ -11,9 +13,27 @@
 	<lib name="Core.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/Core.jar!/"/>
 	</lib>
+	<lib name="lib/GriefPrevention-7.8-SNAPSHOT.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/GriefPrevention-7.8-SNAPSHOT.jar!/"/>
+	</lib>
+	<lib name="lib/JExel-1_0_0-beta_13.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/JExel-1_0_0-beta_13.jar!/"/>
+	</lib>
+	<lib name="lib/Core.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/Core.jar!/"/>
+	</lib>
+	<lib name="Maven: me.ryanhamshire:GriefPrevention:7.8-SNAPSHOT" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/GriefPrevention-7.8-SNAPSHOT.jar!/"/>
+	</lib>
+	<lib name="Maven: com.gadberry:JExel:1.0.0-BETA-13" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/JExel-1_0_0-beta_13.jar!/"/>
+	</lib>
+	<lib name="Maven: us.core-network:Core:1.0.0" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/Core.jar!/"/>
+	</lib>
 	<levels>
-		<level name="Maven: org.bukkit:bukkit:1.7.9-R0.1-SNAPSHOT" value="project"/>
-		<level name="Maven: org.bukkit:craftbukkit:1.7.9-R0.1-SNAPSHOT" value="project"/>
+		<level name="Maven: org.bukkit:bukkit:1.7.10-R0.1-SNAPSHOT" value="project"/>
+		<level name="Maven: org.bukkit:craftbukkit:1.7.10-R0.1-SNAPSHOT" value="project"/>
 		<level name="Maven: com.sk89q:worldedit:5.5.9-SNAPSHOT" value="project"/>
 		<level name="Maven: de.schlichtherle:truezip:6.8.3" value="project"/>
 		<level name="Maven: rhino:js:1.7R2" value="project"/>
