@@ -270,8 +270,8 @@ public class THuntManager {
 			double dz = chestLoc.getBlockZ() - playerLoc.getBlockZ();
 			
 			List<String> headings =  (List<String>) THuntModule.instance.config.getList(THuntSettings.DIRECTIONS.string);
-			double angle = Math.atan2(dz, dx);
-			
+			double angle = Math.atan2(-dz, dx);
+			//{ "E", "NE", "N", "NW", "W", "SW", "S", "SE" };
 			int octant = (int) (Math.round( 8 * angle / (2*Math.PI) + 8 ) % 8);
 			direction = headings.get(octant);
 			
