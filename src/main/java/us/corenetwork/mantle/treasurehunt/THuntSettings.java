@@ -26,6 +26,7 @@ public enum THuntSettings {
 				add("&aWave 1! Treasure crate dropped &6<Distance> blocks away &6(<X>,<Z>)");
 				add("&7Walk towards <Direction>");}});
 			put("LootTables", new ArrayList<String>(){{add("wave1-1");add("wave1-2");add("wave1-3");}});
+			put("NotificationTimes", new ArrayList<Integer>(){{add(10); add(20); add(30);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("Distance", 500);
@@ -34,6 +35,7 @@ public enum THuntSettings {
 				add("&aWave 2! Treasure crate dropped &6<Distance> blocks away &6(<X>,<Z>)");
 				add("&7Sprint and jump towards <Direction>");}});
 			put("LootTables", new ArrayList<String>(){{add("wave2-1");add("wave2-2");add("wave2-3");}});
+			put("NotificationTimes", new ArrayList<Integer>(){{add(10); add(20); add(30);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("Distance", 750);
@@ -42,6 +44,7 @@ public enum THuntSettings {
 				add("&aWave 3! Treasure crate dropped &6<Distance> blocks away &6(<X>,<Z>)");
 				add("&7Ride a horse towards <Direction>");}});
 			put("LootTables", new ArrayList<String>(){{add("wave3-1");add("wave3-2");add("wave3-3");}});
+			put("NotificationTimes", new ArrayList<Integer>(){{add(10); add(20); add(30);}});
 		}});
 	}}),
 	//{ "E", "NE", "N", "NW", "W", "SW", "S", "SE" };
@@ -68,6 +71,8 @@ public enum THuntSettings {
 	
 	MESSAGE_RIGHT_CLICK("Messages.RightClick", "You cannot open this chest, left click it to get the rewards."),
 	MESSAGE_ONE_PER_WAVE("Messages.OnePerWave", "You can loot only one chest per wave!"),
+	
+	MESSAGE_WAVE_NOTIFICATION("Messages.WaveNotificaton", "&6<Distance> &ablocks away &6(<X>,<Z>), <TimeLeft> &aseconds left"),
 	;
 	protected String string;
 	protected Object def;

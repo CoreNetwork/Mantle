@@ -213,13 +213,39 @@ public class THuntManager {
 		
 		List<Player> playerList = getPlayersWhoCanJoin();
 		
-		Map<Player, Location> playerChestsLocations = THuntLocationRandomizer.getPlayerChests(playerList, distance); 
+		final Map<Player, Location> playerChestsLocations = THuntLocationRandomizer.getPlayerChests(playerList, distance); 
 		chestList = new ArrayList<Location>(playerChestsLocations.values());
 		
 		announceChest(playerChestsLocations);
-		placeChests();
 		
+		placeChests();
 		save();
+		
+		final int totalTime = (Integer) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("TimeLimit");
+		List<Integer> notificationTimes = (List<Integer>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("NotificationTimes");
+		for(int time : notificationTimes)
+		{
+			final int notificationTime = time;
+			MantlePlugin.instance.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+				
+				@Override
+				public void run()
+				{
+					for(Entry<Player, Location> entry : playerChestsLocations.entrySet())
+					{
+						Location playerLoc = entry.getKey().getLocation();
+						Location chestLoc = entry.getValue();
+						List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Messages");
+
+						String message = THuntSettings.MESSAGE_WAVE_NOTIFICATION.string();
+						int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
+						message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "")
+								.replace("<TimeLeft>", (totalTime - notificationTime) + "");
+						Util.Message(message, entry.getKey());
+					}
+				}
+			}, time * 20);
+		}
 	}
 	
 	private void endWave()
@@ -255,28 +281,13 @@ public class THuntManager {
 	
 	private void announceChest(Map<Player, Location> playerChestsLocations)	
 	{
-		//tan (22.5 degrees)
-		double magicValue = 0.41421;
-		double magicValue2 = 2.41421;
 		for(Entry<Player, Location> entry : playerChestsLocations.entrySet())
 		{
 			Location playerLoc = entry.getKey().getLocation();
 			Location chestLoc = entry.getValue();
-			String direction ="";
-			
-			double dx = chestLoc.getBlockX() - playerLoc.getBlockX();
-			double dz = chestLoc.getBlockZ() - playerLoc.getBlockZ();
-			
-			List<String> headings =  (List<String>) THuntModule.instance.config.getList(THuntSettings.DIRECTIONS.string);
-			double angle = Math.atan2(-dz, dx);
-			//{ "E", "NE", "N", "NW", "W", "SW", "S", "SE" };
-			int octant = (int) (Math.round( 8 * angle / (2*Math.PI) + 8 ) % 8);
-			direction = headings.get(octant);
-			
-		
-			
+			String direction = getDirection(chestLoc, playerLoc);
 			List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Messages");
-			
+
 			for(String message : messageList)
 			{
 				int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
@@ -289,6 +300,18 @@ public class THuntManager {
 		}
 	}
 		
+	private String getDirection(Location chestLoc, Location playerLoc)
+	{
+
+		double dx = chestLoc.getBlockX() - playerLoc.getBlockX();
+		double dz = chestLoc.getBlockZ() - playerLoc.getBlockZ();
+		
+		List<String> headings =  (List<String>) THuntModule.instance.config.getList(THuntSettings.DIRECTIONS.string);
+		double angle = Math.atan2(-dz, dx);
+		//{ "E", "NE", "N", "NW", "W", "SW", "S", "SE" };
+		int octant = (int) (Math.round( 8 * angle / (2*Math.PI) + 8 ) % 8);
+		return headings.get(octant);
+	}
 	private void placeChests()
 	{
 		for(Location loc : chestList)
