@@ -44,6 +44,17 @@ public enum THuntSettings {
 			put("LootTables", new ArrayList<String>(){{add("wave3-1");add("wave3-2");add("wave3-3");}});
 		}});
 	}}),
+	//{ "E", "NE", "N", "NW", "W", "SW", "S", "SE" };
+	DIRECTIONS("Directions", new ArrayList<String>(){{
+		add("east");
+		add("north east");
+		add("north");
+		add("north west");
+		add("west");
+		add("south west");
+		add("south");
+		add("south east");
+		}}),
 	MESSAGE_ADDED_TO_QUEUE("Messages.AddedToQueue", "Your treasure hunt has been added to queue. It will start when the day breaks."),
 	MESSAGE_ADDED_TO_QUEUE_BROADCAST("Messages.AddedToQueueBroadcast", "<Player> scheduled a Treasure Hunt! It will start in <Time> min"),
 	MESSAGE_NO_HUNT("Messages.NoHunt", "You have no hunts to run"),
