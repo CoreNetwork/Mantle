@@ -6,18 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import java.util.UUID;
-
-import net.minecraft.server.v1_7_R3.EntityItem;
-
+import net.minecraft.server.v1_7_R4.EntityItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_7_R3.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftItem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.restockablechests.LootTableNodeParser;
