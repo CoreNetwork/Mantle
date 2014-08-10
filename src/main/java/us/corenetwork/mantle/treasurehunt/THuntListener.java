@@ -25,7 +25,7 @@ public class THuntListener implements Listener {
 		
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK && THuntModule.manager.isHuntChest(block.getLocation()))
 		{
-			THuntModule.manager.chestClicked(event.getPlayer());
+			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation());
 		}
 		else if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{

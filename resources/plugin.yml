@@ -11,3 +11,5 @@ commands:
         description: Nanobot
     inspect:
         description: Structure inspector
+    raid:
+        description: Treasure Raid commands

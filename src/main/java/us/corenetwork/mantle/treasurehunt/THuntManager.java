@@ -209,7 +209,6 @@ public class THuntManager {
 
 	private void startWave(int distance)
 	{
-		Util.Broadcast(THuntSettings.MESSAGE_START_WAVE.string());
 		wave++;
 		
 		List<Player> playerList = getPlayersWhoCanJoin();
@@ -225,7 +224,6 @@ public class THuntManager {
 	
 	private void endWave()
 	{
-		Util.Broadcast(THuntSettings.MESSAGE_END_WAVE.string());
 		clearChests();
 		alreadyClicked.clear();
 		save();
@@ -277,7 +275,7 @@ public class THuntManager {
 			
 		
 			
-			List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Message");
+			List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Messages");
 			
 			for(String message : messageList)
 			{
@@ -313,7 +311,7 @@ public class THuntManager {
 		return chestList.contains(loc);
 	}
 
-	public void chestClicked(Player player)
+	public void chestClicked(Player player, Location chestLocation)
 	{
 		if(huntRunning == false)
 			return;
@@ -326,10 +324,10 @@ public class THuntManager {
 		
 		alreadyClicked.add(player);
 		
-		dropLoot(player);
+		dropLoot(player, chestLocation);
 	}
 	
-	private void dropLoot(Player player)
+	private void dropLoot(Player player, Location chestLocation)
 	{
 		String lootTable = ((ArrayList<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("LootTables")).get(lootTableToUse);
 		
@@ -338,7 +336,7 @@ public class THuntManager {
 		
 		for(ItemStack itemToDrop : items)
 		{
-			Item item = player.getWorld().dropItem(player.getLocation(), itemToDrop);
+			Item item = player.getWorld().dropItem(chestLocation.add(0.5, 1, 0.5), itemToDrop);
 			EntityItem nmsItem = (EntityItem) ((CraftItem) item).getHandle();
 			nmsItem.a(player.getName());
 		}
