@@ -86,17 +86,10 @@
     <dependency>
       <groupId>com.comphenix.protocol</groupId>
       <artifactId>ProtocolLib</artifactId>
-      <version>3.2.0</version>
+      <version>3.4.0</version>
       <scope>compile</scope>
     </dependency>
-    
-    <dependency>
-      <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib</artifactId>
-      <version>3.2.0</version>
-      <scope>compile</scope>
-    </dependency>
-    
+
     <dependency>
       <groupId>me.ryanhamshire</groupId>
       <artifactId>GriefPrevention</artifactId>
