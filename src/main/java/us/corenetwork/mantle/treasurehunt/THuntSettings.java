@@ -22,23 +22,30 @@ public enum THuntSettings {
 		add(new HashMap<String, Object>(){{
 			put("Distance", 250);
 			put("TimeLimit", 50);
-			put("Message", "Message wave 01 Your chest is <Distance> meters away, at <X>,  <Z>.");
+			put("Message", new ArrayList<String>(){{
+				add("&aWave 1! Treasure crate dropped &6<Distance> blocks away &6(<X>,<Z>)");
+				add("&7Walk towards <Direction>");}});
 			put("LootTables", new ArrayList<String>(){{add("wave1-1");add("wave1-2");add("wave1-3");}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("Distance", 500);
 			put("TimeLimit", 50);
-			put("Message", "Message wave 02 Your chest is <Distance> meters away, at <X>,  <Z>.");
+			put("Message", new ArrayList<String>(){{
+				add("&aWave 2! Treasure crate dropped &6<Distance> blocks away &6(<X>,<Z>)");
+				add("&7Sprint and jump towards <Direction>");}});
 			put("LootTables", new ArrayList<String>(){{add("wave2-1");add("wave2-2");add("wave2-3");}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("Distance", 750);
 			put("TimeLimit", 50);
-			put("Message", "Message wave 03 Your chest is <Distance> meters away, at <X>,  <Z>.");
+			put("Message", new ArrayList<String>(){{
+				add("&aWave 3! Treasure crate dropped &6<Distance> blocks away &6(<X>,<Z>)");
+				add("&7Ride a horse towards <Direction>");}});
 			put("LootTables", new ArrayList<String>(){{add("wave3-1");add("wave3-2");add("wave3-3");}});
 		}});
 	}}),
 	MESSAGE_ADDED_TO_QUEUE("Messages.AddedToQueue", "Your treasure hunt has been added to queue. It will start when the day breaks."),
+	MESSAGE_ADDED_TO_QUEUE_BROADCAST("Messages.AddedToQueueBroadcast", "<Player> scheduled a Treasure Hunt! It will start in <Time> min"),
 	MESSAGE_NO_HUNT("Messages.NoHunt", "You have no hunts to run"),
 	MESSAGE_HUNT_BOUGHT("Messages.HuntBought","You have bought a Treasure Hunt!"),
 

@@ -92,17 +92,46 @@ public class THuntManager {
 	{
 		huntQueue.add(playerName);
 		save();
-		
+		/*
 		if(canStart())
 		{
 			startHunt();
 		}
 		else
 		{
+			*/
+			int timeInMinutes = 0; 
+			long time = MantlePlugin.instance.getServer().getWorld("world").getTime();
+			int periodBeg = THuntSettings.START_PERIOD_BEG.integer();
+			int periodEnd = THuntSettings.START_PERIOD_END.integer();
+			if(time >= periodBeg && time <= periodEnd && huntRunning == false)
+			{
+				timeInMinutes = 0;
+			}
+			else if (time < periodBeg)
+			{
+				timeInMinutes = (int) (Math.floor((periodBeg - time) / 20 / 60));
+			}
+			else if (time > periodBeg)
+			{
+				int tickTillStart = (int) (24000 - time + periodBeg);
+				timeInMinutes = (int) (Math.floor(tickTillStart / 20 / 60));
+			}
+			
+			timeInMinutes += (huntQueue.size() - 1 ) * 20;
+			
+			
 			Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
 			if(player != null)
-				Util.Message(THuntSettings.MESSAGE_ADDED_TO_QUEUE.string(), player);
-		}
+			{
+				Util.Message(THuntSettings.MESSAGE_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
+			}
+			
+			String broadcastMessage = THuntSettings.MESSAGE_ADDED_TO_QUEUE_BROADCAST.string();
+			broadcastMessage = broadcastMessage.replace("<Player>", playerName);
+			broadcastMessage = broadcastMessage.replace("<Time>", timeInMinutes + "");
+			Util.Broadcast(broadcastMessage, playerName);
+		//}
 	}
 		
 	public boolean canStart()
@@ -263,11 +292,18 @@ public class THuntManager {
 			if(aaa >= -magicValue && aaa < magicValue)
 				direction = "South";
 			*/
-			String message = (String) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Message");
-			int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
-			message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "");
-					//.replace("<Direction>", direction);
-			Util.Message(message, entry.getKey());
+			
+			List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Message");
+			
+			for(String message : messageList)
+			{
+				int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
+				message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "");
+						//.replace("<Direction>", direction);
+				Util.Message(message, entry.getKey());
+			}
+			//String message = (String) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Message");
+			
 		}
 	}
 		
