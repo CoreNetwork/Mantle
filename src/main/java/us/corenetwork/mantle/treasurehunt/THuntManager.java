@@ -160,6 +160,7 @@ public class THuntManager {
 		save();
 		
 		Util.Broadcast(THuntSettings.MESSAGE_END_HUNT.string());
+		messagePlayersInWrongWorlds();
 	}
 	
 	private void runTheHunt()
@@ -267,6 +268,19 @@ public class THuntManager {
 		for(Player player : MantlePlugin.instance.getServer().getOnlinePlayers())
 		{
 			Environment env = player.getWorld().getEnvironment(); 
+			if(env == Environment.NORMAL)
+			{
+				playerList.add(player);
+			}
+		}
+		return playerList;
+	}
+	
+	private void messagePlayersInWrongWorlds()
+	{
+		for(Player player : MantlePlugin.instance.getServer().getOnlinePlayers())
+		{
+			Environment env = player.getWorld().getEnvironment(); 
 			if(env == Environment.THE_END)
 			{
 				Util.Message(THuntSettings.MESSAGE_IN_LIMBO.string(), player);
@@ -275,12 +289,7 @@ public class THuntManager {
 			{
 				Util.Message(THuntSettings.MESSAGE_IN_NETHER.string(), player);
 			}
-			else
-			{
-				playerList.add(player);
-			}
 		}
-		return playerList;
 	}
 	
 	

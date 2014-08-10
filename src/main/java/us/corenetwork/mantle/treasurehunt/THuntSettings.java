@@ -67,7 +67,7 @@ public enum THuntSettings {
 	MESSAGE_END_HUNT("Messages.EndHunt", "Treasure Hunt ended!"),
 	
 	MESSAGE_IN_LIMBO("Messages.InLimbo", "I'm sorry, you cannot participate in Treasure Hunt while in Limbo"),
-	MESSAGE_IN_NETHER("Messages.InNether", "Treasure Hunt takes place in overworld! Travel back to find your chest."),
+	MESSAGE_IN_NETHER("Messages.InNether", "Treasure Hunt takes place in overworld! Travel back and join the next wave."),
 	
 	MESSAGE_RIGHT_CLICK("Messages.RightClick", "You cannot open this chest, left click it to get the rewards."),
 	MESSAGE_ONE_PER_WAVE("Messages.OnePerWave", "You can loot only one chest per wave!"),
