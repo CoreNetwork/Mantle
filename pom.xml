@@ -51,6 +51,16 @@
         <id>comphenix-releases</id>
         <url>http://repo.comphenix.net/content/repositories/releases/</url>
     </repository>
+      <repository>
+          <id>zml-repo</id>
+          <url>http://files.zachsthings.com/repo</url>
+          <releases>
+              <enabled>false</enabled>
+          </releases>
+          <snapshots>
+              <enabled>false</enabled>
+          </snapshots>
+      </repository>
   </repositories>
 
   <dependencies>
