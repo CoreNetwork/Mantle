@@ -233,6 +233,11 @@ public class THuntManager {
 				{
 					for(Entry<Player, Location> entry : playerChestsLocations.entrySet())
 					{
+						if(alreadyClicked.contains(entry.getKey()))
+						{
+							continue;
+						}
+						
 						Location playerLoc = entry.getKey().getLocation();
 						Location chestLoc = entry.getValue();
 						List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Messages");
