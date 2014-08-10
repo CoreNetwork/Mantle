@@ -1,20 +1,13 @@
 package us.corenetwork.mantle.spellbooks;
 
-import java.lang.reflect.Field;
-
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.NBTTagList;
-
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
-import org.bukkit.inventory.ItemStack;
-
-import us.corenetwork.mantle.MantlePlugin;
-
 import com.comphenix.protocol.PacketType.Play;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import us.corenetwork.mantle.MantlePlugin;
 
 
 public class ItemProtocolListener extends PacketAdapter {
@@ -46,28 +39,31 @@ public class ItemProtocolListener extends PacketAdapter {
 	{
 		if (stack == null || SpellbookItem.parseSpellbook(stack) == null)
 			return;
-		
-		try
-		{
-			Field handleField = CraftItemStack.class.getDeclaredField("handle");
-			handleField.setAccessible(true);
-			
-			net.minecraft.server.v1_7_R4.ItemStack nmsStack = (net.minecraft.server.v1_7_R4.ItemStack) handleField.get(stack);
-			if (nmsStack.tag == null)
-			{
-				nmsStack.tag = new NBTTagCompound();
-			}
-			
-			if (nmsStack.tag.get("ench") == null)
-			{
-				nmsStack.tag.set("ench", new NBTTagList());
-			}
-			
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+
+        stack.addUnsafeEnchantment(Enchantment.ARROW_DAMAGE, 10);
+
+
+//		try
+//		{
+//			Field handleField = CraftItemStack.class.getDeclaredField("handle");
+//			handleField.setAccessible(true);
+//
+//			net.minecraft.server.v1_7_R4.ItemStack nmsStack = (net.minecraft.server.v1_7_R4.ItemStack) handleField.get(stack);
+//			if (nmsStack.tag == null)
+//			{
+//				nmsStack.tag = new NBTTagCompound();
+//			}
+//
+//			if (nmsStack.tag.get("ench") == null)
+//			{
+//				nmsStack.tag.set("ench", new NBTTagList());
+//			}
+//
+//		}
+//		catch (Exception e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static void init()
