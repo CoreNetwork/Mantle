@@ -33,7 +33,8 @@ public class JoinHuntCommand extends BaseMantleCommand  {
 		}
 		else
 		{
-			THuntModule.manager.addPlayerToHunt(player);
+			Util.Message(THuntSettings.MESSAGE_JOIN.string(), player);
 		}
+		THuntModule.manager.addPlayerToHunt(player);
 	}
 }

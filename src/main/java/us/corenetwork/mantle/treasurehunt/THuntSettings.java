@@ -74,6 +74,9 @@ public enum THuntSettings {
 	MESSAGE_ENTER_WHILE_RUNNING("Message.EnterWhileRunning", "Treasure Raid is running right now!/raid join and participate in next wave."),
 	MESSAGE_ENTER_WHILE_QUEUED("Message.EnterWhileQueued", "Treasure Raid will take place in <Time> min. /raid join."),
 	
+	MESSAGE_WAVE_ACTIVE("Message.WaveActive", "Active wave : <Wave>. Please wait for next wave."),
+	MESSAGE_WAVE_ACTIVE_LAST("Message.WaveActive", "Active wave : <Wave>. Sorry, there is no next wave."),
+	
 	MESSAGE_RIGHT_CLICK("Messages.RightClick", "You cannot open this chest, left click it to get the rewards."),
 	MESSAGE_ONE_PER_WAVE("Messages.OnePerWave", "You can loot only one chest per wave!"),
 	

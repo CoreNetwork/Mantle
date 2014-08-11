@@ -34,6 +34,7 @@ public class THuntManager {
 	private List<Player> huntParticipants;
 	
 	private int wave;
+	private int waveCount;
 	private int lootTableToUse;
 	private int lootTableCount;
 	
@@ -119,15 +120,27 @@ public class THuntManager {
 		return !huntQueue.isEmpty();
 	}
 	
+	public int getActiveWave()
+	{
+		return wave;
+	}
+	public int getWaveCount()
+	{
+		return waveCount;
+	}
+	
 	public void addPlayerToHunt(Player player)
 	{
-		Util.Message(THuntSettings.MESSAGE_JOIN.string(), player);
+		
 		huntParticipants.add(player);
 	}
 	public void removePlayerFromHunt(Player player)
 	{
-		Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
-		huntParticipants.remove(player);
+		if(huntParticipants.contains(player))
+		{
+			Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
+			huntParticipants.remove(player);
+		}
 	}
 	public boolean isTakingPart(Player player)
 	{
@@ -222,6 +235,7 @@ public class THuntManager {
 		
 		int delay = 0;
 		wave = 0;
+		waveCount = waveList.size();
 		lootTableToUse = (new Random()).nextInt(lootTableCount);
 		for(Map<?, ?> waveMap : waveList)
 		{

@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.treasurehunt;
 
+import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import us.corenetwork.mantle.Util;
@@ -67,4 +69,27 @@ public class THuntListener implements Listener {
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent event)
+	{
+		Player player = event.getPlayer();
+		
+		if(player.getWorld().getEnvironment() == Environment.NORMAL && THuntModule.manager.isTakingPart(player))
+		{
+			if(THuntModule.manager.isRunning())
+			{
+				int activeWave = THuntModule.manager.getActiveWave();
+				int waveCount = THuntModule.manager.getWaveCount();
+				if(activeWave != waveCount)
+				{
+					Util.Message(THuntSettings.MESSAGE_WAVE_ACTIVE.string().replace("<Wave>", THuntModule.manager.getActiveWave() +""), player);
+				}
+				else
+				{
+					Util.Message(THuntSettings.MESSAGE_WAVE_ACTIVE_LAST.string().replace("<Wave>", THuntModule.manager.getActiveWave() +""), player);
+				}
+				
+			}
+		}
+	}
 }
