@@ -1,13 +1,14 @@
 package us.corenetwork.mantle.treasurehunt;
 
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
+import org.bukkit.event.player.PlayerJoinEvent;
 import us.corenetwork.mantle.Util;
 
 public class THuntListener implements Listener {
@@ -43,6 +44,26 @@ public class THuntListener implements Listener {
 		if(THuntModule.manager.isHuntChest(block.getLocation()))
 		{
 			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		Player player = event.getPlayer();
+		
+		if(THuntModule.manager.isTakingPart(player) == false && THuntModule.manager.shouldMessagePlayer(player))
+		{
+			if(THuntModule.manager.isRunning())
+			{
+				Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
+				return;
+			}
+			if(THuntModule.manager.isQueued())
+			{
+				Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				return;
+			}
 		}
 	}
 	

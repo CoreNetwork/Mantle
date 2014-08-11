@@ -1,4 +1,5 @@
 package us.corenetwork.mantle;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -109,6 +110,14 @@ public class Util {
 
 	}
 
+	public static void Multicast(String message, List<Player> players)
+	{
+		for (Player p : players)
+		{
+			Util.Message(message, p);
+		}
+	}
+	
 	public static void MessagePermissions(String message, String permission)
 	{
 		for (Player p : Bukkit.getOnlinePlayers())

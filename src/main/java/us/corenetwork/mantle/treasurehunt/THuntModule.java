@@ -10,6 +10,8 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.commands.BuyHuntCommand;
 import us.corenetwork.mantle.treasurehunt.commands.CheckHuntCommand;
+import us.corenetwork.mantle.treasurehunt.commands.JoinHuntCommand;
+import us.corenetwork.mantle.treasurehunt.commands.LeaveHuntCommand;
 import us.corenetwork.mantle.treasurehunt.commands.RunHuntCommand;
 
 public class THuntModule extends MantleModule {
@@ -55,6 +57,8 @@ public class THuntModule extends MantleModule {
 		commands.put("run", new RunHuntCommand());
 		commands.put("buy", new BuyHuntCommand());
 		commands.put("check", new CheckHuntCommand());
+		commands.put("join", new JoinHuntCommand());
+		commands.put("leave", new LeaveHuntCommand());
 		
 		manager = new THuntManager();
 		

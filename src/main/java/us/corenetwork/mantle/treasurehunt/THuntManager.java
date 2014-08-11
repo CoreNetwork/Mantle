@@ -9,6 +9,7 @@ import java.util.Random;
 import net.minecraft.server.v1_7_R4.EntityItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.World.Environment;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftItem;
 import org.bukkit.entity.Item;
@@ -30,6 +31,8 @@ public class THuntManager {
 	private List<Location> chestList;
 	private List<Player> alreadyClicked;
 	
+	private List<Player> huntParticipants;
+	
 	private int wave;
 	private int lootTableToUse;
 	private int lootTableCount;
@@ -40,6 +43,7 @@ public class THuntManager {
 		huntQueue = Collections.synchronizedList(new ArrayList<String>());
 		chestList = new ArrayList<Location>();
 		alreadyClicked = new ArrayList<Player>();
+		huntParticipants = new ArrayList<Player>();
 		ArrayList<String> list = (ArrayList<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(0).get("LootTables");
 		
 		lootTableCount = list.size();
@@ -88,12 +92,74 @@ public class THuntManager {
 		THuntModule.instance.saveStorageYaml();
 	}
 	
+	public boolean shouldMessagePlayer(Player player)
+	{
+		int playTime = player.getStatistic(Statistic.PLAY_ONE_TICK);
+		return playTime > 72000;
+	}
+	
+	public List<Player> onlinePlayersToMessage()
+	{
+		List<Player> onlinePlayersToMessage = new ArrayList<Player>();
+		for(Player onlinePlayer : MantlePlugin.instance.getServer().getOnlinePlayers())
+		{
+			if(shouldMessagePlayer(onlinePlayer))
+				onlinePlayersToMessage.add(onlinePlayer);
+		}
+		return onlinePlayersToMessage;
+	}
+	
+	public boolean isRunning()
+	{
+		return huntRunning;
+	}
+	
+	public boolean isQueued()
+	{
+		return !huntQueue.isEmpty();
+	}
+	
+	public void addPlayerToHunt(Player player)
+	{
+		Util.Message(THuntSettings.MESSAGE_JOIN.string(), player);
+		huntParticipants.add(player);
+	}
+	public void removePlayerFromHunt(Player player)
+	{
+		Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
+		huntParticipants.remove(player);
+	}
+	public boolean isTakingPart(Player player)
+	{
+		return huntParticipants.contains(player);
+	}
+	
 	public void addToQueue(String playerName)
 	{
 		huntQueue.add(playerName);
 		
 		save();
 		
+		int timeInMinutes = getTimeToStartTime() + (huntQueue.size() - 1 ) * 20;
+		
+		Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
+		if(player != null)
+		{
+			Util.Message(THuntSettings.MESSAGE_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
+		}
+		
+		String broadcastMessage = THuntSettings.MESSAGE_ADDED_TO_QUEUE_BROADCAST.string();
+		broadcastMessage = broadcastMessage.replace("<Player>", playerName);
+		broadcastMessage = broadcastMessage.replace("<Time>", timeInMinutes + "");
+		
+		List<Player> sendToPlayers = onlinePlayersToMessage();
+		if(player != null)
+			sendToPlayers.remove(player);
+		Util.Multicast(broadcastMessage, sendToPlayers);
+	}
+		
+	public int getTimeToStartTime()
+	{
 		int timeInMinutes = 0; 
 		long time = MantlePlugin.instance.getServer().getWorld("world").getTime();
 		int periodBeg = THuntSettings.START_PERIOD_BEG.integer();
@@ -111,22 +177,9 @@ public class THuntManager {
 			int tickTillStart = (int) (24000 - time + periodBeg);
 			timeInMinutes = (int) (Math.floor(tickTillStart / 20 / 60));
 		}
-		
-		timeInMinutes += (huntQueue.size() - 1 ) * 20;
-		
-		Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
-		if(player != null)
-		{
-			Util.Message(THuntSettings.MESSAGE_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
-		}
-		
-		String broadcastMessage = THuntSettings.MESSAGE_ADDED_TO_QUEUE_BROADCAST.string();
-		broadcastMessage = broadcastMessage.replace("<Player>", playerName);
-		broadcastMessage = broadcastMessage.replace("<Time>", timeInMinutes + "");
-		Util.Broadcast(broadcastMessage, playerName);
-		
+		return timeInMinutes;
 	}
-		
+	
 	public boolean canStart()
 	{
 		long time = MantlePlugin.instance.getServer().getWorld("world").getTime();
@@ -149,18 +202,18 @@ public class THuntManager {
 		save();
 		runTheHunt();
 		
-		Util.Broadcast(THuntSettings.MESSAGE_START_HUNT.string());
+		Util.Multicast(THuntSettings.MESSAGE_START_HUNT.string(), onlinePlayersToMessage());
 	}
 	
 	public void endHunt()
 	{
 		clearChests();
+		huntParticipants.clear();
 		huntRunning = false;
 		activeHunt = null;
 		save();
 		
-		Util.Broadcast(THuntSettings.MESSAGE_END_HUNT.string());
-		messagePlayersInWrongWorlds();
+		Util.Multicast(THuntSettings.MESSAGE_END_HUNT.string(), onlinePlayersToMessage());
 	}
 	
 	private void runTheHunt()
@@ -212,9 +265,9 @@ public class THuntManager {
 	{
 		wave++;
 		
-		List<Player> playerList = getPlayersWhoCanJoin();
+		List<Player> waveParticipants = getWaveParticipants();
 		
-		final Map<Player, Location> playerChestsLocations = THuntLocationRandomizer.getPlayerChests(playerList, distance); 
+		final Map<Player, Location> playerChestsLocations = THuntLocationRandomizer.getPlayerChests(waveParticipants, distance); 
 		chestList = new ArrayList<Location>(playerChestsLocations.values());
 		
 		announceChest(playerChestsLocations);
@@ -261,11 +314,11 @@ public class THuntManager {
 		save();
 	}
 	
-	private List<Player> getPlayersWhoCanJoin()
+	private List<Player> getWaveParticipants()
 	{
 		List<Player> playerList = new ArrayList<Player>();
 		
-		for(Player player : MantlePlugin.instance.getServer().getOnlinePlayers())
+		for(Player player : huntParticipants)
 		{
 			Environment env = player.getWorld().getEnvironment(); 
 			if(env == Environment.NORMAL)
@@ -276,21 +329,7 @@ public class THuntManager {
 		return playerList;
 	}
 	
-	private void messagePlayersInWrongWorlds()
-	{
-		for(Player player : MantlePlugin.instance.getServer().getOnlinePlayers())
-		{
-			Environment env = player.getWorld().getEnvironment(); 
-			if(env == Environment.THE_END)
-			{
-				Util.Message(THuntSettings.MESSAGE_IN_LIMBO.string(), player);
-			}
-			else if(env == Environment.NETHER)
-			{
-				Util.Message(THuntSettings.MESSAGE_IN_NETHER.string(), player);
-			}
-		}
-	}
+	
 	
 	
 	private void announceChest(Map<Player, Location> playerChestsLocations)	
@@ -309,14 +348,11 @@ public class THuntManager {
 						.replace("<Direction>", direction);
 				Util.Message(message, entry.getKey());
 			}
-			//String message = (String) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Message");
-			
 		}
 	}
 		
 	private String getDirection(Location chestLoc, Location playerLoc)
 	{
-
 		double dx = chestLoc.getBlockX() - playerLoc.getBlockX();
 		double dz = chestLoc.getBlockZ() - playerLoc.getBlockZ();
 		
@@ -370,10 +406,11 @@ public class THuntManager {
 		
 		LootTableNodeParser parser = new LootTableNodeParser(lootTable, 1, 0, RChestsModule.instance.config);
 		List<ItemStack> items = parser.parse();
-		
+		Location dropLocation = chestLocation.add(0.5, 1, 0.5);
 		for(ItemStack itemToDrop : items)
 		{
-			Item item = player.getWorld().dropItem(chestLocation.add(0.5, 1, 0.5), itemToDrop);
+			Item item = player.getWorld().dropItem(dropLocation, itemToDrop);
+			item.teleport(dropLocation);
 			EntityItem nmsItem = (EntityItem) ((CraftItem) item).getHandle();
 			nmsItem.a(player.getName());
 		}

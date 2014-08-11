@@ -25,7 +25,7 @@ public class THuntLocationRandomizer {
 		Map<Player, Location> playerChestLoc = new HashMap<Player, Location>();
 		
 		
-		for(Player player : MantlePlugin.instance.getServer().getOnlinePlayers())
+		for(Player player : playerList)
 		{
 			boolean isValidLocation = false;
 			Location origin = getInBoundsLocation(player);
