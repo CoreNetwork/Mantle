@@ -45,9 +45,6 @@ public class THuntManager {
 		chestList = new ArrayList<Location>();
 		alreadyClicked = new ArrayList<Player>();
 		huntParticipants = new ArrayList<Player>();
-		ArrayList<String> list = (ArrayList<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(0).get("LootTables");
-		
-		lootTableCount = list.size();
 		load();
 	}
 	
@@ -236,6 +233,10 @@ public class THuntManager {
 		int delay = 0;
 		wave = 0;
 		waveCount = waveList.size();
+		
+		ArrayList<String> list = (ArrayList<String>) waveList.get(0).get("LootTables");
+		lootTableCount = list.size();
+		
 		lootTableToUse = (new Random()).nextInt(lootTableCount);
 		for(Map<?, ?> waveMap : waveList)
 		{
