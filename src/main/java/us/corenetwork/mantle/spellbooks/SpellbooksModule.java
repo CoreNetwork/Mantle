@@ -40,8 +40,12 @@ public class SpellbooksModule extends MantleModule {
 		Bukkit.getServer().getPluginManager().registerEvents(new SpellbooksListener(), MantlePlugin.instance);
 				
 		SpellbookManager.init();
-		ItemProtocolListener.init();
-		
+
+        if (Bukkit.getPluginManager().isPluginEnabled("ProtocolLib"))
+        {
+            ItemProtocolListener.init();
+        }
+
 		return true;
 	}
 	
