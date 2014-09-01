@@ -128,7 +128,6 @@ public class THuntManager {
 	
 	public void addPlayerToHunt(Player player)
 	{
-		
 		huntParticipants.add(player);
 	}
 	public void removePlayerFromHunt(Player player)
@@ -224,6 +223,18 @@ public class THuntManager {
 		save();
 		
 		Util.Multicast(THuntSettings.MESSAGE_END_HUNT.string(), onlinePlayersToMessage());
+		
+		if(huntQueue.isEmpty() == false)
+		{
+			MantlePlugin.instance.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+				
+				@Override
+				public void run()
+				{
+					Util.Broadcast(THuntSettings.MESSAGE_NEXT_HUNT_SCHEDULED.string().replace("<Time>", getTimeToStartTime()+""));
+				}
+			}, 200);
+		}
 	}
 	
 	private void runTheHunt()

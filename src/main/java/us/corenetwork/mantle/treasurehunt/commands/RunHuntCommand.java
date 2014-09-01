@@ -2,8 +2,6 @@ package us.corenetwork.mantle.treasurehunt.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import us.corenetwork.core.PlayerUtils;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
@@ -32,6 +30,7 @@ public class RunHuntCommand extends BaseMantleCommand {
 
 			THuntModule.instance.saveStorageYaml();
 			THuntModule.manager.addToQueue(player.getName());
+			THuntModule.manager.addPlayerToHunt(player);
 		}
 		else
 		{
