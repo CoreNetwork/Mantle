@@ -1,6 +1,8 @@
 package us.corenetwork.mantle.spellbooks;
 
 import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -75,7 +77,13 @@ public class SpellbookItem {
                 {
                     try
                     {
+
                         expireTime = (int) (SpellbooksSettings.expireDateStorageFormat.parse(line).getTime() / 1000 + SpellbooksSettings.EXPIRE_OFFSET_SECONDS.integer());
+                        int tzOffset = Calendar.getInstance().getTimeZone().getOffset(expireTime);
+                        expireTime += tzOffset;
+
+                        MLog.debug("book expire date: " + new Date(expireTime).toString());
+
                         expireTimeLoreLineId = i;
                     }
                     catch (ParseException e)
