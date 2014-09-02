@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.nanobot;
 
+import java.util.Calendar;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
@@ -8,8 +9,8 @@ import org.bukkit.TreeSpecies;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.TexturedMaterial;
-
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 
 public class NanobotUtil {	
 	public static ItemStack getMaterialFromItem(String name)
@@ -134,7 +135,17 @@ public class NanobotUtil {
 	{
 		source = source.replaceAll("(?<!&)&([klmnor0-9abcdef])", ChatColor.COLOR_CHAR + "$1");
 		source = source.replaceAll("&&([klmnor0-9abcdef])", ChatColor.COLOR_CHAR + "$1");
-	
+
+        if (source.startsWith("ExpireAfterDays: "))
+        {
+            int days = Integer.parseInt(source.substring(17));
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, days);
+
+            source = SpellbooksSettings.expireDateStorageFormat.format(calendar.getTime());
+        }
+
 		return source;
 	}
 }

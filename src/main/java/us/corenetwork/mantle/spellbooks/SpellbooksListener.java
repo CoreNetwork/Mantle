@@ -1,12 +1,15 @@
 package us.corenetwork.mantle.spellbooks;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
 public class SpellbooksListener implements Listener {
@@ -49,4 +52,17 @@ public class SpellbooksListener implements Listener {
 			}
 		}
 	}
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerChangeGamemode(final PlayerGameModeChangeEvent event)
+    {
+        Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                event.getPlayer().updateInventory();
+            }
+        }, 1);
+    }
 }

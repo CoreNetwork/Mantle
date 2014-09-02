@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks;
 
+import java.text.SimpleDateFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,16 +25,8 @@ public class SpellbooksModule extends MantleModule {
 		return false;
 	}
 
-	@Override
+    @Override
 	protected boolean loadModule() {
-
-		for (SpellbooksSettings setting : SpellbooksSettings.values())
-		{
-			if (config.get(setting.string) == null)
-				config.set(setting.string, setting.def);
-		}
-		saveConfig();
-		
 		MantlePlugin.adminCommands.put("makebook", new MakeBookCommand());
 		MantlePlugin.adminCommands.put("reslime", new ReslimeCommand());
 
@@ -48,7 +41,22 @@ public class SpellbooksModule extends MantleModule {
 
 		return true;
 	}
-	
+
+    @Override
+    public void loadConfig()
+    {
+        super.loadConfig();
+
+        for (SpellbooksSettings setting : SpellbooksSettings.values())
+        {
+            if (config.get(setting.string) == null)
+                config.set(setting.string, setting.def);
+        }
+        saveConfig();
+
+        SpellbooksSettings.expireDateStorageFormat = new SimpleDateFormat(SpellbooksSettings.LORE_DATE_STORE.string());
+    }
+
 	@Override
 	protected void unloadModule() {
 	}
