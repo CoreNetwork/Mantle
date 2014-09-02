@@ -20,7 +20,7 @@ import us.corenetwork.mantle.spellbooks.books.WindBook;
 
 public class SpellbookManager {
 	private static HashMap<String, Spellbook> books = new HashMap<String, Spellbook>();
-	
+
 	public static void init()
 	{
 		addSpellbook(new GrowthBook());

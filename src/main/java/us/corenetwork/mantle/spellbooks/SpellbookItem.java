@@ -1,15 +1,19 @@
 package us.corenetwork.mantle.spellbooks;
 
+import java.text.ParseException;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import us.corenetwork.mantle.MLog;
 
-public class SpellbookItem {	
+public class SpellbookItem {
 	private ItemStack item;
 	private Spellbook spellbook;
 	private String owner;
-	
+	private int expireTime;
+
+    private int expireTimeLoreLineId;
 	
 	private SpellbookItem()
 	{
@@ -26,7 +30,15 @@ public class SpellbookItem {
 		return spellbook;
 	}
 	
-	
+	public int getExpiringTime()
+    {
+        return expireTime;
+    }
+    public int getExpiringTimeLoreLineId()
+    {
+        return expireTimeLoreLineId;
+    }
+
 	public static SpellbookItem parseSpellbook(ItemStack itemStack)
 	{
 		if (itemStack.getType() != Material.ENCHANTED_BOOK && itemStack.getType() != Material.BOOK)
@@ -44,16 +56,35 @@ public class SpellbookItem {
 			return null;
 		
 		String owner = null;
+        int expireTime = -1;
+        int expireTimeLoreLineId = -1;
+        String expireTimeStart = SpellbooksSettings.DATE_STORE_BEGINNING.string();
 		if (meta.getLore() != null)
 		{
-			for (String s : meta.getLore())
+			for (int i = 0; i < meta.getLore().size(); i++)
 			{
+                String s = meta.getLore().get(i);
+
 				s = ChatColor.stripColor(s);
 				if (s.startsWith("Soulbound to "))
 				{
 					owner = s.substring(13);
-					break;
 				}
+                else if (s.startsWith(expireTimeStart))
+                {
+                    try
+                    {
+                        expireTime = (int) (SpellbooksSettings.expireDateStorageFormat.parse(s).getTime() / 1000 + SpellbooksSettings.EXPIRE_OFFSET_SECONDS.integer());
+                        expireTimeLoreLineId = i;
+                    }
+                    catch (ParseException e)
+                    {
+                        MLog.severe("Invalid date format on book: " + s);
+
+                        expireTime = -1;
+                        expireTimeLoreLineId = -1;
+                    }
+                }
 			}
 		}
 		
@@ -61,6 +92,8 @@ public class SpellbookItem {
 		item.item = itemStack;
 		item.spellbook = book;
 		item.owner = owner;
+        item.expireTime = expireTime;
+        item.expireTimeLoreLineId = expireTimeLoreLineId;
 		
 		return item;
 	}	

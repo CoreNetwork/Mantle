@@ -62,15 +62,23 @@ public abstract class Spellbook {
 	public void activate(SpellbookItem item, PlayerEvent event)
 	{
 		long start = System.nanoTime();
-				
+        Player player = event.getPlayer();
+
+        if (item.getExpiringTime() < System.currentTimeMillis() / 1000)
+        {
+            String message = SpellbooksSettings.MESSAGE_BOOK_EXPIRED.string();
+            message = message.replace("<Spellbook>", getName());
+            Util.Message(message, player);
+
+            return;
+        }
+
 		BookFinishAction action = BookFinishAction.NOTHING;
 		if (event instanceof PlayerInteractEntityEvent)
 			action = onActivateEntity(item, (PlayerInteractEntityEvent) event);
 		else if (event instanceof PlayerInteractEvent)
 			action = onActivate(item, (PlayerInteractEvent) event);
-		
-		Player player = event.getPlayer();
-		
+
 		if (action == BookFinishAction.CONSUME || action == BookFinishAction.BROADCAST_AND_CONSUME)
 		{
 			if (player.getGameMode() != GameMode.CREATIVE)
