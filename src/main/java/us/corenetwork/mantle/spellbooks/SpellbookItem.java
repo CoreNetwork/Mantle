@@ -79,10 +79,10 @@ public class SpellbookItem {
                     {
 
                         expireTime = (int) (SpellbooksSettings.expireDateStorageFormat.parse(line).getTime() / 1000 + SpellbooksSettings.EXPIRE_OFFSET_SECONDS.integer());
-                        int tzOffset = Calendar.getInstance().getTimeZone().getOffset(expireTime);
-                        expireTime += tzOffset;
+                        int tzOffset = Calendar.getInstance().getTimeZone().getOffset(expireTime * 1000);
+                        expireTime += tzOffset / 1000;
 
-                        MLog.debug("book expire date: " + new Date(expireTime).toString());
+                        MLog.debug("book expire date: " + new Date(expireTime* 1000).toString());
 
                         expireTimeLoreLineId = i;
                     }
