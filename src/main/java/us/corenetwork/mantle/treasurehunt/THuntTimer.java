@@ -9,6 +9,7 @@ public class THuntTimer implements Runnable {
 	{
 		if (THuntModule.manager.canStart())
 			THuntModule.manager.startHunt();
+		THuntModule.manager.checkSkipDay();
 	}
 
 }

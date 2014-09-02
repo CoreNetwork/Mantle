@@ -15,6 +15,8 @@ public enum THuntSettings {
 	MAX_Z("MaxZ", 8000),
 	
 	GROUND_LEVEL("GroundLevel", 4),
+
+	MIN_MINUTES_BEFORE_TO_START("MinMinutesBeforeToStart", 4),
 	START_PERIOD_BEG("StartPeriodBeginning", 200),
 	START_PERIOD_END("StartPeriodEnd", 2000),
 	
