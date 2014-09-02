@@ -23,9 +23,10 @@ import us.corenetwork.mantle.restockablechests.RChestsModule;
 
 
 public class THuntManager {
-
+	
 	private List<String> huntQueue; 
 	private boolean huntRunning;
+	private boolean skipDay;
 	private String activeHunt;
 	
 	private List<Location> chestList;
@@ -41,6 +42,7 @@ public class THuntManager {
 	public THuntManager()
 	{
 		huntRunning = false;
+		skipDay = false;
 		huntQueue = Collections.synchronizedList(new ArrayList<String>());
 		chestList = new ArrayList<Location>();
 		alreadyClicked = new ArrayList<Player>();
@@ -154,6 +156,18 @@ public class THuntManager {
 		
 		int timeInMinutes = getTimeToStartTime() + (huntQueue.size() - 1 ) * 20;
 		
+		//If too close to start time, skip the day
+		if(timeInMinutes < THuntSettings.MIN_MINUTES_BEFORE_TO_START.integer())
+		{
+			skipDay = true;
+		}
+
+		//If we are skipping next day, add 20 min to all timeInMinutes to start
+		if(skipDay)
+		{
+			timeInMinutes += 20;
+		}
+		
 		Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
 		if(player != null)
 		{
@@ -174,6 +188,14 @@ public class THuntManager {
 		}
 	}
 		
+	public void checkSkipDay()
+	{
+		if(getTimeToStartTime() >= THuntSettings.MIN_MINUTES_BEFORE_TO_START.integer())
+		{
+			skipDay = false;
+		}
+	}
+	
 	public int getTimeToStartTime()
 	{
 		int timeInMinutes = 0; 
@@ -201,7 +223,7 @@ public class THuntManager {
 		long time = MantlePlugin.instance.getServer().getWorld("world").getTime();
 		boolean timeIsRight = time >= THuntSettings.START_PERIOD_BEG.integer() && time <= THuntSettings.START_PERIOD_END.integer(); 
 		
-		return timeIsRight && (huntRunning == false) && huntQueue.isEmpty() == false;
+		return skipDay == false && timeIsRight && (huntRunning == false) && huntQueue.isEmpty() == false;
 	}
 	
 	public void startHunt()
@@ -459,5 +481,6 @@ public class THuntManager {
 			nmsItem.a(player.getName());
 		}
 	}
+
 	
 }
