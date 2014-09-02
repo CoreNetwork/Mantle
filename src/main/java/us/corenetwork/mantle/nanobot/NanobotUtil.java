@@ -143,7 +143,7 @@ public class NanobotUtil {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, days);
 
-            source = SpellbooksSettings.expireDateStorageFormat.format(calendar.getTime());
+            source = fixFormatting(SpellbooksSettings.expireDateStorageFormat.format(calendar.getTime()));
         }
 
 		return source;
