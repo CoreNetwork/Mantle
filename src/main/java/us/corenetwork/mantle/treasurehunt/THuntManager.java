@@ -325,6 +325,11 @@ public class THuntManager {
 							continue;
 						}
 						
+						if(entry.getKey().getWorld().getEnvironment() != Environment.NORMAL)
+						{
+							continue;
+						}
+						
 						Location playerLoc = entry.getKey().getLocation();
 						Location chestLoc = entry.getValue();
 						List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Messages");
