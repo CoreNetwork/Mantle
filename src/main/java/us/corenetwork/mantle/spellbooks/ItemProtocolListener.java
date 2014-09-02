@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 
 public class ItemProtocolListener extends PacketAdapter {
@@ -85,6 +86,8 @@ public class ItemProtocolListener extends PacketAdapter {
                     else
                         newLore = newLore.replace("<PluralS>", "s");
                 }
+
+                newLore = NanobotUtil.fixFormatting(newLore);
 
                 lore.set(book.getExpiringTimeLoreLineId(), newLore);
                 meta.setLore(lore);

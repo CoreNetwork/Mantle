@@ -64,23 +64,23 @@ public class SpellbookItem {
 		{
 			for (int i = 0; i < meta.getLore().size(); i++)
 			{
-                String s = meta.getLore().get(i);
+                String line = meta.getLore().get(i);
 
-				s = ChatColor.stripColor(s);
-				if (s.startsWith("Soulbound to "))
+                String noColorLine = ChatColor.stripColor(line);
+				if (noColorLine.startsWith("Soulbound to "))
 				{
-					owner = s.substring(13);
+					owner = noColorLine.substring(13);
 				}
-                else if (s.startsWith(expireTimeStart))
+                else if (line.startsWith(expireTimeStart))
                 {
                     try
                     {
-                        expireTime = (int) (SpellbooksSettings.expireDateStorageFormat.parse(s).getTime() / 1000 + SpellbooksSettings.EXPIRE_OFFSET_SECONDS.integer());
+                        expireTime = (int) (SpellbooksSettings.expireDateStorageFormat.parse(line).getTime() / 1000 + SpellbooksSettings.EXPIRE_OFFSET_SECONDS.integer());
                         expireTimeLoreLineId = i;
                     }
                     catch (ParseException e)
                     {
-                        MLog.severe("Invalid date format on book: " + s);
+                        MLog.severe("Invalid date format on book: " + line);
 
                         expireTime = -1;
                         expireTimeLoreLineId = -1;
