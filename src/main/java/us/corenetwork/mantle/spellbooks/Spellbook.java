@@ -64,7 +64,7 @@ public abstract class Spellbook {
 		long start = System.nanoTime();
         Player player = event.getPlayer();
 
-        if (item.getExpiringTime() < System.currentTimeMillis() / 1000)
+        if (item.getExpiringTime() != -1 && item.getExpiringTime() < System.currentTimeMillis() / 1000)
         {
             String message = SpellbooksSettings.MESSAGE_BOOK_EXPIRED.string();
             message = message.replace("<Spellbook>", getName());
