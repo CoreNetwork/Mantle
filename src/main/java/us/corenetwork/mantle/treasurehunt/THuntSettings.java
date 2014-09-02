@@ -80,6 +80,9 @@ public enum THuntSettings {
 	MESSAGE_ENTER_WHILE_RUNNING("Messages.EnterWhileRunning", "Treasure Raid is running right now!/raid join and participate in next wave."),
 	MESSAGE_ENTER_WHILE_QUEUED("Messages.EnterWhileQueued", "Treasure Raid will take place in <Time> min. /raid join."),
 	
+	MESSAGE_ENTER_WHILE_RUNNING_ALREADY_IN("Messages.EnterWhileRunningAlreadyIn", "Treasure Raid is running right now!/raid join and participate in next wave."),
+	MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN("Messages.EnterWhileQueuedAlreadyIn", "Treasure Raid will take place in <Time> min. /raid join."),
+	
 	MESSAGE_WAVE_ACTIVE("Messages.WaveActive", "Active wave : <Wave>. Please wait for next wave."),
 	MESSAGE_WAVE_ACTIVE_LAST("Messages.WaveActive", "Active wave : <Wave>. Sorry, there is no next wave."),
 	

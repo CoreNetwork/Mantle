@@ -57,12 +57,26 @@ public class THuntListener implements Listener {
 		{
 			if(THuntModule.manager.isRunning())
 			{
-				Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
+				if(THuntModule.manager.isTakingPart(player))
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING_ALREADY_IN.string(), player);	
+				}
+				else
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
+				}
 				return;
 			}
 			if(THuntModule.manager.isQueued())
 			{
-				Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				if(THuntModule.manager.isTakingPart(player))
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				}
+				else
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				}
 				return;
 			}
 		}

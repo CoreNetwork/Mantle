@@ -18,6 +18,12 @@ public class LeaveHuntCommand extends BaseMantleCommand  {
 	public void run(CommandSender sender, String[] args)
 	{
 		Player player = (Player) sender;
-		THuntModule.manager.removePlayerFromHunt(player);
+		boolean silent = false;
+		if(args.length == 1 && args[0].toLowerCase().equals("silent"))
+		{
+			silent = true;
+		}
+		
+		THuntModule.manager.removePlayerFromHunt(player, silent);
 	}
 }

@@ -130,11 +130,14 @@ public class THuntManager {
 	{
 		huntParticipants.add(player);
 	}
-	public void removePlayerFromHunt(Player player)
+	public void removePlayerFromHunt(Player player, boolean silent)
 	{
 		if(huntParticipants.contains(player))
 		{
-			Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
+			if(silent == false)
+			{
+				Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
+			}
 			huntParticipants.remove(player);
 		}
 	}
