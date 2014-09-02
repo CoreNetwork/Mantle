@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 public class SpellbookItem {
 	private ItemStack item;
@@ -58,7 +59,7 @@ public class SpellbookItem {
 		String owner = null;
         int expireTime = -1;
         int expireTimeLoreLineId = -1;
-        String expireTimeStart = SpellbooksSettings.DATE_STORE_BEGINNING.string();
+        String expireTimeStart = NanobotUtil.fixFormatting(SpellbooksSettings.DATE_STORE_BEGINNING.string());
 		if (meta.getLore() != null)
 		{
 			for (int i = 0; i < meta.getLore().size(); i++)

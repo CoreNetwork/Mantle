@@ -6,7 +6,7 @@ import java.util.List;
 public enum SpellbooksSettings {
     EXPIRE_OFFSET_SECONDS("ExpireOffsetSeconds", 43200),
 
-    LORE_DATE_STORE("Lores.DateStore", "'Expires on' yyyy-MM-dd 'at 12:00 GMT+0'"),
+    LORE_DATE_STORE("Lores.DateStore", "yyyy-MM-dd 'at 12:00 GMT+0'"),
     DATE_STORE_BEGINNING("DateStoreBeginning", "Expires on "),
     LORE_BOOK_DAYS_LEFT("Lores.BookDaysLeft", "This book will expire in around <Days> day<PluralS>!"),
     LORE_BOOK_EXPIRED("Lores.BookExpired", "Book expired! Feel free to throw it into lava."),
