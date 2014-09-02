@@ -28,13 +28,12 @@ public class THuntListener implements Listener {
 		
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK && THuntModule.manager.isHuntChest(block.getLocation()))
 		{
-			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation());
+			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation(), true);
 		}
 		else if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
-			Util.Message(THuntSettings.MESSAGE_RIGHT_CLICK.string(), event.getPlayer());
+			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation(), false);
 			event.setCancelled(true);
-			return;
 		}
 	}
 	
