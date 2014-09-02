@@ -8,6 +8,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.Setting;
+import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 public class SpellbookItem {
@@ -82,7 +84,8 @@ public class SpellbookItem {
                         int tzOffset = Calendar.getInstance().getTimeZone().getOffset(expireTime * 1000);
                         expireTime += tzOffset / 1000;
 
-                        MLog.debug("book expire date: " + new Date(expireTime* 1000).toString());
+                        if (Settings.getBoolean(Setting.DEBUG))
+                            MLog.info("book expire date: " + new Date(expireTime * 1000L).toString());
 
                         expireTimeLoreLineId = i;
                     }
