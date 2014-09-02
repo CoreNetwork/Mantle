@@ -59,7 +59,11 @@ public enum THuntSettings {
 		add("south east");
 		}}),
 	MESSAGE_ADDED_TO_QUEUE("Messages.AddedToQueue", "Your treasure hunt has been added to queue. It will start in <Time> min."),
-	MESSAGE_ADDED_TO_QUEUE_BROADCAST("Messages.AddedToQueueBroadcast", "<Player> scheduled a Treasure Hunt! It will start in <Time> min"),
+	MESSAGE_ADDED_TO_QUEUE_BROADCAST("Messages.AddedToQueueBroadcast", new ArrayList<String>(){{
+							add("<Player> scheduled a Treasure Hunt! It will start in <Time> min");
+							add("Line 2 broadcast");
+							add("Line 3 broadcast");
+							}}),
 	MESSAGE_NEXT_HUNT_SCHEDULED("Messages.NextHuntScheduled", "Next hunt will start in <Time> min."),
 	
 	MESSAGE_NO_HUNT("Messages.NoHunt", "You have no hunts to run"),
@@ -73,11 +77,14 @@ public enum THuntSettings {
 	MESSAGE_JOIN("Messages.Join", "You joined Treasure Raid!"),
 	MESSAGE_LEAVE("Messages.Leave", "You left Treasure Raid!"),
 	
-	MESSAGE_ENTER_WHILE_RUNNING("Message.EnterWhileRunning", "Treasure Raid is running right now!/raid join and participate in next wave."),
-	MESSAGE_ENTER_WHILE_QUEUED("Message.EnterWhileQueued", "Treasure Raid will take place in <Time> min. /raid join."),
+	MESSAGE_ENTER_WHILE_RUNNING("Messages.EnterWhileRunning", "Treasure Raid is running right now!/raid join and participate in next wave."),
+	MESSAGE_ENTER_WHILE_QUEUED("Messages.EnterWhileQueued", "Treasure Raid will take place in <Time> min. /raid join."),
 	
-	MESSAGE_WAVE_ACTIVE("Message.WaveActive", "Active wave : <Wave>. Please wait for next wave."),
-	MESSAGE_WAVE_ACTIVE_LAST("Message.WaveActive", "Active wave : <Wave>. Sorry, there is no next wave."),
+	MESSAGE_ENTER_WHILE_RUNNING_ALREADY_IN("Messages.EnterWhileRunningAlreadyIn", "Treasure Raid is running right now!/raid join and participate in next wave."),
+	MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN("Messages.EnterWhileQueuedAlreadyIn", "Treasure Raid will take place in <Time> min. /raid join."),
+	
+	MESSAGE_WAVE_ACTIVE("Messages.WaveActive", "Active wave : <Wave>. Please wait for next wave."),
+	MESSAGE_WAVE_ACTIVE_LAST("Messages.WaveActive", "Active wave : <Wave>. Sorry, there is no next wave."),
 	
 	MESSAGE_RIGHT_CLICK("Messages.RightClick", "You cannot open this chest, left click it to get the rewards."),
 	MESSAGE_ONE_PER_WAVE("Messages.OnePerWave", "You can loot only one chest per wave!"),

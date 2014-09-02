@@ -130,11 +130,14 @@ public class THuntManager {
 	{
 		huntParticipants.add(player);
 	}
-	public void removePlayerFromHunt(Player player)
+	public void removePlayerFromHunt(Player player, boolean silent)
 	{
 		if(huntParticipants.contains(player))
 		{
-			Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
+			if(silent == false)
+			{
+				Util.Message(THuntSettings.MESSAGE_LEAVE.string(), player);
+			}
 			huntParticipants.remove(player);
 		}
 	}
@@ -157,14 +160,18 @@ public class THuntManager {
 			Util.Message(THuntSettings.MESSAGE_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
 		}
 		
-		String broadcastMessage = THuntSettings.MESSAGE_ADDED_TO_QUEUE_BROADCAST.string();
-		broadcastMessage = broadcastMessage.replace("<Player>", playerName);
-		broadcastMessage = broadcastMessage.replace("<Time>", timeInMinutes + "");
+		ArrayList<String> broadcastMessages = (ArrayList<String>) THuntModule.instance.config.getStringList(THuntSettings.MESSAGE_ADDED_TO_QUEUE_BROADCAST.string);
 		
-		List<Player> sendToPlayers = onlinePlayersToMessage();
-		if(player != null)
-			sendToPlayers.remove(player);
-		Util.Multicast(broadcastMessage, sendToPlayers);
+		for(String broadcastMessage : broadcastMessages)
+		{
+			broadcastMessage = broadcastMessage.replace("<Player>", playerName);
+			broadcastMessage = broadcastMessage.replace("<Time>", timeInMinutes + "");
+			
+			List<Player> sendToPlayers = onlinePlayersToMessage();
+			if(player != null)
+				sendToPlayers.remove(player);
+			Util.Multicast(broadcastMessage, sendToPlayers);
+		}
 	}
 		
 	public int getTimeToStartTime()
@@ -318,6 +325,11 @@ public class THuntManager {
 							continue;
 						}
 						
+						if(entry.getKey().getWorld().getEnvironment() != Environment.NORMAL)
+						{
+							continue;
+						}
+						
 						Location playerLoc = entry.getKey().getLocation();
 						Location chestLoc = entry.getValue();
 						List<String> messageList = (List<String>) THuntModule.instance.config.getMapList(THuntSettings.WAVES.string).get(wave - 1).get("Messages");
@@ -410,7 +422,7 @@ public class THuntManager {
 		return chestList.contains(loc);
 	}
 
-	public void chestClicked(Player player, Location chestLocation)
+	public void chestClicked(Player player, Location chestLocation, boolean leftClick)
 	{
 		if(huntRunning == false)
 			return;
@@ -421,9 +433,15 @@ public class THuntManager {
 			return;
 		}
 		
-		alreadyClicked.add(player);
-		
-		dropLoot(player, chestLocation);
+		if(leftClick)
+		{
+			alreadyClicked.add(player);
+			dropLoot(player, chestLocation);
+		}
+		else
+		{
+			Util.Message(THuntSettings.MESSAGE_RIGHT_CLICK.string(), player);
+		}
 	}
 	
 	private void dropLoot(Player player, Location chestLocation)

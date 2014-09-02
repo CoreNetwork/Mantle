@@ -28,13 +28,12 @@ public class THuntListener implements Listener {
 		
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK && THuntModule.manager.isHuntChest(block.getLocation()))
 		{
-			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation());
+			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation(), true);
 		}
 		else if (event.getAction() == Action.RIGHT_CLICK_BLOCK)
 		{
-			Util.Message(THuntSettings.MESSAGE_RIGHT_CLICK.string(), event.getPlayer());
+			THuntModule.manager.chestClicked(event.getPlayer(), block.getLocation(), false);
 			event.setCancelled(true);
-			return;
 		}
 	}
 	
@@ -58,12 +57,26 @@ public class THuntListener implements Listener {
 		{
 			if(THuntModule.manager.isRunning())
 			{
-				Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
+				if(THuntModule.manager.isTakingPart(player))
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING_ALREADY_IN.string(), player);	
+				}
+				else
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
+				}
 				return;
 			}
 			if(THuntModule.manager.isQueued())
 			{
-				Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				if(THuntModule.manager.isTakingPart(player))
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				}
+				else
+				{
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+				}
 				return;
 			}
 		}
