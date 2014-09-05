@@ -3,12 +3,10 @@ package us.corenetwork.mantle;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
@@ -52,7 +50,7 @@ public class MantlePlugin extends JavaPlugin {
 		adminCommands.put("dumpchunks", new DumpChunksCommand());
 		adminCommands.put("chunkinfo", new ChunkInfoCommand());
 
-		MantleModule.loadModules();
+        MantleModule.loadModules();
 
 		log.info("[Mantle] " + getDescription().getFullName() + " loaded!");
 	}

@@ -52,6 +52,10 @@
         <url>http://repo.comphenix.net/content/repositories/releases/</url>
     </repository>
       <repository>
+          <id>spigot-repo</id>
+          <url>http://repo.md-5.net/content/groups/public/</url>
+      </repository>
+      <repository>
           <id>zml-repo</id>
           <url>http://files.zachsthings.com/repo</url>
           <releases>
@@ -71,13 +75,21 @@
       <version>1.7.10-R0.1-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
-    
-    <dependency>
-      <groupId>org.bukkit</groupId>
-      <artifactId>craftbukkit</artifactId>
-      <version>1.7.10-R0.1-SNAPSHOT</version>
-      <scope>compile</scope>
-    </dependency>
+
+      <dependency>
+          <groupId>org.spigotmc</groupId>
+          <artifactId>spigot</artifactId>
+          <version>1.7.10-R0.1-SNAPSHOT</version>
+          <scope>system</scope>
+          <systemPath>${basedir}/lib/spigot.jar</systemPath>
+      </dependency>
+
+      <!--<dependency>-->
+      <!--<groupId>org.bukkit</groupId>-->
+      <!--<artifactId>craftbukkit</artifactId>-->
+      <!--<version>1.7.10-R0.1-SNAPSHOT</version>-->
+      <!--<scope>compile</scope>-->
+    <!--</dependency>-->
     
     <dependency>
       <groupId>com.sk89q</groupId>

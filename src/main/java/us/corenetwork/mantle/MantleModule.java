@@ -11,6 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
+import us.corenetwork.mantle.armorhologram.ArmorHologramModule;
 import us.corenetwork.mantle.gametweaks.GameTweaksModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
@@ -309,7 +310,16 @@ public abstract class MantleModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}
-	}
+
+        //Armor Stand Holograms
+        module = new ArmorHologramModule();
+        if (module.loadModuleInternal())
+        {
+            module.active = true;
+            modules.add(module);
+        }
+
+    }
 
 	public static void reloadConfigs()
 	{
