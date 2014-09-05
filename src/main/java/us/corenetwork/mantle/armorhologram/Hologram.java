@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 /**
  * Created by Matej on 5.9.2014.
@@ -144,7 +145,7 @@ public class Hologram
         packet.getBytes().write(1, (byte) (0 * 256.0F / 360.0F)); //Pitch - does not matter, can be 0
 
         WrappedDataWatcher watcher = new WrappedDataWatcher();
-        watcher.setObject(2, text); //CustomName
+        watcher.setObject(2, NanobotUtil.fixFormatting(text)); //CustomName
         watcher.setObject(3, Byte.valueOf((byte) 1)); //Custom name always visible
         watcher.setObject(0, Byte.valueOf((byte) (1 << 5))); //Invisible (flag?)
         watcher.setObject(10, Byte.valueOf((byte) 0x2)); //No gravity (flag?)
