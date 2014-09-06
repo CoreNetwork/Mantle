@@ -24,14 +24,14 @@ public class HologramPlayerData
         return player;
     }
 
-    private HashMap<Integer, Integer> hologramIds = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer[]> hologramIds = new HashMap<Integer, Integer[]>();
 
     public boolean isHologramDisplayed(int id)
     {
         return hologramIds.containsKey(id);
     }
 
-    public void addHologram(int globalId, int perPlayerId)
+    public void addHologram(int globalId, Integer[] perPlayerId)
     {
         hologramIds.put(globalId, perPlayerId);
     }
@@ -46,7 +46,7 @@ public class HologramPlayerData
         hologramIds.clear();
     }
 
-    public Integer getPersonalizedHologramId(int globalId)
+    public Integer[] getPersonalizedHologramId(int globalId)
     {
         return hologramIds.get(globalId);
     }

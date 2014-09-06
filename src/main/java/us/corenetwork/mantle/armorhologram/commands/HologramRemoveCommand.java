@@ -46,6 +46,9 @@ public class HologramRemoveCommand extends BaseHologramCommand
             nearest.removeForAll();
 
             HologramStorage.storage.remove(nearest);
+            if (nearest.getName() != null)
+                HologramStorage.namedHolograms.remove(nearest.getName());
+
             HologramStorage.save();
 
             sender.sendMessage("Hologram removed. If it did not disappear, try reconnecting.");

@@ -7,7 +7,10 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.WrappedDataWatcher;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.server.v1_7_R4.Entity;
 import org.bukkit.Bukkit;
@@ -21,6 +24,7 @@ import us.corenetwork.mantle.nanobot.NanobotUtil;
  */
 public class Hologram
 {
+    private String name;
     private int id;
 
     private World world;
@@ -28,7 +32,7 @@ public class Hologram
     private double x;
     private double y;
     private double z;
-    private String text;
+    private List<String> text =  new ArrayList<>();
 
     private int chunkX;
     private int chunkZ;
@@ -40,23 +44,36 @@ public class Hologram
         x = ((Number) map.get("x")).doubleValue();
         y = ((Number) map.get("y")).doubleValue();
         z = ((Number) map.get("z")).doubleValue();
-        text = (String) map.get("text");
+
+        Object text = map.get("text");
+        if (text instanceof String)
+        {
+            parseSingleLine((String) text);
+        }
+        else
+        {
+            this.text.addAll((List) text);
+        }
+
         world = Bukkit.getWorld((String) map.get("world"));
+        name = (String) map.get("name");
+
 
         chunkX = (int) x >> 4;
         chunkZ = (int) z >> 4;
     }
 
-    public Hologram(World world, double x, double y, double z, String text)
+    public Hologram(String name, World world, double x, double y, double z, String text)
     {
         id = getNextEntityId();
 
         Bukkit.broadcastMessage(Integer.toString(id));
 
+        this.name = name;
         this.x = x;
         this.y = y;
         this.z = z;
-        this.text = text;
+        parseSingleLine(text);
         this.world = world;
 
         chunkX = (int) x >> 4;
@@ -71,8 +88,15 @@ public class Hologram
         map.put("z", (Double) z);
         map.put("text", text);
         map.put("world", world.getName());
+        if (name != null)
+            map.put("name", name);
 
         return map;
+    }
+
+    private void parseSingleLine(String text)
+    {
+        this.text.addAll(Arrays.asList(text.split("<N>")));
     }
 
     public int getId()
@@ -95,7 +119,7 @@ public class Hologram
         return z;
     }
 
-    public String getText()
+    public List<String> getText()
     {
         return text;
     }
@@ -115,6 +139,11 @@ public class Hologram
         return world;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
     public boolean isInViewDistance(Player player)
     {
         World world = player.getWorld();
@@ -127,40 +156,49 @@ public class Hologram
         return world.isChunkLoaded(chunkX, chunkZ);
     }
 
-    public int display(Player player)
+    public Integer[] display(Player player)
     {
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+        Integer[] personalizedIds = new Integer[text.size()];
+        double y = this.y;
 
-        int personalizedId = getNextEntityId();
-
-        packet.getIntegers().write(0, personalizedId); //Entity ID, different every time - Client seems to have trouble respawning entities with same ID. My guess it is because they are not within chunk data?
-        packet.getIntegers().write(1, 30); //Armor stand ID
-
-        packet.getIntegers().write(2, (int) Math.floor(x * 32.0D)); //X
-        packet.getIntegers().write(3, (int) Math.floor(y * 32.0D)); //Y
-        packet.getIntegers().write(4, (int) Math.floor(z * 32.0D)); //Z
-
-        packet.getBytes().write(0, (byte) (0 * 256.0F / 360.0F)); //Yaw - does not matter, can be 0
-        packet.getBytes().write(1, (byte) (0 * 256.0F / 360.0F)); //Pitch - does not matter, can be 0
-
-        WrappedDataWatcher watcher = new WrappedDataWatcher();
-        watcher.setObject(2, NanobotUtil.fixFormatting(text)); //CustomName
-        watcher.setObject(3, Byte.valueOf((byte) 1)); //Custom name always visible
-        watcher.setObject(0, Byte.valueOf((byte) (1 << 5))); //Invisible (flag?)
-        watcher.setObject(10, Byte.valueOf((byte) 0x2)); //No gravity (flag?)
-
-        packet.getDataWatcherModifier().write(0, watcher);
-
-        try
+        for (int i = 0; i < text.size(); i++)
         {
-            protocolManager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException e)
-        {
-            e.printStackTrace();
+            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+            PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
+
+            personalizedIds[i] = getNextEntityId();
+
+            packet.getIntegers().write(0, personalizedIds[i]); //Entity ID, different every time - Client seems to have trouble respawning entities with same ID. My guess it is because they are not within chunk data?
+            packet.getIntegers().write(1, 30); //Armor stand ID
+
+            packet.getIntegers().write(2, (int) Math.floor(x * 32.0D)); //X
+            packet.getIntegers().write(3, (int) Math.floor(y * 32.0D)); //Y
+            packet.getIntegers().write(4, (int) Math.floor(z * 32.0D)); //Z
+
+            packet.getBytes().write(0, (byte) (0 * 256.0F / 360.0F)); //Yaw - does not matter, can be 0
+            packet.getBytes().write(1, (byte) (0 * 256.0F / 360.0F)); //Pitch - does not matter, can be 0
+
+            WrappedDataWatcher watcher = new WrappedDataWatcher();
+            watcher.setObject(2, NanobotUtil.fixFormatting(text.get(i))); //CustomName
+            watcher.setObject(3, Byte.valueOf((byte) 1)); //Custom name always visible
+            watcher.setObject(0, Byte.valueOf((byte) (1 << 5))); //Invisible (flag?)
+            watcher.setObject(10, Byte.valueOf((byte) 0x2)); //No gravity (flag?)
+
+            packet.getDataWatcherModifier().write(0, watcher);
+
+            try
+            {
+                protocolManager.sendServerPacket(player, packet);
+            } catch (InvocationTargetException e)
+            {
+                e.printStackTrace();
+            }
+
+            y -= 0.25;
         }
 
-        return personalizedId;
+
+        return personalizedIds;
     }
 
     public void displayForAll()
@@ -179,15 +217,16 @@ public class Hologram
         }
     }
 
-    public void remove(Player player, int id)
+    public void remove(Player player, Integer[] ids)
     {
         ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
         PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
 
-        int[] entityArray = new int[1];
-        entityArray[0] = id;
+        int[] idsUnboxed = new int[ids.length];
+        for (int i = 0; i < ids.length; i++)
+            idsUnboxed[i] = ids[i];
 
-        packet.getIntegerArrays().write(0, entityArray); //Entity ID
+        packet.getIntegerArrays().write(0, idsUnboxed); //Entity ID
 
         try
         {
@@ -210,6 +249,24 @@ public class Hologram
                 playerData.setHologramAsNotDisplayed(id);
             }
         }
+    }
+
+    public void update(String newText)
+    {
+        removeForAll();
+        text.clear();
+        parseSingleLine(newText);
+        displayForAll();
+    }
+
+    public void updateLine(int line, String newText)
+    {
+        if (line >= text.size() || line < 0)
+            return;
+
+        removeForAll();
+        text.set(line, newText);
+        displayForAll();
     }
 
     private static int getNextEntityId()

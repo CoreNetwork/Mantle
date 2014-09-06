@@ -14,8 +14,10 @@ public class MantleHologramCommand extends BaseMantleCommand {
 	{
 		commands.put("help", new HologramHelpCommand());
         commands.put("reload", new HologramReloadCommand());
-        commands.put("add", new HologramAddCommand());
+        commands.put("set", new HologramSetCommand());
         commands.put("remove", new HologramRemoveCommand());
+        commands.put("update", new HologramUpdateCommand());
+        commands.put("updateline", new HologramUpdateLineCommand());
 
     }
 	

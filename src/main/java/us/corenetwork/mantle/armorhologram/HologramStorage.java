@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class HologramStorage
 {
     public static ArrayList<Hologram> storage = new ArrayList<Hologram>();
+    public static HashMap<String, Hologram> namedHolograms = new HashMap<String, Hologram>();
 
     public static void load()
     {
@@ -26,13 +27,15 @@ public class HologramStorage
         for (Hologram hologram : storage)
             hologram.removeForAll();
         storage.clear();
-
+        namedHolograms.clear();
         for (Map map : hologramList)
         {
             Map<String, ?> firstEntry = (Map<String, ?>) map.values().toArray()[0];
 
             Hologram hologram = new Hologram(firstEntry);
             storage.add(hologram);
+            if (hologram.getName() != null)
+                namedHolograms.put(hologram.getName(), hologram);
 
             hologram.displayForAll();
         }

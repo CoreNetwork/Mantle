@@ -9,6 +9,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -19,10 +20,14 @@ public class ArmorHologramListener implements Listener
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerJoin(PlayerJoinEvent event)
     {
+        processPlayerMoving(event.getPlayer(), event.getPlayer().getLocation(), true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerQuit(PlayerQuitEvent event)
+    {
         HologramPlayerData data = HologramPlayerData.get(event.getPlayer().getUniqueId());
         data.clearDisplayedHolograms();
-
-        processPlayerMoving(event.getPlayer(), event.getPlayer().getLocation(), true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -56,6 +61,9 @@ public class ArmorHologramListener implements Listener
                 }
                 else
                 {
+                    if (displayed)
+                        hologram.remove(player, playerData.getPersonalizedHologramId(hologram.getId()));
+
                     playerData.addHologram(hologram.getId(), hologram.display(player));
                 }
             }
