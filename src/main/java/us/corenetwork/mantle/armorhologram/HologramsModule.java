@@ -18,13 +18,13 @@ import us.corenetwork.mantle.armorhologram.commands.HologramUpdateCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramUpdateLineCommand;
 
 
-public class ArmorHologramModule extends MantleModule {
-	public static ArmorHologramModule instance;
+public class HologramsModule extends MantleModule {
+	public static HologramsModule instance;
 
     public static HashMap<String, BaseHologramCommand> commands = new HashMap<String, BaseHologramCommand>();
 
-    public ArmorHologramModule() {
-		super("Armor Hologram", new String[] {"holo"}, "armorhologram");
+    public HologramsModule() {
+		super("Holograms", new String[] {"holo"}, "holograms");
 
 		instance = this;
 	}
@@ -33,14 +33,14 @@ public class ArmorHologramModule extends MantleModule {
 	@Override
 	protected boolean loadModule() {
 
-		for (ArmorHologramSettings setting : ArmorHologramSettings.values())
+		for (HologramsSettings setting : HologramsSettings.values())
 		{
 			if (config.get(setting.string) == null)
 				config.set(setting.string, setting.def);
 		}
 		saveConfig();
 				
-		Bukkit.getServer().getPluginManager().registerEvents(new ArmorHologramListener(), MantlePlugin.instance);
+		Bukkit.getServer().getPluginManager().registerEvents(new HologramsListener(), MantlePlugin.instance);
 
         commands.put("help", new HologramHelpCommand());
         commands.put("reload", new HologramReloadCommand());

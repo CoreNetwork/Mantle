@@ -3,14 +3,18 @@ package us.corenetwork.mantle.armorhologram;
 
 import us.corenetwork.mantle.hydration.HydrationModule;
 
-public enum ArmorHologramSettings
+public enum HologramsSettings
 {
-	;
+	MESSAGE_NO_HOLOGRAM_WITH_THAT_NAME("Messages.NoHologramWithThatName", "No hologram with such name exist!"),
+    MESSAGE_HOLOGRAM_ADDED("Messages.HologramAdded", "Hologram Added"),
+    MESSAGE_HOLOGRAM_UPDATED("Messages.HologramUpdated", "Hologram Updated"),
+    MESSAGE_HOLOGRAM_REMOVED("Messages.HologramRemoved", "Hologram Removed"),
+    MESSAGE_RELOADED("Messages.Reloaded", "Reloaded.");
 
 	protected String string;
 	protected Object def;
 	
-	private ArmorHologramSettings(String string, Object def)
+	private HologramsSettings(String string, Object def)
 	{
 		this.string = string;
 		this.def = def;

@@ -72,8 +72,6 @@ public class Hologram
     {
         id = getNextEntityId();
 
-        Bukkit.broadcastMessage(Integer.toString(id));
-
         this.name = name;
         this.x = x;
         this.y = y;
@@ -198,7 +196,7 @@ public class Hologram
         {
             if (text.get(i).isEmpty())
                 continue;
-            
+
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
 

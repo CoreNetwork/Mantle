@@ -16,7 +16,7 @@ public class HologramStorage
 
     public static void load()
     {
-        ArmorHologramModule module = ArmorHologramModule.instance;
+        HologramsModule module = HologramsModule.instance;
         module.loadStorageYaml();
 
         List<Map> hologramList = (List<Map>) module.storageConfig.getList("Holograms");
@@ -43,7 +43,7 @@ public class HologramStorage
 
     public static void save()
     {
-        ArmorHologramModule module = ArmorHologramModule.instance;
+        HologramsModule module = HologramsModule.instance;
         YamlConfiguration configuration = module.storageConfig;
 
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

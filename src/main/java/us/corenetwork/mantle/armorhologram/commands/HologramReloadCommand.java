@@ -1,6 +1,8 @@
 package us.corenetwork.mantle.armorhologram.commands;
 
 import org.bukkit.command.CommandSender;
+import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.armorhologram.HologramsSettings;
 import us.corenetwork.mantle.armorhologram.HologramStorage;
 
 
@@ -17,7 +19,7 @@ public class HologramReloadCommand extends BaseHologramCommand
 
 	public void run(CommandSender sender, String[] args) {
         HologramStorage.load();
-        sender.sendMessage("Reloaded. If some old holograms did not disappear, try reconnecting.");
+        Util.Message(HologramsSettings.MESSAGE_RELOADED.string(), sender);
 	}
 	
 

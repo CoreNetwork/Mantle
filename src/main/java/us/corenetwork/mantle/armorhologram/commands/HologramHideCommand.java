@@ -1,6 +1,8 @@
 package us.corenetwork.mantle.armorhologram.commands;
 
 import org.bukkit.command.CommandSender;
+import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.armorhologram.HologramsSettings;
 import us.corenetwork.mantle.armorhologram.Hologram;
 import us.corenetwork.mantle.armorhologram.HologramStorage;
 
@@ -26,7 +28,7 @@ public class HologramHideCommand extends BaseHologramCommand
         Hologram hologram = HologramStorage.namedHolograms.get(args[0]);
         if (hologram == null)
         {
-            sender.sendMessage("No hologram with such name exist!");
+            Util.Message(HologramsSettings.MESSAGE_NO_HOLOGRAM_WITH_THAT_NAME.string(), sender);
             return;
         }
 

@@ -3,6 +3,8 @@ package us.corenetwork.mantle.armorhologram.commands;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.armorhologram.HologramsSettings;
 import us.corenetwork.mantle.armorhologram.Hologram;
 import us.corenetwork.mantle.armorhologram.HologramStorage;
 
@@ -63,12 +65,12 @@ public class HologramSetCommand extends BaseHologramCommand
                 HologramStorage.namedHolograms.put(name, hologram);
             hologram.displayForAll();
 
-            sender.sendMessage("Hologram added.");
+            Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_ADDED.string(), sender);
         }
         else
         {
             hologram.update(text);
-            sender.sendMessage("Hologram updated.");
+            Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_REMOVED.string(), sender);
         }
 
         HologramStorage.save();
