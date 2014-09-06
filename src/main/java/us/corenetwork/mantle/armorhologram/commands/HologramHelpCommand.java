@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.armorhologram.ArmorHologramModule;
 
 
 public class HologramHelpCommand extends BaseHologramCommand
@@ -26,9 +27,9 @@ public class HologramHelpCommand extends BaseHologramCommand
 		if (args.length > 0 && Util.isInteger(args[0])) page = Integer.parseInt(args[0]);
 		List<String> komandes = new ArrayList<String>();
 
-		for (Entry<String, BaseHologramCommand> e : MantleHologramCommand.commands.entrySet())
+		for (Entry<String, BaseHologramCommand> e : ArmorHologramModule.commands.entrySet())
 		{
-			komandes.add(Settings.getCommandDescription(e.getKey(), "mantle hologram", e.getValue().desc));
+			komandes.add(Settings.getCommandDescription(e.getKey(), "holo", e.getValue().desc));
 		}  		
 		String[] komande = komandes.toArray(new String[0]);
 		Arrays.sort(komande);

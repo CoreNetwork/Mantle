@@ -13,3 +13,5 @@ commands:
         description: Structure inspector
     raid:
         description: Treasure Raid commands
+    holo:
+        description: 1.8 holograms

@@ -19,7 +19,7 @@ public class HologramUpdateCommand extends BaseHologramCommand
 	public void run(CommandSender sender, String[] args) {
         if (args.length < 2)
         {
-            sender.sendMessage("/mantle hologram update <name> <text>");
+            sender.sendMessage("/holo update <name> <text>");
             return;
         }
 

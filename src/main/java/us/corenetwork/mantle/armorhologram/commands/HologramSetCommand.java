@@ -21,7 +21,7 @@ public class HologramSetCommand extends BaseHologramCommand
 	public void run(CommandSender sender, String[] args) {
         if (args.length < 1)
         {
-            sender.sendMessage("Usage: /mantle hologram add (name) \"[text]\"");
+            sender.sendMessage("Usage: /holo add (name) \"[text]\"");
             return;
         }
 
