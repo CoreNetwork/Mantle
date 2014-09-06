@@ -62,7 +62,7 @@ public class Hologram
         this.hiddenToSave = this.hidden;
 
         world = Bukkit.getWorld((String) map.get("world"));
-        name = (String) map.get("name");
+        name = (String) map.get("id");
 
         chunkX = (int) x >> 4;
         chunkZ = (int) z >> 4;
@@ -96,7 +96,7 @@ public class Hologram
         map.put("world", world.getName());
         map.put("hidden", hiddenToSave);
         if (name != null)
-            map.put("name", name);
+            map.put("id", name);
 
         return map;
     }
