@@ -194,13 +194,13 @@ public class Hologram
 
         for (int i = 0; i < text.size(); i++)
         {
+            personalizedIds[i] = getNextEntityId();
+
             if (text.get(i).isEmpty())
                 continue;
 
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
-
-            personalizedIds[i] = getNextEntityId();
 
             packet.getIntegers().write(0, personalizedIds[i]); //Entity ID, different every time - Client seems to have trouble respawning entities with same ID. My guess it is because they are not within chunk data?
             packet.getIntegers().write(1, 30); //Armor stand ID
