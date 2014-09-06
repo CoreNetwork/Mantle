@@ -9,9 +9,11 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.armorhologram.commands.BaseHologramCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramHelpCommand;
+import us.corenetwork.mantle.armorhologram.commands.HologramHideCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramReloadCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramRemoveCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramSetCommand;
+import us.corenetwork.mantle.armorhologram.commands.HologramShowCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramUpdateCommand;
 import us.corenetwork.mantle.armorhologram.commands.HologramUpdateLineCommand;
 
@@ -39,7 +41,6 @@ public class ArmorHologramModule extends MantleModule {
 		saveConfig();
 				
 		Bukkit.getServer().getPluginManager().registerEvents(new ArmorHologramListener(), MantlePlugin.instance);
-		
 
         commands.put("help", new HologramHelpCommand());
         commands.put("reload", new HologramReloadCommand());
@@ -47,7 +48,8 @@ public class ArmorHologramModule extends MantleModule {
         commands.put("remove", new HologramRemoveCommand());
         commands.put("update", new HologramUpdateCommand());
         commands.put("updateline", new HologramUpdateLineCommand());
-
+        commands.put("show", new HologramShowCommand());
+        commands.put("hide", new HologramHideCommand());
 
         HologramStorage.load();
 

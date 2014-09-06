@@ -32,10 +32,13 @@ public class Hologram
     private double x;
     private double y;
     private double z;
-    private List<String> text =  new ArrayList<>();
+    private List<String> text = new ArrayList<>();
 
     private int chunkX;
     private int chunkZ;
+
+    private boolean hidden;
+    private boolean hiddenToSave;
 
     public Hologram(Map<String, ?> map)
     {
@@ -49,15 +52,17 @@ public class Hologram
         if (text instanceof String)
         {
             parseSingleLine((String) text);
-        }
-        else
+        } else
         {
             this.text.addAll((List) text);
         }
 
+        Boolean hidden = (Boolean) map.get("hidden");
+        this.hidden = hidden != null && hidden;
+        this.hiddenToSave = this.hidden;
+
         world = Bukkit.getWorld((String) map.get("world"));
         name = (String) map.get("name");
-
 
         chunkX = (int) x >> 4;
         chunkZ = (int) z >> 4;
@@ -75,10 +80,13 @@ public class Hologram
         this.z = z;
         parseSingleLine(text);
         this.world = world;
+        this.hidden = false;
+        this.hiddenToSave = false;
 
         chunkX = (int) x >> 4;
         chunkZ = (int) z >> 4;
     }
+
     public Map<String, Object> serialize()
     {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -88,6 +96,7 @@ public class Hologram
         map.put("z", (Double) z);
         map.put("text", text);
         map.put("world", world.getName());
+        map.put("hidden", hiddenToSave);
         if (name != null)
             map.put("name", name);
 
@@ -144,6 +153,30 @@ public class Hologram
         return name;
     }
 
+    public boolean isHidden()
+    {
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden, boolean persistent)
+    {
+        this.hidden = hidden;
+        if (persistent)
+        {
+            this.hiddenToSave = hidden;
+            HologramStorage.save();
+        }
+
+        if (hidden)
+        {
+            removeForAll();
+        }
+        else
+        {
+            displayForAll();
+        }
+    }
+
     public boolean isInViewDistance(Player player)
     {
         World world = player.getWorld();
@@ -163,6 +196,9 @@ public class Hologram
 
         for (int i = 0; i < text.size(); i++)
         {
+            if (text.get(i).isEmpty())
+                continue;
+            
             ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
             PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
 
@@ -203,6 +239,9 @@ public class Hologram
 
     public void displayForAll()
     {
+        if (hidden)
+            return;
+
         for (Player player : Bukkit.getOnlinePlayers())
         {
             if (!HologramPlayerData.isPlayer18(player))

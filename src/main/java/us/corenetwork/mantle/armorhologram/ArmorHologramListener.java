@@ -51,6 +51,9 @@ public class ArmorHologramListener implements Listener
         HologramPlayerData playerData = HologramPlayerData.get(player.getUniqueId());
         for (Hologram hologram : HologramStorage.storage)
         {
+            if (hologram.isHidden())
+                return;
+
             boolean displayed = playerData.isHologramDisplayed(hologram.getId());
             boolean inViewDistance = hologram.isInViewDistance(player);
             if ((displayed != inViewDistance) || (displayed && teleport))
@@ -76,6 +79,9 @@ public class ArmorHologramListener implements Listener
     {
         for (Hologram hologram : HologramStorage.storage)
         {
+            if (hologram.isHidden())
+                return;
+
             if (hologram.getChunkX() != event.getChunk().getX() || hologram.getChunkZ() != event.getChunk().getZ())
                 return;
 
@@ -99,6 +105,9 @@ public class ArmorHologramListener implements Listener
     {
         for (Hologram hologram : HologramStorage.storage)
         {
+            if (hologram.isHidden())
+                return;
+
             if (hologram.getChunkX() != event.getChunk().getX() || hologram.getChunkZ() != event.getChunk().getZ())
                 return;
 
