@@ -20,7 +20,7 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
 	public void run(CommandSender sender, String[] args) {
         if (args.length < 3 || !Util.isInteger(args[1]))
         {
-            sender.sendMessage("/holo update [name] [line] [text]");
+            sender.sendMessage("/holo update <name> <line> <text>");
             return;
         }
 
