@@ -26,15 +26,22 @@ public class HologramRemoveCommand extends BaseHologramCommand
         Hologram nearest = null;
         double nearestDistance = Double.MAX_VALUE;
 
-        for (Hologram hologram : HologramStorage.storage)
+        if (args.length < 1)
         {
-            Location hologramLocation = new Location(location.getWorld(), hologram.getX(), hologram.getY(), hologram.getZ());
-            double distance = hologramLocation.distanceSquared(location);
-            if (distance < nearestDistance)
+            for (Hologram hologram : HologramStorage.storage)
             {
-                nearestDistance = distance;
-                nearest = hologram;
+                Location hologramLocation = new Location(location.getWorld(), hologram.getX(), hologram.getY(), hologram.getZ());
+                double distance = hologramLocation.distanceSquared(location);
+                if (distance < nearestDistance)
+                {
+                    nearestDistance = distance;
+                    nearest = hologram;
+                }
             }
+        }
+        else
+        {
+            nearest = HologramStorage.namedHolograms.get(args[0]);
         }
 
         if (nearest == null)
