@@ -22,23 +22,23 @@ public class ArmorHologramListener implements Listener
         HologramPlayerData data = HologramPlayerData.get(event.getPlayer().getUniqueId());
         data.clearDisplayedHolograms();
 
-        processPlayerMoving(event.getPlayer(), event.getPlayer().getLocation());
+        processPlayerMoving(event.getPlayer(), event.getPlayer().getLocation(), true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerMove(PlayerMoveEvent event)
     {
         if (!event.getFrom().getChunk().equals(event.getTo().getChunk())) //We only need to update it every chunk, better performance
-            processPlayerMoving(event.getPlayer(), event.getPlayer().getLocation());
+            processPlayerMoving(event.getPlayer(), event.getPlayer().getLocation(), false);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerTeleport(PlayerTeleportEvent event)
     {
-        processPlayerMoving(event.getPlayer(), event.getTo());
+        processPlayerMoving(event.getPlayer(), event.getTo(), true);
     }
 
-    public void processPlayerMoving(Player player, Location location)
+    public void processPlayerMoving(Player player, Location location, boolean teleport)
     {
         if (!HologramPlayerData.isPlayer18(player))
             return;
@@ -47,10 +47,10 @@ public class ArmorHologramListener implements Listener
         for (Hologram hologram : HologramStorage.storage)
         {
             boolean displayed = playerData.isHologramDisplayed(hologram.getId());
-
-            if (displayed != hologram.isInViewDistance(player))
+            boolean inViewDistance = hologram.isInViewDistance(player);
+            if ((displayed != inViewDistance) || (displayed && teleport))
             {
-                if (displayed)
+                if (displayed && !teleport)
                 {
                     playerData.setHologramAsNotDisplayed(hologram.getId());
                 }
@@ -86,7 +86,7 @@ public class ArmorHologramListener implements Listener
         }
     }
 
-   // @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onChunkUnload(ChunkUnloadEvent event)
     {
         for (Hologram hologram : HologramStorage.storage)
