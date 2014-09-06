@@ -20,7 +20,7 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
 	public void run(CommandSender sender, String[] args) {
         if (args.length < 3 || !Util.isInteger(args[1]))
         {
-            sender.sendMessage("/holo update <name> <line> <text>");
+            sender.sendMessage("/holo update <id> <line> <text>");
             return;
         }
 
@@ -39,6 +39,12 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
             text += args[i] + " ";
         }
         text = text.substring(0, text.length() - 1);
+
+        //Removing quotes
+        if (text.startsWith("\""))
+            text = text.substring(1);
+        if (text.endsWith("\""))
+            text = text.substring(0, text.length() - 1);
 
         hologram.updateLine(line - 1, text);
 	}
