@@ -57,6 +57,7 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
@@ -673,4 +674,22 @@ public class HardmodeListener implements Listener {
 			}
 		}
 	}
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDeath(PlayerDeathEvent event)
+    {
+        Player player = event.getEntity();
+        String worldName = player.getWorld().getName();
+
+        if (HardmodeSettings.NO_DEATH_DROPS_EXPERIENCE.stringList().contains(worldName))
+        {
+            event.setDroppedExp(0);
+        }
+
+        if (HardmodeSettings.NO_DEATH_DROPS_ITEMS.stringList().contains(worldName))
+        {
+            event.getDrops().clear();
+        }
+
+    }
 }

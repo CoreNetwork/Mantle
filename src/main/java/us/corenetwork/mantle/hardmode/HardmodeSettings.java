@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,8 +36,11 @@ public enum HardmodeSettings {
     NETHER_IGNORE_LIGHT_UNDER_Y("Nether.IgnoreSpawnLightUnderY", 64),
 	NETHER_HORSE_SPEED("Nether.HorseSpeed", 0.125),
 	NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN("Nether.VillagerApplyDamageNodeOnSpawn", "SlownessVillager"),
-	
-	MESSAGE_NO_WITHER_SURFACE("Messages.NoWitherSurface", "Sorry, you can't build wither on the surface!"),
+
+    NO_DEATH_DROPS_EXPERIENCE("NoDeathDrops.Experience", new ArrayList<String>()),
+    NO_DEATH_DROPS_ITEMS("NoDeathDrops.Items", new ArrayList<String>()),
+
+    MESSAGE_NO_WITHER_SURFACE("Messages.NoWitherSurface", "Sorry, you can't build wither on the surface!"),
 	MESSAGE_NO_MILKING_NETHER("Messages.NoMilkingNether", "Sorry, you can't milk cows in nether!");
 	
 	protected String string;
