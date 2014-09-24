@@ -15,3 +15,5 @@ commands:
         description: Treasure Raid commands
     holo:
         description: 1.8 holograms
+    title:
+        description: 1.8 title command

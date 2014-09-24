@@ -12,6 +12,7 @@ import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
 import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
+import us.corenetwork.mantle.mantlecommands.TitleCommand;
 
 
 public class MantlePlugin extends JavaPlugin {
@@ -49,6 +50,7 @@ public class MantlePlugin extends JavaPlugin {
 		adminCommands.put("reload", new ReloadCommand());
 		adminCommands.put("dumpchunks", new DumpChunksCommand());
 		adminCommands.put("chunkinfo", new ChunkInfoCommand());
+        adminCommands.put("title", new TitleCommand());
 
         MantleModule.loadModules();
 
@@ -59,7 +61,10 @@ public class MantlePlugin extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		if (args.length < 1 || Util.isInteger(args[0]))
+        if (command.getName().equals("title"))
+            return adminCommands.get("title").execute(sender, args, false);
+
+        if (args.length < 1 || Util.isInteger(args[0]))
 			return adminCommands.get("help").execute(sender, args);
 
 		BaseMantleCommand cmd = adminCommands.get(args[0]);
