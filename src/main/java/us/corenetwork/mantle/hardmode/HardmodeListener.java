@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
-
 import net.minecraft.server.v1_7_R4.AttributeInstance;
 import net.minecraft.server.v1_7_R4.EntityInsentient;
 import net.minecraft.server.v1_7_R4.GenericAttributes;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -64,7 +62,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffectType;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -569,6 +566,21 @@ public class HardmodeListener implements Listener {
 		event.setCancelled(true);
 	}
 
+	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+	public void onEntityDamageEntity(EntityDamageEvent event)
+	{
+		
+		if (event.getEntity().getType()== EntityType.SKELETON && event.getEntity().getWorld().getEnvironment() == Environment.NETHER)
+		{
+			if( event.getCause() == DamageCause.THORNS)
+			{
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	
+	
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onEntityPrime(ExplosionPrimeEvent event)
 	{
