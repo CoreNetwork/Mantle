@@ -62,8 +62,14 @@ public class MantleListener implements Listener {
         IInventory nmsInventory = inventory.getInventory();
         if (nmsInventory instanceof InventoryGUI.GUIVanillaInventory)
         {
-            ((InventoryGUI.GUIVanillaInventory) nmsInventory).click(event);
-            event.setCancelled(true);
+            try
+            {
+                ((InventoryGUI.GUIVanillaInventory) nmsInventory).click(event);
+            }
+            finally
+            {
+                event.setCancelled(true);
+            }
         }
     }
 }
