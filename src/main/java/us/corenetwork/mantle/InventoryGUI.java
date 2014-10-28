@@ -43,7 +43,7 @@ public abstract class InventoryGUI extends CraftInventory
 
     public void onClose(CraftHumanEntity player)
     {
-        Bukkit.broadcastMessage("onclose!");
+        
     }
 
     public abstract String getTitle();
