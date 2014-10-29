@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
 import us.corenetwork.mantle.armorhologram.HologramsModule;
+import us.corenetwork.mantle.farming.FarmingModule;
 import us.corenetwork.mantle.gametweaks.GameTweaksModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
@@ -315,6 +316,13 @@ public abstract class MantleModule implements CommandExecutor {
         module = new HologramsModule();
         if (module.loadModuleInternal())
         {
+            module.active = true;
+            modules.add(module);
+        }
+
+        //Farming adjustments
+        module = new FarmingModule();
+        if (module.loadModuleInternal()) {
             module.active = true;
             modules.add(module);
         }
