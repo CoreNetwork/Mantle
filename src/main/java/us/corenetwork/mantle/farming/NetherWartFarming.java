@@ -153,10 +153,7 @@ public class NetherWartFarming implements Listener {
             return;
         }
         for (Block block : event.blockList()) {
-            if (block.getType() == Material.SOUL_SAND) {
-                Block warts = block.getRelative(BlockFace.UP);
-                if (warts.getType() == )
-            }
+            onBreak(block, event.getYield());
         }
     }
 
