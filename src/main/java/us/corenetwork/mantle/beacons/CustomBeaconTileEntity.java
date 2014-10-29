@@ -18,6 +18,9 @@ import us.corenetwork.mantle.ParticleLibrary;
 public class CustomBeaconTileEntity extends TileEntityBeacon
 {
     private int pyramidSize = 0;
+    private boolean active;
+    private int currentRange = 9001;
+    private int fuelLeftTicks = 33 * 20;
 
     private BeaconEffect activeEffect;
 
@@ -63,6 +66,21 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         return pyramidSize;
     }
 
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    public int getCurrentRange()
+    {
+        return currentRange;
+    }
+
+    public int getFuelLeftTicks()
+    {
+        return fuelLeftTicks;
+    }
+
     private Location getLocation()
     {
         return new Location(this.world.getWorld(), x, y, z);
@@ -72,7 +90,6 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     {
         return this.world.getWorld().getBlockAt(x, y, z);
     }
-
 
     private Location getCenterLocation()
     {

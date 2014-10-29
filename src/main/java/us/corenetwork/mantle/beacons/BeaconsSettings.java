@@ -10,19 +10,14 @@ import us.corenetwork.mantle.portals.PortalsModule;
 
 public enum BeaconsSettings
 {
-	GUI_ITEM_HELP("GuiItems.Help", new ItemStack(Material.WRITTEN_BOOK, 1)),
-    GUI_ITEM_CANCEL_EFFECT("GuiItems.CancelEffect", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData())),
-    GUI_ITEM_PYRAMID_LEVEL("GuiItems.PyramidLevel", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.YELLOW.getData())),
-    GUI_ITEM_FUEL_LEFT("GuiItems.FuelLeft", new ItemStack(Material.GOLD_INGOT, 1)),
-    GUI_ITEM_EFFECT_HASTE("GuiItems.Effects.Haste", new ItemStack(Material.GOLD_PICKAXE, 1)),
-    GUI_ITEM_EFFECT_REGENERATION("GuiItems.Effects.Regeneration", new ItemStack(Material.GOLDEN_APPLE, 1)),
-    GUI_ITEM_EFFECT_STRENGTH("GuiItems.Effects.Strength", new ItemStack(Material.IRON_SWORD, 1)),
-    GUI_ITEM_EFFECT_JUMP_BOOST("GuiItems.Effects.JumpBoost", new ItemStack(Material.BEDROCK, 1)),
-    GUI_ITEM_EFFECT_WATER_BREATHING("GuiItems.Effects.WaterBreathing", new ItemStack(Material.RAW_FISH, 1)),
-    GUI_ITEM_EFFECT_OVERCLOCK("GuiItems.Effects.Overclock", new ItemStack(Material.FURNACE, 1)),
-    GUI_ITEM_EFFECT_ANIMAL_GROWTH("GuiItems.Effects.AnimalGrowth", new ItemStack(Material.WHEAT, 1)),
+	GUI_ITEM_HELP("GuiItems.Help", new ItemStack(Material.SIGN, 1)),
+    GUI_ITEM_HELP_SELECTED("GuiItems.HelpSelected", new ItemStack(Material.SIGN, 1)),
+    GUI_ITEM_CANCEL_EFFECT("GuiItems.CancelEffect", new ItemStack(Material.BEACON, 1)),
+    GUI_ITEM_BEACON_ON("GuiItems.BeaconON", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GREEN.getData())),
+    GUI_ITEM_BEACON_OFF("GuiItems.BeaconOFF", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData())),
 
-    GUI_TITLE_PICK_EFFECT("Messages.GuiTitles.PickEffect", "Hover icons for options");
+    GUI_TITLE_PICK_EFFECT("Messages.GuiTitles.PickEffect", "Hover icons for options"),
+    GUI_TITLE_BEACON_STATUS("Messages.GuiTitles.BeaconStatus", "[Return] ------------- [Help]");
 
 
     protected String string;

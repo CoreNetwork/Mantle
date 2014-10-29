@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.nanobot;
 
 import java.util.Calendar;
+import java.util.List;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
@@ -8,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.TexturedMaterial;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
@@ -109,27 +111,6 @@ public class NanobotUtil {
 		
 		return prefix;
 	}
-	
-	public static boolean hasPermission(CommandSender player, String permission)
-    {
-    	while (true)
-    	{
-    		if (player.hasPermission(permission))
-    			return true;
-    		
-    		if (permission.length() < 2)
-    			return false;
-    		
-    		if (permission.endsWith("*"))
-    			permission = permission.substring(0, permission.length() - 2);
-    		
-    		int lastIndex = permission.lastIndexOf(".");
-    		if (lastIndex < 0)
-    			return false;
-    		
-    		permission = permission.substring(0, lastIndex).concat(".*");  
-    	}
-    }
 
 	public static String fixFormatting(String source)
 	{
@@ -148,4 +129,28 @@ public class NanobotUtil {
 
 		return source;
 	}
+
+    public static void replaceStringInItem(ItemStack item, String source, String replacement)
+    {
+        if (!item.hasItemMeta())
+            return;
+
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta.hasDisplayName())
+            meta.setDisplayName(meta.getDisplayName().replace(source, replacement));
+
+        if (meta.hasLore())
+        {
+            List<String> lore = meta.getLore();
+            for (int i = 0; i < lore.size(); i++)
+            {
+                lore.set(i, lore.get(i).replace(source, replacement));
+            }
+
+            meta.setLore(lore);
+        }
+
+        item.setItemMeta(meta);
+    }
 }

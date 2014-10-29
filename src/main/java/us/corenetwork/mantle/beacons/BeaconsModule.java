@@ -46,7 +46,15 @@ public class BeaconsModule extends MantleModule {
 
 		return true;
 	}
-	@Override
+
+    @Override
+    public void loadConfig()
+    {
+        super.loadConfig();
+        BeaconEffect.STORAGE.load(config);
+    }
+
+    @Override
 	protected void unloadModule() {
 	}
 }
