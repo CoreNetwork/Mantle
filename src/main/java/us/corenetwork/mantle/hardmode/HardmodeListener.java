@@ -1,10 +1,12 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
 import net.minecraft.server.v1_7_R4.AttributeInstance;
+import net.minecraft.server.v1_7_R4.EntityCreature;
 import net.minecraft.server.v1_7_R4.EntityInsentient;
 import net.minecraft.server.v1_7_R4.GenericAttributes;
 import org.bukkit.Bukkit;
@@ -17,23 +19,11 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftVillager;
-import org.bukkit.entity.Enderman;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
-import org.bukkit.entity.Ghast;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.PigZombie;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
-import org.bukkit.entity.Wither;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -301,7 +291,32 @@ public class HardmodeListener implements Listener {
 				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (short) 1));
 			}
 		}
-	}
+
+        if (event.getEntity() instanceof Animals) {
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
+
+                try {
+                    Field nmsEntityField = CraftEntity.class.getDeclaredField("entity");
+                    nmsEntityField.setAccessible(true);
+                    for (Entity e : event.getEntity().getWorld().getEntitiesByClass(Animals.class)) {
+                        if (e.getType() != event.getEntity().getType() || e.getLocation().distanceSquared(event.getEntity().getLocation()) > 25*25) {
+                            continue;
+                        }
+                        try {
+                            EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
+                            creature.b((net.minecraft.server.v1_7_R4.EntityLiving) nmsEntityField.get(lastDamager));
+
+                        } catch (IllegalAccessException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 	@EventHandler(ignoreCancelled = true)
 	public void onPistonExtend(BlockPistonExtendEvent event)
