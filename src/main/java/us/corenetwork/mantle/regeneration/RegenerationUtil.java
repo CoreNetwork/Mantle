@@ -3,16 +3,20 @@ package us.corenetwork.mantle.regeneration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
+import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-
 import us.corenetwork.mantle.CachedSchematic;
+import us.corenetwork.mantle.CachedSchematic.ChestInfo;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.generation.VillagerSpawner;
+import us.corenetwork.mantle.restockablechests.RestockableChest;
 
 
 public class RegenerationUtil {
@@ -43,6 +47,17 @@ public class RegenerationUtil {
 				final int zSize = set.getInt("SizeZ");
 				int pastingY = set.getInt("PastingY");
 				
+				//Ginaw
+				//hacky solution to randomizing a schematic for overworld village
+				if(structureName.equalsIgnoreCase("villages"))
+				{
+					List<String> schematicsNames = (List<String>) GenerationModule.instance.config.get("Worlds.world.Structures.Village.Schematics");
+					String newSchematicName = schematicsNames.get(MantlePlugin.random.nextInt(schematicsNames.size()));
+					
+					schematicName = newSchematicName;
+				}
+				//End
+				
 				final CachedSchematic schematic = new CachedSchematic(schematicName);
 				World world = Bukkit.getWorld(worldName);
 
@@ -58,9 +73,16 @@ public class RegenerationUtil {
 				if (structure.shouldRespawnVillagers())
 					schematic.findVillagers();
 
-
+				List<RestockableChest> oldRestockableChests = RestockableChest.getChestsInStructure(id);
+				
+				for(RestockableChest rc : oldRestockableChests)
+					rc.delete();
+				
+				//Searching for loot chests, removing signs
+				schematic.findChests();
+				
 				schematic.place(pastingLocation, structure.shouldIgnoreAir());
-
+				
 				if (structure.shouldRespawnVillagers())
 				{
 					schematic.findVillagers();
@@ -79,6 +101,14 @@ public class RegenerationUtil {
 
 				}
 
+
+				
+				ChestInfo[] chests = schematic.getChests(pastingLocation);
+				for (ChestInfo chest : chests)
+				{
+					if (chest.restockable)
+						RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer, id);
+				}
 			}
 			
 			statement.close();
