@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.UUID;
 import net.minecraft.server.v1_7_R4.AttributeInstance;
 import net.minecraft.server.v1_7_R4.EntityCreature;
@@ -51,7 +52,9 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -62,6 +65,7 @@ public class HardmodeListener implements Listener {
 
 	private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
 	protected static HashMap<UUID, Long> lastWitherHits = new HashMap<UUID, Long>();
+    private static Random random = new Random();
 
 	static
 	{
@@ -159,7 +163,14 @@ public class HardmodeListener implements Listener {
 					double multiplier = HardmodeSettings.GHAST_FIREBALL_DAMAGE_MULTIPLIER.doubleNumber();
 					event.setDamage(event.getDamage() * multiplier);
 				}
-			}
+			} else if (victim instanceof Spider && damager instanceof Player) {
+                for (Entity e : victim.getWorld().getEntitiesByClass(Spider.class)) {
+                    if (e.getLocation().distanceSquared(damager.getLocation()) < 48 * 48) {
+                        Spider spider = (Spider) e;
+                        spider.setTarget((Player) damager);
+                    }
+                }
+            }
 
 
 		}
@@ -515,7 +526,33 @@ public class HardmodeListener implements Listener {
 				HardmodeModule.applyDamageNode(event.getEntity(), HardmodeSettings.NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 			}
 		}
-	}
+
+        //assign spiders a random potion effect
+        if (!event.isCancelled() && event.getEntityType() == EntityType.SPIDER) {
+            // clear vanilla effects so there aren't multiple on a spider in rare cases.
+            for (PotionEffectType type : PotionEffectType.values()) {
+                event.getEntity().removePotionEffect(type);
+            }
+            int sel = random.nextInt(3);
+            PotionEffectType type = null;
+            switch (sel) {
+                case 0:
+                    type = PotionEffectType.SPEED;
+                    break;
+                case 1:
+                    type = PotionEffectType.INVISIBILITY;
+                    break;
+                case 2:
+                    type = PotionEffectType.REGENERATION;
+                    break;
+                case 3:
+                    type = PotionEffectType.INCREASE_DAMAGE;
+                    break;
+            }
+
+            event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 1));
+        }
+    }
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onEntityPortal(EntityPortalEvent event)
