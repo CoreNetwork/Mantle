@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-
 import net.minecraft.server.v1_7_R4.EntityVillager;
-
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,11 +15,10 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftVillager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-
 import us.corenetwork.mantle.generation.ImagePixel;
 import us.corenetwork.mantle.generation.MapColors;
 import us.corenetwork.mantle.generation.VillagerSpawner;
-
+import us.corenetwork.mantle.regeneration.RegenerationModule;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.EmptyClipboardException;
 import com.sk89q.worldedit.LocalSession;
@@ -92,116 +89,155 @@ public class CachedSchematic {
 
 	public void findChests()
 	{
-		chests = new ArrayList<ChestInfo>();
-		try
+		String path = "Containers."+name;
+		
+		List<String> stringVectorList = new ArrayList<String>();
+		List<Vector> vectorList = new ArrayList<Vector>();
+		
+		
+		Object oList = RegenerationModule.instance.storageConfig.get(path);
+		if(oList == null)
 		{
-			for (int x = 0; x < xSize; x++)
+			try
 			{
-				for (int z = 0; z < zSize; z++)
+				for (int x = 0; x < xSize; x++)
 				{
-					for (int y = 0; y < localSession.getClipboard().getHeight(); y++)
+					for (int z = 0; z < zSize; z++)
 					{
-						Vector vector = new Vector(x, y, z);
-						BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
-						if (Util.isInventoryContainer(baseBlock.getType()))
+						for (int y = 0; y < localSession.getClipboard().getHeight(); y++)
 						{
-							Vector chest = vector;
-							for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+							Vector vector = new Vector(x, y, z);
+							BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+							if (Util.isInventoryContainer(baseBlock.getType()))
 							{
-								vector = new Vector(x + face.getModX(), y, z + face.getModZ());
-								try
-								{
-									baseBlock = localSession.getClipboard().getPoint(vector);
-								}
-								catch (ArrayIndexOutOfBoundsException e)
-								{
-									continue;
-								}
-
-
-								if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
-								{
-									try
-									{
-										SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
-										sign.setNbtData(baseBlock.getNbtData());
-
-										boolean properSign = true;
-										
-										if (sign.getText()[0].trim().startsWith("[loot]"))
-										{
-											ChestInfo info = new ChestInfo();
-											info.restockable = true;
-											info.lootTable = sign.getText()[1];
-											info.interval = Integer.parseInt(sign.getText()[2]);
-											info.perPlayer = sign.getText()[3].contains("true");
-											info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
-
-											chests.add(info);
-										}
-										else if (sign.getText()[0].trim().startsWith("[Allow]"))
-										{
-
-
-											ChestInfo info = new ChestInfo();
-											info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
-											info.restockable = false;
-
-											chests.add(info);
-										}
-										else
-											properSign = false;
-										
-										if (properSign)
-										{
-											int replaceID = 0;
-											int replaceData = 0;
-											
-											String prvaSplit[] = sign.getText()[0].split(" ");
-											if (prvaSplit.length > 1)
-											{
-												String idString = prvaSplit[1];
-												if (Util.isInteger(idString))
-												{
-													replaceID = Integer.parseInt(idString);
-												}
-												else if (idString.contains(":"))
-												{
-													String[] idSplit = idString.split(":");
-													if (Util.isInteger(idSplit[0]))
-													{
-														replaceID = Integer.parseInt(idSplit[0]);
-													}
-													if (Util.isInteger(idSplit[1]))
-													{
-														replaceData = Integer.parseInt(idSplit[1]);
-													}
-												}
-											}
-
-											localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID, replaceData));
-										
-											break;
-										}
-									}
-									catch (DataException e)
-									{
-										e.printStackTrace();
-									}
-
-								}
+								vectorList.add(vector);
 							}
 						}
 					}
 				}
 			}
+			catch (EmptyClipboardException e)
+			{
+				e.printStackTrace();
+			}
+			
+			stringVectorList = vectorToStringVectorList(vectorList);
+			RegenerationModule.instance.storageConfig.set(path, stringVectorList);
+			RegenerationModule.instance.saveStorageYaml();
 		}
-		catch (EmptyClipboardException e)
+		else
 		{
-			e.printStackTrace();
+			stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
+			vectorList = stringVectorToVecotrList(stringVectorList);
 		}
+		
+		handleChests(vectorList);
 	}
 
+	private void handleChests(List<Vector> chestLocations)
+	{
+		chests = new ArrayList<ChestInfo>();
+		for(Vector vector : chestLocations)
+		{
+			try
+			{
+				Vector chest = vector;
+						
+				BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+				for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+				{
+					vector = new Vector(vector.getBlockX() + face.getModX(), vector.getBlockY(), vector.getBlockZ() + face.getModZ());
+					try
+					{
+						baseBlock = localSession.getClipboard().getPoint(vector);
+					}
+					catch (ArrayIndexOutOfBoundsException e)
+					{
+						continue;
+					}
+		
+		
+					if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
+					{
+						try
+						{
+							SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
+							sign.setNbtData(baseBlock.getNbtData());
+		
+							boolean properSign = true;
+							
+							if (sign.getText()[0].trim().startsWith("[loot]"))
+							{
+								ChestInfo info = new ChestInfo();
+								info.restockable = true;
+								info.lootTable = sign.getText()[1];
+								info.interval = Integer.parseInt(sign.getText()[2]);
+								info.perPlayer = sign.getText()[3].contains("true");
+								info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
+		
+								chests.add(info);
+							}
+							else if (sign.getText()[0].trim().startsWith("[Allow]"))
+							{
+		
+		
+								ChestInfo info = new ChestInfo();
+								info.loc = new Location(null, chest.getBlockX(), chest.getBlockY(), chest.getBlockZ());
+								info.restockable = false;
+		
+								chests.add(info);
+							}
+							else
+								properSign = false;
+							
+							if (properSign)
+							{
+								int replaceID = 0;
+								int replaceData = 0;
+								
+								String prvaSplit[] = sign.getText()[0].split(" ");
+								if (prvaSplit.length > 1)
+								{
+									String idString = prvaSplit[1];
+									if (Util.isInteger(idString))
+									{
+										replaceID = Integer.parseInt(idString);
+									}
+									else if (idString.contains(":"))
+									{
+										String[] idSplit = idString.split(":");
+										if (Util.isInteger(idSplit[0]))
+										{
+											replaceID = Integer.parseInt(idSplit[0]);
+										}
+										if (Util.isInteger(idSplit[1]))
+										{
+											replaceData = Integer.parseInt(idSplit[1]);
+										}
+									}
+								}
+		
+								localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID, replaceData));
+							
+								break;
+							}
+						}
+						catch (DataException e)
+						{
+							e.printStackTrace();
+						}
+		
+					}
+				}
+			
+			}
+			catch (EmptyClipboardException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public ChestInfo[] getChests(Location placementCorner)
 	{			
 		ChestInfo[] infos = new ChestInfo[chests.size()];
@@ -223,63 +259,129 @@ public class CachedSchematic {
 
 	public void findVillagers()
 	{
-		try
+		String path = "Villagers."+name;
+		
+		List<String> stringVectorList = new ArrayList<String>();
+		List<Vector> vectorList = new ArrayList<Vector>();
+		
+		
+		Object oList = RegenerationModule.instance.storageConfig.get(path);
+		if(oList == null)
 		{
-			for (int x = 0; x < xSize; x++)
+			try
 			{
-				for (int z = 0; z < zSize; z++)
-				{
-					for (int y = 0; y < localSession.getClipboard().getHeight(); y++)
-					{
-						Vector vector = new Vector(x, y, z);
-						BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
-						if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
+				for (int x = 0; x < xSize; x++) {
+					for (int z = 0; z < zSize; z++)	{
+						for (int y = 0; y < localSession.getClipboard().getHeight(); y++)
 						{
-							SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
-							sign.setNbtData(baseBlock.getNbtData());
-
-							boolean villagerSign = false;
-							for (int i = 0; i < 4; i++)
+							Vector vector = new Vector(x, y, z);
+							BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+							if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 							{
-								String line = sign.getText()[i];
-								String lineS[] = line.split(" ");
-								int amount = 1;
-
-								int type = -1;
-								if (lineS[0].trim().equalsIgnoreCase("farmer"))
-									type = 0;
-								else if (lineS[0].trim().equalsIgnoreCase("librarian"))
-									type = 1;
-								else if (lineS[0].trim().equalsIgnoreCase("priest"))
-									type = 2;
-								else if (lineS[0].trim().equalsIgnoreCase("blacksmith"))
-									type = 3;
-								else if (lineS[0].trim().equalsIgnoreCase("butcher"))
-									type = 4;
-								else if (lineS[0].trim().equalsIgnoreCase("greenie"))
-									type = 5;
-								else
-									continue;
-
-								villagerSign = true;
-
-								if (lineS.length >= 2 && Util.isInteger(lineS[1]))
-									amount = Integer.parseInt(lineS[1]);
-								
-								VillagerInfo villager = new VillagerInfo();
-								villager.id = type;
-								villager.amount = amount;
-								villager.loc = new Location(null, x, y, z);	
-
-								villagers.add(villager);
+								vectorList.add(vector);
 							}
-
-							if (villagerSign)
-								localSession.getClipboard().setBlock(vector, new BaseBlock(Material.AIR.getId()));
 						}
 					}
 				}
 			}
+			catch (EmptyClipboardException e)
+			{
+				e.printStackTrace();
+			}
+			
+			stringVectorList = vectorToStringVectorList(vectorList);
+			RegenerationModule.instance.storageConfig.set(path, stringVectorList);
+			RegenerationModule.instance.saveStorageYaml();
+		}
+		else
+		{
+			stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
+			vectorList = stringVectorToVecotrList(stringVectorList);
+		}
+
+		handleVillagerSigns(vectorList);
+	}
+
+	private List<String> vectorToStringVectorList(List<Vector> list)
+	{
+		List<String> returnList = new ArrayList<String>();
+		
+		for(Vector v : list)
+		{
+			String s = v.getBlockX()+":"+v.getBlockY()+":"+v.getBlockZ();
+			returnList.add(s);
+		}
+		
+		return returnList;
+	}
+	
+	private List<Vector> stringVectorToVecotrList(List<String> list)
+	{
+		List<Vector> returnList = new ArrayList<Vector>();
+		
+		for(String s : list)
+		{
+			String arr[] = s.split(":");
+			
+			Vector v = new Vector(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]), Integer.parseInt(arr[2])); 
+			returnList.add(v);
+		}
+		
+		return returnList;
+	}
+	
+	private void handleVillagerSigns(List<Vector> signLocations)
+	{
+		try
+		{
+			for(Vector vector : signLocations)
+			{
+				BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+				SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
+				sign.setNbtData(baseBlock.getNbtData());
+		
+				boolean villagerSign = false;
+				for (int i = 0; i < 4; i++)
+				{
+					String line = sign.getText()[i];
+					String lineS[] = line.split(" ");
+					int amount = 1;
+		
+					int type = -1;
+					if (lineS[0].trim().equalsIgnoreCase("farmer"))
+						type = 0;
+					else if (lineS[0].trim().equalsIgnoreCase("librarian"))
+						type = 1;
+					else if (lineS[0].trim().equalsIgnoreCase("priest"))
+						type = 2;
+					else if (lineS[0].trim().equalsIgnoreCase("blacksmith"))
+						type = 3;
+					else if (lineS[0].trim().equalsIgnoreCase("butcher"))
+						type = 4;
+					else if (lineS[0].trim().equalsIgnoreCase("greenie"))
+						type = 5;
+					else
+						continue;
+		
+					villagerSign = true;
+		
+					if (lineS.length >= 2 && Util.isInteger(lineS[1]))
+						amount = Integer.parseInt(lineS[1]);
+					
+					VillagerInfo villager = new VillagerInfo();
+					villager.id = type;
+					villager.amount = amount;
+					villager.loc = new Location(null, vector.getBlockX(), vector.getBlockY(), vector.getBlockZ());	
+		
+					villagers.add(villager);
+				}
+		
+				if (villagerSign)	
+				{
+					localSession.getClipboard().setBlock(vector, new BaseBlock(Material.AIR.getId()));
+				}
+			}
+		
 		}
 		catch (EmptyClipboardException e)
 		{
@@ -288,7 +390,7 @@ public class CachedSchematic {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public void spawnVillagers(Location placementCorner, VillagerSpawner spawner)
 	{
 		for (VillagerInfo villager : villagers)

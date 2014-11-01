@@ -70,9 +70,6 @@ public class RegenerationUtil {
 				final Location pastingLocation = new Location(world, cornerX, pastingY, cornerZ);
 				RegStructure structure = RegenerationModule.instance.structures.get(structureName);
 
-				if (structure.shouldRespawnVillagers())
-					schematic.findVillagers();
-
 				List<RestockableChest> oldRestockableChests = RestockableChest.getChestsInStructure(id);
 				
 				for(RestockableChest rc : oldRestockableChests)
@@ -80,13 +77,17 @@ public class RegenerationUtil {
 				
 				//Searching for loot chests, removing signs
 				schematic.findChests();
+				//find villagers before placing the schematic, so findVillagers can remove the signs from the schematic
+				// YAY for side effects in methods~!
+				if (structure.shouldRespawnVillagers())
+				{
+					schematic.findVillagers();
+				}
 				
 				schematic.place(pastingLocation, structure.shouldIgnoreAir());
 				
 				if (structure.shouldRespawnVillagers())
 				{
-					schematic.findVillagers();
-
 					Bukkit.getServer().getScheduler().runTask(MantlePlugin.instance, new Runnable() {
 
 						@Override

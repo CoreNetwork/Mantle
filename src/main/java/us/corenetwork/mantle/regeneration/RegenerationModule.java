@@ -2,12 +2,10 @@ package us.corenetwork.mantle.regeneration;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -55,7 +53,7 @@ public class RegenerationModule extends MantleModule {
 		}
 		
 		StructureChecker.schedule();
-		
+		RegenerationModule.instance.loadStorageYaml();
 		return true;
 	}
 	@Override
