@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
 import net.minecraft.server.v1_7_R4.TileEntity;
 import net.minecraft.server.v1_7_R4.TileEntityBeacon;
 import net.minecraft.server.v1_7_R4.TileEntityBrewingStand;
@@ -44,6 +45,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private Block lastFuelContainer;
     private List<TileEntity> overclockCache;
 
+    private int effectToLoad = -1;
     private BeaconEffect activeEffect;
 
     public CustomBeaconTileEntity()
@@ -59,6 +61,9 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             @Override
             public void run()
             {
+                if (effectToLoad != -1 && effectToLoad < BeaconEffect.STORAGE.effects.size())
+                    activeEffect = BeaconEffect.STORAGE.effects.get(effectToLoad);
+
                 redstoneBlocked = getBlock().isBlockPowered();
                 if (redstoneBlocked)
                     fuelLeftTicks = 0;
@@ -529,6 +534,34 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     {
         return 0;
     }
+
+    /*
+        Load from NBT
+     */
+    @Override
+    public void a(NBTTagCompound nbttagcompound) {
+        super.a(nbttagcompound);
+
+        fuelLeftTicks = nbttagcompound.getInt("FuelLeft");
+        effectToLoad = nbttagcompound.getInt("ActiveEffect") - 1;
+    }
+
+    /*
+        Save to NBT
+     */
+    @Override
+    public void b(NBTTagCompound nbttagcompound) {
+        super.b(nbttagcompound);
+
+        int effect = -1;
+        if (activeEffect != null)
+            effect = BeaconEffect.STORAGE.effects.indexOf(activeEffect);
+        nbttagcompound.setInt("ActiveEffect", effect + 1);
+
+        nbttagcompound.setInt("FuelLeft", fuelLeftTicks);
+
+    }
+
 
     public static void inject()
     {
