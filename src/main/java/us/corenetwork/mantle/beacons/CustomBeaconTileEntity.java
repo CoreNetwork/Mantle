@@ -407,6 +407,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         firstCheck = false;
     }
 
+    @Override
+    public int getSize()
+    {
+        return 0;
+    }
 
     public static void inject()
     {
