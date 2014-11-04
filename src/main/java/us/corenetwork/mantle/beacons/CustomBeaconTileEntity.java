@@ -9,13 +9,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
+import us.corenetwork.mantle.Util;
 
 /**
  * Created by Matej on 28.10.2014.
@@ -25,9 +31,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private int pyramidLevel = 0;
     private int range = 0;
     private int rangeSquared = 0;
-    private int fuelLeftTicks = 33 * 20;
+    private int fuelLeftTicks = 0;
     private boolean goldPyramid;
     private boolean redstoneBlocked = false;
+
+    private Block lastFuelContainer;
 
     private BeaconEffect activeEffect;
 
@@ -54,7 +62,6 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     {
         //Check pyramid size every 80 ticks
         if (this.world.getTime() % 80L == 0L) {
-
             updatePyramidSize();
         }
 
@@ -70,6 +77,12 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             {
                 ParticleLibrary.HAPPY_VILLAGER.broadcastParticle(getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10);
             }
+
+            fuelLeftTicks--;
+        }
+        else if (isReady())
+        {
+            refuel();
         }
     }
 
@@ -106,6 +119,14 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         return activeEffect != null && fuelLeftTicks > 0 && pyramidLevel > 0 && !redstoneBlocked;
     }
 
+    /*
+        When beacon is ready to be activated, it just needs fuel
+     */
+    public boolean isReady()
+    {
+        return activeEffect != null && pyramidLevel > 0 && !redstoneBlocked;
+    }
+
     public int getRange()
     {
         return range;
@@ -116,9 +137,13 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         return fuelLeftTicks;
     }
 
-    public int getFuelDuration()
+    public int getFuelDurationMinutes()
     {
-        return activeEffect.getFuelDuration();
+        int duration = activeEffect.getFuelDuration();
+        if (isPyramidSolidGold())
+            duration *= 1.1;
+
+        return duration;
     }
 
     public boolean shouldUseStrongerEffect()
@@ -149,6 +174,86 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private Location getCenterLocation()
     {
         return new Location(this.world.getWorld(), x + 0.5, y + 0.5, z + 0.5);
+    }
+
+    private void refuel()
+    {
+        if (lastFuelContainer == null)
+        {
+            findNewFuelContainer();
+            return;
+        }
+
+        BlockState state = lastFuelContainer.getState();
+        if (!(state instanceof InventoryHolder))
+        {
+            lastFuelContainer = null;
+            return;
+        }
+
+        InventoryHolder holder = (InventoryHolder) state;
+        Inventory inventory = holder.getInventory();
+
+        boolean foundItem = false;
+        ItemStack fuel = activeEffect.getFuelIcon();
+        for (int i = 0; i < inventory.getSize(); i++)
+        {
+            ItemStack item = inventory.getItem(i);
+            if (item != null && Util.isItemTypeSame(fuel, item))
+            {
+                if (item.getAmount() > 1)
+                {
+                    item.setAmount(item.getAmount() - 1);
+                    inventory.setItem(i, item);
+                }
+                else
+                {
+                    inventory.setItem(i, null);
+                }
+
+                foundItem = true;
+                fuelLeftTicks += getFuelDurationMinutes() * 1200; //1200 ticks in minute
+
+                break;
+            }
+        }
+
+        if (!foundItem)
+            lastFuelContainer = null;
+
+    }
+
+    private void findNewFuelContainer()
+    {
+        if (this.world.getTime() % 20L != 0L) //Scan for new chests every 20 ticks to prevent constant scanning if there is no chest placed around
+            return;
+
+        Block beaconBlock = getBlock();
+        ItemStack fuel = activeEffect.getFuelIcon();
+
+        for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST})
+        {
+            Block neighbour = beaconBlock.getRelative(face);
+            BlockState state = neighbour.getState();
+
+            if (state instanceof InventoryHolder)
+            {
+                InventoryHolder holder = (InventoryHolder) state;
+                Inventory inventory = holder.getInventory();
+
+                for (ItemStack stack : inventory)
+                {
+                    if (stack != null && Util.isItemTypeSame(fuel, stack))
+                    {
+                        lastFuelContainer = neighbour;
+                        break;
+                    }
+                }
+
+                if (lastFuelContainer != null)
+                    break;
+            }
+        }
     }
 
     private void applyPotionEffect()
