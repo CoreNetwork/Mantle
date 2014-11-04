@@ -235,7 +235,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         Block beaconBlock = getBlock();
         ItemStack fuel = activeEffect.getFuelIcon();
 
-        for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST})
+        for (BlockFace face : new BlockFace[] { BlockFace.UP, BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST})
         {
             Block neighbour = beaconBlock.getRelative(face);
             BlockState state = neighbour.getState();
