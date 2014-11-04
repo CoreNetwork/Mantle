@@ -3,6 +3,9 @@ package us.corenetwork.mantle.beacons;
 import java.lang.reflect.Field;
 import java.util.Map;
 import net.minecraft.server.v1_7_R4.EntityHuman;
+import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_7_R4.Packet;
+import net.minecraft.server.v1_7_R4.PacketPlayOutTileEntityData;
 import net.minecraft.server.v1_7_R4.TileEntity;
 import net.minecraft.server.v1_7_R4.TileEntityBeacon;
 import org.bukkit.Bukkit;
@@ -26,7 +29,7 @@ import us.corenetwork.mantle.Util;
 /**
  * Created by Matej on 28.10.2014.
  */
-public class CustomBeaconTileEntity extends TileEntityBeacon
+public class CustomBeaconTileEntity extends TileEntity
 {
     private int pyramidLevel = 0;
     private int range = 0;
@@ -400,6 +403,26 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         this.goldPyramid = goldBlocks == totalBlocks;
 
         long end = System.nanoTime();
+    }
+
+    /*
+        Needed to keep  compatibility with client beacon
+     */
+    public Packet getUpdatePacket() {
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+
+        this.b(nbttagcompound);
+        return new PacketPlayOutTileEntityData(this.x, this.y, this.z, 3, nbttagcompound);
+    }
+
+    /*
+        Needed to keep map from crashing when plugin is not loaded (so regular beacon loads)
+     */
+    public void b(NBTTagCompound nbttagcompound) {
+        super.b(nbttagcompound);
+        nbttagcompound.setInt("Primary", 0);
+        nbttagcompound.setInt("Secondary", 0);
+        nbttagcompound.setInt("Levels", 0);
     }
 
 
