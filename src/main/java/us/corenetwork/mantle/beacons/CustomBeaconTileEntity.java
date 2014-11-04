@@ -37,6 +37,7 @@ public class CustomBeaconTileEntity extends TileEntity
     private int fuelLeftTicks = 0;
     private boolean goldPyramid;
     private boolean redstoneBlocked = false;
+    private boolean firstCheck;
 
     private Block lastFuelContainer;
 
@@ -45,6 +46,8 @@ public class CustomBeaconTileEntity extends TileEntity
     public CustomBeaconTileEntity()
     {
         super();
+
+        firstCheck = true;
 
         //Delay initialization for 1 tick to make sure stuff around has loaded
         Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
@@ -110,6 +113,7 @@ public class CustomBeaconTileEntity extends TileEntity
     public void setActiveEffect(BeaconEffect activeEffect)
     {
         this.activeEffect = activeEffect;
+        fuelLeftTicks = 0;
     }
 
     public int getPyramidLevel()
@@ -142,7 +146,7 @@ public class CustomBeaconTileEntity extends TileEntity
 
     public int getFuelDurationMinutes()
     {
-        int duration = activeEffect.getFuelDuration();
+        int duration = shouldUseStrongerEffect() ? activeEffect.getFuelDurationStrongEffect() : activeEffect.getFuelDuration();
         if (isPyramidSolidGold())
             duration *= 1.1;
 
@@ -294,8 +298,6 @@ public class CustomBeaconTileEntity extends TileEntity
 
     private void updatePyramidSize()
     {
-        long start = System.nanoTime();
-
         int size = 0;
         boolean fail = false;
 
@@ -362,8 +364,6 @@ public class CustomBeaconTileEntity extends TileEntity
             size++;
         }
 
-        pyramidLevel = size;
-
         double rangeIron = 0;
         double rangeGold = 0;
         double rangeEmerald = 0;
@@ -397,12 +397,17 @@ public class CustomBeaconTileEntity extends TileEntity
                 break;
         }
 
+        boolean strongEffectBefore = shouldUseStrongerEffect();
+        pyramidLevel = size;
         range = (int) Math.round(rangeIron + rangeGold + rangeEmerald + rangeDiamond);
         rangeSquared = range * range;
-
         this.goldPyramid = goldBlocks == totalBlocks;
 
-        long end = System.nanoTime();
+        //When switching pyramid from L3 to L4 (or to L3 in gold case), deplete all fuel
+        if (!firstCheck && !strongEffectBefore && shouldUseStrongerEffect())
+            fuelLeftTicks = 0;
+
+        firstCheck = false;
     }
 
     /*

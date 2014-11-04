@@ -22,11 +22,12 @@ public class BeaconEffect
     private ItemStack activeEffectIcon;
     private ItemStack fuelIcon;
     private int fuelDuration;
+    private int fuelDurationStrongEffect;
     private int strongEffectModifier;
     private String effectNameStrong;
     private String effectNameWeak;
 
-    public BeaconEffect(String name, EffectType effectType, ItemStack effectIcon, ItemStack activeEffectIcon, ItemStack fuelIcon, int fuelDuration, int strongEffectModifier, String effectNameStrong, String effectNameWeak)
+    public BeaconEffect(String name, EffectType effectType, ItemStack effectIcon, ItemStack activeEffectIcon, ItemStack fuelIcon, int fuelDuration, int fuelDurationStrongEffect, int strongEffectModifier, String effectNameStrong, String effectNameWeak)
     {
         this.name = name;
         this.effectType = effectType;
@@ -34,6 +35,7 @@ public class BeaconEffect
         this.activeEffectIcon = activeEffectIcon;
         this.fuelIcon = fuelIcon;
         this.fuelDuration = fuelDuration;
+        this.fuelDurationStrongEffect = fuelDurationStrongEffect;
         this.strongEffectModifier = strongEffectModifier;
         this.effectNameStrong = effectNameStrong;
         this.effectNameWeak = effectNameWeak;
@@ -82,6 +84,14 @@ public class BeaconEffect
             return null;
         }
 
+        Integer fuelDurationStrongEffect = (Integer) section.get("FuelDurationStrongEffect");
+        if (fuelDurationStrongEffect == null)
+        {
+            System.out.println("Invalid config: beacon effect has no FuelDurationStrongEffect defined.");
+            return null;
+        }
+
+
         Integer strongEffectModifier = (Integer) section.get("StrongEffectModifier");
         if (strongEffectModifier == null)
         {
@@ -104,7 +114,7 @@ public class BeaconEffect
         }
 
 
-        BeaconEffect effect = new BeaconEffect(name, effectType, effectIcon, activeEffectIcon, fuelIcon, fuelDuration, strongEffectModifier, effectNameStrong, effectNameWeak);
+        BeaconEffect effect = new BeaconEffect(name, effectType, effectIcon, activeEffectIcon, fuelIcon, fuelDuration, fuelDurationStrongEffect, strongEffectModifier, effectNameStrong, effectNameWeak);
 
         if (effectType == EffectType.POTION)
         {
@@ -154,6 +164,11 @@ public class BeaconEffect
     public int getFuelDuration()
     {
         return fuelDuration;
+    }
+
+    public int getFuelDurationStrongEffect()
+    {
+        return fuelDurationStrongEffect;
     }
 
     public int getStrongEffectModifier()
