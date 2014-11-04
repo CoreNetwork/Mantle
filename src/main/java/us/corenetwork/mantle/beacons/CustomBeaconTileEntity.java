@@ -60,6 +60,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             public void run()
             {
                 redstoneBlocked = getBlock().isBlockPowered();
+                if (redstoneBlocked)
+                    fuelLeftTicks = 0;
             }
         });
     }
@@ -113,7 +115,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
     public void physics()
     {
-        redstoneBlocked = getBlock().isBlockPowered();
+        boolean newRedstoneState = getBlock().isBlockPowered();
+        if (!redstoneBlocked && newRedstoneState)
+            fuelLeftTicks = 0; //Suck all fuel out when disabling beacon via redstone
+
+        redstoneBlocked = newRedstoneState;
     }
 
     public BeaconEffect getActiveEffect()
@@ -474,14 +480,16 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                 break;
         }
 
-        boolean strongEffectBefore = shouldUseStrongerEffect();
+        int oldLevel = pyramidLevel;
+        boolean oldStrongEffect = shouldUseStrongerEffect();
+
         pyramidLevel = size;
         range = (int) Math.round(rangeIron + rangeGold + rangeEmerald + rangeDiamond);
         rangeSquared = range * range;
         this.goldPyramid = goldBlocks == totalBlocks;
 
-        //When switching pyramid from L3 to L4 (or to L3 in gold case), deplete all fuel
-        if (!firstCheck && !strongEffectBefore && shouldUseStrongerEffect())
+        //When pyramid changes, deplete all fuel
+        if (!firstCheck && (oldStrongEffect != shouldUseStrongerEffect() || (oldLevel != 0 && pyramidLevel == 0)))
             fuelLeftTicks = 0;
 
         firstCheck = false;
