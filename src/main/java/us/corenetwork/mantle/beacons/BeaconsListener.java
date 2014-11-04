@@ -1,32 +1,22 @@
 package us.corenetwork.mantle.beacons;
 
+import net.minecraft.server.v1_7_R4.TileEntity;
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.BrewingStand;
+import org.bukkit.block.Furnace;
+import org.bukkit.craftbukkit.v1_7_R4.CraftChunk;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 
 public class BeaconsListener implements Listener
-{
-
-      public void onPlayerInventoryClick(InventoryClickEvent event)
-      {
-      }
-//    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-//    public void onPlayerInteract(PlayerInteractEvent event)
-//    {
-//        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
-//            return;
-//
-//        if (event.getClickedBlock().getType() != Material.BEACON)
-//            return;
-//
-//        CustomBeaconTileEntity tileEntity = (CustomBeaconTileEntity) ((CraftWorld) event.getClickedBlock().getWorld()).getHandle().getTileEntity(event.getClickedBlock().getX(), event.getClickedBlock().getY(), event.getClickedBlock().getZ());
-//        if (tileEntity == null)
-//        {
-//            MLog.warning("Beacon tile entity null at " + event.getClickedBlock());
-//            return;
-//        }
-//
-//        tileEntity.clicked(event.getPlayer());
-//
-//    }
+ {
 }

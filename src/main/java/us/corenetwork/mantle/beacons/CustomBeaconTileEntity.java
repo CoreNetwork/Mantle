@@ -1,16 +1,21 @@
 package us.corenetwork.mantle.beacons;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import net.minecraft.server.v1_7_R4.EntityHuman;
 import net.minecraft.server.v1_7_R4.TileEntity;
 import net.minecraft.server.v1_7_R4.TileEntityBeacon;
+import net.minecraft.server.v1_7_R4.TileEntityBrewingStand;
+import net.minecraft.server.v1_7_R4.TileEntityFurnace;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.Furnace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -37,6 +42,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private boolean firstCheck;
 
     private Block lastFuelContainer;
+    private List<TileEntity> overclockCache;
 
     private BeaconEffect activeEffect;
 
@@ -45,6 +51,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         super();
 
         firstCheck = true;
+        overclockCache = new ArrayList<TileEntity>();
 
         //Delay initialization for 1 tick to make sure stuff around has loaded
         Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
@@ -66,14 +73,21 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         //Check pyramid size every 80 ticks
         if (this.world.getTime() % 80L == 0L) {
             updatePyramidSize();
-        }
+            updateFurnaces();
 
+        }
 
         if (isActive())
         {
-            if (activeEffect.getEffectType() == BeaconEffect.EffectType.POTION && this.world.getTime() % 80L == 0L)
+            if (activeEffect.getEffectType() == BeaconEffect.EffectType.POTION)
             {
-                applyPotionEffect();
+                if (this.world.getTime() % 80L == 0L)
+                    applyPotionEffect();
+            }
+            else if (activeEffect.getEffectType() == BeaconEffect.EffectType.OVERCLOCK)
+            {
+                if (this.world.getTime() % 1L == 0L || shouldUseStrongerEffect())
+                    applyOverclockEffect();
             }
 
             if (this.world.getTime() % 20L == 0L)
@@ -288,6 +302,72 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                         LivingEntity livingEntity = (LivingEntity) entity;
                         livingEntity.addPotionEffect(actualEffect, true);
                     }
+                }
+            }
+        }
+    }
+
+    private void applyOverclockEffect()
+    {
+        for (TileEntity tileEntity : overclockCache)
+        {
+            if (tileEntity instanceof TileEntityBrewingStand)
+            {
+                TileEntityBrewingStand brewingStand = (TileEntityBrewingStand) tileEntity;
+                if (brewingStand.brewTime != 0)
+                    brewingStand.brewTime--;
+            }
+            else if (tileEntity instanceof TileEntityFurnace)
+            {
+                TileEntityFurnace furnace = (TileEntityFurnace) tileEntity;
+                if (furnace.cookTime != 0)
+                    furnace.cookTime++;
+
+                if (furnace.cookTime == 200)
+                {
+                    furnace.cookTime = 0;
+                    furnace.burn();
+                    furnace.update();
+                }
+            }
+        }
+    }
+
+    private void updateFurnaces()
+    {
+        int rangeChunks = (int) Math.ceil(range / 16.0);
+        Block beaconBlock = getBlock();
+        Chunk beaconChunk = beaconBlock.getChunk();
+        Location beaconLocation = getCenterLocation();
+
+        overclockCache.clear();
+
+        for (int x = -rangeChunks; x <= rangeChunks; x++)
+        {
+            for (int z = -rangeChunks; z <= rangeChunks; z++)
+            {
+                int nX = beaconChunk.getX() + x;
+                int nZ = beaconChunk.getZ() + z;
+                if (!world.chunkProvider.isChunkLoaded(nX, nZ))
+                    continue;
+
+                net.minecraft.server.v1_7_R4.Chunk nmsChunk = world.chunkProvider.getChunkAt(nX, nZ);
+
+                for (Object tileEntityObject : nmsChunk.tileEntities.values())
+                {
+                    if (!(tileEntityObject instanceof TileEntityFurnace || tileEntityObject instanceof TileEntityBrewingStand))
+                        continue;
+
+                    TileEntity tileEntity = (TileEntity) tileEntityObject;
+                    int diffX = tileEntity.x - beaconBlock.getX();
+                    int diffY = tileEntity.y - beaconBlock.getY();
+                    int diffZ = tileEntity.z - beaconBlock.getZ();
+
+                    int distance = diffX * diffX + diffY * diffY + diffZ * diffZ;
+                    if (distance > rangeSquared)
+                        continue;
+
+                    overclockCache.add(tileEntity);
                 }
             }
         }
