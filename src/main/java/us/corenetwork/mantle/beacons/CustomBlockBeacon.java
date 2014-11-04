@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.beacons;
 
+import java.util.Random;
+import net.minecraft.server.v1_7_R4.Block;
 import net.minecraft.server.v1_7_R4.BlockContainer;
 import net.minecraft.server.v1_7_R4.CreativeModeTab;
 import net.minecraft.server.v1_7_R4.EntityHuman;
@@ -8,6 +10,7 @@ import net.minecraft.server.v1_7_R4.ItemStack;
 import net.minecraft.server.v1_7_R4.Material;
 import net.minecraft.server.v1_7_R4.TileEntity;
 import net.minecraft.server.v1_7_R4.World;
+import org.bukkit.Bukkit;
 
 /**
  * Clone of original Minecraft's BlockBeacon.java with TileEntity changes and interact event changed.
@@ -46,6 +49,18 @@ public class CustomBlockBeacon extends BlockContainer
             return true;
         }
     }
+
+    @Override
+    public void doPhysics(World world, int i, int j, int k, Block block)
+    {
+        CustomBeaconTileEntity tileentitybeacon = (CustomBeaconTileEntity) world.getTileEntity(i, j, k);
+
+        if (tileentitybeacon != null) {
+            tileentitybeacon.physics();
+        }
+    }
+
+
 
     @Override
     public boolean c()

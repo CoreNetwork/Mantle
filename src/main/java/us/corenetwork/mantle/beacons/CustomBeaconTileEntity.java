@@ -14,6 +14,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
 
 /**
@@ -30,9 +31,24 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
     private BeaconEffect activeEffect;
 
+    public CustomBeaconTileEntity()
+    {
+        super();
+
+        //Delay initialization for 1 tick to make sure stuff around has loaded
+        Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                redstoneBlocked = getBlock().isBlockPowered();
+            }
+        });
+    }
+
     /*
-        Tile entity tick
-     */
+            Tile entity tick
+         */
     @Override
     public void h()
     {
@@ -63,6 +79,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             human.getBukkitEntity().openInventory(new GUIEffectPicker(this));
         else
             human.getBukkitEntity().openInventory(new GUIBeaconStatus(this));
+    }
+
+    public void physics()
+    {
+        redstoneBlocked = getBlock().isBlockPowered();
     }
 
     public BeaconEffect getActiveEffect()
