@@ -161,6 +161,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         return fuelLeftTicks;
     }
 
+    public int getAmountFuelItemsConsumed()
+    {
+        return shouldUseStrongerEffect() ? activeEffect.getFuelItemsConsumedStrongEffect() : activeEffect.getFuelItemsConsumed();
+    }
+
     public int getFuelDurationMinutes()
     {
         int duration = shouldUseStrongerEffect() ? activeEffect.getFuelDurationStrongEffect() : activeEffect.getFuelDuration();
@@ -218,33 +223,40 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         InventoryHolder holder = (InventoryHolder) state;
         Inventory inventory = holder.getInventory();
 
-        boolean foundItem = false;
+
+        if (!hasEnoughFuel(inventory))
+        {
+            lastFuelContainer = null;
+            return;
+        }
+
+        int amountToRemove = getAmountFuelItemsConsumed();
         ItemStack fuel = activeEffect.getFuelIcon();
+
         for (int i = 0; i < inventory.getSize(); i++)
         {
             ItemStack item = inventory.getItem(i);
             if (item != null && Util.isItemTypeSame(fuel, item))
             {
-                if (item.getAmount() > 1)
+                if (amountToRemove >= item.getAmount())
                 {
-                    item.setAmount(item.getAmount() - 1);
-                    inventory.setItem(i, item);
+                    amountToRemove -= item.getAmount();
+                    inventory.setItem(i, null);
+
+                    if (amountToRemove == 0)
+                        break;
                 }
                 else
                 {
-                    inventory.setItem(i, null);
+                    item.setAmount(item.getAmount() - amountToRemove);
+                    inventory.setItem(i, item);
+                    break;
                 }
 
-                foundItem = true;
-                fuelLeftTicks += getFuelDurationMinutes() * 1200; //1200 ticks in minute
-
-                break;
             }
         }
 
-        if (!foundItem)
-            lastFuelContainer = null;
-
+        fuelLeftTicks += getFuelDurationMinutes() * 1200; //1200 ticks in minute
     }
 
     private void findNewFuelContainer()
@@ -265,19 +277,36 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                 InventoryHolder holder = (InventoryHolder) state;
                 Inventory inventory = holder.getInventory();
 
-                for (ItemStack stack : inventory)
+                if (hasEnoughFuel(inventory))
                 {
-                    if (stack != null && Util.isItemTypeSame(fuel, stack))
-                    {
-                        lastFuelContainer = neighbour;
-                        break;
-                    }
-                }
-
-                if (lastFuelContainer != null)
+                    lastFuelContainer = neighbour;
                     break;
+                }
             }
         }
+    }
+
+    private boolean hasEnoughFuel(Inventory inventory)
+    {
+        boolean hasEnough = false;
+        int foundAmount = 0;
+        int neededAmount = getAmountFuelItemsConsumed();
+        ItemStack fuel = activeEffect.getFuelIcon();
+
+        for (ItemStack item : inventory.getContents())
+        {
+            if (item != null && Util.isItemTypeSame(fuel, item))
+            {
+                foundAmount += item.getAmount();
+                if (foundAmount >= neededAmount)
+                {
+                    hasEnough = true;
+                    break;
+                }
+            }
+        }
+
+        return hasEnough;
     }
 
     private void applyPotionEffect()

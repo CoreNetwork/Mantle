@@ -23,11 +23,13 @@ public class BeaconEffect
     private ItemStack fuelIcon;
     private int fuelDuration;
     private int fuelDurationStrongEffect;
+    private int fuelItemsConsumed;
+    private int fuelItemsConsumedStrongEffect;
     private int strongEffectModifier;
     private String effectNameStrong;
     private String effectNameWeak;
 
-    public BeaconEffect(String name, EffectType effectType, ItemStack effectIcon, ItemStack activeEffectIcon, ItemStack fuelIcon, int fuelDuration, int fuelDurationStrongEffect, int strongEffectModifier, String effectNameStrong, String effectNameWeak)
+    public BeaconEffect(String name, EffectType effectType, ItemStack effectIcon, ItemStack activeEffectIcon, ItemStack fuelIcon, int fuelDuration, int fuelDurationStrongEffect, int fuelItemsConsumed, int fuelItemsConsumedStrongEffect, int strongEffectModifier, String effectNameStrong, String effectNameWeak)
     {
         this.name = name;
         this.effectType = effectType;
@@ -36,6 +38,8 @@ public class BeaconEffect
         this.fuelIcon = fuelIcon;
         this.fuelDuration = fuelDuration;
         this.fuelDurationStrongEffect = fuelDurationStrongEffect;
+        this.fuelItemsConsumed = fuelItemsConsumed;
+        this.fuelItemsConsumedStrongEffect = fuelItemsConsumedStrongEffect;
         this.strongEffectModifier = strongEffectModifier;
         this.effectNameStrong = effectNameStrong;
         this.effectNameWeak = effectNameWeak;
@@ -77,17 +81,38 @@ public class BeaconEffect
             return null;
         }
 
-        Integer fuelDuration = (Integer) section.get("FuelDuration");
-        if (fuelDuration == null)
+        Map<String, Object> fuelParameters = (Map<String, Object>) section.get("FuelParameters");
+        if (fuelParameters == null)
         {
-            System.out.println("Invalid config: beacon effect has no FuelDuration defined.");
+            System.out.println("Invalid config: beacon effect has no FuelParameters defined.");
             return null;
         }
 
-        Integer fuelDurationStrongEffect = (Integer) section.get("FuelDurationStrongEffect");
+        Integer fuelDuration = (Integer) fuelParameters.get("WeakEffectDuration");
+        if (fuelDuration == null)
+        {
+            System.out.println("Invalid config: beacon effect has no FuelParameters.WeakEffectDuration defined.");
+            return null;
+        }
+
+        Integer fuelDurationStrongEffect = (Integer) fuelParameters.get("StrongEffectDuration");
         if (fuelDurationStrongEffect == null)
         {
-            System.out.println("Invalid config: beacon effect has no FuelDurationStrongEffect defined.");
+            System.out.println("Invalid config: beacon effect has no FuelParameters.StrongEffectDuration defined.");
+            return null;
+        }
+
+        Integer fuelItemsConsumed = (Integer) fuelParameters.get("WeakEffectItemsConsumed");
+        if (fuelItemsConsumed == null)
+        {
+            System.out.println("Invalid config: beacon effect has no FuelParameters.WeakEffectItemsConsumed defined.");
+            return null;
+        }
+
+        Integer fuelItemsConsumedStrongEffect = (Integer) fuelParameters.get("StrongEffectItemsConsumed");
+        if (fuelItemsConsumedStrongEffect == null)
+        {
+            System.out.println("Invalid config: beacon effect has no FuelParameters.StrongEffectItemsConsumed defined.");
             return null;
         }
 
@@ -114,7 +139,7 @@ public class BeaconEffect
         }
 
 
-        BeaconEffect effect = new BeaconEffect(name, effectType, effectIcon, activeEffectIcon, fuelIcon, fuelDuration, fuelDurationStrongEffect, strongEffectModifier, effectNameStrong, effectNameWeak);
+        BeaconEffect effect = new BeaconEffect(name, effectType, effectIcon, activeEffectIcon, fuelIcon, fuelDuration, fuelDurationStrongEffect, fuelItemsConsumed, fuelItemsConsumedStrongEffect, strongEffectModifier, effectNameStrong, effectNameWeak);
 
         if (effectType == EffectType.POTION)
         {
@@ -169,6 +194,16 @@ public class BeaconEffect
     public int getFuelDurationStrongEffect()
     {
         return fuelDurationStrongEffect;
+    }
+
+    public int getFuelItemsConsumed()
+    {
+        return fuelItemsConsumed;
+    }
+
+    public int getFuelItemsConsumedStrongEffect()
+    {
+        return fuelItemsConsumedStrongEffect;
     }
 
     public int getStrongEffectModifier()
