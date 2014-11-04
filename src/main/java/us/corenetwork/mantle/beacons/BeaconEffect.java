@@ -245,8 +245,7 @@ public class BeaconEffect
     public static enum EffectType
     {
         POTION("Potion"),
-        OVERCLOCK("Overclock"),
-        FAST_GROWTH("FastGrowth");
+        OVERCLOCK("Overclock");
 
         private String name;
 
