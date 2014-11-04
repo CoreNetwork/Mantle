@@ -135,6 +135,8 @@ public class NanobotUtil {
         if (!item.hasItemMeta())
             return;
 
+        item = item.clone();
+
         ItemMeta meta = item.getItemMeta();
 
         if (meta.hasDisplayName())

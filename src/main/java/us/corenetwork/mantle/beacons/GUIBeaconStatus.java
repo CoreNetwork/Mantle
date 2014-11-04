@@ -34,10 +34,12 @@ public class GUIBeaconStatus extends InventoryGUI
 
         ItemStack fuelLeftItem = beacon.getActiveEffect().getFuelIcon();
         NanobotUtil.replaceStringInItem(fuelLeftItem, "<TimeLeft>", TimeFormat.formatTimeSeconds(beacon.getFuelLeftTicks() / 20));
+        NanobotUtil.replaceStringInItem(fuelLeftItem, "<FuelDuration>", TimeFormat.formatTimeMinutes(beacon.getFuelDuration()));
         setItem(ITEM_POSITION_FUEL_LEFT, fuelLeftItem);
 
         ItemStack effectIcon = beacon.getActiveEffect().getActiveEffectIcon();
-        NanobotUtil.replaceStringInItem(effectIcon, "<Range>", Integer.toString(beacon.getCurrentRange()));
+        NanobotUtil.replaceStringInItem(effectIcon, "<Range>", Integer.toString(beacon.getRange()));
+        NanobotUtil.replaceStringInItem(effectIcon, "<Name>", beacon.getEffectName());
         setItem(ITEM_POSITION_CURRENT_EFFECT, effectIcon);
     }
 

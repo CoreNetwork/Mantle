@@ -21,14 +21,22 @@ public class BeaconEffect
     private ItemStack effectIcon;
     private ItemStack activeEffectIcon;
     private ItemStack fuelIcon;
+    private int fuelDuration;
+    private int strongEffectModifier;
+    private String effectNameStrong;
+    private String effectNameWeak;
 
-    private BeaconEffect(String name, EffectType effectType, ItemStack effectIcon, ItemStack activeEffectIcon, ItemStack fuelIcon)
+    public BeaconEffect(String name, EffectType effectType, ItemStack effectIcon, ItemStack activeEffectIcon, ItemStack fuelIcon, int fuelDuration, int strongEffectModifier, String effectNameStrong, String effectNameWeak)
     {
         this.name = name;
         this.effectType = effectType;
         this.effectIcon = effectIcon;
         this.activeEffectIcon = activeEffectIcon;
         this.fuelIcon = fuelIcon;
+        this.fuelDuration = fuelDuration;
+        this.strongEffectModifier = strongEffectModifier;
+        this.effectNameStrong = effectNameStrong;
+        this.effectNameWeak = effectNameWeak;
     }
 
     public static BeaconEffect getFromConfig(String name, Map<String, Object> section)
@@ -67,8 +75,36 @@ public class BeaconEffect
             return null;
         }
 
+        Integer fuelDuration = (Integer) section.get("FuelDuration");
+        if (fuelDuration == null)
+        {
+            System.out.println("Invalid config: beacon effect has no FuelDuration defined.");
+            return null;
+        }
 
-        BeaconEffect effect = new BeaconEffect(name, effectType, effectIcon, activeEffectIcon, fuelIcon);
+        Integer strongEffectModifier = (Integer) section.get("StrongEffectModifier");
+        if (strongEffectModifier == null)
+        {
+            System.out.println("Invalid config: beacon effect has no StrongEffectModifier defined.");
+            return null;
+        }
+
+        String effectNameWeak = (String) section.get("EffectNameWeak");
+        if (effectNameWeak == null)
+        {
+            System.out.println("Invalid config: beacon effect has no EffectNameWeak defined.");
+            return null;
+        }
+
+        String effectNameStrong = (String) section.get("EffectNameStrong");
+        if (effectNameStrong == null)
+        {
+            System.out.println("Invalid config: beacon effect has no EffectNameStrong defined.");
+            return null;
+        }
+
+
+        BeaconEffect effect = new BeaconEffect(name, effectType, effectIcon, activeEffectIcon, fuelIcon, fuelDuration, strongEffectModifier, effectNameStrong, effectNameWeak);
 
         if (effectType == EffectType.POTION)
         {
@@ -78,6 +114,8 @@ public class BeaconEffect
                 System.out.println("Invalid config: missing potion effect data!");
                 return null;
             }
+
+            effect.potionEffectParameters = potionEffect;
         }
 
         return effect;
@@ -111,6 +149,26 @@ public class BeaconEffect
     public ItemStack getFuelIcon()
     {
         return fuelIcon;
+    }
+
+    public int getFuelDuration()
+    {
+        return fuelDuration;
+    }
+
+    public int getStrongEffectModifier()
+    {
+        return strongEffectModifier;
+    }
+
+    public String getEffectNameStrong()
+    {
+        return effectNameStrong;
+    }
+
+    public String getEffectNameWeak()
+    {
+        return effectNameWeak;
     }
 
     public static class BeaconEffectStorage
