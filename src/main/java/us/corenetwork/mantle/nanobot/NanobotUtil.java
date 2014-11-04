@@ -130,10 +130,10 @@ public class NanobotUtil {
 		return source;
 	}
 
-    public static void replaceStringInItem(ItemStack item, String source, String replacement)
+    public static ItemStack replaceStringInItem(ItemStack item, String source, String replacement)
     {
         if (!item.hasItemMeta())
-            return;
+            return item;
 
         item = item.clone();
 
@@ -154,5 +154,6 @@ public class NanobotUtil {
         }
 
         item.setItemMeta(meta);
+        return item;
     }
 }

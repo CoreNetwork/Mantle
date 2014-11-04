@@ -33,13 +33,13 @@ public class GUIBeaconStatus extends InventoryGUI
             setItem(ITEM_POSITION_BEACON_STATUS, BeaconsSettings.GUI_ITEM_BEACON_OFF.itemStack());
 
         ItemStack fuelLeftItem = beacon.getActiveEffect().getFuelIcon();
-        NanobotUtil.replaceStringInItem(fuelLeftItem, "<TimeLeft>", TimeFormat.formatTimeSeconds(beacon.getFuelLeftTicks() / 20));
-        NanobotUtil.replaceStringInItem(fuelLeftItem, "<FuelDuration>", TimeFormat.formatTimeMinutes(beacon.getFuelDuration()));
+        fuelLeftItem = NanobotUtil.replaceStringInItem(fuelLeftItem, "<TimeLeft>", TimeFormat.formatTimeSeconds(beacon.getFuelLeftTicks() / 20));
+        fuelLeftItem = NanobotUtil.replaceStringInItem(fuelLeftItem, "<FuelDuration>", TimeFormat.formatTimeMinutes(beacon.getFuelDuration()));
         setItem(ITEM_POSITION_FUEL_LEFT, fuelLeftItem);
 
         ItemStack effectIcon = beacon.getActiveEffect().getActiveEffectIcon();
-        NanobotUtil.replaceStringInItem(effectIcon, "<Range>", Integer.toString(beacon.getRange()));
-        NanobotUtil.replaceStringInItem(effectIcon, "<Name>", beacon.getEffectName());
+        effectIcon = NanobotUtil.replaceStringInItem(effectIcon, "<Range>", Integer.toString(beacon.getRange()));
+        effectIcon = NanobotUtil.replaceStringInItem(effectIcon, "<Name>", beacon.getEffectName());
         setItem(ITEM_POSITION_CURRENT_EFFECT, effectIcon);
     }
 

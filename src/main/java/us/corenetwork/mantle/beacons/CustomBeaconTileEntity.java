@@ -47,8 +47,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     }
 
     /*
-            Tile entity tick
-         */
+        Tile entity tick
+     */
     @Override
     public void h()
     {
