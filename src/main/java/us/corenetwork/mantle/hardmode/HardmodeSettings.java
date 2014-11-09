@@ -33,6 +33,7 @@ public enum HardmodeSettings {
 	PIGMEN_SWORD_CHANCE("Pigmen.SwordChance", 0.05),
 	
 	NETHER_MAX_SPAWN_LIGHT_LEVEL("Nether.MaxSpawnLightLevel", 7),
+    NETHER_IGNORE_LIGHT_UNDER_Y("Nether.IgnoreSpawnLightUnderY", 64),
 	NETHER_HORSE_SPEED("Nether.HorseSpeed", 0.125),
 	NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN("Nether.VillagerApplyDamageNodeOnSpawn", "SlownessVillager"),
 

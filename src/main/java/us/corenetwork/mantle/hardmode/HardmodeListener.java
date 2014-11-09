@@ -445,9 +445,9 @@ public class HardmodeListener implements Listener {
 	{		
 		LivingEntity entity = event.getEntity();
 
-		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER && event.getEntityType() != EntityType.BLAZE)
+		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
 		{
-			if (event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
+			if (event.getLocation().getY() >= HardmodeSettings.NETHER_IGNORE_LIGHT_UNDER_Y.integer() && event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
 			{
 				event.setCancelled(true);
 				return;

@@ -28,9 +28,18 @@ import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
 
 public class NetherSpawner {
 
-	public static void startSpawning(Block block, EntityType type)
+	public static void spawnMob(Block block)
 	{
-		spawn(block, type);
+		boolean blaze = false;
+		if (block.getY() < NetherSpawningSettings.BLAZE_MAX_Y.integer())
+		{
+			blaze = MantlePlugin.random.nextDouble() < NetherSpawningSettings.BLAZE_CHANCE.doubleNumber();
+		}
+
+		if (blaze)
+			spawnBlaze(block);
+		else
+			spawnWitherSkeleton(block, SpawnReason.NATURAL);
 
 		int	maxAdditionalPackMobs = AnimalSpawningSettings.MAX_ADDITIONAL_PACK_MOBS.integer();		
 		int	minAdditionalPackMobs = AnimalSpawningSettings.MIN_ADDITIONAL_PACK_MOBS.integer();
@@ -61,22 +70,12 @@ public class NetherSpawner {
 			if (!canSpawnOnThisBlock(belowBlock))
 				continue;
 
-			spawn(block, type);
+			if (blaze)
+				spawnBlaze(newBlock);
+			else
+				spawnWitherSkeleton(newBlock, SpawnReason.NATURAL);
 		}		
 	}
-
-    public static void spawn(Block block, EntityType type)
-    {
-        switch (type)
-        {
-            case BLAZE:
-                spawnBlaze(block);
-                break;
-            case SKELETON:
-                spawnWitherSkeleton(block, SpawnReason.NATURAL);
-                break;
-        }
-    }
 
 	private static void spawnBlaze(Block block)
 	{
