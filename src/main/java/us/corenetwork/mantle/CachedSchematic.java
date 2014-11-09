@@ -137,16 +137,16 @@ public class CachedSchematic {
 	private void handleChests(List<Vector> chestLocations)
 	{
 		chests = new ArrayList<ChestInfo>();
-		for(Vector vector : chestLocations)
+		for(Vector v : chestLocations)
 		{
 			try
 			{
-				Vector chest = vector;
+				Vector chest = v;
 						
-				BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+				BaseBlock baseBlock = localSession.getClipboard().getPoint(v);
 				for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 				{
-					vector = new Vector(vector.getBlockX() + face.getModX(), vector.getBlockY(), vector.getBlockZ() + face.getModZ());
+					Vector vector = new Vector(v.getBlockX() + face.getModX(), v.getBlockY(), v.getBlockZ() + face.getModZ());
 					try
 					{
 						baseBlock = localSession.getClipboard().getPoint(vector);

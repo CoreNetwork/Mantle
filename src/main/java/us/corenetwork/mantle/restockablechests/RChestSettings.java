@@ -8,6 +8,8 @@ public enum RChestSettings {
 	
 	USE_ONLY_CHEST_GUI("UseOnlyChestGUI", true),
 	
+	GUI_COMPASS_TITLE("GuiCompassTitle", "Pick category"),
+	
 	DUMMY_LOOT_TABLE_OW("DummyLootTableOW", "OWVill"),
 	
 	DIMINISH_CHECKER_INTERNVAL("Diminish.CheckInterval", 1200),
@@ -81,6 +83,7 @@ public enum RChestSettings {
 	MESSAGE_CHEST_CREATED("Messages.ChestCreated", "Restockable chest created."),
 	MESSAGE_CHEST_EXISTS("Messages.ChestExists", "Chest already exists! Break it to delete it."),
 	MESSAGE_CHEST_DELETED("Messages.ChestDeleted", "Restockable chest deleted."),
+	MESSAGE_CHEST_DESTROYED("Messages.ChestDestroyed", "Poof! Loot chest will regenerate unless you claim a village."),
 	MESSAGE_CHEST_INVISIBLE("Messages.ChestInvisible", "Sorry, you can't use this chest while invisible"),
 	MESSAGE_CHEST_INVINCIBLE("Messages.ChestInvicible", "Sorry, you can't use this chest while invincible. Use /RiddleFillThisInIforgotCommandName to disable your invincibility."),
 	MESSAGE_CHESTS_RESTOCKED("Messages.ChestsRestocked", "Chests Restocked");

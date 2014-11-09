@@ -66,6 +66,8 @@ public class RestockableChest {
 
 	public static RestockableChest getChest(Block chest)
 	{
+		Block alternativeChest = chest;
+		boolean checkBoth = false;
 		if (!Util.isInventoryContainer(chest.getTypeId()))
 			return null;
 
@@ -74,11 +76,16 @@ public class RestockableChest {
 		{
 			DoubleChestInventory doubleChestInventory = (DoubleChestInventory) inventory;
 			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
+			Chest rightChest = (Chest) doubleChestInventory.getRightSide().getHolder();
 			chest = leftChest.getBlock();
+			alternativeChest = rightChest.getBlock();
+			checkBoth = true;
 		}
 
 		try
 		{
+			
+			
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable, StructureID FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
 			statement.setString(1, chest.getWorld().getName());
 			statement.setInt(2, chest.getX());
@@ -88,7 +95,25 @@ public class RestockableChest {
 
 			if (!set.next())
 			{
-				return null;
+				
+				if(checkBoth)
+				{
+					statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable, StructureID FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
+					statement.setString(1, alternativeChest.getWorld().getName());
+					statement.setInt(2, alternativeChest.getX());
+					statement.setInt(3, alternativeChest.getY());
+					statement.setInt(4, alternativeChest.getZ());
+					set = statement.executeQuery();
+					
+					if (!set.next())
+					{
+						return null;
+					}
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			RestockableChest rChest = new RestockableChest();
@@ -102,6 +127,7 @@ public class RestockableChest {
 			rChest.structureID = set.getInt("StructureID");
 			statement.close();
 			return rChest;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -139,6 +165,11 @@ public class RestockableChest {
 		}
 		
 		return chests;
+	}
+	
+	public int getStructureID()
+	{
+		return structureID;
 	}
 	
 	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer, Integer structureID)
