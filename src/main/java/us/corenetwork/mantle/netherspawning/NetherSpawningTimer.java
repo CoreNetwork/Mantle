@@ -10,6 +10,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.MantlePlugin;
@@ -26,37 +27,40 @@ public class NetherSpawningTimer implements Runnable {
 
     @Override
     public void run() {
-        for (Chunk c : nether.getLoadedChunks()) {
-            if (netherCps.unloadQueue.contains(c.getX(), c.getZ())) //Don't spawn on unloading chunk
-                continue;
+        for (EntityType entityType : new EntityType[] { EntityType.SKELETON, EntityType.BLAZE })
+        {
+            for (Chunk c : nether.getLoadedChunks()) {
+                if (netherCps.unloadQueue.contains(c.getX(), c.getZ())) //Don't spawn on unloading chunk
+                    continue;
 
-            int randomX = MantlePlugin.random.nextInt(16);
-            int randomZ = MantlePlugin.random.nextInt(16);
-            int randomY = MantlePlugin.random.nextInt(128);
+                int randomX = MantlePlugin.random.nextInt(16);
+                int randomZ = MantlePlugin.random.nextInt(16);
+                int randomY = MantlePlugin.random.nextInt(128);
 
-            Block block = c.getBlock(randomX, randomY, randomZ);
+                Block block = c.getBlock(randomX, randomY, randomZ);
 
-            if (!block.isEmpty())
-                continue;
+                if (!block.isEmpty())
+                    continue;
 
-            Block belowBlock = block.getRelative(BlockFace.DOWN);
-            
-            if (belowBlock == null)
-                continue;
-            if (!NetherSpawner.canSpawnOnThisBlock(belowBlock))
-                continue;
-                        
-            Block aboveBlock = block.getRelative(BlockFace.UP);
-            if (aboveBlock == null || aboveBlock.getY() < block.getY())
-                continue;
-            if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
-                continue;
+                Block belowBlock = block.getRelative(BlockFace.DOWN);
 
-            int[] playerDistances = getDistanceToNearestFarthestPlayer(block.getLocation());
-            if (playerDistances[0] < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer() || playerDistances[1] > NetherSpawningSettings.FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED.integer())
-            	continue;
-            
-            NetherSpawner.spawnMob(block);
+                if (belowBlock == null)
+                    continue;
+                if (!NetherSpawner.canSpawnOnThisBlock(belowBlock))
+                    continue;
+
+                Block aboveBlock = block.getRelative(BlockFace.UP);
+                if (aboveBlock == null || aboveBlock.getY() < block.getY())
+                    continue;
+                if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
+                    continue;
+
+                int[] playerDistances = getDistanceToNearestFarthestPlayer(block.getLocation());
+                if (playerDistances[0] < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer() || playerDistances[1] > NetherSpawningSettings.FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED.integer())
+                    continue;
+
+                NetherSpawner.startSpawning(block, entityType);
+            }
         }
     }
 
