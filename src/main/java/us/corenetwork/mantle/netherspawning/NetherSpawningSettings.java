@@ -10,8 +10,10 @@ public enum NetherSpawningSettings {
 	SPAWNING_INTERVAL_TICKS("SpawningIntervalTicks", 100),
 
 	NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED("MinimumDistanceToPlayerSquared", 625),
-	
-	BLAZE_CHANCE("Blaze.SpawningChance", 0.6),
+    FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED("MaximumDistanceToPlayerSquared", 9216),
+
+
+    BLAZE_CHANCE("Blaze.SpawningChance", 0.6),
 	BLAZE_MAX_Y("Blaze.MaxY", 60),
 
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
