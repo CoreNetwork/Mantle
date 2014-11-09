@@ -3,12 +3,13 @@ package us.corenetwork.mantle.slimespawning;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import us.corenetwork.mantle.IO;
 
 public class IgnoredSlimeChunks {
-	private static HashSet<Long> chunks = new HashSet<Long>(); 
+	private static HashMap<String, HashSet<Long>> ignoredChunkWorlds = new HashMap<String, HashSet<Long>>();
 	
 	public static void load()
 	{
@@ -18,7 +19,8 @@ public class IgnoredSlimeChunks {
 			ResultSet set = statement.executeQuery();
 			while (set.next())
 			{
-				chunks.add(getCombinedLong(set.getInt("x"), set.getInt("y")));
+                String world = set.getString("world");
+				getWorldIgnoredChunks(world).add(getCombinedLong(set.getInt("x"), set.getInt("y")));
 			}
 			
 			statement.close();
@@ -31,15 +33,16 @@ public class IgnoredSlimeChunks {
 		}
 	}
 	
-	public static void addChunk(int x, int y)
+	public static void addChunk(String world, int x, int y)
 	{
-		chunks.add(getCombinedLong(x, y));
+		getWorldIgnoredChunks(world).add(getCombinedLong(x, y));
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO ignoredSlimeChunks (X,Y) VALUES (?,?)");
-			statement.setInt(1, x);
-			statement.setInt(2, y);
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO ignoredSlimeChunks (World, X ,Y) VALUES (?,?)");
+            statement.setString(1, world);
+			statement.setInt(2, x);
+			statement.setInt(3, y);
 			statement.executeUpdate();
 
 			IO.getConnection().commit();
@@ -52,15 +55,16 @@ public class IgnoredSlimeChunks {
 		}
 	}
 	
-	public static void removeChunk(int x, int y)
+	public static void removeChunk(String world, int x, int y)
 	{
-		chunks.remove(getCombinedLong(x,y));
+		getWorldIgnoredChunks(world).remove(getCombinedLong(x,y));
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM ignoredSlimeChunks WHERE X=? AND Y=?");
-			statement.setInt(1, x);
-			statement.setInt(2, y);
+			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM ignoredSlimeChunks WHERE World = ? AND X=? AND Y=?");
+            statement.setString(1, world);
+            statement.setInt(2, x);
+			statement.setInt(3, y);
 			statement.executeUpdate();
 
 			IO.getConnection().commit();
@@ -73,11 +77,23 @@ public class IgnoredSlimeChunks {
 		}
 	}
 	
-	public static boolean isIgnored(int x, int y)
+	public static boolean isIgnored(String world, int x, int y)
 	{
-		return chunks.contains(getCombinedLong(x, y));
+		return getWorldIgnoredChunks(world).contains(getCombinedLong(x, y));
 	}
-	
+
+    private static HashSet<Long> getWorldIgnoredChunks(String world)
+    {
+        HashSet<Long> chunks = ignoredChunkWorlds.get(world);
+        if (chunks == null)
+        {
+            chunks = new HashSet<Long>();
+            ignoredChunkWorlds.put(world, chunks);
+        }
+
+        return chunks;
+    }
+
 	private static long getCombinedLong(int x, int y)
 	{
 		long out = ((long) x & 0xFFFFFFFL) | ((long) y << 32); 

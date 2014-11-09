@@ -26,10 +26,10 @@ public class ReslimeCommand extends BaseMantleCommand {
 
 		
 		Chunk chunk = player.getLocation().getBlock().getChunk();		
-		if (IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()))
+		if (IgnoredSlimeChunks.isIgnored(chunk.getWorld().getName(), chunk.getX(), chunk.getZ()))
 		{
 			Util.Message(SpellbooksSettings.MESSAGE_RESLIME_SUCCESS.string(), player);
-			IgnoredSlimeChunks.removeChunk(chunk.getX(), chunk.getZ());
+			IgnoredSlimeChunks.removeChunk(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
 		}
 		else
 		{

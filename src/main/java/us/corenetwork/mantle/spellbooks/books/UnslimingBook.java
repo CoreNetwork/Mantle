@@ -7,12 +7,14 @@ import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.netherspawning.NetherSpawner;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
 import us.corenetwork.mantle.slimespawning.SlimeSpawner;
 import us.corenetwork.mantle.spellbooks.Spellbook;
@@ -48,12 +50,21 @@ public class UnslimingBook extends Spellbook {
 		}
 
 		
-		Chunk chunk = player.getLocation().getBlock().getChunk();		
-		boolean slimeChunk = SlimeSpawner.isSlimeChunk(chunk) && !IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()); 
+		Chunk chunk = player.getLocation().getBlock().getChunk();
+
+		boolean slimeChunk = !IgnoredSlimeChunks.isIgnored(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
+        if (slimeChunk)
+        {
+            if (chunk.getWorld().getEnvironment() == World.Environment.NETHER)
+                slimeChunk = NetherSpawner.isMagmaCubeChunk(chunk);
+            else
+                slimeChunk = SlimeSpawner.isSlimeChunk(chunk);
+        }
+
 		if (slimeChunk)
 		{
 			Util.Message(settings.getString(SETTING_MESSAGE_SLIME_CHUNK), player);
-			IgnoredSlimeChunks.addChunk(chunk.getX(), chunk.getZ());
+			IgnoredSlimeChunks.addChunk(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
 		}
 		else
 		{

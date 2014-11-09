@@ -2,6 +2,7 @@ package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
 
+import java.util.Random;
 import net.minecraft.server.v1_7_R4.EntityInsentient;
 import net.minecraft.server.v1_7_R4.EntitySkeleton;
 import net.minecraft.server.v1_7_R4.GenericAttributes;
@@ -9,6 +10,7 @@ import net.minecraft.server.v1_7_R4.PathfinderGoal;
 import net.minecraft.server.v1_7_R4.PathfinderGoalSelector;
 import net.minecraft.server.v1_7_R4.World;
 
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,7 +18,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftSkeleton;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Stairs;
@@ -25,6 +29,10 @@ import org.bukkit.material.Step;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
+import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
+import us.corenetwork.mantle.slimespawning.SlimeSpawner;
+import us.corenetwork.mantle.slimespawning.SlimeSpawningHelper;
+import us.corenetwork.mantle.slimespawning.SlimeSpawningSettings;
 
 public class NetherSpawner {
 
@@ -143,7 +151,51 @@ public class NetherSpawner {
         return skeleton;
 	}
 
-	public static Location getLocation(Block block)
+    public static void spawnSlime(Block block)
+    {
+        if (block.getY() < NetherSpawningSettings.MAGMA_CUBE_MIN_Y.integer())
+            return;
+
+        if (block.getY() > NetherSpawningSettings.MAGMA_CUBE_MAX_Y.integer())
+            return;
+
+        Chunk chunk = block.getChunk();
+        if (IgnoredSlimeChunks.isIgnored(chunk.getWorld().getName(), chunk.getX(), chunk.getZ()) || !isMagmaCubeChunk(chunk))
+            return;
+
+        int size = MantlePlugin.random.nextInt(3);
+        size = 1 << size;
+
+        if (!SlimeSpawner.isThereEnoughSpace(block, size))
+            return;
+
+        NetherSpawningHelper.spawningMob = true;
+
+        Location location = NetherSpawner.getLocation(block);
+        location.setYaw(MantlePlugin.random.nextFloat() * 360);
+
+        MagmaCube magmaCube = block.getWorld().spawn(location, MagmaCube.class);
+        if (magmaCube.isValid())
+        {
+            magmaCube.setSize(size);
+        }
+    }
+
+
+    public static boolean isMagmaCubeChunk(Chunk chunk)
+    {
+        long seed = chunk.getWorld().getSeed();
+
+        Random rnd = new Random(seed +
+                (long) (chunk.getX() * chunk.getX() * 0x6091c4) +
+                (long) (chunk.getX() * 0xbd0ca) +
+                (long) (chunk.getZ() * chunk.getZ()) * 0x7a703L +
+                (long) (chunk.getZ() * 0x5f24f) ^ 0x5208daf);
+        return rnd.nextInt(10) == 0;
+    }
+
+
+    public static Location getLocation(Block block)
 	{
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}

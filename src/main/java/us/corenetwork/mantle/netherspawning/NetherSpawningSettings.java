@@ -16,6 +16,10 @@ public enum NetherSpawningSettings {
     BLAZE_CHANCE("Blaze.SpawningChance", 0.6),
 	BLAZE_MAX_Y("Blaze.MaxY", 60),
 
+    MAGMA_CUBE_MAX_Y("MagmaCube.MaxY", 256),
+    MAGMA_CUBE_MIN_Y("MagmaCube.MinY", 0),
+
+
     WITHER_SKELETON_MAX_Y("WitherSkeleton.MaxY", 56),
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
 	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.Normal.BowChance", 0.03),

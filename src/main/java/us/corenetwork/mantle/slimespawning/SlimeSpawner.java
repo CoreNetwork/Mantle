@@ -15,12 +15,12 @@ import us.corenetwork.mantle.netherspawning.NetherSpawner;
 public class SlimeSpawner {
 
 	public static void spawn(Block block)
-	{		
+	{
 		if (block.getLightLevel() < 8)
 			return;
 		
 		Chunk chunk = block.getChunk();
-		if (IgnoredSlimeChunks.isIgnored(chunk.getX(), chunk.getZ()) || !isSlimeChunk(chunk))
+		if (IgnoredSlimeChunks.isIgnored(block.getWorld().getName(), chunk.getX(), chunk.getZ()) || !isSlimeChunk(chunk))
 			return;
 		
 		int size = MantlePlugin.random.nextInt(3);
@@ -56,7 +56,7 @@ public class SlimeSpawner {
 		return rnd.nextInt(10) == 0;
 	}
 	
-	private static boolean isThereEnoughSpace(Block block, int size)
+	public static boolean isThereEnoughSpace(Block block, int size)
 	{
 		size = (int) Math.ceil(size * 0.6);
 		

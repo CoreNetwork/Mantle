@@ -92,7 +92,7 @@ public class IO {
             st.executeUpdate("CREATE TABLE IF NOT EXISTS chestInventory (ID INTEGER, PlayerUUID STRING, Slot INTEGER, ItemID INTEGER, Damage INTEGER, Amount INTEGER)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS horseSpeeds (ID STRING, Speed REAL)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS hydration (PlayerUUID STRING, Hydration REAL, Saturation REAL, FatigueLevel INTEGER, FatigueLevelStart INTEGER, DeliveredMessages STRING)");
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS ignoredSlimeChunks (X INTEGER, Y INTEGER)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS ignoredSlimeChunks (World STRING, X INTEGER, Y INTEGER)");
         	conn.commit();
             st.close();
         } catch (SQLException e) {
