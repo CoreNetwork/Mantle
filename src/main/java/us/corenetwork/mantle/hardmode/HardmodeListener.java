@@ -269,6 +269,16 @@ public class HardmodeListener implements Listener {
                 }
             }
         }
+
+        //Only drop magma cream when biggest slime is killed
+        if (event.getEntityType() == EntityType.MAGMA_CUBE)
+        {
+            event.getDrops().clear();
+
+            MagmaCube cube = (MagmaCube) event.getEntity();
+            if (cube.getSize() == 3 && MantlePlugin.random.nextBoolean())
+                event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, 1));
+        }
     }
 
 	@EventHandler(ignoreCancelled = true)
