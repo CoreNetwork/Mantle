@@ -52,22 +52,16 @@ public class NetherSpawningTimer implements Runnable {
             if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
                 continue;
 
-            int[] playerDistances = getDistanceToNearestFarthestPlayer(block.getLocation());
-            if (playerDistances[0] < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer() || playerDistances[1] > NetherSpawningSettings.FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED.integer())
+            if (getDistanceToNearestPlayer(block.getLocation()) < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer())
             	continue;
             
             NetherSpawner.spawnMob(block);
         }
     }
 
-    /*
-        @return array where first element is distance to nearest player and second element is distance to farthest player.
-     */
-    public static int[] getDistanceToNearestFarthestPlayer(Location location)
+    public static int getDistanceToNearestPlayer(Location location)
     {
     	int minDistance = Integer.MAX_VALUE;
-        int maxDistance = Integer.MIN_VALUE;
-
     	for (Player player : Bukkit.getOnlinePlayers())
     	{
     		if (player.getWorld() != location.getWorld())
@@ -76,10 +70,8 @@ public class NetherSpawningTimer implements Runnable {
     		int distance = (int) player.getLocation().distanceSquared(location);
     		if (distance < minDistance)
     			minDistance = distance;
-            if (distance > maxDistance)
-                maxDistance = distance;
     	}
     	
-    	return new int[] { minDistance, maxDistance };
+    	return minDistance;
     }    
 }
