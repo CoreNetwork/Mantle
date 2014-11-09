@@ -245,25 +245,6 @@ public class HardmodeListener implements Listener {
 			}
 		}
 
-		//Wither skeleton only dropping stuff if he has iron sword
-		if (event.getEntityType() == EntityType.SKELETON && ((Skeleton) entity).getSkeletonType() == SkeletonType.WITHER)
-		{
-			Iterator<ItemStack> iterator = event.getDrops().iterator();
-			while (iterator.hasNext())
-			{
-				ItemStack stack = iterator.next();
-				if (stack.getType() == Material.SKULL_ITEM)
-					iterator.remove();
-			}
-
-			ItemStack itemInHand = entity.getEquipment().getItemInHand();
-			//Check if skeleton is rare one
-			if (itemInHand != null && itemInHand.getType() == Material.IRON_SWORD)
-			{
-				event.getDrops().add(new ItemStack(Material.SKULL_ITEM, 1, (short) 1));
-			}
-		}
-
         if (event.getEntity() instanceof Animals) {
             if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
                 Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
