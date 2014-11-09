@@ -35,7 +35,8 @@ public class NetherSpawningTimer implements Runnable {
     }
 
     @Override
-    public void run()
+    public void run() {
+        for (EntityType entityType : new EntityType[] { EntityType.SKELETON, EntityType.BLAZE, EntityType.SLIME})
     {
         for (Chunk c : nether.getLoadedChunks())
         {
