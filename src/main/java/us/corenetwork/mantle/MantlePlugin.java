@@ -3,10 +3,12 @@ package us.corenetwork.mantle;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
@@ -34,6 +36,9 @@ public class MantlePlugin extends JavaPlugin {
 		MantleModule.unloadAll();
 	}
 
+    /*
+        onEnable now loads BEFORE world loads. Most modules rely on world already lodaded on startup, so we should init them later.
+     */
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -52,10 +57,28 @@ public class MantlePlugin extends JavaPlugin {
 		adminCommands.put("chunkinfo", new ChunkInfoCommand());
         adminCommands.put("title", new TitleCommand());
 
-        MantleModule.loadModules();
+        Bukkit.getScheduler().runTask(this, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                onEnablePostWorld();
+            }
+        });
 
-		log.info("[Mantle] " + getDescription().getFullName() + " loaded!");
+        CustomBeaconTileEntity.inject();
+
+		log.info("[Mantle] " + getDescription().getFullName() + " initialized!");
 	}
+
+    /*
+        onEnable event that trigger after worlds has been loaded.
+     */
+    public void onEnablePostWorld()
+    {
+        MantleModule.loadModules();
+        log.info("[Mantle] " + getDescription().getFullName() + " fully loaded!");
+    }
 
 
 
