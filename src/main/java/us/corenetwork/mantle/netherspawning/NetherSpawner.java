@@ -83,6 +83,10 @@ public class NetherSpawner {
             case SKELETON:
                 spawnWitherSkeleton(block, SpawnReason.NATURAL);
                 break;
+            case SLIME:
+                spawnSlime(block);
+                break;
+
         }
     }
 

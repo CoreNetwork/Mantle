@@ -2,6 +2,7 @@ package us.corenetwork.mantle.netherspawning;
 
 import net.minecraft.server.v1_7_R4.ChunkProviderServer;
 
+import net.minecraft.server.v1_7_R4.EntitySlime;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -27,7 +28,7 @@ public class NetherSpawningTimer implements Runnable {
 
     @Override
     public void run() {
-        for (EntityType entityType : new EntityType[] { EntityType.SKELETON, EntityType.BLAZE })
+        for (EntityType entityType : new EntityType[] { EntityType.SKELETON, EntityType.BLAZE, EntityType.SLIME})
         {
             for (Chunk c : nether.getLoadedChunks()) {
                 if (netherCps.unloadQueue.contains(c.getX(), c.getZ())) //Don't spawn on unloading chunk
