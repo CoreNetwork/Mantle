@@ -17,6 +17,8 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.craftbukkit.v1_7_R4.entity.CraftSkeleton;
+import org.bukkit.entity.Blaze;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Skeleton;
@@ -92,6 +94,44 @@ public class NetherSpawner {
 
 	private static void spawnBlaze(Block block)
 	{
+        boolean foundFire = false;
+
+        // Scan for nearby fire in + pattern
+        for (int x = -4; x <= 4; x++)
+        {
+            for (int z = -4; z <= 4; z++)
+            {
+                Block neighbour = block.getRelative(x, 0, z);
+                if (neighbour.getType() == Material.FIRE)
+                {
+                    foundFire = true;
+                    break;
+                }
+            }
+
+            if (foundFire)
+                break;
+        }
+
+        if (!foundFire)
+            return;
+
+        //Search for nearby Blazes
+        int range = 25; //5*5
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int z = -1; z <= 1; z++)
+            {
+                Chunk neighbourChunk = block.getWorld().getChunkAt(block.getChunk().getX() + x, block.getChunk().getZ() + z);
+
+                for (Entity entity : neighbourChunk.getEntities())
+                {
+                    if (entity instanceof Blaze && entity.getLocation().distanceSquared(getLocation(block)) < range)
+                        return;
+                }
+            }
+        }
+
 		NetherSpawningHelper.spawningMob = true;
 		block.getWorld().spawnEntity(getLocation(block), EntityType.BLAZE);
 	}
@@ -201,11 +241,11 @@ public class NetherSpawner {
     public static void spawnGhast(Block block)
     {
         //Check if there is enough space for Ghast to spawn
-        for (int x = -3; x <= 3; x++)
+        for (int x = -2; x <= 2; x++)
         {
-            for (int y = -3; y <= 3; y++)
+            for (int y = -2; y <= 2; y++)
             {
-                for (int z = -3; z <= 3; z++)
+                for (int z = -2; z <= 2; z++)
                 {
                     Block neighbour = block.getRelative(x, y, z);
                     if (!neighbour.isEmpty())
