@@ -25,7 +25,9 @@ public enum NetherSpawningSettings {
 	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.Normal.BowChance", 0.03),
 	WITHER_SKELETON_RARE_MAX_SPAWN_Y("WitherSkeleton.Rare.MaxSpawnY", 60),
 	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Normal.Speed", 0.25),	
-	
+
+    GHAST_Y("Ghast.Y", 183),
+
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
 

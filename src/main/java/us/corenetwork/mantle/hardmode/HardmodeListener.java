@@ -423,8 +423,9 @@ public class HardmodeListener implements Listener {
 	{		
 		LivingEntity entity = event.getEntity();
 
+        //Prevent spawning on some nether mobs if there is not enough light
 		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER &&
-            event.getEntityType() != EntityType.BLAZE && event.getEntityType() != EntityType.MAGMA_CUBE )
+            event.getEntityType() != EntityType.BLAZE && event.getEntityType() != EntityType.MAGMA_CUBE && event.getEntityType() != EntityType.GHAST )
 		{
 			if (event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
 			{

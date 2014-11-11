@@ -198,6 +198,25 @@ public class NetherSpawner {
         return rnd.nextInt(10) == 0;
     }
 
+    public static void spawnGhast(Block block)
+    {
+        //Check if there is enough space for Ghast to spawn
+        for (int x = -3; x <= 3; x++)
+        {
+            for (int y = -3; y <= 3; y++)
+            {
+                for (int z = -3; z <= 3; z++)
+                {
+                    Block neighbour = block.getRelative(x, y, z);
+                    if (!neighbour.isEmpty())
+                        return;
+
+                }
+            }
+        }
+        NetherSpawningHelper.spawningMob = true;
+        block.getWorld().spawnEntity(getLocation(block), EntityType.GHAST);
+    }
 
     public static Location getLocation(Block block)
 	{
@@ -233,5 +252,7 @@ public class NetherSpawner {
 		
 		return false;
 	}
+
+
 
 }
