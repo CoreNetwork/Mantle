@@ -35,8 +35,7 @@ public class NetherSpawningTimer implements Runnable {
     }
 
     @Override
-    public void run() {
-        for (EntityType entityType : new EntityType[] { EntityType.SKELETON, EntityType.BLAZE, EntityType.SLIME})
+    public void run()
     {
         for (Chunk c : nether.getLoadedChunks())
         {
@@ -71,33 +70,6 @@ public class NetherSpawningTimer implements Runnable {
 
             NetherSpawner.startSpawning(block, entityType);
         }
-
-        //Separate loop for ghasts
-        int ghastY = NetherSpawningSettings.GHAST_Y.integer();
-        for (Chunk c : nether.getLoadedChunks()) {
-            if (netherCps.unloadQueue.contains(c.getX(), c.getZ())) //Don't spawn on unloading chunk
-                continue;
-
-            int randomX = MantlePlugin.random.nextInt(16);
-            int randomZ = MantlePlugin.random.nextInt(16);
-
-            Block block = c.getBlock(randomX, ghastY, randomZ);
-
-            if (block.getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
-                continue;
-
-            block = block.getRelative(BlockFace.DOWN, MantlePlugin.random.nextInt(10) + 5);
-
-            if (!block.isEmpty())
-                continue;
-
-            int[] playerDistances = getDistanceToNearestFarthestPlayer(block.getLocation());
-            if (playerDistances[0] < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer() || playerDistances[1] > NetherSpawningSettings.FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED.integer())
-                continue;
-
-            NetherSpawner.spawnGhast(block);
-        }
-    }
 
     /*
         @return array where first element is distance to nearest player and second element is distance to farthest player.
