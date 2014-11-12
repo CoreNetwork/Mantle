@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.IO;
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.YamlUtils;
 
 public class Category {
 
@@ -19,7 +20,9 @@ public class Category {
 	
 	private int perPlayerTotalLimit;
 	private List<String> preReqCategories;
-	
+	private ItemStack iconItem;
+	private int minDist;
+	private int maxDist;
 	
 	public Category(Map<?, ?> categoryMap)
 	{
@@ -28,6 +31,9 @@ public class Category {
 		this.chances = (ArrayList<Double>) categoryMap.get("chances");
 		this.preReqCategories = categoryMap.get("preReqCategories") == null ? new ArrayList<String>() : (ArrayList<String>) categoryMap.get("preReqCategories");
 		this.perPlayerTotalLimit = categoryMap.get("perPlayerTotalLimit") == null ? -1 : (Integer) categoryMap.get("perPlayerTotalLimit");
+		this.iconItem = YamlUtils.readItemStack((Map<String, Object>) categoryMap.get("icon"));
+		this.minDist = (Integer) categoryMap.get("compassMinDistance");
+		this.maxDist = (Integer) categoryMap.get("compassMaxDistance");
 	}
 
 	public static List<Category> getCategories(List<Map<?, ?>> categoriesListMap)
@@ -63,6 +69,21 @@ public class Category {
 	public String getLootTableName()
 	{
 		return name;
+	}
+
+	public int getMinDistance()
+	{
+		return minDist;
+	}
+	
+	public int getMaxDistance()
+	{
+		return maxDist;
+	}
+	
+	public boolean isRare()
+	{
+		return perPlayerTotalLimit != -1;
 	}
 	
 	public int howManyTimes(Player player, double diminishVillage, double diminishTotal)
@@ -172,7 +193,7 @@ public class Category {
 			if(set.next())
 			{
 				int count = set.getInt(1);
-				return count == preReqCategories.size();
+				return count > 0;
 			}
 			statement.close();
 		}
@@ -181,5 +202,10 @@ public class Category {
 		}
 		
 		return false;
+	}
+	
+	public ItemStack getIcon()
+	{
+		return iconItem;
 	}
 }

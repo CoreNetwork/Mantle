@@ -1,11 +1,15 @@
 package us.corenetwork.mantle.restockablechests;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
 import us.corenetwork.mantle.restockablechests.commands.RestockAllCommand;
 
@@ -14,7 +18,7 @@ public class RChestsModule extends MantleModule {
 	public static RChestsModule instance;
 	public static List<Category> basicCategories;
 	public static List<Category> rareCategories;
-	
+	public static Map<String, Category> categories;
 	
 	public RChestsModule() {
 		super("Restockable chests", null, "rchests");
@@ -39,7 +43,14 @@ public class RChestsModule extends MantleModule {
 		for (RChestSettings setting : RChestSettings.values())
 		{
 			if (config.get(setting.string) == null)
+			{	
+				if (setting.def instanceof ItemStack)
+                {
+                    YamlUtils.writeItemStack(config, setting.string, (org.bukkit.inventory.ItemStack) setting.def);
+                    continue;
+                }
 				config.set(setting.string, setting.def);
+			}
 		}
 		saveConfig();
 		loadStorageYaml();
@@ -66,5 +77,14 @@ public class RChestsModule extends MantleModule {
 	{
 		basicCategories = Category.getCategories(RChestsModule.instance.config.getMapList(RChestSettings.BASIC_CATEGORIES.string));
 		rareCategories =  Category.getCategories(RChestsModule.instance.config.getMapList(RChestSettings.RARE_CATEGORIES.string));
+		categories = new HashMap<String, Category>();
+		for(Category c: basicCategories)
+		{
+			categories.put(c.getLootTableName(), c);
+		}
+		for(Category c: rareCategories)
+		{
+			categories.put(c.getLootTableName(), c);
+		}
 	}
 }

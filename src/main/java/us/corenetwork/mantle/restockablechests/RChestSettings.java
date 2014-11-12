@@ -3,12 +3,22 @@ package us.corenetwork.mantle.restockablechests;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.inventory.ItemStack;
+import us.corenetwork.mantle.YamlUtils;
+import us.corenetwork.mantle.beacons.BeaconsModule;
 
 public enum RChestSettings {	
 	
 	USE_ONLY_CHEST_GUI("UseOnlyChestGUI", true),
 	
-	GUI_COMPASS_TITLE("GuiCompassTitle", "Pick category"),
+	GUI_TITLE_PICK_CATEGORY("GuiCompassTitle", "Pick category"),
+	
+	GUI_ITEM_CATEGORY_OK("GuiItems.CategoryOk", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GREEN.getData())),
+    GUI_ITEM_CATEGORY_NOPE("GuiItems.CategoryNope", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData())),
+	
 	
 	DUMMY_LOOT_TABLE_OW("DummyLootTableOW", "OWVill"),
 	
@@ -27,16 +37,25 @@ public enum RChestSettings {
 			put("lootTable", "Organic");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
+			put("icon", RChestSettings.iconHelper(6));
+			put("compassMinDistance", 200);
+			put("compassMaxDistance", 800);
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Tools");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
+			put("icon", RChestSettings.iconHelper(257));
+			put("compassMinDistance", 200);
+			put("compassMaxDistance", 800);
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "CombatGear");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
+			put("icon", RChestSettings.iconHelper(307));
+			put("compassMinDistance", 200);
+			put("compassMaxDistance", 800);
 		}});
 	}}),
 	RARE_CATEGORIES("RareCategories",new ArrayList<Map<String, Object>>(){{
@@ -46,6 +65,9 @@ public enum RChestSettings {
 			put("chances", new ArrayList<Double>(){{ add(0.15); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
+			put("icon", RChestSettings.iconHelper(49));
+			put("compassMinDistance", 2200);
+			put("compassMaxDistance", 4800);
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Gold");
@@ -53,6 +75,9 @@ public enum RChestSettings {
 			put("chances", new ArrayList<Double>(){{ add(0.10); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
+			put("icon", RChestSettings.iconHelper(266));
+			put("compassMinDistance", 2200);
+			put("compassMaxDistance", 4800);
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Diamond");
@@ -60,6 +85,9 @@ public enum RChestSettings {
 			put("chances", new ArrayList<Double>(){{ add(0.10); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
+			put("icon", RChestSettings.iconHelper(264));
+			put("compassMinDistance", 2200);
+			put("compassMaxDistance", 4800);
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "EnchantedBook");
@@ -67,6 +95,9 @@ public enum RChestSettings {
 			put("chances", new ArrayList<Double>(){{ add(0.20); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
+			put("icon", RChestSettings.iconHelper(403));
+			put("compassMinDistance", 2200);
+			put("compassMaxDistance", 4800);
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "IronHorseArmor");
@@ -75,6 +106,9 @@ public enum RChestSettings {
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
 			put("preReqCategories", new ArrayList<String>(){{ add("Organic"); add("Tools");}});
+			put("icon", RChestSettings.iconHelper(417));
+			put("compassMinDistance", 2200);
+			put("compassMaxDistance", 4800);
 		}});
 	}}),
 	
@@ -118,6 +152,16 @@ public enum RChestSettings {
 		return (String) RChestsModule.instance.config.get(string, def);
 	}
 	
+	public ItemStack itemStack()
+    {
+        if (!RChestsModule.instance.config.contains(string))
+            return null;
+
+        ConfigurationSection cs = RChestsModule.instance.config.getConfigurationSection(string);
+        
+        return YamlUtils.readItemStack(cs.getValues(false));
+    }
+	
 	public static String getCommandDescription(String cmd, String def)
 	{
 		String path = "CommandDescriptions." + cmd;
@@ -132,5 +176,10 @@ public enum RChestSettings {
 		
 		return (String) descO;
 		
+	}
+	
+	public static HashMap iconHelper(final int id)
+	{
+		return new HashMap<String, Integer>(){{put("ID", id);put("Amount", 1);put("Damage", 0);}};
 	}
 }

@@ -172,6 +172,16 @@ public class RestockableChest {
 		return structureID;
 	}
 	
+	public int getID()
+	{
+		return id;
+	}
+	
+	public boolean chestExists()
+	{
+		return chestBlock.getType() == Material.CHEST;
+	}
+	
 	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer, Integer structureID)
 	{
 		Inventory inventory = ((InventoryHolder) chest.getState()).getInventory();
@@ -488,16 +498,64 @@ public class RestockableChest {
 	{
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		List<Category> categories;
+		Category basicCat = null;
+		Category rareCat = null;
+		Category compassCat = null;
 		
+		boolean isFromCompass = false;
 		double diminishVillage = getDiminishVillage(player);
-		double diminishTotal = getDiminishTotal(player);
 		
-		categories = RChestsModule.basicCategories;
-		items.addAll(getItemsFromRandomCategory(categories, player, diminishVillage, diminishTotal));
+		PlayerTotal playerTotal = getDiminishTotal(player);
 		
-		categories = RChestsModule.rareCategories;
-		categories = Category.filterRareCategories(categories, player);
-		items.addAll(getItemsFromRandomCategory(categories, player, diminishVillage, diminishTotal));
+		double diminishTotal = playerTotal.diminishTotal;
+		
+		if(playerTotal.category != null)
+		{
+			if(playerTotal.chestID == id)
+			{
+				compassCat = RChestsModule.categories.get(playerTotal.category);
+				if(compassCat == null)
+				{
+					MLog.warning("Compass category not found in all categories! This should not happen. Did something change?");
+				}
+				else
+				{
+					isFromCompass = true;
+					if(compassCat.isRare())
+					{
+						rareCat = compassCat;
+					}
+					else
+					{
+						basicCat = compassCat;
+					}
+					CompassDestination.destinations.remove(player.getUniqueId());
+				}
+			}
+		}
+		
+		if(basicCat == null)
+		{
+			categories = RChestsModule.basicCategories;
+			basicCat = Category.pickOne(categories);
+		}
+		if(rareCat == null)
+		{
+			categories = RChestsModule.rareCategories;
+			categories = Category.filterRareCategories(categories, player);
+			rareCat = Category.pickOne(categories);
+		}
+		
+		MLog.debug("-OwLoot---");
+		MLog.debug("Player diminish Village : "+ diminishVillage);
+		MLog.debug("Player diminish Total : "+ diminishTotal);
+		MLog.debug("Is compass chest : " + isFromCompass + "  " + (isFromCompass == false ? "" : playerTotal.category));
+		MLog.debug("Basic category   : " + basicCat.getLootTableName());
+		MLog.debug("Rare  category   : " + rareCat.getLootTableName());
+		
+		items.addAll(getItemsFromCategory(basicCat, player, diminishVillage, diminishTotal, isFromCompass));
+		items.addAll(getItemsFromCategory(rareCat, player, diminishVillage, diminishTotal, isFromCompass));
+		
 		
 		updateDiminishVillage(player, diminishVillage);
 		updateDiminishTotal(player, diminishTotal);
@@ -507,7 +565,10 @@ public class RestockableChest {
 		Inventory inventory = prepareInventory(player, true, numberDisplay);
 		inventory = spreadItemsRandomly(items, inventory);
 		storePlayerChestVisit(player, true, 0);
+		
+		MLog.debug("----------");
 		return inventory;
+		
 	}
 	
 	private double getDiminishVillage(Player player)
@@ -544,12 +605,13 @@ public class RestockableChest {
 		return dimValue;
 	}
 	
-	private double getDiminishTotal(Player player)
+	private PlayerTotal getDiminishTotal(Player player)
 	{
 		double dimValue = 1;
+		PlayerTotal playerTotal = null;
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishTotal FROM playerTotal WHERE PlayerUUID = ? LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishTotal, CompassCategory, CompassChestID FROM playerTotal WHERE PlayerUUID = ? LIMIT 1");
 			
 			statement.setString(1, player.getUniqueId().toString());
 			
@@ -557,6 +619,7 @@ public class RestockableChest {
 			if(set.next())
 			{
 				dimValue = set.getDouble("diminishTotal");
+				playerTotal = new PlayerTotal(dimValue, set.getString("CompassCategory"), set.getInt("CompassChestID"));
 			}
 			else
 			{
@@ -573,10 +636,24 @@ public class RestockableChest {
 			e.printStackTrace();
 		}
 		
-		return dimValue;
+		return playerTotal;
 	}
 	
-	
+	private class PlayerTotal
+	{
+		public double diminishTotal;
+		public String category;
+		public int chestID;
+		
+		public PlayerTotal(double diminishTotal, String category, Integer chestID)
+		{
+			this.diminishTotal = diminishTotal;
+			this.category = category;
+			this.chestID = chestID;
+		}
+		
+		
+	}
 	
 	private void updateDiminishVillage(Player player, double value)
 	{
@@ -621,15 +698,24 @@ public class RestockableChest {
 		}
 	}
 	
-	private List<ItemStack> getItemsFromRandomCategory(List<Category> categories, Player player, double diminishVillage, double diminishTotal)
+	
+	private List<ItemStack> getItemsFromCategory(Category cat, Player player, double diminishVillage, double diminishTotal, boolean firstTimeAlways)
 	{
 		List<ItemStack> items = new ArrayList<ItemStack>();
-		Category cat = Category.pickOne(categories);
 		int timesPicked = cat.howManyTimes(player, diminishVillage, diminishTotal);		
+		
+		if(firstTimeAlways && timesPicked == 0)
+		{
+			timesPicked = 1;
+		}
+		
 		if(timesPicked > 0)
 		{
 			updateCategoryCounterFor(cat, player, timesPicked);
 		}
+		
+		MLog.debug("Category " + cat.getLootTableName() + " picked " + timesPicked + " times." );
+		
 		LootTableNodeParser parser = new LootTableNodeParser(cat.getLootTableName(), 1, 0, RChestsModule.instance.config);
 		for(int i = 0;i< timesPicked;i++)
 		{
@@ -1003,5 +1089,10 @@ public class RestockableChest {
 		}
 
 
+	}
+
+	public Block getBlock()
+	{
+		return chestBlock;
 	}
 }

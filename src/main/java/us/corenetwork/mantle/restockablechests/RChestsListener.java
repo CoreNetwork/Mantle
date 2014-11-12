@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
@@ -27,7 +28,7 @@ import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
 
 public class RChestsListener implements Listener {
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(PlayerInteractEvent event)
 	{
 
@@ -40,7 +41,7 @@ public class RChestsListener implements Listener {
 		{
 			if(hand.getType() == Material.COMPASS)
 			{
-				
+				player.openInventory(new GUICategoryPicker(player));
 			}
 		}
 		
@@ -154,4 +155,17 @@ public class RChestsListener implements Listener {
 		RestockableChest.inventoryClosed((Player) event.getPlayer());
 	}
 	
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerMove(PlayerMoveEvent event)
+	{
+		ItemStack itemInHand = event.getPlayer().getItemInHand();
+		if (itemInHand == null || itemInHand.getType() != Material.COMPASS)
+			return;
+		
+		//MLog.info("Compass in hand!");
+		
+		CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
+		if (destination != null)
+			destination.playerMoved(event);
+	}
 }
