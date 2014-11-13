@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.Buffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class PathGenerator {
 	private int startX;
 	public HashSet<PathTile> visitedTiles = new HashSet<PathTile>();
 	private World world;
-	private HashMap<Character, StructureData> structures;
+	private HashMap<Integer, StructureData> structures;
 	private ArrayDeque<ImagePixel> pixels;
 	
 	public void generatePath(String path)
@@ -65,68 +66,38 @@ public class PathGenerator {
 
 		MLog.info("Preparing structures...");
 
-		structures = new HashMap<Character, StructureData>();
+		structures = new HashMap<Integer, StructureData>();
 
 		MemorySection structuresConfig = (MemorySection) pathConfig.get("Structures");
 		for (Entry<String,Object> e : structuresConfig.getValues(false).entrySet())
 		{
 			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue(), world);
-			structures.put(structure.getTextAlias(), structure);
+			structures.put(structure.getImageColor(), structure);
 		}
 
-		MLog.info("Preparing textmap...");
+		MLog.info("Loading imagemap...");
 
-		File textMapFile = new File(MantlePlugin.instance.getDataFolder(), (String) pathConfig.get("TextmapFileName"));
+		File imageMapFile = new File(MantlePlugin.instance.getDataFolder(), (String) pathConfig.get("ImageMapFileName"));
 
-		if (!textMapFile.exists())
+		if (!imageMapFile.exists())
 		{
-			MLog.info("Text map file for path " + path + " does not exist. Aborting...");
+			MLog.info("Image map file for path " + path + " does not exist. Aborting...");
 			return;
 		}
 
-		List<String> textMap = new ArrayList<String>();
 
+        BufferedImage imageMap = null;
 		try
 		{
-			BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(textMapFile)));
-			while (true)
-			{
-				String line = reader.readLine();
-				if (line == null)
-					break;
-
-				line = line.replace(" ", "{SPACE}");
-				line = line.trim();
-				line = line.replace("{SPACE}", " ");
-
-				textMap.add(line);
+            imageMap = ImageIO.read(imageMapFile);
 			}
-			reader.close();
-		}
 		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
 
-		if (textMap.size() == 0)
-		{
-			MLog.info("Text map file for path " + path + " is empty. Aborting...");
-			return;
-		}
 
-		int rows = textMap.size();
-		int columns = textMap.get(0).length();
-
-		for (String row : textMap)
-		{
-			if (row.length() != columns)
-			{
-				MLog.info("Text map file for path " + path + " is not properly aligned. Aborting...");
-				return;
-			}
-		}
-
-		PathTileMap tileMap = new PathTileMap(textMap, rows, columns);
+		PathTileMap tileMap = new PathTileMap(imageMap);
 
 		PathTile firstTile = tileMap.tileMap[0][0];
 
@@ -197,12 +168,7 @@ public class PathGenerator {
 		tile.printTile();
 
 
-		CachedSchematic schematic;
-		if (tile.schematic == 0)
-			schematic = structure.getRandomSchematic();
-		else
-			schematic = structure.getSchematic(tile.schematic);
-
+		CachedSchematic schematic = structure.getRandomSchematic();
 		schematic.rotateTo(tile.rotation);
 
 		switch (coordCorner)

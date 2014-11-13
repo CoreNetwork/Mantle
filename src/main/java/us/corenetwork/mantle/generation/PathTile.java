@@ -5,10 +5,9 @@ import us.corenetwork.mantle.MLog;
 public class PathTile {
 	public PathTileMap map;
 	
-	public char structure;
+	public int structure;
 	public int rotation;
-	public int schematic;
-	
+
 	public int x;
 	public int z;
 		
@@ -54,6 +53,6 @@ public class PathTile {
 	
 	public void printTile()
 	{
-		MLog.info("Tile " + x + " " + z + " " + structure + " " + rotation + " " + schematic);
+		MLog.info("Tile " + x + " " + z + " " + Integer.toHexString(structure) + " " + rotation);
 	}
 }
