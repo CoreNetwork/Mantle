@@ -485,7 +485,9 @@ public class HardmodeListener implements Listener {
         if (!event.isCancelled() && event.getEntityType() == EntityType.SPIDER) {
             // clear vanilla effects so there aren't multiple on a spider in rare cases.
             for (PotionEffectType type : PotionEffectType.values()) {
-                event.getEntity().removePotionEffect(type);
+                if (event.getEntity().hasPotionEffect(type)) {
+                    event.getEntity().removePotionEffect(type);
+                }
             }
             int sel = random.nextInt(3);
             PotionEffectType type = null;
