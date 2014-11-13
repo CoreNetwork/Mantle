@@ -18,6 +18,10 @@ public class FarmingModule extends MantleModule {
     protected boolean loadModule() {
         Bukkit.getPluginManager().registerEvents(new PistonNoFarmListener(), MantlePlugin.instance);
         Bukkit.getPluginManager().registerEvents(new NetherWartFarming(), MantlePlugin.instance);
+        FishingConfig fishingConfig = new FishingConfig();
+        fishingConfig.loadConfig();
+        Bukkit.getPluginManager().registerEvents(fishingConfig, MantlePlugin.instance);
+
         return true;
     }
 

@@ -38,7 +38,7 @@ public class NetherWartFarming implements Listener {
                 }
                 tool.setDurability((short) (durability + TOOL_DAMAGE));
 
-                if (tool.getDurability() > 1562) {
+                if (tool.getDurability() > DIAMOND_HOE_USES) {
                     event.getPlayer().getInventory().setItemInHand(new ItemStack(Material.AIR));
                     event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.ITEM_BREAK, 1f, 1f);
                 }
