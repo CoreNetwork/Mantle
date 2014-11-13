@@ -56,7 +56,10 @@ public enum ParticleLibrary {
     {
     	for (Player player : Bukkit.getOnlinePlayers())
     	{
-    		sendToPlayer(player, location, offsetX, offsetY, offsetZ, data, count);
+            if (player.getWorld().equals(location.getWorld()) && Util.flatDistanceSquared(player.getLocation(), location) < 100)
+            {
+                sendToPlayer(player, location, offsetX, offsetY, offsetZ, data, count);
+            }
     	}
     }
     

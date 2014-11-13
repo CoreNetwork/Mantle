@@ -109,11 +109,12 @@ public class StructureGenerator {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (Schematic, StructureName, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?)");
-
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (ID, Schematic, StructureName, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?)");
+			int id = 0;
 
 			while (mapEntries.advance())
 			{
+				id++;
 				int x = mapEntries.getCurX();
 				int z = mapEntries.getCurZ();
 				StructureData structure = mapEntries.getCurStructure();
@@ -128,14 +129,15 @@ public class StructureGenerator {
 
 				if (structure.shouldStoreAsRespawnable())
 				{
-					statement.setString(1, schematic.name);
-					statement.setString(2, structure.getRespawnableStructureName());
-					statement.setString(3, world.getName());
-					statement.setInt(4, schematicCorner.getBlockX());
-					statement.setInt(5, schematicCorner.getBlockZ());
-					statement.setInt(6, structure.getPasteHeight());
-					statement.setInt(7, schematic.xSize);
-					statement.setInt(8, schematic.zSize);
+					statement.setInt(1, id);
+					statement.setString(2, schematic.name);
+					statement.setString(3, structure.getRespawnableStructureName());
+					statement.setString(4, world.getName());
+					statement.setInt(5, schematicCorner.getBlockX());
+					statement.setInt(6, schematicCorner.getBlockZ());
+					statement.setInt(7, structure.getPasteHeight());
+					statement.setInt(8, schematic.xSize);
+					statement.setInt(9, schematic.zSize);
 					statement.addBatch();
 				}
 
@@ -156,7 +158,7 @@ public class StructureGenerator {
 					for (ChestInfo chest : chests)
 					{
 						if (chest.restockable)
-							RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer);
+							RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer, id);
 
 						if (chestLocations != null)
 							chestLocations.add(chest.loc);

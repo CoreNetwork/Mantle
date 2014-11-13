@@ -17,7 +17,7 @@ public class TimeFormat
         return out;
     }
 
-    private static String formatTimeMinutes(int minutes)
+    public static String formatTimeMinutes(int minutes)
     {
         if (minutes > 90)
             return formatTimeHours((int) Math.round(minutes / 60.0));

@@ -13,6 +13,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
 import us.corenetwork.mantle.armorhologram.HologramsModule;
 import us.corenetwork.mantle.farming.FarmingModule;
+import us.corenetwork.mantle.beacons.BeaconsModule;
 import us.corenetwork.mantle.gametweaks.GameTweaksModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
@@ -327,6 +328,13 @@ public abstract class MantleModule implements CommandExecutor {
             modules.add(module);
         }
 
+        //Beacons
+        module = new BeaconsModule();
+        if (module.loadModuleInternal())
+        {
+            module.active = true;
+            modules.add(module);
+        }
     }
 
 	public static void reloadConfigs()

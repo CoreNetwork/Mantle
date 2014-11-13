@@ -64,7 +64,7 @@ public class CreateChestCommand extends BaseMantleCommand {
 			return true;
 		}
 		
-		RestockableChest.createChest(chest, data.lootingTable,  data.interval, data.perPlayer);
+		RestockableChest.createChest(chest, data.lootingTable,  data.interval, data.perPlayer, null);
 		
 		
 		Util.Message(RChestSettings.MESSAGE_CHEST_CREATED.string(), player);

@@ -4,6 +4,7 @@ version: 1.2.0
 author: matejdro
 depend: [GriefPrevention, Core]
 softdepend: [WorldGuard, ProtocolLib]
+load: STARTUP
 commands:
     mantle:
         description: Main command    

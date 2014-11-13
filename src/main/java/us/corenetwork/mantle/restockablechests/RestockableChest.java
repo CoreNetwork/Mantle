@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
@@ -56,7 +57,8 @@ public class RestockableChest {
 	private int interval;
 	private boolean perPlayer;
 	private String lootTable;
-
+	private Integer structureID;
+	
 	private RestockableChest()
 	{
 
@@ -64,6 +66,8 @@ public class RestockableChest {
 
 	public static RestockableChest getChest(Block chest)
 	{
+		Block alternativeChest = chest;
+		boolean checkBoth = false;
 		if (!Util.isInventoryContainer(chest.getTypeId()))
 			return null;
 
@@ -72,12 +76,17 @@ public class RestockableChest {
 		{
 			DoubleChestInventory doubleChestInventory = (DoubleChestInventory) inventory;
 			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
+			Chest rightChest = (Chest) doubleChestInventory.getRightSide().getHolder();
 			chest = leftChest.getBlock();
+			alternativeChest = rightChest.getBlock();
+			checkBoth = true;
 		}
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
+			
+			
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable, StructureID FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
 			statement.setString(1, chest.getWorld().getName());
 			statement.setInt(2, chest.getX());
 			statement.setInt(3, chest.getY());
@@ -86,7 +95,25 @@ public class RestockableChest {
 
 			if (!set.next())
 			{
-				return null;
+				
+				if(checkBoth)
+				{
+					statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable, StructureID FROM chests WHERE World = ? AND X = ? AND Y = ? AND Z = ? LIMIT 1");
+					statement.setString(1, alternativeChest.getWorld().getName());
+					statement.setInt(2, alternativeChest.getX());
+					statement.setInt(3, alternativeChest.getY());
+					statement.setInt(4, alternativeChest.getZ());
+					set = statement.executeQuery();
+					
+					if (!set.next())
+					{
+						return null;
+					}
+				}
+				else
+				{
+					return null;
+				}
 			}
 
 			RestockableChest rChest = new RestockableChest();
@@ -97,8 +124,10 @@ public class RestockableChest {
 			rChest.lootTable = set.getString("LootTable");
 			rChest.chestBlock = chest;
 			rChest.inventoryHolder = (InventoryHolder) chest.getState();
+			rChest.structureID = set.getInt("StructureID");
 			statement.close();
 			return rChest;
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +135,54 @@ public class RestockableChest {
 		return null;
 	}
 
-	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer)
+	public static List<RestockableChest> getChestsInStructure(int structureID)
+	{
+		List<RestockableChest> chests = new ArrayList<RestockableChest>();
+		
+		
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID,Interval,PerPlayer,LootTable,World,X,Y,Z FROM chests WHERE StructureID = ?");
+			statement.setInt(1, structureID);
+			ResultSet set = statement.executeQuery();
+			
+			while(set.next())
+			{
+				RestockableChest rChest = new RestockableChest();
+				rChest.id = set.getInt("ID");
+				rChest.interval = set.getInt("Interval");
+				rChest.perPlayer = set.getInt("perPlayer") == 1;
+				rChest.lootTable = set.getString("LootTable");
+				rChest.chestBlock = MantlePlugin.instance.getServer().getWorld(set.getString("World")).getBlockAt(set.getInt("X"),set.getInt("Y"),set.getInt("Z"));
+				rChest.inventoryHolder = (InventoryHolder) rChest.chestBlock.getState();
+				rChest.structureID = structureID;
+				chests.add(rChest);
+			}
+			
+			statement.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return chests;
+	}
+	
+	public int getStructureID()
+	{
+		return structureID;
+	}
+	
+	public int getID()
+	{
+		return id;
+	}
+	
+	public boolean chestExists()
+	{
+		return chestBlock.getType() == Material.CHEST;
+	}
+	
+	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer, Integer structureID)
 	{
 		Inventory inventory = ((InventoryHolder) chest.getState()).getInventory();
 		if (inventory instanceof DoubleChestInventory)
@@ -118,7 +194,7 @@ public class RestockableChest {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO chests (Interval, LootTable, PerPlayer, World, X, Y, Z) VALUES (?,?,?,?,?,?,?)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO chests (Interval, LootTable, PerPlayer, World, X, Y, Z, StructureID) VALUES (?,?,?,?,?,?,?,?)");
 			statement.setInt(1, interval);
 			statement.setString(2, lootTable);
 			statement.setInt(3, perPlayer ? 1 : 0);
@@ -126,12 +202,14 @@ public class RestockableChest {
 			statement.setInt(5, chest.getX());
 			statement.setInt(6, chest.getY());
 			statement.setInt(7, chest.getZ());
+			statement.setInt(8, structureID);
 
 			statement.executeUpdate();
 			IO.getConnection().commit();
 			statement.close();
 		}
 		catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -213,12 +291,16 @@ public class RestockableChest {
 			return false;
 		}
 		
+		
+		///	
 		Inventory inventory = getInventory(player);
 		InventoryView view = player.openInventory(inventory);
 		inventoryCache.put(player, view.getTopInventory());
 		openedInventories.put(player, this);
 		storeInventoryToDB(player, null);
-
+		///
+		
+		
 		if (chestBlock.getType() == Material.TRAPPED_CHEST)
 		{
 			Block redstoneBlock = chestBlock.getRelative(0, -2, 0);
@@ -332,6 +414,7 @@ public class RestockableChest {
 
 	public Inventory tryRestock(Player player)
 	{				
+		
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT * FROM playerChests WHERE ID = ? AND PlayerUUID = ? LIMIT 1");
@@ -356,8 +439,22 @@ public class RestockableChest {
 
 			statement.close();
 
-			if (lastAccess >= 0 && System.currentTimeMillis() / 1000 - lastAccess > interval * 3600)
-				return restock(player, restocks, interval < 0);
+			//Special case for overworld village chests;
+			if(lootTable.equalsIgnoreCase(RChestSettings.DUMMY_LOOT_TABLE_OW.string()))
+			{
+				//Never accessed before, we can give loot;
+				if(lastAccess >= 0)
+				{
+					return getOWChestLoot(player);
+				}
+			}
+			else
+			{
+				if (lastAccess >= 0 && System.currentTimeMillis() / 1000 - lastAccess > interval * 3600)
+					return restock(player, restocks, interval < 0);
+			}
+			
+			
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -390,6 +487,283 @@ public class RestockableChest {
 		LootTableNodeParser parser = new LootTableNodeParser(lootTable, 1, addChance, RChestsModule.instance.config);
 		List<ItemStack> items = parser.parse();
 		
+		Inventory inventory = prepareInventory(player, parser.didAnyItemHadAnyChance(), numberDisplay);
+		inventory = spreadItemsRandomly(items, inventory);
+
+		storePlayerChestVisit(player, finiteChest, restocks);
+		return inventory;
+	}
+
+	private Inventory getOWChestLoot(Player player)
+	{
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		List<Category> categories;
+		Category basicCat = null;
+		Category rareCat = null;
+		Category compassCat = null;
+		
+		boolean isFromCompass = false;
+		double diminishVillage = getDiminishVillage(player);
+		
+		PlayerTotal playerTotal = getDiminishTotal(player);
+		
+		double diminishTotal = playerTotal.diminishTotal;
+		
+		if(playerTotal.category != null)
+		{
+			if(playerTotal.chestID == id)
+			{
+				compassCat = RChestsModule.categories.get(playerTotal.category);
+				if(compassCat == null)
+				{
+					MLog.warning("Compass category not found in all categories! This should not happen. Did something change?");
+				}
+				else
+				{
+					isFromCompass = true;
+					if(compassCat.isRare())
+					{
+						rareCat = compassCat;
+					}
+					else
+					{
+						basicCat = compassCat;
+					}
+					CompassDestination.destinations.remove(player.getUniqueId());
+				}
+			}
+		}
+		
+		if(basicCat == null)
+		{
+			categories = RChestsModule.basicCategories;
+			basicCat = Category.pickOne(categories);
+		}
+		if(rareCat == null)
+		{
+			categories = RChestsModule.rareCategories;
+			categories = Category.filterRareCategories(categories, player);
+			rareCat = Category.pickOne(categories);
+		}
+		
+		MLog.debug("-OwLoot---");
+		MLog.debug("Player diminish Village : "+ diminishVillage);
+		MLog.debug("Player diminish Total : "+ diminishTotal);
+		MLog.debug("Is compass chest : " + isFromCompass + "  " + (isFromCompass == false ? "" : playerTotal.category));
+		MLog.debug("Basic category   : " + basicCat.getLootTableName());
+		MLog.debug("Rare  category   : " + rareCat.getLootTableName());
+		
+		items.addAll(getItemsFromCategory(basicCat, player, diminishVillage, diminishTotal, isFromCompass));
+		items.addAll(getItemsFromCategory(rareCat, player, diminishVillage, diminishTotal, isFromCompass));
+		
+		
+		updateDiminishVillage(player, diminishVillage);
+		updateDiminishTotal(player, diminishTotal);
+		
+		
+		String numberDisplay = "";
+		Inventory inventory = prepareInventory(player, true, numberDisplay);
+		inventory = spreadItemsRandomly(items, inventory);
+		storePlayerChestVisit(player, true, 0);
+		
+		MLog.debug("----------");
+		return inventory;
+		
+	}
+	
+	private double getDiminishVillage(Player player)
+	{
+		double dimValue = 1;
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishVillage FROM playerVillage WHERE PlayerUUID = ? AND StructureID = ? LIMIT 1");
+			
+			statement.setString(1, player.getUniqueId().toString());
+			statement.setInt(2, structureID);
+			
+			ResultSet set = statement.executeQuery();
+			if(set.next())
+			{
+				dimValue = set.getDouble("diminishVillage");
+			}
+			else
+			{
+				PreparedStatement statement2 = IO.getConnection().prepareStatement("INSERT INTO playerVillage (PlayerUUID, StructureID, diminishVillage) VALUES (?,?,?)");
+				statement2.setString(1, player.getUniqueId().toString());
+				statement2.setInt(2, structureID);
+				statement2.setDouble(3, dimValue);
+				statement2.executeUpdate();
+				statement2.close();
+			}
+			statement.close();
+			IO.getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return dimValue;
+	}
+	
+	private PlayerTotal getDiminishTotal(Player player)
+	{
+		double dimValue = 1;
+		PlayerTotal playerTotal = null;
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishTotal, CompassCategory, CompassChestID FROM playerTotal WHERE PlayerUUID = ? LIMIT 1");
+			
+			statement.setString(1, player.getUniqueId().toString());
+			
+			ResultSet set = statement.executeQuery();
+			if(set.next())
+			{
+				dimValue = set.getDouble("diminishTotal");
+				playerTotal = new PlayerTotal(dimValue, set.getString("CompassCategory"), set.getInt("CompassChestID"));
+			}
+			else
+			{
+				PreparedStatement statement2 = IO.getConnection().prepareStatement("INSERT INTO playerTotal (PlayerUUID, diminishTotal) VALUES (?,?)");
+				statement2.setString(1, player.getUniqueId().toString());
+				statement2.setDouble(2, dimValue);
+				statement2.executeUpdate();
+				statement2.close();
+			}
+			statement.close();
+			IO.getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return playerTotal;
+	}
+	
+	private class PlayerTotal
+	{
+		public double diminishTotal;
+		public String category;
+		public int chestID;
+		
+		public PlayerTotal(double diminishTotal, String category, Integer chestID)
+		{
+			this.diminishTotal = diminishTotal;
+			this.category = category;
+			this.chestID = chestID;
+		}
+		
+		
+	}
+	
+	private void updateDiminishVillage(Player player, double value)
+	{
+		double newValue = value - RChestSettings.DIMINISH_VILLAGE.doubleNumber();
+		if(newValue < 0)
+			newValue = 0;
+		
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE playerVillage SET diminishVillage = ? WHERE PlayerUUID = ? AND StructureID = ?");
+			statement.setString(2, player.getUniqueId().toString());
+			statement.setInt(3, structureID);
+			statement.setDouble(1, newValue);	
+			statement.executeUpdate();
+			statement.close();
+			
+			IO.getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void updateDiminishTotal(Player player, double value)
+	{
+		double newValue = value - RChestSettings.DIMINISH_TOTAL.doubleNumber();
+		if(newValue < 0)
+			newValue = 0;
+		
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE playerTotal SET diminishTotal = ? WHERE PlayerUUID = ?");
+			statement.setString(2, player.getUniqueId().toString());
+			statement.setDouble(1, newValue);	
+			statement.executeUpdate();
+			statement.close();
+			
+			IO.getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private List<ItemStack> getItemsFromCategory(Category cat, Player player, double diminishVillage, double diminishTotal, boolean firstTimeAlways)
+	{
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		int timesPicked = cat.howManyTimes(player, diminishVillage, diminishTotal);		
+		
+		if(firstTimeAlways && timesPicked == 0)
+		{
+			timesPicked = 1;
+		}
+		
+		if(timesPicked > 0)
+		{
+			updateCategoryCounterFor(cat, player, timesPicked);
+		}
+		
+		MLog.debug("Category " + cat.getLootTableName() + " picked " + timesPicked + " times." );
+		
+		LootTableNodeParser parser = new LootTableNodeParser(cat.getLootTableName(), 1, 0, RChestsModule.instance.config);
+		for(int i = 0;i< timesPicked;i++)
+		{
+			items.addAll(parser.parse());
+		}
+		return items;
+	}
+	
+	private void updateCategoryCounterFor(Category cat, Player player, int timesPicked)
+	{
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT TimesFound FROM playerCategory WHERE PlayerUUID = ? AND Category = ?");
+			
+			statement.setString(1, player.getUniqueId().toString());
+			statement.setString(2, cat.getLootTableName());
+			
+			ResultSet set = statement.executeQuery();
+			if(set.next())
+			{
+				timesPicked += set.getInt("TimesFound");
+				PreparedStatement statement2 = IO.getConnection().prepareStatement("UPDATE playerCategory SET TimesFound = ? WHERE PlayerUUID = ? AND Category = ?");
+				statement2.setString(2, player.getUniqueId().toString());
+				statement2.setString(3, cat.getLootTableName());
+				statement2.setInt(1, timesPicked);
+				statement2.executeUpdate();
+				statement2.close();
+			}
+			else
+			{
+				PreparedStatement statement2 = IO.getConnection().prepareStatement("INSERT INTO playerCategory (PlayerUUID, Category, TimesFound) VALUES (?,?,?)");
+				statement2.setString(1, player.getUniqueId().toString());
+				statement2.setString(2, cat.getLootTableName());
+				statement2.setInt(3, timesPicked);
+				statement2.executeUpdate();
+				statement2.close();
+				
+			}
+			statement.close();
+			IO.getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private Inventory prepareInventory(Player player, boolean anyItemHadAnyChance, String numberDisplay)
+	{
 		Inventory inventory;
 		if (player == null)
 			inventory = inventoryHolder.getInventory();
@@ -397,16 +771,18 @@ public class RestockableChest {
 		{
 			inventory = createEmptyInventory(numberDisplay);
 			
-			if (!parser.didAnyItemHadAnyChance())
+			if (anyItemHadAnyChance == false)
 			{
 				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.ZeroChanceMessage", "Admin of this server is too lazy to enter message!");
 				Util.Message(message, player);
-
 			}
 		}
-
 		inventory.clear();
-
+		return inventory;
+	}
+	
+	private Inventory spreadItemsRandomly(List<ItemStack> items, Inventory inventory)
+	{
 		for (ItemStack i : items)
 		{
 			int counter = 0;
@@ -427,8 +803,13 @@ public class RestockableChest {
 				}
 			}
 		}
-
-
+		
+		return inventory;
+	}
+	
+	
+	private void storePlayerChestVisit(Player player, boolean finiteChest, int restocks)
+	{
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("DELETE FROM playerChests WHERE ID = ? AND PlayerUUID = ?");
@@ -451,10 +832,8 @@ public class RestockableChest {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		return inventory;
 	}
-
+	
 	private Inventory getInventoryFromDB(Player player)
 	{
 
@@ -710,5 +1089,10 @@ public class RestockableChest {
 		}
 
 
+	}
+
+	public Block getBlock()
+	{
+		return chestBlock;
 	}
 }
