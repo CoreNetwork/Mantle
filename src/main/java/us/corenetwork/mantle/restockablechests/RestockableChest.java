@@ -530,6 +530,20 @@ public class RestockableChest {
 						basicCat = compassCat;
 					}
 					CompassDestination.destinations.remove(player.getUniqueId());
+					
+					try
+					{
+						PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE playerTotal SET CompassCategory = ?, CompassChestID = 0 WHERE PlayerUUID = ?");
+						statement.setString(2, player.getUniqueId().toString());
+						statement.setString(1, null);	
+						statement.executeUpdate();
+						statement.close();
+						
+						IO.getConnection().commit();
+					}
+					catch (SQLException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}

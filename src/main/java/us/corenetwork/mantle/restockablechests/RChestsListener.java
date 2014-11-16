@@ -16,6 +16,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -167,5 +168,70 @@ public class RChestsListener implements Listener {
 		CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
 		if (destination != null)
 			destination.playerMoved(event);
+	}
+	
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event)
+	{
+		Player player = event.getPlayer();
+		
+		
+		//Destination already in memory
+		if(CompassDestination.destinations.containsKey(player.getUniqueId()))
+		{
+			return;
+		}
+		
+		String category = null;
+		int chestID = 0;
+		
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishTotal, CompassCategory, CompassChestID FROM playerTotal WHERE PlayerUUID = ? LIMIT 1");
+			
+			statement.setString(1, player.getUniqueId().toString());
+			
+			ResultSet set = statement.executeQuery();
+			if(set.next())
+			{
+				category = set.getString("CompassCategory");
+				chestID = set.getInt("CompassChestID");
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		//No selected compass target, nothing to do
+		if(category == null)
+		{
+			return;
+		}
+		
+		
+		//Add a proper destination to in-memory collection
+		Category cat = RChestsModule.categories.get(category);
+		int x = 0, z = 0;
+		VillageInfoHelper vih = null;
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ch.X, ch.Z, v.ID, v.CornerX, v.CornerZ, v.SizeX, v.SizeZ, v.World FROM chests ch, regeneration_structures v WHERE ch.ID = ? AND ch.StructureID = v.ID");
+			
+			statement.setInt(1, chestID);
+			
+			ResultSet set = statement.executeQuery();
+			if(set.next())
+			{
+				x = set.getInt(1);
+				z = set.getInt(2);
+				
+				vih = new VillageInfoHelper(set.getInt(3), set.getInt(4), set.getInt(5), set.getInt(6), set.getInt(7), 0, set.getString(8));
+			}
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		CompassDestination.addDestination(player, new CompassDestination(x, z, vih, cat));
 	}
 }

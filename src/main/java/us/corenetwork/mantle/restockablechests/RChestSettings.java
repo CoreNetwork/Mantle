@@ -19,7 +19,6 @@ public enum RChestSettings {
 	GUI_ITEM_CATEGORY_OK("GuiItems.CategoryOk", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.GREEN.getData())),
     GUI_ITEM_CATEGORY_NOPE("GuiItems.CategoryNope", new ItemStack(Material.STAINED_GLASS_PANE, 1, DyeColor.RED.getData())),
 	
-	
 	DUMMY_LOOT_TABLE_OW("DummyLootTableOW", "OWVill"),
 	
 	DIMINISH_CHECKER_INTERNVAL("Diminish.CheckInterval", 1200),
@@ -120,9 +119,9 @@ public enum RChestSettings {
 	MESSAGE_CHEST_DESTROYED("Messages.ChestDestroyed", "Poof! Loot chest will regenerate unless you claim a village."),
 	MESSAGE_CHEST_INVISIBLE("Messages.ChestInvisible", "Sorry, you can't use this chest while invisible"),
 	MESSAGE_CHEST_INVINCIBLE("Messages.ChestInvicible", "Sorry, you can't use this chest while invincible. Use /RiddleFillThisInIforgotCommandName to disable your invincibility."),
-	MESSAGE_CHESTS_RESTOCKED("Messages.ChestsRestocked", "Chests Restocked");
-
-	
+	MESSAGE_CHESTS_RESTOCKED("Messages.ChestsRestocked", "Chests Restocked"),
+	MESSAGE_COMPASS_VILLAGE_CLAIMED("Messages.CompassVillageClaimed", "The village you are heading to got claimed! Recalculating new village"),
+	MESSAGE_COMPASS_NAME("Messages.CompassName", "&5[<Category>] <Distance> blocks away");
 	protected String string;
 	protected Object def;
 	

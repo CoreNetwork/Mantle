@@ -103,134 +103,7 @@ public class GUICategoryPicker extends InventoryGUI {
 		Category selectedCategory = categoryPositions.get(slot);
 		if(selectedCategory != null)
 		{
-			player.getUniqueId();
-			
-			RestockableChest rc = null;
-			List<VillageInfoHelper> villageList = new ArrayList<VillageInfoHelper>();
-			
-			//pick a chest for this category
-				//pick all villages with apprioprate distance
-		
-			Location location = player.getLocation();
-			int x = location.getBlockX();
-			int z = location.getBlockZ();
-			int minkw = selectedCategory.getMinDistance() * selectedCategory.getMinDistance();
-			int maxkw = selectedCategory.getMaxDistance() * selectedCategory.getMaxDistance();
-			try
-			{
-				PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, CornerX, CornerZ, SizeX, SizeZ, World, ((CornerX - ? + sizeX / 2) * (CornerX - ? + sizeX / 2) + (CornerZ - ? + sizeZ / 2) * (CornerZ - ? + sizeZ / 2)) as dist FROM regeneration_structures WHERE StructureName = 'Villages' AND LastCheck <= LastRestore AND dist > ? AND dist < ? ORDER BY dist ASC ");
-				statement.setInt(1, x);
-				statement.setInt(2, x);
-				statement.setInt(3, z);
-				statement.setInt(4, z);
-				statement.setInt(5, minkw);
-				statement.setInt(6, maxkw);
-
-				ResultSet set = statement.executeQuery();
-				if(!set.next())
-				{
-					MLog.warning("No village found for category " + selectedCategory.getLootTableName() + ". Please change min/max distance for compass.");
-					
-				}
-				else
-				{
-					while(set.next())
-					{
-						int id = set.getInt("ID");
-						final int villageX = set.getInt("CornerX");
-						final int villageZ = set.getInt("CornerZ");
-						final int xSize = set.getInt("SizeX");
-						final int zSize = set.getInt("SizeZ");
-						int distance = (int) Math.sqrt(set.getInt("dist"));
-						String world = set.getString("World");
-						
-						VillageInfoHelper vih = new VillageInfoHelper(id, villageX, villageZ, xSize, zSize, distance, world);
-						villageList.add(vih);
-					}
-				}
-			}
-			catch (SQLException e)
-			{
-				e.printStackTrace();
-			}
-			
-			
-				//pick a random one from the set
-			
-			int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
-			boolean found = false;
-			
-			while(found == false && villageList.size() > 0)
-			{
-				int random = MantlePlugin.random.nextInt(villageList.size());
-				VillageInfoHelper vih = villageList.get(random);
-				villageList.remove(random);
-				
-				if (GriefPreventionHandler.containsClaim(vih.world, vih.villageX, vih.villageZ, vih.xSize, vih.zSize, padding, false, null))
-				{
-					continue;
-				}	
-				
-				
-				
-				for(RestockableChest rchest : RestockableChest.getChestsInStructure(vih.id))
-				{
-					if(rchest.chestExists())
-					{
-						rc = rchest;
-						found = true;
-						break;
-					}
-				}
-			}
-			
-			if(found == false)
-			{
-				MLog.warning("Compass - No viable village + chest found!");
-				return;
-			}
-			
-		
-			//Check if table has a record for this player, if not, insert it with our values, if yes, update the record
-			try
-			{
-				PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishTotal FROM playerTotal WHERE PlayerUUID = ? LIMIT 1");
-				
-				statement.setString(1, player.getUniqueId().toString());
-				
-				ResultSet set = statement.executeQuery();
-				if(set.next())
-				{
-					PreparedStatement statement2 = IO.getConnection().prepareStatement("UPDATE playerTotal SET CompassCategory = ?, CompassChestID = ? WHERE PlayerUUID = ?");
-					statement2.setString(3, player.getUniqueId().toString());
-					statement2.setString(1, selectedCategory.getLootTableName());
-					statement2.setInt(2, rc.getID());
-					statement2.executeUpdate();
-					statement2.close();
-				}
-				else
-				{
-					PreparedStatement statement2 = IO.getConnection().prepareStatement("INSERT INTO playerTotal (PlayerUUID, diminishTotal, CompassCategory, CompassChestID) VALUES (?,?,?,?)");
-					statement2.setString(1, player.getUniqueId().toString());
-					statement2.setDouble(2, 1);
-					statement2.setString(3, selectedCategory.getLootTableName());
-					statement2.setInt(4, rc.getID());
-					statement2.executeUpdate();
-					statement2.close();
-				}
-				statement.close();
-				IO.getConnection().commit();
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
-			
-			//do some magic with displaying the stuff to the player (?)
-			MLog.debug("Picked category = " + selectedCategory.getLootTableName() + ".  ChestID = "+rc.getID()+". X " + rc.getBlock().getLocation().getBlockX() + ".   Z " + rc.getBlock().getLocation().getBlockZ());
-			
-			//add player destination to map
-			CompassDestination.destinations.put(player.getUniqueId(), new CompassDestination(rc.getBlock().getLocation().getBlockX(), rc.getBlock().getLocation().getBlockZ()));
-			
+			selectChestForPlayerCategory(player, selectedCategory);
 			player.closeInventory();
 		}
 		
@@ -242,27 +115,134 @@ public class GUICategoryPicker extends InventoryGUI {
 		return RChestSettings.GUI_TITLE_PICK_CATEGORY.string();
 	}
 
-	
-	class VillageInfoHelper 
+	public static void selectChestForPlayerCategory(HumanEntity player, Category selectedCategory)
 	{
-		int id;
-		int villageX;
-		int villageZ;
-		int xSize;
-		int zSize;
-		int distance;
-		World world;
-		public VillageInfoHelper(int id, int villageX, int villageZ, int xSize, int zSize, int distance, String world)
+		player.getUniqueId();
+		
+		RestockableChest rc = null;
+		VillageInfoHelper selectedVillage = null;
+		List<VillageInfoHelper> villageList = new ArrayList<VillageInfoHelper>();
+		
+		//pick a chest for this category
+			//pick all villages with apprioprate distance
+	
+		Location location = player.getLocation();
+		int x = location.getBlockX();
+		int z = location.getBlockZ();
+		int minkw = selectedCategory.getMinDistance() * selectedCategory.getMinDistance();
+		int maxkw = selectedCategory.getMaxDistance() * selectedCategory.getMaxDistance();
+		try
 		{
-			this.id = id;
-			this.villageX = villageX;
-			this.villageZ = villageZ;
-			this.xSize = xSize;
-			this.zSize = zSize;
-			this.distance = distance;
-			this.world = Bukkit.getWorld(world);
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, CornerX, CornerZ, SizeX, SizeZ, World, ((CornerX - ? + sizeX / 2) * (CornerX - ? + sizeX / 2) + (CornerZ - ? + sizeZ / 2) * (CornerZ - ? + sizeZ / 2)) as dist FROM regeneration_structures WHERE StructureName = 'Villages' AND LastCheck <= LastRestore AND dist > ? AND dist < ? ORDER BY dist ASC ");
+			statement.setInt(1, x);
+			statement.setInt(2, x);
+			statement.setInt(3, z);
+			statement.setInt(4, z);
+			statement.setInt(5, minkw);
+			statement.setInt(6, maxkw);
+
+			ResultSet set = statement.executeQuery();
+			if(!set.next())
+			{
+				MLog.warning("No village found for category " + selectedCategory.getLootTableName() + ". Please change min/max distance for compass.");
+				
+			}
+			else
+			{
+				while(set.next())
+				{
+					int id = set.getInt("ID");
+					final int villageX = set.getInt("CornerX");
+					final int villageZ = set.getInt("CornerZ");
+					final int xSize = set.getInt("SizeX");
+					final int zSize = set.getInt("SizeZ");
+					int distance = (int) Math.sqrt(set.getInt("dist"));
+					String world = set.getString("World");
+					
+					VillageInfoHelper vih = new VillageInfoHelper(id, villageX, villageZ, xSize, zSize, distance, world);
+					villageList.add(vih);
+				}
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
 		}
 		
 		
+			//pick a random one from the set
+		
+		int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
+		boolean found = false;
+		
+		while(found == false && villageList.size() > 0)
+		{
+			int random = MantlePlugin.random.nextInt(villageList.size());
+			VillageInfoHelper vih = villageList.get(random);
+			villageList.remove(random);
+			
+			if (GriefPreventionHandler.containsClaim(vih.world, vih.villageX, vih.villageZ, vih.xSize, vih.zSize, padding, false, null))
+			{
+				continue;
+			}
+			
+			for(RestockableChest rchest : RestockableChest.getChestsInStructure(vih.id))
+			{
+				if(rchest.chestExists())
+				{
+					rc = rchest;
+					found = true;
+					selectedVillage = vih;
+					break;
+				}
+			}
+		}
+		
+		if(found == false)
+		{
+			MLog.warning("Compass - No viable village + chest found!");
+			return;
+		}
+		
+	
+		//Check if table has a record for this player, if not, insert it with our values, if yes, update the record
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT diminishTotal FROM playerTotal WHERE PlayerUUID = ? LIMIT 1");
+			
+			statement.setString(1, player.getUniqueId().toString());
+			
+			ResultSet set = statement.executeQuery();
+			if(set.next())
+			{
+				PreparedStatement statement2 = IO.getConnection().prepareStatement("UPDATE playerTotal SET CompassCategory = ?, CompassChestID = ? WHERE PlayerUUID = ?");
+				statement2.setString(3, player.getUniqueId().toString());
+				statement2.setString(1, selectedCategory.getLootTableName());
+				statement2.setInt(2, rc.getID());
+				statement2.executeUpdate();
+				statement2.close();
+			}
+			else
+			{
+				PreparedStatement statement2 = IO.getConnection().prepareStatement("INSERT INTO playerTotal (PlayerUUID, diminishTotal, CompassCategory, CompassChestID) VALUES (?,?,?,?)");
+				statement2.setString(1, player.getUniqueId().toString());
+				statement2.setDouble(2, 1);
+				statement2.setString(3, selectedCategory.getLootTableName());
+				statement2.setInt(4, rc.getID());
+				statement2.executeUpdate();
+				statement2.close();
+			}
+			statement.close();
+			IO.getConnection().commit();
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		//do some magic with displaying the stuff to the player (?)
+		MLog.debug("Picked category = " + selectedCategory.getLootTableName() + ".  ChestID = "+rc.getID()+". X " + rc.getBlock().getLocation().getBlockX() + ".   Z " + rc.getBlock().getLocation().getBlockZ());
+		
+		//add player destination to map
+		CompassDestination.addDestination(player, new CompassDestination(rc.getBlock().getLocation().getBlockX(), rc.getBlock().getLocation().getBlockZ(), selectedVillage, selectedCategory));
 	}
 }
