@@ -1,11 +1,8 @@
 package us.corenetwork.mantle.hardmode;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
+
 import net.minecraft.server.v1_7_R4.AttributeInstance;
 import net.minecraft.server.v1_7_R4.EntityCreature;
 import net.minecraft.server.v1_7_R4.EntityInsentient;
@@ -48,6 +45,7 @@ import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -55,6 +53,7 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.util.Vector;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -65,6 +64,7 @@ public class HardmodeListener implements Listener {
 
 	private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
     private static Random random = new Random();
+    private Set<Zombie> reinforcementZombies = new HashSet<>();
 
 	static
 	{
@@ -460,6 +460,11 @@ public class HardmodeListener implements Listener {
 				return;
 			}
 
+            if (event.getSpawnReason() == SpawnReason.JOCKEY) {
+                event.setCancelled(true);
+                return;
+            }
+
 			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
 
 			entity.getEquipment().clear();
@@ -479,7 +484,11 @@ public class HardmodeListener implements Listener {
 			{
 				HardmodeModule.applyDamageNode(event.getEntity(), HardmodeSettings.NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 			}
-		}
+		} else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS) {
+            if (entity instanceof Zombie) {
+                reinforcementZombies.add((Zombie) entity);
+            }
+        }
 
         //assign spiders a random potion effect
         if (!event.isCancelled() && event.getEntityType() == EntityType.SPIDER) {
@@ -556,8 +565,17 @@ public class HardmodeListener implements Listener {
 					return;
 				}
 			}
-		}
-	}
+		} else if (event.getEntity() instanceof Zombie && reinforcementZombies.contains(event.getEntity()) && event.getTarget() instanceof Player) {
+            Zombie zombie = (Zombie) event.getEntity();
+            Vector newDistance = event.getTarget().getLocation().subtract(zombie.getLocation()).toVector().normalize().multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
+
+            Location newLocation = event.getTarget().getLocation().add(newDistance);
+            newLocation.setY(newLocation.getWorld().getHighestBlockYAt(newLocation) + 1d);
+
+            zombie.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+            reinforcementZombies.remove(zombie);
+        }
+    }
 
 	@EventHandler(ignoreCancelled = true)
 	public void onZombieBreakDoor(EntityBreakDoorEvent event)

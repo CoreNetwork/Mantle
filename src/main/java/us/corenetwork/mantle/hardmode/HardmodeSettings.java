@@ -40,7 +40,9 @@ public enum HardmodeSettings {
     NO_DEATH_DROPS_ITEMS("NoDeathDrops.Items", new ArrayList<String>()),
 
     MESSAGE_NO_WITHER_SURFACE("Messages.NoWitherSurface", "Sorry, you can't build wither on the surface!"),
-	MESSAGE_NO_MILKING_NETHER("Messages.NoMilkingNether", "Sorry, you can't milk cows in nether!");
+	MESSAGE_NO_MILKING_NETHER("Messages.NoMilkingNether", "Sorry, you can't milk cows in nether!"),
+
+    REINFORCEMENTS_DISTANCE("Reinforcements.Distance", 10);
 	
 	protected String string;
 	protected Object def;
