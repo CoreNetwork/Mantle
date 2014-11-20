@@ -47,6 +47,9 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 		slimeballs += amount;
 		SlimeballsStorage.setSlimeballs(uuid, slimeballs);
 
+		if (amount <= 0)
+			return; //Do not display any messages for negative
+
 		String awardedAnnouncement = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER.string();
 		awardedAnnouncement = awardedAnnouncement.replace("<Player>", offlinePlayer.getName());
 		awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(slimeballs));

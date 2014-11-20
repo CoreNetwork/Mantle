@@ -9,6 +9,7 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.commands.BaseSlimeballsCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsCheckCommand;
+import us.corenetwork.mantle.slimeballs.commands.SlimeballsGiveCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsHelpCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsImportCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsPayCommand;
@@ -44,6 +45,7 @@ public class SlimeballsModule extends MantleModule {
         commands.put("import", new SlimeballsImportCommand());
         commands.put("check", new SlimeballsCheckCommand());
         commands.put("pay", new SlimeballsPayCommand());
+        commands.put("give", new SlimeballsGiveCommand());
 
 		return true;
 	}
