@@ -67,7 +67,7 @@ public class Util
 
     public static void Message(String message, CommandSender sender)
     {
-        message = message.replaceAll("\\&([0-9abcdefklmnor])", ChatColor.COLOR_CHAR + "$1");
+        message = applyColors(message);
 
         final String newLine = "\\[NEWLINE\\]";
         String[] lines = message.split(newLine);
@@ -89,8 +89,11 @@ public class Util
 
         for (int i = 0; i < lines.length; i++)
             sender.sendMessage(lines[i]);
+    }
 
-
+    public static String applyColors(String message)
+    {
+        return message.replaceAll("\\&([0-9abcdefklmnor])", ChatColor.COLOR_CHAR + "$1");
     }
 
     public static void Broadcast(String message)

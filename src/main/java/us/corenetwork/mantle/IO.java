@@ -96,6 +96,8 @@ public class IO {
             st.executeUpdate("CREATE TABLE IF NOT EXISTS playerCategory (PlayerUUID STRING, Category STRING, TimesFound INTEGER)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS playerVillage (PlayerUUID STRING, StructureID INTEGER, diminishVillage REAL)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS playerTotal (PlayerUUID STRING, diminishTotal REAL, CompassCategory STRING, CompassChestID INTEGER)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS Slimeballs (PlayerUUID STRING PRIMARY KEY, Slimeballs INTEGER)");
+
             st.executeUpdate("CREATE INDEX IF NOT EXISTS `playerCategory_idx` on `playerCategory` (`PlayerUUID`, `Category`);");
             st.executeUpdate("CREATE INDEX IF NOT EXISTS `playerVillage_idx` on `playerVillage` (`PlayerUUID`, `StructureID`);");
             st.executeUpdate("CREATE INDEX IF NOT EXISTS `playerTotal_idx` on `playerTotal` (`PlayerUUID`);");

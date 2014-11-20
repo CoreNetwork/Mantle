@@ -18,3 +18,5 @@ commands:
         description: 1.8 holograms
     title:
         description: 1.8 title command
+    slimeballs:
+        description: Slimeballs

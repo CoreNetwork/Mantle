@@ -76,12 +76,12 @@ public enum BeaconsSettings
 	{
 		String path = "CommandDescriptions." + cmd;
 
-		Object descO = PortalsModule.instance.config.get(path);
+		Object descO = BeaconsModule.instance.config.get(path);
 		if (descO == null)
 		{
-			PortalsModule.instance.config.set(path, "&a/chp " + cmd + " &8-&f " + def);
-			PortalsModule.instance.saveConfig();
-			descO = PortalsModule.instance.config.get(path);
+			BeaconsModule.instance.config.set(path, "&a/chp " + cmd + " &8-&f " + def);
+			BeaconsModule.instance.saveConfig();
+			descO = BeaconsModule.instance.config.get(path);
 		}
 		
 		return (String) descO;
