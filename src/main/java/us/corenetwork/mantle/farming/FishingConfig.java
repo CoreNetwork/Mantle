@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
 
 import java.util.*;
@@ -16,35 +17,40 @@ public class FishingConfig implements Listener {
     private Random random = new Random();
 
     public void loadConfig() {
-        List<?> fishConfig =  FarmingModule.instance.config.getList("Fishing");
-        for (Object groupObj : fishConfig) {
-            Map<String, Object> groupMap = (Map<String, Object>) groupObj;
-            int weight = (Integer) groupMap.get("Weight");
-            FishingGroup currentGroup = new FishingGroup(weight);
+        try {
+            List<?> fishConfig =  FarmingModule.instance.config.getList("Fishing");
+            for (Object groupObj : fishConfig) {
+                Map<String, Object> groupMap = (Map<String, Object>) groupObj;
+                int weight = (Integer) groupMap.get("Weight");
+                FishingGroup currentGroup = new FishingGroup(weight);
 
-            List<?> items = (List<?>) groupMap.get("Items");
-            for (Object itemObj : items) {
-                Map<String, Object> itemMap = (Map<String, Object>) itemObj;
-                ItemStack mat = YamlUtils.readItemStack((Map<String, Object>) itemMap.get("Item"));
-                int itemWeight = (Integer) itemMap.get("Weight");
-                int xp = FishingItem.DONT_CHANGE_XP;
-                if (itemMap.containsKey("Exp")) {
-                    xp = (Integer) itemMap.get("Exp");
+                List<?> items = (List<?>) groupMap.get("Items");
+                for (Object itemObj : items) {
+                    Map<String, Object> itemMap = (Map<String, Object>) itemObj;
+                    ItemStack mat = YamlUtils.readItemStack((Map<String, Object>) itemMap.get("Item"));
+                    int itemWeight = (Integer) itemMap.get("Weight");
+                    int xp = FishingItem.DONT_CHANGE_XP;
+                    if (itemMap.containsKey("Exp")) {
+                        xp = (Integer) itemMap.get("Exp");
+                    }
+                    int enchantLevel = FishingItem.DONT_ENCHANT;
+                    if (itemMap.containsKey("EnchantLevel")) {
+                        enchantLevel = (Integer) itemMap.get("EnchantLevel");
+                    }
+                    FishingItem currentItem = new FishingItem(mat, itemWeight, xp, enchantLevel);
+                    currentGroup.getItems().add(currentItem);
                 }
-                int enchantLevel = FishingItem.DONT_ENCHANT;
-                if (itemMap.containsKey("EnchantLevel")) {
-                    enchantLevel = (Integer) itemMap.get("EnchantLevel");
-                }
-                FishingItem currentItem = new FishingItem(mat, itemWeight, xp, enchantLevel);
-                currentGroup.getItems().add(currentItem);
+                groups.add(currentGroup);
             }
-            groups.add(currentGroup);
+        } catch (Exception e) {
+            MantlePlugin.log.warning("[Farming] No fishing config found. Fishing loot will be untouched.");
+            groups = null;
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onFished(PlayerFishEvent event) {
-        if (event.getCaught() instanceof Item) {
+        if (groups != null && event.getCaught() instanceof Item) {
             Item item = (Item) event.getCaught();
 
             FishingGroup group = (FishingGroup) selectWeighted(groups);
