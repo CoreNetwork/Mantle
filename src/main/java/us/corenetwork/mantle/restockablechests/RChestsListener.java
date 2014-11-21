@@ -232,6 +232,27 @@ public class RChestsListener implements Listener {
 			e.printStackTrace();
 		}
 		
-		CompassDestination.addDestination(player, new CompassDestination(x, z, vih, cat));
+		//if vih == null, then the chest doesnt exist anymore - village got regenerated when player was offline
+		//we will clear his value in the db, and do nothing here.
+		if(vih != null)
+		{
+			CompassDestination.addDestination(player, new CompassDestination(x, z, vih, cat));
+		}
+		else
+		{
+			try
+			{
+				PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE playerTotal SET CompassCategory = ?, CompassChestID = 0 WHERE PlayerUUID = ?");
+				statement.setString(2, player.getUniqueId().toString());
+				statement.setString(1, null);	
+				statement.executeUpdate();
+				statement.close();
+				
+				IO.getConnection().commit();
+			}
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

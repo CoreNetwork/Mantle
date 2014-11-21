@@ -3,14 +3,14 @@ package us.corenetwork.mantle.restockablechests;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-class VillageInfoHelper 
+public class VillageInfoHelper 
 	{
-		int id;
-		int villageX;
-		int villageZ;
-		int xSize;
-		int zSize;
-		int distance;
+		public int id;
+		public int villageX;
+		public int villageZ;
+		public int xSize;
+		public int zSize;
+		public int distance;
 		World world;
 		public VillageInfoHelper(int id, int villageX, int villageZ, int xSize, int zSize, int distance, String world)
 		{

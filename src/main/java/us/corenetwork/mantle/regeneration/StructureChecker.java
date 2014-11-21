@@ -3,17 +3,19 @@ package us.corenetwork.mantle.regeneration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.restockablechests.CompassDestination;
 
 
 public class StructureChecker implements Runnable {
@@ -62,6 +64,17 @@ public class StructureChecker implements Runnable {
 
 				ResultSet set = statement.executeQuery();
 
+				List<Integer> structuresToSkip = new ArrayList<Integer>();
+				for(UUID uuid : CompassDestination.destinations.keySet())
+				{
+					Player p = Bukkit.getPlayer(uuid);
+					if(p != null && p.isOnline())
+					{
+						structuresToSkip.add(CompassDestination.destinations.get(uuid).getVih().id);
+					}
+				}
+				
+				
 				while (set.next())
 				{
 					final int id = set.getInt("id");
@@ -77,8 +90,14 @@ public class StructureChecker implements Runnable {
 					MLog.info("Checking structure " + structure.getName() + " around " + cornerX + " " + cornerZ);
 
 					int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
-					
-					if (isPlayerInside(cornerX, cornerZ, xSize, zSize))
+
+					//Ginaw
+					//Added skipping structure if it is a target of CompassDestination (OW Loot)
+					if(structuresToSkip.contains(id))
+					{
+						MLog.info("Will not restore - structure is a target of a compass loot system.");
+					}
+					else if (isPlayerInside(cornerX, cornerZ, xSize, zSize))
 					{
 						MLog.info("Will not restore - player inside.");
 					}
