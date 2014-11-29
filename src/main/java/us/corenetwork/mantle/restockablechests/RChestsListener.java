@@ -166,7 +166,7 @@ public class RChestsListener implements Listener {
 		//MLog.info("Compass in hand!");
 		
 		CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
-		if (destination != null)
+		if (destination != null && event.getPlayer().getWorld().equals(Bukkit.getWorld("world")))
 			destination.playerMoved(event);
 	}
 	
