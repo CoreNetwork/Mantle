@@ -93,11 +93,11 @@ public class StructureGenerator {
 
 		if (extension.equals("txt"))
 		{
-			mapEntries = new StructureTextmapParser(textMapFile, worldConfig, sizeX, sizeZ, minX, minZ);
+			mapEntries = new StructureTextmapParser(world, textMapFile, worldConfig, sizeX, sizeZ, minX, minZ);
 		}
 		else if (extension.equals("png"))
 		{
-			mapEntries = new StructureImageMapParser(textMapFile, worldConfig, sizeX, sizeZ, minX, minZ);
+			mapEntries = new StructureImageMapParser(world, textMapFile, worldConfig, sizeX, sizeZ, minX, minZ);
 		}
 		else
 		{

@@ -70,7 +70,7 @@ public class PathGenerator {
 		MemorySection structuresConfig = (MemorySection) pathConfig.get("Structures");
 		for (Entry<String,Object> e : structuresConfig.getValues(false).entrySet())
 		{
-			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue());
+			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue(), world);
 			structures.put(structure.getTextAlias(), structure);
 		}
 

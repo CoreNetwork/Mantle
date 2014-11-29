@@ -1,11 +1,25 @@
 package us.corenetwork.mantle;
 
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.transform.AffineTransform;
+import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.registry.WorldData;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import javax.sound.sampled.Clip;
 import net.minecraft.server.v1_7_R4.EntityVillager;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -43,7 +57,7 @@ public class CachedSchematic {
 
 	private List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
 
-	public CachedSchematic(String name)
+	public CachedSchematic(String name, World world)
 	{
 		this.name = name;
 		File schematic = new File(new File(MantlePlugin.instance.getDataFolder(), "schematics"), name + ".schematic");
@@ -53,11 +67,15 @@ public class CachedSchematic {
 
 		WorldEditPlugin worldEdit = (WorldEditPlugin) MantlePlugin.instance.getServer().getPluginManager().getPlugin("WorldEdit");
 		localSession = new LocalSession(worldEdit.getLocalConfiguration());
+
+		WorldData worldData = new BukkitWorld(world).getWorldData();
 		try {
-			localSession.setClipboard(SchematicFormat.MCEDIT.load(schematic));
-			xSize = localSession.getClipboard().getWidth();
-			zSize = localSession.getClipboard().getLength();
-			ySize = localSession.getClipboard().getHeight();
+
+			localSession.setClipboard(readSchematic(schematic, worldData));
+			Vector maximumPoint = localSession.getClipboard().getClipboard().getMaximumPoint();
+			xSize = maximumPoint.getBlockX() + 1;
+			zSize = maximumPoint.getBlockY() + 1;
+			ySize = maximumPoint.getBlockZ() + 1;
 
 
 		} catch (Exception e) {
@@ -76,10 +94,15 @@ public class CachedSchematic {
 			rotateBy = 4 + rotateBy;
 
 		try {
-			localSession.getClipboard().rotate2D(rotateBy * 90);
+			ClipboardHolder holder = localSession.getClipboard();
+			AffineTransform transform = new AffineTransform();
+			transform = transform.rotateX(rotateBy * 90);
+			holder.setTransform(holder.getTransform().combine(transform));
 
-			xSize = localSession.getClipboard().getWidth();
-			zSize = localSession.getClipboard().getLength();
+			Vector maximumPoint = localSession.getClipboard().getClipboard().getMaximumPoint();
+			xSize = maximumPoint.getBlockX() + 1;
+			zSize = maximumPoint.getBlockY() + 1;
+			ySize = maximumPoint.getBlockZ() + 1;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -104,10 +127,10 @@ public class CachedSchematic {
 				{
 					for (int z = 0; z < zSize; z++)
 					{
-						for (int y = 0; y < localSession.getClipboard().getHeight(); y++)
+						for (int y = 0; y < ySize; y++)
 						{
 							Vector vector = new Vector(x, y, z);
-							BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+							BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
 							if (Util.isInventoryContainer(baseBlock.getType()))
 							{
 								vectorList.add(vector);
@@ -143,13 +166,13 @@ public class CachedSchematic {
 			{
 				Vector chest = v;
 						
-				BaseBlock baseBlock = localSession.getClipboard().getPoint(v);
+				BaseBlock baseBlock = null;
 				for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 				{
 					Vector vector = new Vector(v.getBlockX() + face.getModX(), v.getBlockY(), v.getBlockZ() + face.getModZ());
 					try
 					{
-						baseBlock = localSession.getClipboard().getPoint(vector);
+						baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
 					}
 					catch (ArrayIndexOutOfBoundsException e)
 					{
@@ -217,16 +240,15 @@ public class CachedSchematic {
 									}
 								}
 		
-								localSession.getClipboard().setBlock(vector, new BaseBlock(replaceID, replaceData));
+								localSession.getClipboard().getClipboard().setBlock(vector, new BaseBlock(replaceID, replaceData));
 							
 								break;
 							}
-						}
-						catch (DataException e)
+						} catch (WorldEditException e)
 						{
 							e.printStackTrace();
 						}
-		
+
 					}
 				}
 			
@@ -272,10 +294,10 @@ public class CachedSchematic {
 			{
 				for (int x = 0; x < xSize; x++) {
 					for (int z = 0; z < zSize; z++)	{
-						for (int y = 0; y < localSession.getClipboard().getHeight(); y++)
+						for (int y = 0; y < ySize; y++)
 						{
 							Vector vector = new Vector(x, y, z);
-							BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+							BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
 							if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 							{
 								vectorList.add(vector);
@@ -336,7 +358,7 @@ public class CachedSchematic {
 		{
 			for(Vector vector : signLocations)
 			{
-				BaseBlock baseBlock = localSession.getClipboard().getPoint(vector);
+				BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
 				SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
 				sign.setNbtData(baseBlock.getNbtData());
 		
@@ -378,7 +400,7 @@ public class CachedSchematic {
 		
 				if (villagerSign)	
 				{
-					localSession.getClipboard().setBlock(vector, new BaseBlock(Material.AIR.getId()));
+					localSession.getClipboard().getClipboard().setBlock(vector, new BaseBlock(Material.AIR.getId()));
 				}
 			}
 		
@@ -386,7 +408,8 @@ public class CachedSchematic {
 		catch (EmptyClipboardException e)
 		{
 			e.printStackTrace();
-		} catch (DataException e) {
+		} catch (WorldEditException e)
+		{
 			e.printStackTrace();
 		}
 	}
@@ -471,13 +494,18 @@ public class CachedSchematic {
 	public void place(Location placement, boolean ignoreAir)
 	{
 
-		Vector middle = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
+		Vector to = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
 
 		try {
 			EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
 
 			editSession.enableQueue();
-			localSession.getClipboard().place(editSession, middle, ignoreAir);
+			Operation operation = localSession.getClipboard()
+					.createPaste(editSession, localSession.getClipboard().getWorldData())
+					.to(to)
+					.ignoreAirBlocks(ignoreAir)
+					.build();
+			Operations.completeLegacy(operation);
 			editSession.flushQueue();
 			
 			localSession.clearHistory();
@@ -543,7 +571,7 @@ public class CachedSchematic {
 			Vector vector = new Vector(x, y, z);
 			int material;
 			try {
-				material = localSession.getClipboard().getPoint(vector).getType();
+				material = localSession.getClipboard().getClipboard().getBlock(vector).getType();
 				if (material != 0)
 					return material;
 			} catch (ArrayIndexOutOfBoundsException e) {
@@ -554,6 +582,32 @@ public class CachedSchematic {
 		}
 		
 		return 0;
+	}
+
+	private static ClipboardHolder readSchematic(File file, WorldData worldData)
+	{
+		try
+		{
+			FileInputStream fileStream = new FileInputStream(file);
+			BufferedInputStream bufferedStream = new BufferedInputStream(fileStream);
+			ClipboardReader reader = ClipboardFormat.findByFile(file).getReader(bufferedStream);
+
+			Clipboard clipboard = reader.read(worldData);
+			ClipboardHolder holder = new ClipboardHolder(clipboard, worldData);
+
+			bufferedStream.close();
+			return holder;
+
+		} catch (FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	private static class VillagerInfo

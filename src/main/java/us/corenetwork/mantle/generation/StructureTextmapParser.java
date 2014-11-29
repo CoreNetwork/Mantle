@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.MLog;
@@ -29,7 +30,7 @@ public class StructureTextmapParser implements MapIterator {
 	private int tileSizeX;
 	private int tileSizeZ;
 
-	public StructureTextmapParser(File file, MemorySection worldConfig, int worldSizeX, int worldSizeZ, int worldMinX, int worldMinZ)
+	public StructureTextmapParser(World world, File file, MemorySection worldConfig, int worldSizeX, int worldSizeZ, int worldMinX, int worldMinZ)
 	{
 		this.worldMinX = worldMinX;
 		this.worldMinZ = worldMinZ;
@@ -43,7 +44,7 @@ public class StructureTextmapParser implements MapIterator {
 		MemorySection structuresConfig = (MemorySection) worldConfig.get("Structures");
 		for (Entry<String,Object> e : structuresConfig.getValues(false).entrySet())
 		{
-			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue());
+			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue(), world);
 			structures.put(structure.getTextAlias(), structure);
 		}
 		

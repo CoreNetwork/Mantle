@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 
+import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.MLog;
@@ -27,7 +28,7 @@ public class StructureImageMapParser implements MapIterator {
 	private int tileSizeX;
 	private int tileSizeZ;
 
-	public StructureImageMapParser(File file, MemorySection worldConfig, int worldSizeX, int worldSizeZ, int worldMinX, int worldMinZ)
+	public StructureImageMapParser(World world, File file, MemorySection worldConfig, int worldSizeX, int worldSizeZ, int worldMinX, int worldMinZ)
 	{
 		this.worldMinX = worldMinX;
 		this.worldMinZ = worldMinZ;
@@ -41,7 +42,7 @@ public class StructureImageMapParser implements MapIterator {
 		MemorySection structuresConfig = (MemorySection) worldConfig.get("Structures");
 		for (Entry<String,Object> e : structuresConfig.getValues(false).entrySet())
 		{
-			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue());
+			StructureData structure = new StructureData(e.getKey(), (MemorySection) e.getValue(), world);
 			structures.put(structure.getImageColor(), structure);
 		}
 		

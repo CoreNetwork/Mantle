@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
 
 import us.corenetwork.mantle.CachedSchematic;
@@ -18,7 +19,7 @@ public class StructureData {
 	private MemorySection configNode;
 	private String name;
 	
-	public StructureData(String name, MemorySection configNode)
+	public StructureData(String name, MemorySection configNode, World world)
 	{
 		this.name = name;
 		this.configNode = configNode;
@@ -36,7 +37,7 @@ public class StructureData {
 		
 			MLog.info("Loading schematic " + schematic + " for structure " + name + "...");
 			
-			CachedSchematic cs = new CachedSchematic(schematic);
+			CachedSchematic cs = new CachedSchematic(schematic, world);
 			
 			if (shouldSpawnVillagers())
 				cs.findVillagers();

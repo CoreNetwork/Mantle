@@ -1,11 +1,11 @@
 package us.corenetwork.mantle.generation;
 
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.databases.ProtectionDatabaseException;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
@@ -41,7 +41,8 @@ public class WorldGuardManager {
 		manager.addRegion(region);
 		try {
 			manager.save();
-		} catch (ProtectionDatabaseException e) {
+		} catch (StorageException e)
+		{
 			e.printStackTrace();
 		}
 	}

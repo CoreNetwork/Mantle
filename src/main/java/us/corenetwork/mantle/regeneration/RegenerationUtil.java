@@ -58,8 +58,8 @@ public class RegenerationUtil {
 				}
 				//End
 				
-				final CachedSchematic schematic = new CachedSchematic(schematicName);
 				World world = Bukkit.getWorld(worldName);
+				final CachedSchematic schematic = new CachedSchematic(schematicName, world);
 
 				if (clearClaims)
 				{
