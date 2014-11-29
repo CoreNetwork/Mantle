@@ -53,7 +53,6 @@ public class CachedSchematic {
 	public String name;
 	private Random random;
 	private List<ChestInfo> chests;
-	private int curRoation;
 
 	private List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
 
@@ -72,42 +71,38 @@ public class CachedSchematic {
 		try {
 
 			localSession.setClipboard(readSchematic(schematic, worldData));
-			Vector maximumPoint = localSession.getClipboard().getClipboard().getMaximumPoint();
-			xSize = maximumPoint.getBlockX() + 1;
-			zSize = maximumPoint.getBlockY() + 1;
-			ySize = maximumPoint.getBlockZ() + 1;
-
+			calculateSize();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		random = new Random();
-		curRoation = 0;
 	}
 
-	public void rotateTo(int rotation)
+	public void rotateTo(int rotateBy)
 	{
-		rotation = rotation % 5;
-		int rotateBy = rotation - curRoation;
-		if (rotateBy < 0)
-			rotateBy = 4 + rotateBy;
+		rotateBy = (rotateBy % 5) * 90;
 
 		try {
 			ClipboardHolder holder = localSession.getClipboard();
 			AffineTransform transform = new AffineTransform();
-			transform = transform.rotateX(rotateBy * 90);
-			holder.setTransform(holder.getTransform().combine(transform));
 
-			Vector maximumPoint = localSession.getClipboard().getClipboard().getMaximumPoint();
-			xSize = maximumPoint.getBlockX() + 1;
-			zSize = maximumPoint.getBlockY() + 1;
-			ySize = maximumPoint.getBlockZ() + 1;
+			transform = transform.rotateY(rotateBy);
+			holder.setTransform(transform);
+
+			calculateSize();
+
+			if (rotateBy == 90 || rotateBy == 270)
+			{
+				int tmp = xSize;
+				xSize = zSize;
+				zSize = tmp;
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		curRoation = rotation;
 	}
 
 	public void findChests()
@@ -493,10 +488,13 @@ public class CachedSchematic {
 
 	public void place(Location placement, boolean ignoreAir)
 	{
-
-		Vector to = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
-
 		try {
+			Vector to = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
+			Vector origin = localSession.getClipboard().getClipboard().getOrigin();
+			Vector min = localSession.getClipboard().getClipboard().getMinimumPoint();
+			Vector max = localSession.getClipboard().getClipboard().getMaximumPoint();
+			to = origin.subtract(max).add(to).add(max.subtract(min));
+
 			EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
 
 			editSession.enableQueue();
@@ -562,8 +560,25 @@ public class CachedSchematic {
 			}
 		}
 	}
-	
-	
+
+
+	private void calculateSize()
+	{
+		try
+		{
+			Vector maximumPoint = localSession.getClipboard().getClipboard().getMaximumPoint();
+			Vector minimumPoint = localSession.getClipboard().getClipboard().getMinimumPoint();
+
+			xSize = Math.abs(maximumPoint.getBlockX() - minimumPoint.getBlockX()) + 1;
+			ySize = Math.abs(maximumPoint.getBlockY() - minimumPoint.getBlockY()) + 1;
+			zSize = Math.abs(maximumPoint.getBlockZ() - minimumPoint.getBlockZ()) + 1;
+		}
+		catch (EmptyClipboardException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 	public int getHighestMaterial(int x, int z)
 	{
 		for (int y = ySize - 1; y >= 0; y--)
@@ -593,6 +608,13 @@ public class CachedSchematic {
 			ClipboardReader reader = ClipboardFormat.findByFile(file).getReader(bufferedStream);
 
 			Clipboard clipboard = reader.read(worldData);
+
+			//Move origin to center of schematic
+			Vector min = clipboard.getMinimumPoint();
+			Vector max = clipboard.getMaximumPoint();
+			Vector halfsize = max.subtract(min).divide(2);
+			clipboard.setOrigin(min.add(halfsize));
+
 			ClipboardHolder holder = new ClipboardHolder(clipboard, worldData);
 
 			bufferedStream.close();

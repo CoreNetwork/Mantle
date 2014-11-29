@@ -167,7 +167,6 @@ public class PathGenerator {
 
 		tile.printTile();
 
-
 		CachedSchematic schematic = structure.getRandomSchematic();
 		schematic.rotateTo(tile.rotation);
 
@@ -222,7 +221,7 @@ public class PathGenerator {
 
 		int xSize = schematic.xSize;
 		int zSize = schematic.zSize;
-		
+
 		for (int i = 0; i < 4; i++)
 		{
 			PathTile neighbour = tile.getNeighbour(i);

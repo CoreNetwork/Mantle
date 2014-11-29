@@ -13,13 +13,13 @@ public class PathTileMap {
 	{
         rows = image.getHeight() / 10;
         cols = image.getWidth() / 10;
-		tileMap = new PathTile[rows][cols];
+		tileMap = new PathTile[cols][rows];
 
-		for (int x = 0; x < rows; x++)
+        for (int x = 0; x < cols; x++)
 		{
-			for (int z = 0; z < cols; z++)
+			for (int z = 0; z < rows; z++)
 			{
-				PathTile tile = new PathTile(this, x, z);
+                PathTile tile = new PathTile(this, x, z);
 
                 int imageTileX = x * 10;
                 int imageTileZ = z * 10;
@@ -36,7 +36,7 @@ public class PathTileMap {
                     tile.rotation = 0;
 
 				tileMap[x][tile.z] = tile;
-			}
+            }
 		}		
 	}
 }

@@ -70,7 +70,7 @@ public class NetherSpawningTimer implements Runnable {
 
             NetherSpawner.startSpawning(block, entityType);
         }
-
+    }
     /*
         @return array where first element is distance to nearest player and second element is distance to farthest player.
      */
