@@ -1,9 +1,6 @@
 package us.corenetwork.mantle.netherspawning;
 
-import javax.swing.text.html.parser.Entity;
 import net.minecraft.server.v1_7_R4.ChunkProviderServer;
-
-import net.minecraft.server.v1_7_R4.EntitySlime;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -14,9 +11,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class NetherSpawningTimer implements Runnable {
     private static World nether;
@@ -70,7 +65,7 @@ public class NetherSpawningTimer implements Runnable {
 
             NetherSpawner.startSpawning(block, entityType);
         }
-
+    }
     /*
         @return array where first element is distance to nearest player and second element is distance to farthest player.
      */
