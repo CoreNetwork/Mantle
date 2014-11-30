@@ -1,9 +1,9 @@
 package us.corenetwork.mantle;
 
 import java.util.HashSet;
-import net.minecraft.server.v1_7_R4.IInventory;
+import net.minecraft.server.v1_8_R1.IInventory;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;

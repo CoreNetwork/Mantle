@@ -14,7 +14,6 @@ import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
 import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
-import us.corenetwork.mantle.mantlecommands.TitleCommand;
 
 
 public class MantlePlugin extends JavaPlugin {
@@ -55,7 +54,6 @@ public class MantlePlugin extends JavaPlugin {
 		adminCommands.put("reload", new ReloadCommand());
 		adminCommands.put("dumpchunks", new DumpChunksCommand());
 		adminCommands.put("chunkinfo", new ChunkInfoCommand());
-        adminCommands.put("title", new TitleCommand());
 
         Bukkit.getScheduler().runTask(this, new Runnable()
         {

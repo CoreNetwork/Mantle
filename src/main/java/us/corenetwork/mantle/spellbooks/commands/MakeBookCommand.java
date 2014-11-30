@@ -2,13 +2,13 @@ package us.corenetwork.mantle.spellbooks.commands;
 
 import java.util.HashMap;
 
-import net.minecraft.server.v1_7_R4.EntityItem;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.EntityItem;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -65,8 +65,8 @@ public class MakeBookCommand extends BaseMantleCommand {
 			int stackAmount = Math.min(amount, 64);
 			ItemStack stack = new ItemStack(Material.BOOK, stackAmount);
 			
-			net.minecraft.server.v1_7_R4.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
-			nmsStack.tag = newTag;
+			net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+			nmsStack.setTag(newTag);
 			stack = CraftItemStack.asCraftMirror(nmsStack);
 
 			HashMap<Integer, ItemStack> overflowItems = player.getInventory().addItem(stack);
@@ -76,7 +76,7 @@ public class MakeBookCommand extends BaseMantleCommand {
 				{
 					Item item = player.getWorld().dropItem(player.getLocation(), itemToDrop);
 					EntityItem nmsItem = (EntityItem) ((CraftItem) item).getHandle();
-					nmsItem.a(player.getName());
+					nmsItem.b(player.getName()); //Prevent other players from picking up this item
 				}
 			}
 

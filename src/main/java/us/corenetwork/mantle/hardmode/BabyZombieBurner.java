@@ -1,8 +1,9 @@
 package us.corenetwork.mantle.hardmode;
 
-import net.minecraft.server.v1_7_R4.EntityZombie;
-import net.minecraft.server.v1_7_R4.MathHelper;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.EntityZombie;
+import net.minecraft.server.v1_8_R1.MathHelper;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -47,9 +48,9 @@ public class BabyZombieBurner implements Listener, Runnable{
                 EntityZombie nmsZombie = (EntityZombie) nmsEntityField.get(zombie);
 
                 //begin copied code from EntityZombie.e
-                float f = nmsZombie.d(1.0F);
+                float f = nmsZombie.c(1.0F);
 
-                if ((f > 0.5F) && (nmsZombie.world.i(MathHelper.floor(nmsZombie.locX), MathHelper.floor(nmsZombie.locY), MathHelper.floor(nmsZombie.locZ)))) {
+                if ((f > 0.5F) && (nmsZombie.world.i(new BlockPosition(MathHelper.floor(nmsZombie.locX), MathHelper.floor(nmsZombie.locY), MathHelper.floor(nmsZombie.locZ))))) {
                     zombie.setFireTicks(30); // TODO config
                 }
                 //end

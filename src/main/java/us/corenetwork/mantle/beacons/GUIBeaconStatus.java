@@ -24,6 +24,8 @@ public class GUIBeaconStatus extends InventoryGUI
     {
         this.beacon = beacon;
 
+
+
         setItem(ITEM_POSITION_HELP, BeaconsSettings.GUI_ITEM_HELP_SELECTED.itemStack());
         setItem(ITEM_POSITION_CANCEL_EFFECT, BeaconsSettings.GUI_ITEM_CANCEL_EFFECT.itemStack());
 

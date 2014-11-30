@@ -1,15 +1,20 @@
 package us.corenetwork.mantle.beacons;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.TileEntity;
-import net.minecraft.server.v1_7_R4.TileEntityBeacon;
-import net.minecraft.server.v1_7_R4.TileEntityBrewingStand;
-import net.minecraft.server.v1_7_R4.TileEntityFurnace;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.Item;
+import net.minecraft.server.v1_8_R1.ItemBlock;
+import net.minecraft.server.v1_8_R1.MinecraftKey;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.TileEntity;
+import net.minecraft.server.v1_8_R1.TileEntityBeacon;
+import net.minecraft.server.v1_8_R1.TileEntityBrewingStand;
+import net.minecraft.server.v1_8_R1.TileEntityFurnace;
+import net.minecraft.server.v1_8_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -75,7 +80,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         Tile entity tick
      */
     @Override
-    public void h()
+    public void m()
     {
         //Check pyramid size every 80 ticks
         if (this.world.getTime() % 80L == 0L) {
@@ -197,17 +202,17 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
     private Location getLocation()
     {
-        return new Location(this.world.getWorld(), x, y, z);
+        return new Location(this.world.getWorld(), position.getX(), position.getY(), position.getZ());
     }
 
     private Block getBlock()
     {
-        return this.world.getWorld().getBlockAt(x, y, z);
+        return this.world.getWorld().getBlockAt(position.getX(), position.getY(), position.getZ());
     }
 
     private Location getCenterLocation()
     {
-        return new Location(this.world.getWorld(), x + 0.5, y + 0.5, z + 0.5);
+        return new Location(this.world.getWorld(), position.getX() + 0.5, position.getY() + 0.5, position.getZ() + 0.5);
     }
 
     private void refuel()
@@ -382,16 +387,18 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
         overclockCache.clear();
 
+        WorldServer worldServer = (WorldServer) world;
+
         for (int x = -rangeChunks; x <= rangeChunks; x++)
         {
             for (int z = -rangeChunks; z <= rangeChunks; z++)
             {
                 int nX = beaconChunk.getX() + x;
                 int nZ = beaconChunk.getZ() + z;
-                if (!world.chunkProvider.isChunkLoaded(nX, nZ))
+                if (!worldServer.chunkProviderServer.isChunkLoaded(nX, nZ))
                     continue;
 
-                net.minecraft.server.v1_7_R4.Chunk nmsChunk = world.chunkProvider.getChunkAt(nX, nZ);
+                net.minecraft.server.v1_8_R1.Chunk nmsChunk = worldServer.chunkProviderServer.getChunkAt(nX, nZ);
 
                 for (Object tileEntityObject : nmsChunk.tileEntities.values())
                 {
@@ -399,9 +406,9 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                         continue;
 
                     TileEntity tileEntity = (TileEntity) tileEntityObject;
-                    int diffX = tileEntity.x - beaconBlock.getX();
-                    int diffY = tileEntity.y - beaconBlock.getY();
-                    int diffZ = tileEntity.z - beaconBlock.getZ();
+                    int diffX = tileEntity.getPosition().getX() - beaconBlock.getX();
+                    int diffY = tileEntity.getPosition().getY() - beaconBlock.getY();
+                    int diffZ = tileEntity.getPosition().getZ() - beaconBlock.getZ();
 
                     int distance = diffX * diffX + diffY * diffY + diffZ * diffZ;
                     if (distance > rangeSquared)
@@ -567,8 +574,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     {
         try
         {
-            Field tileEntityNameMapField = TileEntity.class.getDeclaredField("i");
-            Field tileEntityClassMapField = TileEntity.class.getDeclaredField("j");
+            Field tileEntityNameMapField = TileEntity.class.getDeclaredField("f");
+            Field tileEntityClassMapField = TileEntity.class.getDeclaredField("g");
 
             tileEntityClassMapField.setAccessible(true);
             tileEntityNameMapField.setAccessible(true);
@@ -581,7 +588,15 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             Map tileEntityNameMap = (Map) tileEntityNameMapField.get(null);
             tileEntityNameMap.put("Beacon", CustomBeaconTileEntity.class);
 
-            net.minecraft.server.v1_7_R4.Block.REGISTRY.a(138, "beacon", new CustomBlockBeacon());
+            net.minecraft.server.v1_8_R1.Block beaconBlock = new CustomBlockBeacon();
+
+            net.minecraft.server.v1_8_R1.Block.REGISTRY.a(138, new MinecraftKey("beacon"), beaconBlock);
+
+            Method registerItemMethod = Item.class.getDeclaredMethod("a", net.minecraft.server.v1_8_R1.Block.class, Item.class);
+            registerItemMethod.setAccessible(true);
+            registerItemMethod.invoke(null, beaconBlock, new CustomBeaconItem(beaconBlock));
+
+            System.out.println(beaconBlock.getBlockData());
         }
         catch (Exception e)
         {

@@ -559,16 +559,16 @@ public class FancyMessage implements JsonRepresentedObject, Cloneable, Iterable<
         }
 
 	// The ChatSerializer's instance of Gson
-	private static net.minecraft.util.com.google.gson.Gson nmsChatSerializerGsonInstance;
+	private static org.bukkit.craftbukkit.libs.com.google.gson.Gson nmsChatSerializerGsonInstance;
 
 	private Object createChatPacket(String json) throws IllegalArgumentException, IllegalAccessException, InstantiationException, InvocationTargetException{
 		if(nmsChatSerializerGsonInstance == null){
 			// Find the field and its value, completely bypassing obfuscation
 			for(Field declaredField : Reflection.getNMSClass("ChatSerializer").getDeclaredFields()){
-				if(Modifier.isFinal(declaredField.getModifiers()) && Modifier.isStatic(declaredField.getModifiers()) && declaredField.getType() == net.minecraft.util.com.google.gson.Gson.class){
+				if(Modifier.isFinal(declaredField.getModifiers()) && Modifier.isStatic(declaredField.getModifiers()) && declaredField.getType() == org.bukkit.craftbukkit.libs.com.google.gson.Gson.class){
 					// We've found our field
 					declaredField.setAccessible(true);
-					nmsChatSerializerGsonInstance = (net.minecraft.util.com.google.gson.Gson)declaredField.get(null);
+					nmsChatSerializerGsonInstance = (org.bukkit.craftbukkit.libs.com.google.gson.Gson)declaredField.get(null);
 					break;
 				}
 			}

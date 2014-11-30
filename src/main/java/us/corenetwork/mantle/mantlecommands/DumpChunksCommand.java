@@ -1,13 +1,13 @@
 package us.corenetwork.mantle.mantlecommands;
 
-import net.minecraft.server.v1_7_R4.ChunkProviderServer;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import net.minecraft.server.v1_7_R4.PlayerChunkMap;
-import net.minecraft.server.v1_7_R4.WorldServer;
+import net.minecraft.server.v1_8_R1.ChunkProviderServer;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import net.minecraft.server.v1_8_R1.PlayerChunkMap;
+import net.minecraft.server.v1_8_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 

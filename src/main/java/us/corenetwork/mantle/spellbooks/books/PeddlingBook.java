@@ -5,17 +5,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 import me.ryanhamshire.GriefPrevention.Claim;
-import net.minecraft.server.v1_7_R4.EntityVillager;
-import net.minecraft.server.v1_7_R4.Items;
-import net.minecraft.server.v1_7_R4.MerchantRecipe;
-import net.minecraft.server.v1_7_R4.MerchantRecipeList;
+import net.minecraft.server.v1_8_R1.EntityVillager;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.MerchantRecipe;
+import net.minecraft.server.v1_8_R1.MerchantRecipeList;
 
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -71,7 +71,7 @@ public class PeddlingBook extends Spellbook {
 		{
 			MerchantRecipe recipe = (MerchantRecipe) recipeObject;
 			
-			if (recipe.g()) //Do not sell if recipe is locked
+			if (recipe.h()) //Do not sell if recipe is locked
 				continue;
 			
 			if (recipe.hasSecondItem())
@@ -91,7 +91,7 @@ public class PeddlingBook extends Spellbook {
 			if (item == null || item.getType() == Material.AIR)
 				continue;
 					
-			net.minecraft.server.v1_7_R4.ItemStack nmsItem = SpellbookUtil.getNMSInnerItem(item);
+			net.minecraft.server.v1_8_R1.ItemStack nmsItem = SpellbookUtil.getNMSInnerItem(item);
 			
 			for (RecipeData recipe : recipes)
 			{
@@ -161,14 +161,14 @@ public class PeddlingBook extends Spellbook {
 
 	}
 	
-	private static void removeItem(Inventory inventory, net.minecraft.server.v1_7_R4.ItemStack comparingItem, int amount)
+	private static void removeItem(Inventory inventory, net.minecraft.server.v1_8_R1.ItemStack comparingItem, int amount)
 	{
 		for (int i = 0; i < inventory.getSize(); i++)
 		{
 			ItemStack stack = inventory.getItem(i);
 			if (stack != null && stack.getType() != Material.AIR)
 			{
-				net.minecraft.server.v1_7_R4.ItemStack nmsStack = SpellbookUtil.getNMSInnerItem(stack);
+				net.minecraft.server.v1_8_R1.ItemStack nmsStack = SpellbookUtil.getNMSInnerItem(stack);
 				if (!SpellbookUtil.compareItemTypes(nmsStack, comparingItem))
 					continue;
 				
@@ -197,7 +197,7 @@ public class PeddlingBook extends Spellbook {
 	
 	private static class RecipeData
 	{
-		public net.minecraft.server.v1_7_R4.ItemStack sellItem;
+		public net.minecraft.server.v1_8_R1.ItemStack sellItem;
 		public int amountPlayerHave;
 		public double itemsPerEmerald;
 		

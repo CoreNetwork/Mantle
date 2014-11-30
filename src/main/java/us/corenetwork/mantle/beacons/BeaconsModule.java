@@ -42,7 +42,8 @@ public class BeaconsModule extends MantleModule {
 		}
 		saveConfig();
 
-		Bukkit.getServer().getPluginManager().registerEvents(new BeaconsListener(), MantlePlugin.instance);
+		System.out.println(net.minecraft.server.v1_8_R1.Block.getByName("beacon").getClass().getName());
+		System.out.println(net.minecraft.server.v1_8_R1.Block.getById(138).getClass().getName());
 
 		return true;
 	}

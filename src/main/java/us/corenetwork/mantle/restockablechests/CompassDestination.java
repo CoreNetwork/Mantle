@@ -2,11 +2,11 @@ package us.corenetwork.mantle.restockablechests;
 
 import java.util.HashMap;
 import java.util.UUID;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;

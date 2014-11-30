@@ -1,12 +1,13 @@
 package us.corenetwork.mantle;
 
 import java.util.List;
-import net.minecraft.server.v1_7_R4.EntityHuman;
-import net.minecraft.server.v1_7_R4.IInventory;
-import net.minecraft.server.v1_7_R4.ItemStack;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.IChatBaseComponent;
+import net.minecraft.server.v1_8_R1.IInventory;
+import net.minecraft.server.v1_8_R1.ItemStack;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftHumanEntity;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -93,17 +94,6 @@ public abstract class InventoryGUI extends CraftInventory
             items[i] = itemStack;
         }
 
-        @Override
-        public String getInventoryName()
-        {
-            return parent.getTitle();
-        }
-
-        @Override
-        public boolean k_()
-        {
-            return false;
-        }
 
         @Override
         public int getMaxStackSize()
@@ -124,13 +114,13 @@ public abstract class InventoryGUI extends CraftInventory
         }
 
         @Override
-        public void startOpen()
+        public void startOpen(EntityHuman entityHuman)
         {
 
         }
 
         @Override
-        public void closeContainer()
+        public void closeContainer(EntityHuman entityHuman)
         {
 
         }
@@ -139,6 +129,30 @@ public abstract class InventoryGUI extends CraftInventory
         public boolean b(int i, ItemStack itemStack)
         {
             return false;
+        }
+
+        @Override
+        public int getProperty(int i)
+        {
+            return 0;
+        }
+
+        @Override
+        public void b(int i, int i1)
+        {
+
+        }
+
+        @Override
+        public int g()
+        {
+            return 0;
+        }
+
+        @Override
+        public void l()
+        {
+
         }
 
         @Override
@@ -179,6 +193,24 @@ public abstract class InventoryGUI extends CraftInventory
         @Override
         public void setMaxStackSize(int i)
         {
+        }
+
+        @Override
+        public String getName()
+        {
+            return parent.getTitle();
+        }
+
+        @Override
+        public boolean hasCustomName()
+        {
+            return true;
+        }
+
+        @Override
+        public IChatBaseComponent getScoreboardDisplayName()
+        {
+            return null;
         }
     }
 }

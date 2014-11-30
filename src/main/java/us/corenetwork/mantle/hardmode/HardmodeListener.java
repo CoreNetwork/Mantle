@@ -3,10 +3,10 @@ package us.corenetwork.mantle.hardmode;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import net.minecraft.server.v1_7_R4.AttributeInstance;
-import net.minecraft.server.v1_7_R4.EntityCreature;
-import net.minecraft.server.v1_7_R4.EntityInsentient;
-import net.minecraft.server.v1_7_R4.GenericAttributes;
+import net.minecraft.server.v1_8_R1.AttributeInstance;
+import net.minecraft.server.v1_8_R1.EntityCreature;
+import net.minecraft.server.v1_8_R1.EntityInsentient;
+import net.minecraft.server.v1_8_R1.GenericAttributes;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -17,9 +17,9 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
 import org.bukkit.entity.*;
 import org.bukkit.entity.Skeleton.SkeletonType;
 import org.bukkit.event.EventHandler;
@@ -258,7 +258,7 @@ public class HardmodeListener implements Listener {
                         }
                         try {
                             EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
-                            creature.b((net.minecraft.server.v1_7_R4.EntityLiving) nmsEntityField.get(lastDamager));
+                            creature.b((net.minecraft.server.v1_8_R1.EntityLiving) nmsEntityField.get(lastDamager));
 
                         } catch (IllegalAccessException e1) {
                             e1.printStackTrace();

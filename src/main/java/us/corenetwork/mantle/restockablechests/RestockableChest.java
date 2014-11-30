@@ -7,15 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import net.minecraft.server.v1_7_R4.PacketPlayOutBlockAction;
-import net.minecraft.server.v1_7_R4.TileEntity;
-import net.minecraft.server.v1_7_R4.TileEntityBeacon;
-import net.minecraft.server.v1_7_R4.TileEntityBrewingStand;
-import net.minecraft.server.v1_7_R4.TileEntityChest;
-import net.minecraft.server.v1_7_R4.TileEntityDispenser;
-import net.minecraft.server.v1_7_R4.TileEntityDropper;
-import net.minecraft.server.v1_7_R4.TileEntityFurnace;
-import net.minecraft.server.v1_7_R4.TileEntityHopper;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.PacketPlayOutBlockAction;
+import net.minecraft.server.v1_8_R1.TileEntity;
+import net.minecraft.server.v1_8_R1.TileEntityBeacon;
+import net.minecraft.server.v1_8_R1.TileEntityBrewingStand;
+import net.minecraft.server.v1_8_R1.TileEntityChest;
+import net.minecraft.server.v1_8_R1.TileEntityDispenser;
+import net.minecraft.server.v1_8_R1.TileEntityDropper;
+import net.minecraft.server.v1_8_R1.TileEntityFurnace;
+import net.minecraft.server.v1_8_R1.TileEntityHopper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -23,10 +24,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -318,7 +319,7 @@ public class RestockableChest {
 		//Chest animation
 		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
 		{
-			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ(), net.minecraft.server.v1_7_R4.Block.getById(chestBlock.getTypeId()), 1, 1);
+			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(new BlockPosition(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ()), net.minecraft.server.v1_8_R1.Block.getById(chestBlock.getTypeId()), 1, 1);
 
 			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 			nearbyEntities.add(player);
@@ -363,7 +364,7 @@ public class RestockableChest {
 				//Chest animation
 				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
 				{
-					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ(), net.minecraft.server.v1_7_R4.Block.getById(chest.chestBlock.getTypeId()), 1, 0);
+					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(new BlockPosition(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ()), net.minecraft.server.v1_8_R1.Block.getById(chest.chestBlock.getTypeId()), 1, 0);
 					
 					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 					nearbyEntities.add(player);
@@ -988,42 +989,42 @@ public class RestockableChest {
 		if (!Util.isInventoryContainer(chestBlock.getTypeId()))
 			return "";
 
-		TileEntity tEntity = ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ());
+		TileEntity tEntity = ((CraftWorld) chestBlock.getWorld()).getHandle().getTileEntity(new BlockPosition(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ()));
 
 		if (tEntity instanceof TileEntityChest)
 		{
 			TileEntityChest container = (TileEntityChest) tEntity;
-			return container.k_() ? container.getInventoryName() : "Chest";
+			return container.hasCustomName() ? container.getName() : "Chest";
 		}
 		else if (tEntity instanceof TileEntityDispenser)
 		{
 			TileEntityDispenser container = (TileEntityDispenser) tEntity;
-			return container.k_() ? container.getInventoryName() : "Dispenser";
+			return container.hasCustomName() ? container.getName() : "Dispenser";
 		}
 		else if (tEntity instanceof TileEntityFurnace)
 		{
 			TileEntityFurnace container = (TileEntityFurnace) tEntity;
-			return container.k_() ? container.getInventoryName() : "Furnace";
+			return container.hasCustomName() ? container.getName() : "Furnace";
 		}
 		else if (tEntity instanceof TileEntityHopper)
 		{
 			TileEntityHopper container = (TileEntityHopper) tEntity;
-			return container.k_() ? container.getInventoryName() : "Hopper";
+			return container.hasCustomName() ? container.getName() : "Hopper";
 		}
 		else if (tEntity instanceof TileEntityDropper)
 		{
 			TileEntityDropper container = (TileEntityDropper) tEntity;
-			return container.k_() ? container.getInventoryName() : "Dropper";
+			return container.hasCustomName() ? container.getName() : "Dropper";
 		}
 		else if (tEntity instanceof TileEntityBeacon)
 		{
 			TileEntityBeacon container = (TileEntityBeacon) tEntity;
-			return container.k_() ? container.getInventoryName() : "Beacon";
+			return container.hasCustomName() ? container.getName() : "Beacon";
 		}
 		else if (tEntity instanceof TileEntityBrewingStand)
 		{
 			TileEntityBrewingStand container = (TileEntityBrewingStand) tEntity;
-			return container.k_() ? container.getInventoryName() : "Brewing Stand";
+			return container.hasCustomName() ? container.getName() : "Brewing Stand";
 		}
 
 		return Util.getMaterialName(chestBlock.getType());
@@ -1084,7 +1085,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_7_R4.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom$MinecraftInventory");
 
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);

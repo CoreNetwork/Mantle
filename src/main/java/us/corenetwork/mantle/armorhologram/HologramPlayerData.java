@@ -2,8 +2,8 @@ package us.corenetwork.mantle.armorhologram;
 
 import java.util.HashMap;
 import java.util.UUID;
-import net.minecraft.server.v1_7_R4.EntityPlayer;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
+import net.minecraft.server.v1_8_R1.EntityPlayer;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**
@@ -59,7 +59,7 @@ public class HologramPlayerData
 
     public static boolean isPlayer18(Player player)
     {
-        EntityPlayer nmsPlayer = ((CraftPlayer) player).getHandle();
-        return nmsPlayer.playerConnection.networkManager.getVersion() >= 36;
+
+        return true; //Everyone is 1.8 now
     }
 }

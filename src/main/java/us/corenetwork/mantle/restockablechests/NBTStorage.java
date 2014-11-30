@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,7 +18,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -29,8 +29,8 @@ import us.corenetwork.mantle.MantlePlugin;
 public class NBTStorage {
 	public static boolean hasNbt(ItemStack stack)
 	{
-		net.minecraft.server.v1_7_R4.ItemStack nmsStack =  CraftItemStack.asNMSCopy(stack);
-		return nmsStack.tag != null;
+		net.minecraft.server.v1_8_R1.ItemStack nmsStack =  CraftItemStack.asNMSCopy(stack);
+		return nmsStack.hasTag();
 	}
 	
 	public static void saveNbtTags(Integer chestId, String player, Inventory inventory)
@@ -44,7 +44,7 @@ public class NBTStorage {
 			if (item == null || item.getType() == Material.AIR)
 				continue;
 			
-			NBTTagCompound tag = CraftItemStack.asNMSCopy(item).tag;
+			NBTTagCompound tag = CraftItemStack.asNMSCopy(item).getTag();
 			if (tag == null)
 				continue;
 
@@ -115,8 +115,8 @@ public class NBTStorage {
 				continue;
 			}
 			
-			net.minecraft.server.v1_7_R4.ItemStack nmsStack = CraftItemStack.asNMSCopy(inventory.getItem(slot));
-			nmsStack.tag = tag;
+			net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(inventory.getItem(slot));
+			nmsStack.setTag(tag);
 			inventory.setItem(slot, CraftItemStack.asCraftMirror(nmsStack));
 
 		}

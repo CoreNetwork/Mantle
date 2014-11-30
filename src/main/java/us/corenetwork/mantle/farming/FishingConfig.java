@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.farming;
 
-import net.minecraft.server.v1_7_R4.EnchantmentManager;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import net.minecraft.server.v1_8_R1.EnchantmentManager;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -60,7 +60,7 @@ public class FishingConfig implements Listener {
                 event.setExpToDrop(selectedItem.getXp());
             }
             if (selectedItem.getEnchantLevel() != FishingItem.DONT_ENCHANT) {
-                net.minecraft.server.v1_7_R4.ItemStack nmsStack = CraftItemStack.asNMSCopy(replace);
+                net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(replace);
                 nmsStack = EnchantmentManager.a(random, nmsStack, selectedItem.getEnchantLevel());
                 replace = CraftItemStack.asBukkitCopy(nmsStack);
             }

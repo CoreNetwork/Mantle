@@ -1,12 +1,13 @@
 package us.corenetwork.mantle.slimespawning;
 
-import net.minecraft.server.v1_7_R4.ChunkProviderServer;
+import net.minecraft.server.v1_8_R1.ChunkProviderServer;
 
+import net.minecraft.server.v1_8_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.craftbukkit.v1_7_R4.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -19,7 +20,6 @@ public class SlimeSpawningTimer implements Runnable {
     public SlimeSpawningTimer() {
         overworld = Bukkit.getWorld(SlimeSpawningSettings.OVERWORLD_NAME.string());
         overworldCps = ((CraftWorld) overworld).getHandle().chunkProviderServer;
-
     }
 
     @Override

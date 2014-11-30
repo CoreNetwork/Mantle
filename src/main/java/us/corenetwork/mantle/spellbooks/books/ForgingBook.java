@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import me.ryanhamshire.GriefPrevention.Claim;
-import net.minecraft.server.v1_7_R4.RecipesFurnace;
+import net.minecraft.server.v1_8_R1.RecipesFurnace;
 
 import org.bukkit.CoalType;
 import org.bukkit.Color;
@@ -16,7 +16,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -45,7 +45,7 @@ public class ForgingBook extends Spellbook {
 		//Get all recipes from vanilla furnaces
 		for (Object recipeO : RecipesFurnace.getInstance().recipes.entrySet())
 		{
-			Entry<net.minecraft.server.v1_7_R4.ItemStack, net.minecraft.server.v1_7_R4.ItemStack> recipe = (Entry<net.minecraft.server.v1_7_R4.ItemStack, net.minecraft.server.v1_7_R4.ItemStack>) recipeO;
+			Entry<net.minecraft.server.v1_8_R1.ItemStack, net.minecraft.server.v1_8_R1.ItemStack> recipe = (Entry<net.minecraft.server.v1_8_R1.ItemStack, net.minecraft.server.v1_8_R1.ItemStack>) recipeO;
 			FORGEITEMS.put(CraftItemStack.asCraftMirror(recipe.getKey()), CraftItemStack.asCraftMirror(recipe.getValue()));
 		}
 		

@@ -7,25 +7,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.NBTBase;
-import net.minecraft.server.v1_7_R4.NBTTagByte;
-import net.minecraft.server.v1_7_R4.NBTTagByteArray;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
-import net.minecraft.server.v1_7_R4.NBTTagDouble;
-import net.minecraft.server.v1_7_R4.NBTTagFloat;
-import net.minecraft.server.v1_7_R4.NBTTagInt;
-import net.minecraft.server.v1_7_R4.NBTTagIntArray;
-import net.minecraft.server.v1_7_R4.NBTTagList;
-import net.minecraft.server.v1_7_R4.NBTTagLong;
-import net.minecraft.server.v1_7_R4.NBTTagShort;
-import net.minecraft.server.v1_7_R4.NBTTagString;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.NBTBase;
+import net.minecraft.server.v1_8_R1.NBTTagByte;
+import net.minecraft.server.v1_8_R1.NBTTagByteArray;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagDouble;
+import net.minecraft.server.v1_8_R1.NBTTagFloat;
+import net.minecraft.server.v1_8_R1.NBTTagInt;
+import net.minecraft.server.v1_8_R1.NBTTagIntArray;
+import net.minecraft.server.v1_8_R1.NBTTagList;
+import net.minecraft.server.v1_8_R1.NBTTagLong;
+import net.minecraft.server.v1_8_R1.NBTTagShort;
+import net.minecraft.server.v1_8_R1.NBTTagString;
 
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
@@ -58,7 +58,7 @@ public class SaveCommand extends NanobotBaseCommand {
 
 		YamlConfiguration yaml = new YamlConfiguration();
 
-		if (stack.tag == null)
+		if (!stack.hasTag())
 		{
 			if (inHand.getType() == Material.POTION)
 			{
@@ -77,10 +77,11 @@ public class SaveCommand extends NanobotBaseCommand {
 				return;
 			}
 		}
-		
-		Set<String> tagKeys = stack.tag.c();
+
+		NBTTagCompound tag = stack.getTag();
+		Set<String> tagKeys = tag.c();
 		for (String key : tagKeys) {
-			addTag(yaml, key, stack.tag.get(key));
+			addTag(yaml, key, tag.get(key));
 		}
 
 		try {

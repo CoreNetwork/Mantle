@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-import net.minecraft.server.v1_7_R4.EntityItem;
+import net.minecraft.server.v1_8_R1.EntityItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_7_R4.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -478,7 +478,7 @@ public class THuntManager {
 			Item item = player.getWorld().dropItem(dropLocation, itemToDrop);
 			item.teleport(dropLocation);
 			EntityItem nmsItem = (EntityItem) ((CraftItem) item).getHandle();
-			nmsItem.a(player.getName());
+			nmsItem.b(player.getName());
 		}
 	}
 

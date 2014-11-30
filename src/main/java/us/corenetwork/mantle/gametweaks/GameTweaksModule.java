@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.gametweaks;
 
-import net.minecraft.server.v1_7_R4.Block;
+import net.minecraft.server.v1_8_R1.Block;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -41,12 +41,12 @@ public class GameTweaksModule extends MantleModule {
 	{
 		MLog.info("Enabling sound hack...");
 
-		SilentPlaceProxy.apply(Block.b("wheat"));
-		SilentPlaceProxy.apply(Block.b("potatoes"));
-		SilentPlaceProxy.apply(Block.b("carrots"));
-		SilentPlaceProxy.apply(Block.b("melon_stem"));
-		SilentPlaceProxy.apply(Block.b("pumpkin_stem"));
-		SilentPlaceProxy.apply(Block.b("nether_wart"));
+		SilentPlaceProxy.apply(Block.getByName("wheat"));
+		SilentPlaceProxy.apply(Block.getByName("potatoes"));
+		SilentPlaceProxy.apply(Block.getByName("carrots"));
+		SilentPlaceProxy.apply(Block.getByName("melon_stem"));
+		SilentPlaceProxy.apply(Block.getByName("pumpkin_stem"));
+		SilentPlaceProxy.apply(Block.getByName("nether_wart"));
 		
 		MLog.info("Sound hack enabled!");
 	}	

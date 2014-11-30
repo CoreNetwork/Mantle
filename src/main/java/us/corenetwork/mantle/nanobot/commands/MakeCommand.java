@@ -1,10 +1,10 @@
 package us.corenetwork.mantle.nanobot.commands;
 
-import net.minecraft.server.v1_7_R4.ItemStack;
-import net.minecraft.server.v1_7_R4.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_7_R4.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import us.corenetwork.mantle.Util;
@@ -73,7 +73,7 @@ public class MakeCommand extends NanobotBaseCommand {
 			return;
 		}
 		
-		nmsStack.tag = newTag;
+		nmsStack.setTag(newTag);
 
 		if (invSlot == null)
 		{
