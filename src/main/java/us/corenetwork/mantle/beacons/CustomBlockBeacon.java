@@ -3,6 +3,7 @@ package us.corenetwork.mantle.beacons;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.Random;
 import net.minecraft.server.v1_8_R1.Block;
 import net.minecraft.server.v1_8_R1.BlockBeacon;
@@ -38,10 +39,12 @@ public class CustomBlockBeacon extends BlockContainer
 
         try
         {
+            Object blockData = Blocks.BEACON.getBlockData();
+
             Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R1.BlockData");
-            Constructor blockDataConstructor = blockDataClass.getDeclaredConstructor(Block.class, ImmutableMap.class);
-            blockDataConstructor.setAccessible(true);
-            Object blockData = blockDataConstructor.newInstance(this, ImmutableMap.builder().build());
+            Field blockField = blockDataClass.getDeclaredField("a");
+            blockField.setAccessible(true);
+            blockField.set(blockData, this);
             this.j((IBlockData) blockData);
         } catch (Exception e1)
         {
@@ -52,7 +55,6 @@ public class CustomBlockBeacon extends BlockContainer
     @Override
     public TileEntity a(World world, int i)
     {
-        System.out.println("beacon a!");
         return new CustomBeaconTileEntity();
     }
 
@@ -80,13 +82,6 @@ public class CustomBlockBeacon extends BlockContainer
         if (tileentitybeacon != null) {
             tileentitybeacon.physics();
         }
-    }
-
-    @Override
-    public void onPlace(World world, BlockPosition blockposition, IBlockData iblockdata)
-    {
-        System.out.println("beacon onplace");
-        super.onPlace(world, blockposition, iblockdata);
     }
 
     @Override

@@ -22,9 +22,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Furnace;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -592,11 +594,9 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
             net.minecraft.server.v1_8_R1.Block.REGISTRY.a(138, new MinecraftKey("beacon"), beaconBlock);
 
-            Method registerItemMethod = Item.class.getDeclaredMethod("a", net.minecraft.server.v1_8_R1.Block.class, Item.class);
+            Method registerItemMethod = Item.class.getDeclaredMethod("b", net.minecraft.server.v1_8_R1.Block.class);
             registerItemMethod.setAccessible(true);
-            registerItemMethod.invoke(null, beaconBlock, new CustomBeaconItem(beaconBlock));
-
-            System.out.println(beaconBlock.getBlockData());
+            registerItemMethod.invoke(null, beaconBlock);
         }
         catch (Exception e)
         {
