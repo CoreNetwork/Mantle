@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.Item;
 import net.minecraft.server.v1_8_R1.ItemBlock;
@@ -18,6 +19,7 @@ import net.minecraft.server.v1_8_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -41,6 +43,8 @@ import us.corenetwork.mantle.Util;
  */
 public class CustomBeaconTileEntity extends TileEntityBeacon
 {
+    public static final int MAX_LEVEL = 4;
+
     private int pyramidLevel = 0;
     private int range = 0;
     private int rangeSquared = 0;
@@ -490,10 +494,48 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             size++;
         }
 
+        //Scan for nearby beacons
+        int doubleSize = size * 2;
+        for (int x = -doubleSize; x <= doubleSize; x++)
+        {
+            for (int z = -doubleSize; z <= doubleSize; z++)
+            {
+                for (int y = 0; y <= size - 1; y++)
+                {
+                    Block block = startBlock.getRelative(x, -y, z);
+                    if (block.getType() == Material.BEACON && !block.equals(startBlock))
+                    {
+                        CustomBeaconTileEntity secondBeacon = (CustomBeaconTileEntity) world.getTileEntity(new BlockPosition(block.getX(), block.getY(), block.getZ()));
+                        if (!secondBeacon.isActive())
+                            continue;
+
+
+                        int distance = Math.max(Math.abs(x), Math.abs(z));
+                        int heightDifference = y;
+                        int levelMe = size;
+                        int levelOther = secondBeacon.getPyramidLevel();
+                        int myWidestPyramidLevelWidth = Math.min(levelMe, levelOther + heightDifference);
+                        int otherWidestPyramidLevelWidth = myWidestPyramidLevelWidth - heightDifference;
+
+                        if (myWidestPyramidLevelWidth + otherWidestPyramidLevelWidth >= distance)
+                        {
+                            pyramidLevel = 0;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         double rangeIron = 0;
         double rangeGold = 0;
         double rangeEmerald = 0;
         double rangeDiamond = 0;
+
+        int oldLevel = pyramidLevel;
+        boolean oldStrongEffect = shouldUseStrongerEffect();
+
+        pyramidLevel = size;
 
         switch (pyramidLevel)
         {
@@ -523,10 +565,6 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                 break;
         }
 
-        int oldLevel = pyramidLevel;
-        boolean oldStrongEffect = shouldUseStrongerEffect();
-
-        pyramidLevel = size;
         range = (int) Math.round(rangeIron + rangeGold + rangeEmerald + rangeDiamond);
         rangeSquared = range * range;
         this.goldPyramid = goldBlocks == totalBlocks;
