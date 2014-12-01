@@ -1,6 +1,8 @@
 package us.corenetwork.mantle;
 
 import java.util.List;
+import javax.swing.border.TitledBorder;
+import net.minecraft.server.v1_8_R1.ChatComponentText;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.IChatBaseComponent;
 import net.minecraft.server.v1_8_R1.IInventory;
@@ -128,7 +130,7 @@ public abstract class InventoryGUI extends CraftInventory
         @Override
         public boolean b(int i, ItemStack itemStack)
         {
-            return false;
+            return true;
         }
 
         @Override
@@ -210,7 +212,7 @@ public abstract class InventoryGUI extends CraftInventory
         @Override
         public IChatBaseComponent getScoreboardDisplayName()
         {
-            return null;
+            return new ChatComponentText(getName());
         }
     }
 }
