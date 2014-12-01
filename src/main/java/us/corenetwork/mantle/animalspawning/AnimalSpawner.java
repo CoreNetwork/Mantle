@@ -3,7 +3,6 @@ package us.corenetwork.mantle.animalspawning;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
-
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,7 +15,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.Sheep;
-
 import us.corenetwork.core.CorePlugin;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -81,7 +79,7 @@ public class AnimalSpawner {
 	@SuppressWarnings("incomplete-switch")
 	private static void spawn(Location location, EntityType type, MemorySection configSection)
 	{
-		AnimalSpawningHelper.spawningMob = true;
+		AnimalSpawningListener.spawningMob = true;
 		Entity entity = location.getWorld().spawnEntity(location, type);
 		
 		if (entity.isDead())

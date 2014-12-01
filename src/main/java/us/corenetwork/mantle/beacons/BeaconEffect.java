@@ -230,6 +230,12 @@ public class BeaconEffect
             effects.clear();
 
             List<Map<String, Object>> effectMap = (List<Map<String, Object>>) configuration.getList("Effects");
+            if(effectMap == null)
+            {
+            	System.out.println("Invalid config: no effects defined!");
+            	return;
+            }
+            
             for (Map<String, Object> effectNode : effectMap)
             {
                 String effectName = effectNode.keySet().toArray(new String[0])[0];

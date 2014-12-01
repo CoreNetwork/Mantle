@@ -1,10 +1,5 @@
 package us.corenetwork.mantle.animalspawning;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayDeque;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -13,9 +8,10 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+
+import java.util.ArrayDeque;
 
 public class AnimalSpawningTimer implements Runnable {
 	public static AnimalSpawningTimer timerSingleton;
@@ -37,51 +33,16 @@ public class AnimalSpawningTimer implements Runnable {
 		
 		ArrayDeque<ChunkCoordinates> chunks = new ArrayDeque<ChunkCoordinates>(amount);
 		
-		try
+		MLog.debug("[ANIMAL] Randomizing chunks - start!");
+
+		
+		for(int i = 0; i<amount;i++)
 		{
-			MLog.debug("[ANIMAL] Executing SQL!");
-
-			PreparedStatement statement = AnimalSpawningIO.getConnection().prepareStatement("SELECT * FROM animal_chunks WHERE Spawned <> 0 ORDER BY Spawned LIMIT " + amount);
-			ResultSet set = statement.executeQuery();
-			
-			
-			MLog.debug("[ANIMAL] Iterating SQL!");
-
-			
-			while (set.next())
-			{
-				ChunkCoordinates coordinates = new ChunkCoordinates();
-				coordinates.x = set.getInt("X");
-				coordinates.z = set.getInt("Z");
-				
-				chunks.add(coordinates);
-				
-				PreparedStatement updateStatement = AnimalSpawningIO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = 0 WHERE X = ? AND Z = ?");
-				updateStatement.setInt(1, coordinates.x);
-				updateStatement.setInt(2, coordinates.z);
-
-				updateStatement.executeUpdate();
-				updateStatement.close();
-			}
-			
-			MLog.debug("[ANIMAL] Finished SQL!");
-			
-			statement.close();
-			if (chunks.size() < amount)
-			{
-				MLog.debug("All chunks spawned! Resetting...");
-				statement = AnimalSpawningIO.getConnection().prepareStatement("UPDATE animal_chunks SET Spawned = random()");
-				statement.executeUpdate();
-				statement.close();
-			}
-			
-			AnimalSpawningIO.getConnection().commit();				
-			
+			 chunks.add(AnimalRange.getRandomChunk());
 		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
+		
+		MLog.debug("[ANIMAL] Randomizing chunks - finish!");
+		
 				
 		long end = System.nanoTime();
 		MLog.debug("Spawning PREPARE ended!");
@@ -179,11 +140,5 @@ public class AnimalSpawningTimer implements Runnable {
 		}
 		
 
-	}
-	
-	public static class ChunkCoordinates
-	{
-		int x;
-		int z;
 	}
 }

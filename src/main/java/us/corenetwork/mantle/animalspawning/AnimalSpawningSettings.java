@@ -1,7 +1,10 @@
 package us.corenetwork.mantle.animalspawning;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -19,7 +22,25 @@ public enum AnimalSpawningSettings {
 	CHUNKS_SPAWNING_AMOUNT("ChunksSpawningAmount", 10),
 	
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
-	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
+	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3),
+	
+	RANGES("Ranges", new ArrayList<Map<String, Integer>>(){{
+		add(new HashMap<String, Integer>(){{
+			put("StartChunk", 1);
+			put("EndChunk", 100);
+			put("Weight", 3);
+		}});
+		add(new HashMap<String, Integer>(){{
+			put("StartChunk", 101);
+			put("EndChunk", 300);
+			put("Weight", 2);
+		}});
+		add(new HashMap<String, Integer>(){{
+			put("StartChunk", 301);
+			put("EndChunk", 500);
+			put("Weight", 1);
+		}});
+	}});
 	protected String string;
 	protected Object def;
 	

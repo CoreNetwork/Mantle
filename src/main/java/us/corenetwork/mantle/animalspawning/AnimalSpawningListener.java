@@ -3,16 +3,16 @@ package us.corenetwork.mantle.animalspawning;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
 import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
+import org.bukkit.event.entity.EntityDeathEvent;
 
 
-public class AnimalSpawningHelper implements Listener {
+public class AnimalSpawningListener implements Listener {
 	public static boolean spawningMob = false;
 	
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -45,7 +45,7 @@ public class AnimalSpawningHelper implements Listener {
 			modifiersField.setAccessible(true);
 		    modifiersField.setInt(reasonField, reasonField.getModifiers() & ~Modifier.FINAL);
 		    
-		    reasonField.set(event, SpawnReason.NATURAL);
+		    reasonField.set(event, SpawnReason.CUSTOM);
 		}
 		catch (Exception e)
 		{
@@ -53,5 +53,11 @@ public class AnimalSpawningHelper implements Listener {
 		}
 		
 		spawningMob = false;
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+	public void onEntityDeathEvent(EntityDeathEvent event)
+	{
+		
 	}
 }
