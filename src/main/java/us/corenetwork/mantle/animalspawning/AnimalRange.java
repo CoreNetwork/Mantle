@@ -38,7 +38,7 @@ public class AnimalRange {
 		lastWeightedChunk = endWeightedChunk;
 	}
 	
-	public static void initializeRanges(int rangeCount)
+	public static void initializeRanges()
 	{
 		lastWeightedChunk = 0;
 		ranges = new ArrayList<AnimalRange>();

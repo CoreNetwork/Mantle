@@ -52,8 +52,16 @@ public class AnimalSpawningModule extends MantleModule {
 		saveConfig();
 	}	
 	
+	@Override
+	public void loadConfig()
+	{
+		super.loadConfig();
+		init();
+	}
+	
 	private void init()
 	{
+		AnimalRange.initializeRanges();
 		List<Map<?, ?>> ranges = config.getMapList(AnimalSpawningSettings.RANGES.string);
 		
 		for(Map<?, ?> range : ranges)
@@ -65,4 +73,5 @@ public class AnimalSpawningModule extends MantleModule {
 			AnimalRange.addRange(startChunk, endChunk, weight);
 		}
 	}
+
 }
