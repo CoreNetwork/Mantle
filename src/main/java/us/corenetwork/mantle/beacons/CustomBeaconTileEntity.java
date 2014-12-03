@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import net.minecraft.server.v1_8_R1.Item;
 import net.minecraft.server.v1_8_R1.ItemBlock;
 import net.minecraft.server.v1_8_R1.MinecraftKey;
@@ -110,7 +111,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
             if (this.world.getTime() % 20L == 0L)
             {
-                ParticleLibrary.HAPPY_VILLAGER.broadcastParticle(getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10);
+                ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10);
             }
 
             fuelLeftTicks--;

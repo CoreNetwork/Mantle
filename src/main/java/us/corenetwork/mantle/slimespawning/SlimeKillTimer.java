@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.slimespawning;
 
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Effect;
@@ -37,7 +38,7 @@ public class SlimeKillTimer implements Runnable {
         		{
         			if (e instanceof Player)
         			{
-                		ParticleLibrary.EXPLODE.sendToPlayer((Player) e, slime.getLocation(), 0, 0, 0, 0,  10);
+                		ParticleLibrary.sendToPlayer(EnumParticle.EXPLOSION_NORMAL, (Player)e, slime.getLocation(), 0, 0, 0, 0, 10);
         			}
         		}
         		

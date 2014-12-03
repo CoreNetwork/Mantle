@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -38,7 +39,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
 		Vector direction = event.getPlayer().getLocation().getDirection();
 
-		ParticleLibrary.HAPPY_VILLAGER.broadcastParticle(effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10);
+		ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10);
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		Block baseBlock = event.getPlayer().getLocation().getBlock();

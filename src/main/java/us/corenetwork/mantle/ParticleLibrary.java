@@ -2,6 +2,7 @@ package us.corenetwork.mantle;
 
 import java.lang.reflect.Field;
 
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import net.minecraft.server.v1_8_R1.PacketPlayOutWorldParticles;
 
 import org.bukkit.Bukkit;
@@ -9,65 +10,23 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-public enum ParticleLibrary {
-    HUGE_EXPLOSION("hugeexplosion"),
-    LARGE_EXPLODE("largeexplode"),
-    FIREWORKS_SPARK("fireworksSpark"),
-    BUBBLE("bubble"),
-    SUSPEND("suspend"),
-    DEPTH_SUSPEND("depthSuspend"),
-    TOWN_AURA("townaura"),
-    CRIT("crit"),
-    MAGIC_CRIT("magicCrit"),
-    MOB_SPELL("mobSpell"),
-    MOB_SPELL_AMBIENT("mobSpellAmbient"),
-    SPELL("spell"),
-    INSTANT_SPELL("instantSpell"),
-    WITCH_MAGIC("witchMagic"),
-    NOTE("note"),
-    PORTAL("portal"),
-    ENCHANTMENT_TABLE("enchantmenttable"),
-    EXPLODE("explode"),
-    FLAME("flame"),
-    LAVA("lava"),
-    FOOTSTEP("footstep"),
-    SPLASH("splash"),
-    LARGE_SMOKE("largesmoke"),
-    CLOUD("cloud"),
-    RED_DUST("reddust"),
-    SNOWBALL_POOF("snowballpoof"),
-    DRIP_WATER("dripWater"),
-    DRIP_LAVA("dripLava"),
-    SNOW_SHOVEL("snowshovel"),
-    SLIME("slime"),
-    HEART("heart"),
-    ANGRY_VILLAGER("angryVillager"),
-    HAPPY_VILLAGER("happyVillager"),
-    ICONCRACK("iconcrack_"),
-    TILECRACK("tilecrack_");
-   
-    private String particleName;
-   
-    ParticleLibrary(String particleName) {
-        this.particleName = particleName;
-    }
- 
-    public void broadcastParticle(Location location, float offsetX, float offsetY, float offsetZ, float data, int count)
+public class ParticleLibrary {
+    public static void broadcastParticle(EnumParticle particle, Location location, float offsetX, float offsetY, float offsetZ, float data, int count)
     {
     	for (Player player : Bukkit.getOnlinePlayers())
     	{
             if (player.getWorld().equals(location.getWorld()) && Util.flatDistanceSquared(player.getLocation(), location) < 100)
             {
-                sendToPlayer(player, location, offsetX, offsetY, offsetZ, data, count);
+                sendToPlayer(particle, player, location, offsetX, offsetY, offsetZ, data, count);
             }
     	}
     }
     
-    public void sendToPlayer(Player player, Location location, float offsetX, float offsetY, float offsetZ, float data, int count) {
+    public static void sendToPlayer(EnumParticle particle, Player player, Location location, float offsetX, float offsetY, float offsetZ, float data, int count) {
     	try
         {
         	PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
-            ReflectionUtilities.setValue(packet, "a", particleName);
+            ReflectionUtilities.setValue(packet, "a", particle);
             ReflectionUtilities.setValue(packet, "b", (float) location.getX());
             ReflectionUtilities.setValue(packet, "c", (float) location.getY());
             ReflectionUtilities.setValue(packet, "d", (float) location.getZ());

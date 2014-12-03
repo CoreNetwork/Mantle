@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.EnumParticle;
 import net.minecraft.server.v1_8_R1.PacketPlayOutBlockAction;
 import net.minecraft.server.v1_8_R1.TileEntity;
 import net.minecraft.server.v1_8_R1.TileEntityBeacon;
@@ -982,7 +983,7 @@ public class RestockableChest {
 		World world = location.getWorld();
 
 		world.playSound(location, Sound.GLASS, 1f, 1f);
-		ParticleLibrary.SPELL.broadcastParticle(location, 0, 0, 0, 0, 3);
+		ParticleLibrary.broadcastParticle(EnumParticle.SPELL, location, 0, 0, 0, 0, 3);
 	}
 	private String getCustomName()
 	{
