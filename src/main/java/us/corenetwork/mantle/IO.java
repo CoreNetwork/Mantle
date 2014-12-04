@@ -112,7 +112,6 @@ public class IO {
     
     public static void UpdateDB()
     {
-    	Update("SELECT InspectionStatus FROM regeneration_structures LIMIT 1", "ALTER TABLE regeneration_structures ADD InspectionStatus INTEGER DEFAULT 0");
     }
         
     public static void Update(String check, String sql)
