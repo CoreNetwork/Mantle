@@ -30,7 +30,7 @@ public class RegenerationUtil {
 	{
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT StructureName, Schematic, World, CornerX, CornerZ, SizeX, SizeZ, PastingY FROM regeneration_structures WHERE id = ? LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT StructureName, Schematic, Rotation, World, CornerX, CornerZ, SizeX, SizeZ, PastingY FROM regeneration_structures WHERE id = ? LIMIT 1");
 			statement.setInt(1, id);
 
 			ResultSet set = statement.executeQuery();
@@ -46,7 +46,7 @@ public class RegenerationUtil {
 				final int xSize = set.getInt("SizeX");
 				final int zSize = set.getInt("SizeZ");
 				int pastingY = set.getInt("PastingY");
-				
+				int rotation = set.getInt("Rotation");
 				//Ginaw
 				//hacky solution to randomizing a schematic for overworld village
 				if(structureName.equalsIgnoreCase("villages"))
@@ -60,6 +60,8 @@ public class RegenerationUtil {
 				
 				World world = Bukkit.getWorld(worldName);
 				final CachedSchematic schematic = new CachedSchematic(schematicName, world);
+				schematic.rotateTo(rotation);
+
 
 				if (clearClaims)
 				{

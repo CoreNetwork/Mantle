@@ -109,7 +109,7 @@ public class StructureGenerator {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (ID, Schematic, StructureName, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (ID, Schematic, StructureName, Rotation, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?,?,?)");
 			int id = 0;
 
 			while (mapEntries.advance())
@@ -122,6 +122,12 @@ public class StructureGenerator {
 				MLog.info("Pasting " + structure.getName() + " to " + x + "," + z);
 
 				CachedSchematic schematic = structure.getRandomSchematic();
+				int rotation = 0;
+				if (structure.shouldRotateRandomly())
+					rotation = MantlePlugin.random.nextInt(4);
+
+				schematic.rotateTo(rotation);
+
 
 				Location schematicCorner = schematic.place(world, x, structure.getPasteHeight(), z, 0, structure.shouldIgnoreAir(), !GenerationSettings.NO_GENERATE.bool());
 
@@ -132,12 +138,13 @@ public class StructureGenerator {
 					statement.setInt(1, id);
 					statement.setString(2, schematic.name);
 					statement.setString(3, structure.getRespawnableStructureName());
-					statement.setString(4, world.getName());
-					statement.setInt(5, schematicCorner.getBlockX());
-					statement.setInt(6, schematicCorner.getBlockZ());
-					statement.setInt(7, structure.getPasteHeight());
-					statement.setInt(8, schematic.xSize);
-					statement.setInt(9, schematic.zSize);
+					statement.setInt(4, rotation);
+					statement.setString(5, world.getName());
+					statement.setInt(6, schematicCorner.getBlockX());
+					statement.setInt(7, schematicCorner.getBlockZ());
+					statement.setInt(8, structure.getPasteHeight());
+					statement.setInt(9, schematic.xSize);
+					statement.setInt(10, schematic.zSize);
 					statement.addBatch();
 				}
 

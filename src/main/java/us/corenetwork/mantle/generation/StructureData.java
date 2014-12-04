@@ -119,7 +119,17 @@ public class StructureData {
 		}
 		return result;
 	}
-	
+
+	public boolean shouldRotateRandomly()
+	{
+		Boolean result = (Boolean) configNode.get("RotateRandomly");
+		if (result == null)
+		{
+			return false;
+		}
+		return result;
+	}
+
 	public CachedSchematic getRandomSchematic()
 	{
 		List<?> schematics = (List<?>) configNode.get("Schematics");
