@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.animalspawning.commands.CountersCommand;
 
 
 public class AnimalSpawningModule extends MantleModule {
@@ -47,6 +48,8 @@ public class AnimalSpawningModule extends MantleModule {
 		Bukkit.getServer().getPluginManager().registerEvents(new AnimalSpawningListener(), MantlePlugin.instance);
 		
 		AnimalSpawningTimer.timerSingleton = new AnimalSpawningTimer();
+		
+		MantlePlugin.adminCommands.put("counters", new CountersCommand());
 		
 		Bukkit.getScheduler().runTaskLaterAsynchronously(MantlePlugin.instance, AnimalSpawningTimer.timerSingleton, 20);
 		AnimalSpawningIO.PrepareDB();

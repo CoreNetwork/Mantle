@@ -141,7 +141,7 @@ public class AnimalSpawningIO {
 			ResultSet set = statement.executeQuery();
 			while(set.next())
 			{
-				counts.put(set.getString(1), set.getInt(2));
+				counts.put(set.getString(2), set.getInt(1));
 			}
 			
 		} catch (SQLException e)
