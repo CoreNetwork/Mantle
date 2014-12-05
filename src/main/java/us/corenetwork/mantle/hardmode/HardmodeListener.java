@@ -1,8 +1,9 @@
 package us.corenetwork.mantle.hardmode;
 
 import java.lang.reflect.Field;
-import java.util.*;
-
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
@@ -20,8 +21,23 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
-import org.bukkit.entity.*;
-import org.bukkit.entity.Skeleton.SkeletonType;
+import org.bukkit.entity.Animals;
+import org.bukkit.entity.Enderman;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Fireball;
+import org.bukkit.entity.Ghast;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.MagmaCube;
+import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.Spider;
+import org.bukkit.entity.Wither;
+import org.bukkit.entity.WitherSkull;
+import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -44,6 +60,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -52,9 +69,9 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.util.Vector;
 import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
@@ -258,7 +275,12 @@ public class HardmodeListener implements Listener {
                         }
                         try {
                             EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
-                            creature.b((net.minecraft.server.v1_8_R1.EntityLiving) nmsEntityField.get(lastDamager));
+                            if(nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R1.EntityLiving)
+                            {
+                            	net.minecraft.server.v1_8_R1.EntityLiving el = (net.minecraft.server.v1_8_R1.EntityLiving) nmsEntityField.get(lastDamager);
+                            	creature.b(el);
+                            }
+                            
 
                         } catch (IllegalAccessException e1) {
                             e1.printStackTrace();
@@ -729,5 +751,28 @@ public class HardmodeListener implements Listener {
             event.getDrops().clear();
         }
 
+    }
+    
+    @EventHandler(ignoreCancelled = true)
+    public void onProjectileLaunchEvent(ProjectileLaunchEvent event)
+    {
+    	Projectile projectile = event.getEntity();
+    	if(projectile instanceof WitherSkull)
+    	{
+    		final WitherSkull witherSkull = (WitherSkull)projectile;
+    		witherSkull.setCharged(true);
+    		Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+				
+				@Override
+				public void run()
+				{
+					Vector velo = witherSkull.getVelocity();
+					int wps = HardmodeSettings.WITHER_PROJECTILE_SPEED.integer();
+		    		MLog.debug(velo.getX() +" "+ velo.getY() +" "+ velo.getZ());
+		    		witherSkull.setVelocity(velo.multiply(wps));
+					
+				}
+			});
+    	}
     }
 }

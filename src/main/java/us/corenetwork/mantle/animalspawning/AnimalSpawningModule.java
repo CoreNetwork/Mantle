@@ -1,18 +1,25 @@
 package us.corenetwork.mantle.animalspawning;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
 
 public class AnimalSpawningModule extends MantleModule {
 	public static AnimalSpawningModule instance;
+	
+	
+	public static Map<UUID, String> spawnedAnimals = new HashMap<UUID, String>();
+	public static List<UUID> killedAnimals = new ArrayList<UUID>();
+	
+	public static Map<String, Integer> animalCounts = new HashMap<String, Integer>();
 	
 	public AnimalSpawningModule() {
 		super("Animal spawning", null, "animalspawn");
@@ -42,9 +49,9 @@ public class AnimalSpawningModule extends MantleModule {
 		AnimalSpawningTimer.timerSingleton = new AnimalSpawningTimer();
 		
 		Bukkit.getScheduler().runTaskLaterAsynchronously(MantlePlugin.instance, AnimalSpawningTimer.timerSingleton, 20);
-	    
+		AnimalSpawningIO.PrepareDB();
 		init();
-		
+		animalCounts = AnimalSpawningIO.getAnimalCounts();
 		return true;
 	}
 	@Override

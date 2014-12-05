@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public class CachedPotionConfig {
 	
-	private static HashMap<String, CachedPotionConfig> potions;
+	private static HashMap<String, CachedPotionConfig> potions = new HashMap<String, CachedPotionConfig>();;
 	
 	public double normal;
 	public double saturation;
