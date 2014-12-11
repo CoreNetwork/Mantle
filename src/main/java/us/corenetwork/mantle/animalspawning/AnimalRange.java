@@ -117,19 +117,19 @@ public class AnimalRange {
 		switch (section)
 		{
 		case 0:
-			x = (-endChunk + 1) + random.nextInt(dim1);
+			x = -endChunk + random.nextInt(dim1);
 			z = -endChunk + random.nextInt(dim2);
 			break;
 		case 1:
-			x = (-endChunk + 1) + random.nextInt(dim2);
+			x = -endChunk + random.nextInt(dim2);
 			z = startChunk - 1 + random.nextInt(dim1);
 			break;
 		case 2:
-			x = startChunk + random.nextInt(dim1);
+			x = startChunk -1 + random.nextInt(dim1);
 			z = (- startChunk + 1) + random.nextInt(dim2);
 			break;
 		case 3:
-			x = (-startChunk + 2) + random.nextInt(dim2);
+			x = (-startChunk + 1) + random.nextInt(dim2);
 			z = -endChunk + random.nextInt(dim1);
 			break;
 		default:
