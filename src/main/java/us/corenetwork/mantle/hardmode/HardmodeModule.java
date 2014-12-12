@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -36,7 +36,7 @@ public class HardmodeModule extends MantleModule {
 		saveConfig();
 				
 		Bukkit.getPluginManager().registerEvents(new HardmodeListener(), MantlePlugin.instance);
-		
+
 		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new HardmodeTimer(), 20, 20);
 
         BabyZombieBurner burner = new BabyZombieBurner();
@@ -44,6 +44,8 @@ public class HardmodeModule extends MantleModule {
         Bukkit.getPluginManager().registerEvents(burner, MantlePlugin.instance);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, burner, 20, 20); //TODO config
 
+		NMSWitherManager.register();
+        
         return true;
 	}
 	
