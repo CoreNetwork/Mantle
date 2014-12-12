@@ -61,12 +61,12 @@ public class PortalsListener implements Listener {
 		{
 			Location source = player.getLocation();
 			Claim sourceClaim = GriefPrevention.instance.dataStore.getClaimAt(source, true, null);
-			if (sourceClaim == null || sourceClaim.allowBuild(player) == null)
+			if (sourceClaim == null || sourceClaim.allowBuild(player, Material.STONE) == null)
 			{
 				Location destination = PortalUtil.getOtherSide(clicked).getLocation();
 				Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
 
-				if (claim != null && claim.allowBuild(player) != null)
+				if (claim != null && claim.allowBuild(player, Material.STONE) != null)
 				{
 					String owner = claim.getOwnerName();
 					if (owner == null)
@@ -214,7 +214,7 @@ public class PortalsListener implements Listener {
 
 				Player player = Bukkit.getServer().getPlayer(creator.player);
 
-				if (player == null || claim.allowBuild(player) != null)
+				if (player == null || claim.allowBuild(player, Material.STONE) != null)
 				{
 					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 

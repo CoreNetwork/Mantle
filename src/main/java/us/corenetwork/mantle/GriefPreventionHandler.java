@@ -1,18 +1,17 @@
 package us.corenetwork.mantle;
 
 import java.awt.Rectangle;
+import java.lang.reflect.Field;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-
 import me.ryanhamshire.GriefPrevention.Claim;
-import me.ryanhamshire.GriefPrevention.ClaimArray;
 import me.ryanhamshire.GriefPrevention.ClaimPermission;
 import me.ryanhamshire.GriefPrevention.CreateClaimResult;
-import me.ryanhamshire.GriefPrevention.CreateClaimResult.Result;
+import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -28,10 +27,11 @@ public class GriefPreventionHandler {
 		int x2 = corner.getBlockX() + xSize + padding - 1;
 		int z2 = corner.getBlockZ() + zSize + padding - 1;
 
-		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, "", null, null, false, null);
-		if (bigClaimResult.succeeded != Result.Success)
+		
+		CreateClaimResult bigClaimResult = GriefPrevention.instance.dataStore.createClaim(world, x1, x2, 1, 256, z1, z2, null, null, null);
+		if (bigClaimResult.succeeded != true)
 		{
-			MLog.severe("Creation of GriefPrevention claim at " + corner.getBlockX() + " " + corner.getBlockZ() + " failed! Please review that location manually (" + bigClaimResult.succeeded.toString() + ")");
+			MLog.severe("Creation of GriefPrevention claim at " + corner.getBlockX() + " " + corner.getBlockZ() + " failed! Please review that location manually");
 			return;
 		}
 		
@@ -60,10 +60,10 @@ public class GriefPreventionHandler {
 		{			
 			for (Location subClaimLoc : chestSubclaims)
 			{
-				CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(subClaimLoc.getWorld(), subClaimLoc.getBlockX(), subClaimLoc.getBlockX(), subClaimLoc.getBlockY(), subClaimLoc.getBlockY(), subClaimLoc.getBlockZ(), subClaimLoc.getBlockZ(), "", bigClaim, null, false, null);
-				if (chestClaimResult.succeeded != Result.Success)
+				CreateClaimResult chestClaimResult = GriefPrevention.instance.dataStore.createClaim(subClaimLoc.getWorld(), subClaimLoc.getBlockX(), subClaimLoc.getBlockX(), subClaimLoc.getBlockY(), subClaimLoc.getBlockY(), subClaimLoc.getBlockZ(), subClaimLoc.getBlockZ(), null, bigClaim, null);
+				if (chestClaimResult.succeeded != true)
 				{
-					MLog.severe("Creation of GriefPrevention sub claim at " + subClaimLoc.getBlockX() + " " + subClaimLoc.getBlockZ() + " failed! Please review that location manually (" + chestClaimResult.succeeded.toString() + ")");
+					MLog.severe("Creation of GriefPrevention sub claim at " + subClaimLoc.getBlockX() + " " + subClaimLoc.getBlockZ() + " failed! Please review that location manually");
 					continue;
 				}
 
@@ -84,14 +84,14 @@ public class GriefPreventionHandler {
 
 	public static Claim getClaimAt(Location location)
 	{
-		return GriefPrevention.instance.dataStore.getClaimAt(location, true);
+		return GriefPrevention.instance.dataStore.getClaimAt(location, true, null);
 	}
 	
 	public static boolean containsClaim(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
 		Rectangle villageRectangle = new Rectangle(x - padding, z - padding, xSize + padding, zSize + padding);
 		
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		ArrayList<Claim> ca =  getAllClaims();
 		for (int i = 0; i < ca.size(); i++)
 		{
 			Claim claim = ca.get(i);
@@ -99,7 +99,7 @@ public class GriefPreventionHandler {
 			if (adminOnly && !claim.isAdminClaim())
 				continue;
 			
-			if (claim.getClaimWorldName() != world.getName())
+			if (claim.getGreaterBoundaryCorner().getWorld().getName().equals(world.getName()) == false)
 				continue;
 			
 			if (player != null && (claim.allowAccess(player) == null))
@@ -125,7 +125,7 @@ public class GriefPreventionHandler {
 		
 		Rectangle villageRectangle = new Rectangle(x - padding, z - padding, xSize + padding, zSize + padding);
 
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
+		ArrayList<Claim> ca =  getAllClaims();
 		for (int i = 0; i < ca.size(); i++)
 		{
 			Claim claim = ca.get(i);
@@ -133,7 +133,7 @@ public class GriefPreventionHandler {
 			if (adminOnly && !claim.isAdminClaim())
 				continue;
 			
-			if (claim.getClaimWorldName() != world.getName())
+			if (claim.getGreaterBoundaryCorner().getWorld().getName().equals(world.getName()) == false)
 				continue;
 			
 			if (player != null && (claim.allowAccess(player) == null))
@@ -154,124 +154,35 @@ public class GriefPreventionHandler {
 	
 	public static void deleteClaimsInside(World world, int x, int z, int xSize, int zSize, int padding, boolean adminOnly, Player player)
 	{		
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
 		List<Claim> claimsToDelete = getClaimsInside(world, x, z, xSize, zSize, padding, adminOnly, player);
 		
 		for (Claim claim : claimsToDelete)
 			GriefPrevention.instance.dataStore.deleteClaim(claim);
 	}
 	
-	public static Deque<Location> getAllClaims()
-	{
-		ArrayDeque<Location> list = new ArrayDeque<Location>();
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
-		for (int i = 0; i < ca.size(); i++)
-		{
-			Claim claim = ca.get(i);
-
-			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
-			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
-			int claimSizeX = Math.abs(claim.getLesserBoundaryCorner().getBlockX() - claim.getGreaterBoundaryCorner().getBlockX());
-			int claimSizeZ = Math.abs(claim.getLesserBoundaryCorner().getBlockZ() - claim.getGreaterBoundaryCorner().getBlockZ());
-
-			int claimCenterX = claimMinX + claimSizeX / 2;
-			int claimCenterZ = claimMinZ + claimSizeZ / 2;
-			
-			Location center = new Location(claim.getLesserBoundaryCorner().getWorld(), claimCenterX, 0, claimCenterZ);
-			
-			list.addLast(center);
-		}
-		
-		return list;
-	}
-	
 	public static void enableExplosions(World world)
 	{
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
-		for(Claim claim : ca)
+		for(Claim claim : getAllClaims())
 		{
-			if (claim.getClaimWorldName() != world.getName())
-				continue;
-			
-			claim.areExplosivesAllowed = true;
+			if (claim.getGreaterBoundaryCorner().getWorld().getName().equals(world.getName()))
+				claim.areExplosivesAllowed = true;
 		}
 	}
 	
- 	public static Deque<Location> getPlayerClaims(String player, boolean inverse)
+	private static ArrayList<Claim> getAllClaims()
 	{
-		ArrayDeque<Location> list = new ArrayDeque<Location>();
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
-		for (int i = 0; i < ca.size(); i++)
+		ArrayList<Claim> ca = new ArrayList<Claim>();
+		try
 		{
-			Claim claim = ca.get(i);
-
-			if (inverse == claim.getOwnerName().equals(player))
-					continue;
-			
-			int claimMinX = Math.min(claim.getLesserBoundaryCorner().getBlockX(), claim.getGreaterBoundaryCorner().getBlockX());
-			int claimMinZ = Math.min(claim.getLesserBoundaryCorner().getBlockZ(), claim.getGreaterBoundaryCorner().getBlockZ());
-			int claimSizeX = Math.abs(claim.getLesserBoundaryCorner().getBlockX() - claim.getGreaterBoundaryCorner().getBlockX());
-			int claimSizeZ = Math.abs(claim.getLesserBoundaryCorner().getBlockZ() - claim.getGreaterBoundaryCorner().getBlockZ());
-
-			int claimCenterX = claimMinX + claimSizeX / 2;
-			int claimCenterZ = claimMinZ + claimSizeZ / 2;
-			
-			Location center = new Location(claim.getLesserBoundaryCorner().getWorld(), claimCenterX, 0, claimCenterZ);
-			
-			list.addLast(center);
+			Field privateField = DataStore.class.getDeclaredField("claims");
+			privateField.setAccessible(true);
+			ca = (ArrayList<Claim>) privateField.get(GriefPrevention.instance.dataStore);
+		} catch (Exception e)
+		{
+			MLog.severe("Reflection error, blah.");
+			e.printStackTrace();
 		}
-		
-		return list;
+		return ca;
 	}
 	
-	public static boolean playerHasClaim(String player)
-	{
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
-		for (int i = 0; i < ca.size(); i++)
-		{
-			Claim claim = ca.get(i);
-
-			if (claim.getOwnerName().equals(player))
-					return true;			
-		}
-		
-		return false;
-	}
-	
-	public static Location findBiggestClaim(String player)
-	{
-		ClaimArray ca = GriefPrevention.instance.dataStore.getClaimArray();
-		
-		Claim biggest = null;
-		int biggestSize = 0;
-		for (int i = 0; i < ca.size(); i++)
-		{
-			Claim claim = ca.get(i);
-			
-			if (!claim.getOwnerName().equals(player))
-					continue;
-			
-			if (biggestSize >= claim.getArea())
-				continue;
-			
-			biggest = claim;
-			biggestSize = claim.getArea();
-			
-		}
-				
-		if (biggest == null)
-			return null;
-		
-		int claimMinX = Math.min(biggest.getLesserBoundaryCorner().getBlockX(), biggest.getGreaterBoundaryCorner().getBlockX());
-		int claimMinZ = Math.min(biggest.getLesserBoundaryCorner().getBlockZ(), biggest.getGreaterBoundaryCorner().getBlockZ());
-		int claimSizeX = Math.abs(biggest.getLesserBoundaryCorner().getBlockX() - biggest.getGreaterBoundaryCorner().getBlockX());
-		int claimSizeZ = Math.abs(biggest.getLesserBoundaryCorner().getBlockZ() - biggest.getGreaterBoundaryCorner().getBlockZ());
-
-		int claimCenterX = claimMinX + claimSizeX / 2;
-		int claimCenterZ = claimMinZ + claimSizeZ / 2;
-		
-		Location center = new Location(biggest.getLesserBoundaryCorner().getWorld(), claimCenterX, 0, claimCenterZ);
-		
-		return center;
-	}
 }

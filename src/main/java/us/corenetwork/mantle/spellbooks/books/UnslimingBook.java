@@ -1,17 +1,16 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import me.ryanhamshire.GriefPrevention.Claim;
-
 import org.bukkit.Chunk;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
@@ -43,7 +42,7 @@ public class UnslimingBook extends Spellbook {
 		Player player = event.getPlayer();
 		
 		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
-		if (claim != null && claim.allowBuild(player) != null)
+		if (claim != null && claim.allowBuild(player, Material.STONE) != null)
 		{
 			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 			return BookFinishAction.NOTHING;

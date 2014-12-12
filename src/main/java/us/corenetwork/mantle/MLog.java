@@ -1,26 +1,34 @@
 package us.corenetwork.mantle;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 
 public class MLog {
+
 	public static void debug(String text)
 	{
 		if (Settings.getBoolean(Setting.DEBUG))
-			info(text);
+			sendLog("&f[&3Mantle&f]&f "+text);
 	}
-	
+
 	public static void info(String text)
 	{
-		Bukkit.getLogger().info("[Mantle] " + text);
+		sendLog("&f[&fMantle&f]&f "+text);
 	}
-	
+
 	public static void warning(String text)
 	{
-		Bukkit.getLogger().warning("[Mantle] " + text);
+		sendLog("&f[&eMantle&f]&f " + text);
 	}
-	
+
 	public static void severe(String text)
 	{
-		Bukkit.getLogger().severe("[Mantle] " + text);
+		sendLog("&f[&cMantle&f]&f " + text);
 	}
+
+	public static void sendLog(String text)
+	{
+		Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+	}
+
 }
