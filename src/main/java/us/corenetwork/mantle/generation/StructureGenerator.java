@@ -150,7 +150,7 @@ public class StructureGenerator {
 
 				if (structure.shouldSpawnVillagers())
 				{
-					schematic.spawnVillagers(schematicCorner, villagerSpawner);
+					schematic.spawnVillagers(schematicCorner, villagerSpawner, rotation);
 				}
 
 				Protection protection = structure.getProtectionData();
@@ -161,7 +161,7 @@ public class StructureGenerator {
 
 				if (structure.shouldCreateRestockableChests())
 				{
-					ChestInfo[] chests = schematic.getChests(schematicCorner);
+					ChestInfo[] chests = schematic.getChests(schematicCorner, rotation);
 					for (ChestInfo chest : chests)
 					{
 						if (chest.restockable)

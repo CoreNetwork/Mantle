@@ -1,6 +1,7 @@
 package us.corenetwork.mantle;
 
 import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
-import javax.sound.sampled.Clip;
 import net.minecraft.server.v1_8_R1.EntityVillager;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -41,9 +41,6 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.SignBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.bukkit.WorldEditPlugin;
-import com.sk89q.worldedit.data.DataException;
-import com.sk89q.worldedit.schematic.SchematicFormat;
 
 public class CachedSchematic {
 	private LocalSession localSession;
@@ -118,14 +115,15 @@ public class CachedSchematic {
 		{
 			try
 			{
-				for (int x = 0; x < xSize; x++)
+				Clipboard cc =  localSession.getClipboard().getClipboard();
+				for (int y = 0; y < ySize; y++)
 				{
 					for (int z = 0; z < zSize; z++)
 					{
-						for (int y = 0; y < ySize; y++)
+						for (int x = 0; x < xSize; x++)
 						{
-							Vector vector = new Vector(x, y, z);
-							BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
+							Vector vector = new Vector(x,y,z);
+							BaseBlock baseBlock = cc.getBlock(vector);
 							if (Util.isInventoryContainer(baseBlock.getType()))
 							{
 								vectorList.add(vector);
@@ -159,12 +157,15 @@ public class CachedSchematic {
 		{
 			try
 			{
+				Vector minPoint = localSession.getClipboard().getClipboard().getRegion().getMinimumPoint();
 				Vector chest = v;
 						
 				BaseBlock baseBlock = null;
 				for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 				{
-					Vector vector = new Vector(v.getBlockX() + face.getModX(), v.getBlockY(), v.getBlockZ() + face.getModZ());
+					Vector vector = new Vector(chest.getBlockX() + face.getModX(), chest.getBlockY(), chest.getBlockZ() + face.getModZ());
+
+					vector = vector.add(minPoint);
 					try
 					{
 						baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
@@ -183,7 +184,12 @@ public class CachedSchematic {
 							sign.setNbtData(baseBlock.getNbtData());
 		
 							boolean properSign = true;
-							
+							String[] signText = sign.getText();
+							for(int i = 0;i<signText.length;i++)
+							{
+								signText[i] = signText[i].substring(1, signText[i].length()-1);
+							}
+
 							if (sign.getText()[0].trim().startsWith("[loot]"))
 							{
 								ChestInfo info = new ChestInfo();
@@ -255,7 +261,7 @@ public class CachedSchematic {
 		}
 	}
 	
-	public ChestInfo[] getChests(Location placementCorner)
+	public ChestInfo[] getChests(Location placementCorner, int rotation)
 	{			
 		ChestInfo[] infos = new ChestInfo[chests.size()];
 
@@ -263,9 +269,33 @@ public class CachedSchematic {
 		{
 			ChestInfo info = new ChestInfo(chests.get(i));
 
-			int x = info.loc.getBlockX() + placementCorner.getBlockX();
+			int x = placementCorner.getBlockX();
 			int y = info.loc.getBlockY() + placementCorner.getBlockY();
-			int z = info.loc.getBlockZ() + placementCorner.getBlockZ();
+			int z = placementCorner.getBlockZ();
+
+			switch (rotation)
+			{
+				case 0:
+					x += info.loc.getBlockX();
+					z += info.loc.getBlockZ();
+					break;
+				case 1:
+					x += info.loc.getBlockZ();
+					z += this.xSize - info.loc.getBlockX() - 1;
+					break;
+				case 2:
+					x += this.xSize - info.loc.getBlockX() - 1;
+					z += this.zSize - info.loc.getBlockZ() - 1;
+					break;
+				case 3:
+					x += this.zSize - info.loc.getBlockZ() - 1;
+					z += info.loc.getBlockX();
+					break;
+				default :
+					x += info.loc.getBlockX();
+					z += info.loc.getBlockZ();
+					break;
+			}
 			info.loc = new Location(placementCorner.getWorld(), x, y, z);
 
 			infos[i] = info;
@@ -287,12 +317,13 @@ public class CachedSchematic {
 		{
 			try
 			{
+				Clipboard cc =  localSession.getClipboard().getClipboard();
 				for (int x = 0; x < xSize; x++) {
 					for (int z = 0; z < zSize; z++)	{
 						for (int y = 0; y < ySize; y++)
 						{
-							Vector vector = new Vector(x, y, z);
-							BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
+							Vector vector = new Vector(x,y,z);
+							BaseBlock baseBlock = cc.getBlock(vector);
 							if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 							{
 								vectorList.add(vector);
@@ -351,9 +382,12 @@ public class CachedSchematic {
 	{
 		try
 		{
+
+			Vector minPoint = localSession.getClipboard().getClipboard().getRegion().getMinimumPoint();
+
 			for(Vector vector : signLocations)
 			{
-				BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector);
+				BaseBlock baseBlock = localSession.getClipboard().getClipboard().getBlock(vector.add(minPoint));
 				SignBlock sign = new SignBlock(baseBlock.getType(), baseBlock.getData());
 				sign.setNbtData(baseBlock.getNbtData());
 		
@@ -361,6 +395,9 @@ public class CachedSchematic {
 				for (int i = 0; i < 4; i++)
 				{
 					String line = sign.getText()[i];
+					if(line.length() <= 2)
+						continue;
+					line = line.substring(1,line.length()-1);
 					String lineS[] = line.split(" ");
 					int amount = 1;
 		
@@ -409,13 +446,40 @@ public class CachedSchematic {
 		}
 	}
 	
-	public void spawnVillagers(Location placementCorner, VillagerSpawner spawner)
+	public void spawnVillagers(Location placementCorner, VillagerSpawner spawner, int rotation)
 	{
 		for (VillagerInfo villager : villagers)
 		{
-			int x = villager.loc.getBlockX() + placementCorner.getBlockX();
-			int y = villager.loc.getBlockY() + placementCorner.getBlockY();
-			int z = villager.loc.getBlockZ() + placementCorner.getBlockZ();
+
+
+			double x = placementCorner.getBlockX() + 0.5;
+			double y = villager.loc.getBlockY() + placementCorner.getBlockY()+0.5;
+			double z = placementCorner.getBlockZ()+0.5;
+
+			switch (rotation)
+			{
+				case 0:
+					x += villager.loc.getBlockX();
+					z += villager.loc.getBlockZ();
+					break;
+				case 1:
+					x += villager.loc.getBlockZ();
+					z += this.xSize - villager.loc.getBlockX() - 1;
+					break;
+				case 2:
+					x += this.xSize - villager.loc.getBlockX() - 1;
+					z += this.zSize - villager.loc.getBlockZ() - 1;
+					break;
+				case 3:
+					x += this.zSize - villager.loc.getBlockZ() - 1;
+					z += villager.loc.getBlockX();
+					break;
+				default :
+					x += villager.loc.getBlockX();
+					z += villager.loc.getBlockZ();
+					break;
+			}
+
 			Location loc = new Location(placementCorner.getWorld(), x, y, z);
 
 			for (int i = 0; i < villager.amount; i++)
@@ -608,8 +672,6 @@ public class CachedSchematic {
 			ClipboardReader reader = ClipboardFormat.findByFile(file).getReader(bufferedStream);
 
 			Clipboard clipboard = reader.read(worldData);
-
-			//Move origin to center of schematic
 			Vector min = clipboard.getMinimumPoint();
 			Vector max = clipboard.getMaximumPoint();
 			Vector halfsize = max.subtract(min).divide(2);
@@ -641,6 +703,12 @@ public class CachedSchematic {
 
 	public static class ChestInfo
 	{
+		public Location loc;
+		public boolean restockable;
+		public String lootTable;
+		public int interval;
+		public boolean perPlayer;
+
 		public ChestInfo()
 		{
 
@@ -655,10 +723,5 @@ public class CachedSchematic {
 			perPlayer = i.perPlayer;
 		}
 
-		public Location loc;
-		public boolean restockable;
-		public String lootTable;
-		public int interval;
-		public boolean perPlayer;
 	}
 }
