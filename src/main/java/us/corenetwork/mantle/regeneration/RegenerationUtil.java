@@ -60,8 +60,10 @@ public class RegenerationUtil {
 				
 				World world = Bukkit.getWorld(worldName);
 				final CachedSchematic schematic = new CachedSchematic(schematicName, world);
-				schematic.rotateTo(rotation);
+				//schematic.rotateTo(rotation);
 
+				rotation = MantlePlugin.random.nextInt(4);
+				schematic.rotateTo(rotation);
 
 				if (clearClaims)
 				{
@@ -87,7 +89,8 @@ public class RegenerationUtil {
 				}
 				
 				schematic.place(pastingLocation, structure.shouldIgnoreAir());
-				
+
+				final int rot = rotation;
 				if (structure.shouldRespawnVillagers())
 				{
 					Bukkit.getServer().getScheduler().runTask(MantlePlugin.instance, new Runnable() {
@@ -97,7 +100,7 @@ public class RegenerationUtil {
 							schematic.clearVillagers(pastingLocation);
 
 							VillagerSpawner villagerSpawner = new VillagerSpawner();
-							schematic.spawnVillagers(pastingLocation, villagerSpawner);
+							schematic.spawnVillagers(pastingLocation, villagerSpawner, rot);
 							villagerSpawner.close();
 						}
 					});	
@@ -106,7 +109,7 @@ public class RegenerationUtil {
 
 
 				
-				ChestInfo[] chests = schematic.getChests(pastingLocation);
+				ChestInfo[] chests = schematic.getChests(pastingLocation, rotation);
 				for (ChestInfo chest : chests)
 				{
 					if (chest.restockable)
