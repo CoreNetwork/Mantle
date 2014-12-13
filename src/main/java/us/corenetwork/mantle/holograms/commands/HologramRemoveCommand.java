@@ -26,20 +26,10 @@ public class HologramRemoveCommand extends BaseHologramCommand
         Location location = player.getLocation();
 
         Hologram nearest = null;
-        double nearestDistance = Double.MAX_VALUE;
 
         if (args.length < 1)
         {
-            for (Hologram hologram : HologramStorage.storage)
-            {
-                Location hologramLocation = new Location(location.getWorld(), hologram.getX(), hologram.getY(), hologram.getZ());
-                double distance = hologramLocation.distanceSquared(location);
-                if (distance < nearestDistance)
-                {
-                    nearestDistance = distance;
-                    nearest = hologram;
-                }
-            }
+            nearest = HologramStorage.getNearest(location);
         }
         else
         {
@@ -52,9 +42,7 @@ public class HologramRemoveCommand extends BaseHologramCommand
         }
         else
         {
-            nearest.removeForAll();
-
-            HologramStorage.storage.remove(nearest);
+            nearest.delete();
             if (nearest.getName() != null)
                 HologramStorage.namedHolograms.remove(nearest.getName());
 

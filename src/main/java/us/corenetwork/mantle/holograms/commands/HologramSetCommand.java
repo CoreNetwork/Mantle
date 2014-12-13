@@ -60,17 +60,16 @@ public class HologramSetCommand extends BaseHologramCommand
         if (hologram == null)
         {
             hologram = new Hologram(name, location.getWorld(), location.getX(), location.getY(), location.getZ(), text);
-            HologramStorage.storage.add(hologram);
-            if (name != null)
-                HologramStorage.namedHolograms.put(name, hologram);
-            hologram.displayForAll();
+            HologramStorage.add(hologram);
+            hologram.updateEntities();
 
             Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_ADDED.string(), sender);
         }
         else
         {
             hologram.update(text);
-            Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_REMOVED.string(), sender);
+            hologram.updateEntities();
+            Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_UPDATED.string(), sender);
         }
 
         HologramStorage.save();

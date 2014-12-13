@@ -13,7 +13,7 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
 	public HologramUpdateLineCommand()
 	{
 		permission = "update";
-		desc = "Update single line of the hologram - NOT PERSISTENT";
+		desc = "Update single line of the hologram";
 		needPlayer = false;
 	}
 
@@ -48,6 +48,7 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
             text = text.substring(0, text.length() - 1);
 
         hologram.updateLine(line - 1, text);
+        hologram.updateEntityText();
 	}
 	
 

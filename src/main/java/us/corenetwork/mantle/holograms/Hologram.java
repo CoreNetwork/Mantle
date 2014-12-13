@@ -1,22 +1,20 @@
 package us.corenetwork.mantle.holograms;
 
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.ProtocolLibrary;
-import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.wrappers.WrappedDataWatcher;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_8_R1.Entity;
+import java.util.Set;
+import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 /**
@@ -25,25 +23,29 @@ import us.corenetwork.mantle.nanobot.NanobotUtil;
 public class Hologram
 {
     private String name;
-    private int id;
 
     private World world;
 
     private double x;
     private double y;
     private double z;
-    private List<String> text = new ArrayList<>();
+    private List<String> text = new ArrayList<String>();
+
+    private List<UUID> linkedEntities = new ArrayList<UUID>();
 
     private int chunkX;
     private int chunkZ;
 
     private boolean hidden;
-    private boolean hiddenToSave;
+
+    private boolean needsUpdating;
+    private boolean deleteOnNextUpdate;
+    private boolean doNotSave;
+
+    private HologramsChunk parentChunk;
 
     public Hologram(Map<String, ?> map)
     {
-        id = getNextEntityId();
-
         x = ((Number) map.get("x")).doubleValue();
         y = ((Number) map.get("y")).doubleValue();
         z = ((Number) map.get("z")).doubleValue();
@@ -57,12 +59,21 @@ public class Hologram
             this.text.addAll((List) text);
         }
 
+        if (map.containsKey("linkedEntities"))
+            loadLinkedEntitiesStringList((List) map.get("linkedEntities"));
+
         Boolean hidden = (Boolean) map.get("hidden");
         this.hidden = hidden != null && hidden;
-        this.hiddenToSave = this.hidden;
 
         world = Bukkit.getWorld((String) map.get("world"));
         name = (String) map.get("id");
+
+        needsUpdating = true;
+        if (map.containsKey("needsUpdating"))
+            needsUpdating = (Boolean) map.get("needsUpdating");
+        deleteOnNextUpdate = false;
+        if (map.containsKey("deleteOnNextUpdate"))
+            deleteOnNextUpdate = (Boolean) map.get("deleteOnNextUpdate");
 
         chunkX = (int) x >> 4;
         chunkZ = (int) z >> 4;
@@ -70,8 +81,6 @@ public class Hologram
 
     public Hologram(String name, World world, double x, double y, double z, String text)
     {
-        id = getNextEntityId();
-
         this.name = name;
         this.x = x;
         this.y = y;
@@ -79,7 +88,6 @@ public class Hologram
         parseSingleLine(text);
         this.world = world;
         this.hidden = false;
-        this.hiddenToSave = false;
 
         chunkX = (int) x >> 4;
         chunkZ = (int) z >> 4;
@@ -94,21 +102,35 @@ public class Hologram
         map.put("z", (Double) z);
         map.put("text", text);
         map.put("world", world.getName());
-        map.put("hidden", hiddenToSave);
+        map.put("hidden", hidden);
+        map.put("needsUpdating", needsUpdating);
+        map.put("deleteOnNextUpdate", deleteOnNextUpdate);
+        map.put("linkedEntities", getLinkedEntitiesStringList());
+
         if (name != null)
             map.put("id", name);
 
         return map;
     }
 
+    private List<String> getLinkedEntitiesStringList()
+    {
+        List<String> entityIDs = new ArrayList<String>(linkedEntities.size());
+        for (UUID uuid : linkedEntities)
+            entityIDs.add(uuid.toString());
+
+        return entityIDs;
+    }
+
+    private void loadLinkedEntitiesStringList(List<String> list)
+    {
+        for (String entry : list)
+            linkedEntities.add(UUID.fromString(entry));
+    }
+
     private void parseSingleLine(String text)
     {
         this.text.addAll(Arrays.asList(text.split("<N>")));
-    }
-
-    public int getId()
-    {
-        return id;
     }
 
     public double getX()
@@ -156,30 +178,101 @@ public class Hologram
         return hidden;
     }
 
-    public void setHidden(boolean hidden, boolean persistent)
+    public boolean getShouldNotSave()
     {
-        this.hidden = hidden;
-        if (persistent)
-        {
-            this.hiddenToSave = hidden;
-            HologramStorage.save();
-        }
-
-        if (hidden)
-        {
-            removeForAll();
-        }
-        else
-        {
-            displayForAll();
-        }
+        return doNotSave;
     }
 
-    public boolean isInViewDistance(Player player)
+    public boolean getNeedsUpdating()
     {
-        World world = player.getWorld();
-        Chunk chunk = player.getLocation().getChunk();
-        return world.equals(this.world) && Math.min(Math.abs(chunk.getX() - this.chunkX), Math.abs(chunk.getZ() - this.chunkZ)) <= Bukkit.getServer().getViewDistance();
+        return needsUpdating;
+    }
+
+    public void setParentChunk(HologramsChunk parentChunk)
+    {
+        this.parentChunk = parentChunk;
+
+        if (needsUpdating)
+            parentChunk.needsUpdating = true;
+    }
+
+    public void updateEntityText()
+    {
+        if (!isLoaded())
+        {
+            needsUpdating = true;
+            parentChunk.needsUpdating = true;
+            return;
+        }
+
+        Entity[] entitiesInChunk = getChunk().getEntities();
+        for (Entity entity : entitiesInChunk)
+        {
+            if (entity.getType() != EntityType.ARMOR_STAND)
+                continue;
+
+            for (int i = 0; i < linkedEntities.size(); i++)
+            {
+                if (entity.getUniqueId().equals(linkedEntities.get(i)))
+                    ((ArmorStand) entity).setCustomName(text.get(i));
+            }
+        }
+
+    }
+
+    public void updateEntities()
+    {
+        if (!isLoaded())
+        {
+            needsUpdating = true;
+            parentChunk.needsUpdating = true;
+            return;
+        }
+
+        needsUpdating = false;
+
+        //Remove existing holograms
+        Entity[] entitiesInChunk = getChunk().getEntities();
+        for (Entity entity : entitiesInChunk)
+        {
+            if (entity.getType() == EntityType.ARMOR_STAND && linkedEntities.contains(entity.getUniqueId()))
+                entity.remove();
+        }
+
+        linkedEntities.clear();
+
+        if (deleteOnNextUpdate)
+            doNotSave = true;
+
+        if (deleteOnNextUpdate || hidden)
+            return;
+
+        double y = this.y;
+
+        for (String line : text)
+        {
+            if (line.trim().isEmpty())
+                continue;
+
+            ArmorStand armorStand = (ArmorStand) world.spawnEntity(new Location(world, x, y, z), EntityType.ARMOR_STAND);
+            armorStand.setCustomName(NanobotUtil.fixFormatting(line));
+            armorStand.setCustomNameVisible(true);
+            armorStand.setGravity(false);
+            armorStand.setVisible(false);
+
+            linkedEntities.add(armorStand.getUniqueId());
+
+            y -= 0.25;
+        }
+
+        HologramStorage.save();
+    }
+
+    public void setHidden(boolean hidden)
+    {
+        this.hidden = hidden;
+
+        updateEntities();
     }
 
     public boolean isLoaded()
@@ -187,113 +280,17 @@ public class Hologram
         return world.isChunkLoaded(chunkX, chunkZ);
     }
 
-    public Integer[] display(Player player)
+    public Chunk getChunk()
     {
-        Integer[] personalizedIds = new Integer[text.size()];
-        double y = this.y;
-
-        for (int i = 0; i < text.size(); i++)
-        {
-            personalizedIds[i] = getNextEntityId();
-
-            if (text.get(i).isEmpty())
-                continue;
-
-            ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-            PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY_LIVING);
-
-            packet.getIntegers().write(0, personalizedIds[i]); //Entity ID, different every time - Client seems to have trouble respawning entities with same ID. My guess it is because they are not within chunk data?
-            packet.getIntegers().write(1, 30); //Armor stand ID
-
-            packet.getIntegers().write(2, (int) Math.floor(x * 32.0D)); //X
-            packet.getIntegers().write(3, (int) Math.floor(y * 32.0D)); //Y
-            packet.getIntegers().write(4, (int) Math.floor(z * 32.0D)); //Z
-
-            packet.getBytes().write(0, (byte) (0 * 256.0F / 360.0F)); //Yaw - does not matter, can be 0
-            packet.getBytes().write(1, (byte) (0 * 256.0F / 360.0F)); //Pitch - does not matter, can be 0
-
-            WrappedDataWatcher watcher = new WrappedDataWatcher();
-            watcher.setObject(2, NanobotUtil.fixFormatting(text.get(i))); //CustomName
-            watcher.setObject(3, Byte.valueOf((byte) 1)); //Custom name always visible
-            watcher.setObject(0, Byte.valueOf((byte) (1 << 5))); //Invisible (flag?)
-            watcher.setObject(10, Byte.valueOf((byte) 0x2)); //No gravity (flag?)
-
-            packet.getDataWatcherModifier().write(0, watcher);
-
-            try
-            {
-                protocolManager.sendServerPacket(player, packet);
-            } catch (InvocationTargetException e)
-            {
-                e.printStackTrace();
-            }
-
-            y -= 0.25;
-        }
-
-
-        return personalizedIds;
-    }
-
-    public void displayForAll()
-    {
-        if (hidden)
-            return;
-
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
-            if (!HologramPlayerData.isPlayer18(player))
-                continue;
-
-            HologramPlayerData playerData = HologramPlayerData.get(player.getUniqueId());
-
-            if (!playerData.isHologramDisplayed(id) && isInViewDistance(player))
-            {
-                playerData.addHologram(id, display(player));
-            }
-        }
-    }
-
-    public void remove(Player player, Integer[] ids)
-    {
-        ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
-        PacketContainer packet = protocolManager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-
-        int[] idsUnboxed = new int[ids.length];
-        for (int i = 0; i < ids.length; i++)
-            idsUnboxed[i] = ids[i];
-
-        packet.getIntegerArrays().write(0, idsUnboxed); //Entity ID
-
-        try
-        {
-            protocolManager.sendServerPacket(player, packet);
-        } catch (InvocationTargetException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void removeForAll()
-    {
-        for (Player player : Bukkit.getOnlinePlayers())
-        {
-            HologramPlayerData playerData = HologramPlayerData.get(player.getUniqueId());
-
-            if (playerData.isHologramDisplayed(id))
-            {
-                remove(player, playerData.getPersonalizedHologramId(id));
-                playerData.setHologramAsNotDisplayed(id);
-            }
-        }
+        return world.getChunkAt(chunkX, chunkZ);
     }
 
     public void update(String newText)
     {
-        removeForAll();
         text.clear();
         parseSingleLine(newText);
-        displayForAll();
+
+        updateEntities();
     }
 
     public void updateLine(int line, String newText)
@@ -301,28 +298,14 @@ public class Hologram
         if (line >= text.size() || line < 0)
             return;
 
-        removeForAll();
         text.set(line, newText);
-        displayForAll();
+
+        updateEntities();
     }
 
-    private static int getNextEntityId()
+    public void delete()
     {
-        try
-        {
-            Class cl = Entity.class;
-            Field field = cl.getDeclaredField("entityCount");
-            field.setAccessible(true);
-
-            int nextId = (int) field.get(null);
-            field.set(null, nextId + 1 );
-
-            return nextId;
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            return Integer.MAX_VALUE;
-        }
+        deleteOnNextUpdate = true;
+        updateEntities();
     }
 }

@@ -21,7 +21,7 @@ public class HologramShowCommand extends BaseHologramCommand
 	public void run(CommandSender sender, String[] args) {
         if (args.length < 1)
         {
-            sender.sendMessage("/holo show <id> [p - persistent]");
+            sender.sendMessage("/holo show <id>");
             return;
         }
 
@@ -33,7 +33,7 @@ public class HologramShowCommand extends BaseHologramCommand
         }
 
         boolean persistent = args.length > 1;
-        hologram.setHidden(false, persistent);
+        hologram.setHidden(false);
 	}
 	
 

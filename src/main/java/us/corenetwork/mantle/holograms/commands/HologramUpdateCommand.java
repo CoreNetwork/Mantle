@@ -13,7 +13,7 @@ public class HologramUpdateCommand extends BaseHologramCommand
 	public HologramUpdateCommand()
 	{
 		permission = "update";
-		desc = "Update text of the hologram - not persistent and thus faster than set";
+		desc = "Update text of the hologram - cannot change number of lines";
 		needPlayer = false;
 	}
 
@@ -46,6 +46,7 @@ public class HologramUpdateCommand extends BaseHologramCommand
             text = text.substring(0, text.length() - 1);
 
         hologram.update(text);
+        hologram.updateEntityText();
 	}
 	
 

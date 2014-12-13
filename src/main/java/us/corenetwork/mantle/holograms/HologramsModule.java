@@ -59,7 +59,10 @@ public class HologramsModule extends MantleModule {
 	@Override
 	protected void unloadModule() {
 		saveConfig();
-	}
+        HologramStorage.save();
+    }
+
+
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
