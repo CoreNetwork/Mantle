@@ -1,27 +1,27 @@
-package us.corenetwork.mantle.armorhologram.commands;
+package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.armorhologram.HologramsSettings;
-import us.corenetwork.mantle.armorhologram.Hologram;
-import us.corenetwork.mantle.armorhologram.HologramStorage;
+import us.corenetwork.mantle.holograms.HologramsSettings;
+import us.corenetwork.mantle.holograms.Hologram;
+import us.corenetwork.mantle.holograms.HologramStorage;
 
 
-public class HologramUpdateCommand extends BaseHologramCommand
+public class HologramUpdateLineCommand extends BaseHologramCommand
 {
 
-	public HologramUpdateCommand()
+	public HologramUpdateLineCommand()
 	{
 		permission = "update";
-		desc = "Update text of the hologram - not persistent and thus faster than set";
+		desc = "Update single line of the hologram - NOT PERSISTENT";
 		needPlayer = false;
 	}
 
 
 	public void run(CommandSender sender, String[] args) {
-        if (args.length < 2)
+        if (args.length < 3 || !Util.isInteger(args[1]))
         {
-            sender.sendMessage("/holo update <id> <text>");
+            sender.sendMessage("/holo update <id> <line> <text>");
             return;
         }
 
@@ -32,8 +32,10 @@ public class HologramUpdateCommand extends BaseHologramCommand
             return;
         }
 
+        int line = Integer.parseInt(args[1]);
+
         String text = "";
-        for (int i = 1; i < args.length; i++)
+        for (int i = 2; i < args.length; i++)
         {
             text += args[i] + " ";
         }
@@ -45,7 +47,7 @@ public class HologramUpdateCommand extends BaseHologramCommand
         if (text.endsWith("\""))
             text = text.substring(0, text.length() - 1);
 
-        hologram.update(text);
+        hologram.updateLine(line - 1, text);
 	}
 	
 

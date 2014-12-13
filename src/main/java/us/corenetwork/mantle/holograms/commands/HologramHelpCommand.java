@@ -1,4 +1,4 @@
-package us.corenetwork.mantle.armorhologram.commands;
+package us.corenetwork.mantle.holograms.commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.armorhologram.HologramsModule;
+import us.corenetwork.mantle.holograms.HologramsModule;
 
 
 public class HologramHelpCommand extends BaseHologramCommand

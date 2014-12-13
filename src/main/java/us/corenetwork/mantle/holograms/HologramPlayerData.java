@@ -1,9 +1,7 @@
-package us.corenetwork.mantle.armorhologram;
+package us.corenetwork.mantle.holograms;
 
 import java.util.HashMap;
 import java.util.UUID;
-import net.minecraft.server.v1_8_R1.EntityPlayer;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 /**

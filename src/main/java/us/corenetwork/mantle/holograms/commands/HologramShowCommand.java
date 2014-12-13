@@ -1,19 +1,19 @@
-package us.corenetwork.mantle.armorhologram.commands;
+package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.armorhologram.HologramsSettings;
-import us.corenetwork.mantle.armorhologram.Hologram;
-import us.corenetwork.mantle.armorhologram.HologramStorage;
+import us.corenetwork.mantle.holograms.HologramsSettings;
+import us.corenetwork.mantle.holograms.Hologram;
+import us.corenetwork.mantle.holograms.HologramStorage;
 
 
-public class HologramHideCommand extends BaseHologramCommand
+public class HologramShowCommand extends BaseHologramCommand
 {
 
-	public HologramHideCommand()
+	public HologramShowCommand()
 	{
-		permission = "hide";
-		desc = "Hide hologram";
+		permission = "show";
+		desc = "Show hologram";
 		needPlayer = false;
 	}
 
@@ -21,7 +21,7 @@ public class HologramHideCommand extends BaseHologramCommand
 	public void run(CommandSender sender, String[] args) {
         if (args.length < 1)
         {
-            sender.sendMessage("/holo hide <id> [p - persistent]");
+            sender.sendMessage("/holo show <id> [p - persistent]");
             return;
         }
 
@@ -33,7 +33,7 @@ public class HologramHideCommand extends BaseHologramCommand
         }
 
         boolean persistent = args.length > 1;
-        hologram.setHidden(true, persistent);
+        hologram.setHidden(false, persistent);
 	}
 	
 

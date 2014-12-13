@@ -11,7 +11,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
-import us.corenetwork.mantle.armorhologram.HologramsModule;
+import us.corenetwork.mantle.holograms.HologramsModule;
 import us.corenetwork.mantle.farming.FarmingModule;
 import us.corenetwork.mantle.beacons.BeaconsModule;
 import us.corenetwork.mantle.gametweaks.GameTweaksModule;

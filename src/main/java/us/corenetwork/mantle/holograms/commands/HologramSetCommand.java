@@ -1,12 +1,12 @@
-package us.corenetwork.mantle.armorhologram.commands;
+package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.armorhologram.HologramsSettings;
-import us.corenetwork.mantle.armorhologram.Hologram;
-import us.corenetwork.mantle.armorhologram.HologramStorage;
+import us.corenetwork.mantle.holograms.HologramsSettings;
+import us.corenetwork.mantle.holograms.Hologram;
+import us.corenetwork.mantle.holograms.HologramStorage;
 
 
 public class HologramSetCommand extends BaseHologramCommand

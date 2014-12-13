@@ -1,4 +1,4 @@
-package us.corenetwork.mantle.armorhologram;
+package us.corenetwork.mantle.holograms;
 
 import java.util.HashMap;
 import org.bukkit.Bukkit;
@@ -7,15 +7,15 @@ import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.armorhologram.commands.BaseHologramCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramHelpCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramHideCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramReloadCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramRemoveCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramSetCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramShowCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramUpdateCommand;
-import us.corenetwork.mantle.armorhologram.commands.HologramUpdateLineCommand;
+import us.corenetwork.mantle.holograms.commands.BaseHologramCommand;
+import us.corenetwork.mantle.holograms.commands.HologramHelpCommand;
+import us.corenetwork.mantle.holograms.commands.HologramHideCommand;
+import us.corenetwork.mantle.holograms.commands.HologramReloadCommand;
+import us.corenetwork.mantle.holograms.commands.HologramRemoveCommand;
+import us.corenetwork.mantle.holograms.commands.HologramSetCommand;
+import us.corenetwork.mantle.holograms.commands.HologramShowCommand;
+import us.corenetwork.mantle.holograms.commands.HologramUpdateCommand;
+import us.corenetwork.mantle.holograms.commands.HologramUpdateLineCommand;
 
 
 public class HologramsModule extends MantleModule {

@@ -1,4 +1,4 @@
-package us.corenetwork.mantle.armorhologram;
+package us.corenetwork.mantle.holograms;
 
 
 import us.corenetwork.mantle.hydration.HydrationModule;

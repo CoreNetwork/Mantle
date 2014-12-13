@@ -1,4 +1,4 @@
-package us.corenetwork.mantle.armorhologram.commands;
+package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

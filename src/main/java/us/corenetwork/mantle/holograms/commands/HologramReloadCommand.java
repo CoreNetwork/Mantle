@@ -1,9 +1,9 @@
-package us.corenetwork.mantle.armorhologram.commands;
+package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.armorhologram.HologramsSettings;
-import us.corenetwork.mantle.armorhologram.HologramStorage;
+import us.corenetwork.mantle.holograms.HologramsSettings;
+import us.corenetwork.mantle.holograms.HologramStorage;
 
 
 public class HologramReloadCommand extends BaseHologramCommand
