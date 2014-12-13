@@ -633,7 +633,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
             net.minecraft.server.v1_8_R1.Block.REGISTRY.a(138, new MinecraftKey("beacon"), beaconBlock);
 
-            Method registerItemMethod = Item.class.getDeclaredMethod("b", net.minecraft.server.v1_8_R1.Block.class);
+            Method registerItemMethod = Item.class.getDeclaredMethod("c", net.minecraft.server.v1_8_R1.Block.class);
             registerItemMethod.setAccessible(true);
             registerItemMethod.invoke(null, beaconBlock);
         }
