@@ -41,10 +41,7 @@ public class BeaconsModule extends MantleModule {
             }
 		}
 		saveConfig();
-
-		System.out.println(net.minecraft.server.v1_8_R1.Block.getByName("beacon").getClass().getName());
-		System.out.println(net.minecraft.server.v1_8_R1.Block.getById(138).getClass().getName());
-
+		
 		return true;
 	}
 
