@@ -48,8 +48,8 @@
 			<url>http://repo.bukkit.org/content/groups/public/</url>
 		</repository>
 		<repository>
-			<id>comphenix-releases</id>
-			<url>http://repo.comphenix.net/content/repositories/releases/</url>
+			<id>shadowvolt-repo</id>
+			<url>http://ci.shadowvolt.com/plugin/repository/everything/</url>
 		</repository>
 		<repository>
 			<id>spigot-repo</id>
@@ -102,7 +102,7 @@
 		<dependency>
 			<groupId>com.comphenix.protocol</groupId>
 			<artifactId>ProtocolLib</artifactId>
-			<version>3.4.0</version>
+			<version>3.6.3-SNAPSHOT</version>
 			<scope>compile</scope>
 		</dependency>
 
