@@ -41,7 +41,7 @@ public class BeaconsModule extends MantleModule {
             }
 		}
 		saveConfig();
-		
+
 		return true;
 	}
 

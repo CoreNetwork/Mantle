@@ -50,6 +50,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private int range = 0;
     private int rangeSquared = 0;
     private int fuelLeftTicks = 0;
+    private int timeActive = 0;
     private boolean goldPyramid;
     private boolean redstoneBlocked = false;
     private boolean firstCheck;
@@ -87,38 +88,44 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         Tile entity tick
      */
     @Override
-    public void m()
+    public void c()
     {
         //Check pyramid size every 80 ticks
         if (this.world.getTime() % 80L == 0L) {
             updatePyramidSize();
             updateFurnaces();
-
         }
 
         if (isActive())
         {
             if (activeEffect.getEffectType() == BeaconEffect.EffectType.POTION)
             {
-                if (this.world.getTime() % 80L == 0L)
+                if (timeActive % 80L == 0L)
                     applyPotionEffect();
             }
             else if (activeEffect.getEffectType() == BeaconEffect.EffectType.OVERCLOCK)
             {
-                if (this.world.getTime() % 1L == 0L || shouldUseStrongerEffect())
+                if (timeActive % 1L == 0L || shouldUseStrongerEffect())
                     applyOverclockEffect();
             }
 
-            if (this.world.getTime() % 20L == 0L)
+            if (timeActive % 20L == 0L)
             {
                 ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10);
             }
 
             fuelLeftTicks--;
+            timeActive++;
         }
-        else if (isReady())
+        else
         {
-            refuel();
+            if (timeActive != 0)
+                timeActive = 0;
+
+            if (isReady())
+            {
+                refuel();
+            }
         }
     }
 
