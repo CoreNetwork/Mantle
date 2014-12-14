@@ -16,7 +16,7 @@ public class GUIBeaconStatus extends InventoryGUI
     private static final int ITEM_POSITION_HELP = 8;
     private static final int ITEM_POSITION_FUEL_LEFT = 4;
     private static final int ITEM_POSITION_CURRENT_EFFECT = 13;
-    private static final int ITEM_POSITION_BEACON_STATUS = 22;
+    private static final int ITEM_POSITION_BEACON_STATUS = 31;
 
     private CustomBeaconTileEntity beacon;
 

@@ -22,7 +22,7 @@ public class GUIEffectPicker extends InventoryGUI
         this.beacon = beacon;
 
         int amountOfEffects = BeaconEffect.STORAGE.effects.size();
-        int start = (int) Math.ceil((9 - amountOfEffects) / 2.0) + 9;
+        int start = (int) Math.ceil((9 - amountOfEffects) / 2.0) + 18;
 
         setItem(ITEM_POSITION_HELP, BeaconsSettings.GUI_ITEM_HELP.itemStack());
 
