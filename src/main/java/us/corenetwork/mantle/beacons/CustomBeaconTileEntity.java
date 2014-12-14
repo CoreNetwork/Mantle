@@ -54,6 +54,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private boolean goldPyramid;
     private boolean redstoneBlocked = false;
     private boolean firstCheck;
+    private int fuelParticleTicksLeft = 0;
 
     private Block lastFuelContainer;
     private List<TileEntity> overclockCache;
@@ -123,6 +124,13 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         {
             if (timeActive != 0)
                 timeActive = 0;
+        }
+
+        if (fuelParticleTicksLeft > 0 && activeEffect != null)
+        {
+            ItemStack fuel = activeEffect.getFuelIcon();
+            ParticleLibrary.broadcastParticle(EnumParticle.ITEM_CRACK, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
+            fuelParticleTicksLeft--;
         }
     }
 
@@ -298,7 +306,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         }
 
         fuelLeftTicks += getFuelDurationMinutes() * 1200; //1200 ticks in minute
-        ParticleLibrary.broadcastParticle(EnumParticle.ITEM_CRACK, getCenterLocation(), 0.8f, 0.8f, 0.8f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
+        fuelParticleTicksLeft = 15;
     }
 
     private void findNewFuelContainer(boolean ignoreTime)
