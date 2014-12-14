@@ -113,7 +113,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
             if (timeActive % 20L == 0L)
             {
-                ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10);
+                ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10, null);
             }
 
             fuelLeftTicks--;
@@ -144,6 +144,18 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
     public void physics()
     {
+        if (fuelLeftTicks == 0)
+        {
+            Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    findNewFuelContainer(true);
+                }
+            });
+        }
+
         boolean newRedstoneState = getBlock().isBlockPowered();
         if (!redstoneBlocked && newRedstoneState)
             fuelLeftTicks = 0; //Suck all fuel out when disabling beacon via redstone
@@ -238,7 +250,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     {
         if (lastFuelContainer == null)
         {
-            findNewFuelContainer();
+            findNewFuelContainer(false);
             return;
         }
 
@@ -286,11 +298,12 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         }
 
         fuelLeftTicks += getFuelDurationMinutes() * 1200; //1200 ticks in minute
+        ParticleLibrary.broadcastParticle(EnumParticle.ITEM_CRACK, getCenterLocation(), 0.8f, 0.8f, 0.8f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
     }
 
-    private void findNewFuelContainer()
+    private void findNewFuelContainer(boolean ignoreTime)
     {
-        if (this.world.getTime() % 20L != 0L) //Scan for new chests every 20 ticks to prevent constant scanning if there is no chest placed around
+        if (!ignoreTime && this.world.getTime() % 20L != 0L) //Scan for new chests every 20 ticks to prevent constant scanning if there is no chest placed around
             return;
 
         Block beaconBlock = getBlock();

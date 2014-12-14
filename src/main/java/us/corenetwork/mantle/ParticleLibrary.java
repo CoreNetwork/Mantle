@@ -11,18 +11,18 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class ParticleLibrary {
-    public static void broadcastParticle(EnumParticle particle, Location location, float offsetX, float offsetY, float offsetZ, float data, int count)
+    public static void broadcastParticle(EnumParticle particle, Location location, float offsetX, float offsetY, float offsetZ, float data, int count, int[] dataArray)
     {
     	for (Player player : Bukkit.getOnlinePlayers())
     	{
             if (player.getWorld().equals(location.getWorld()) && Util.flatDistanceSquared(player.getLocation(), location) < 100)
             {
-                sendToPlayer(particle, player, location, offsetX, offsetY, offsetZ, data, count);
+                sendToPlayer(particle, player, location, offsetX, offsetY, offsetZ, data, count, dataArray);
             }
     	}
     }
     
-    public static void sendToPlayer(EnumParticle particle, Player player, Location location, float offsetX, float offsetY, float offsetZ, float data, int count) {
+    public static void sendToPlayer(EnumParticle particle, Player player, Location location, float offsetX, float offsetY, float offsetZ, float data, int count, int[] dataArray) {
     	try
         {
         	PacketPlayOutWorldParticles packet = new PacketPlayOutWorldParticles();
@@ -35,6 +35,12 @@ public class ParticleLibrary {
             ReflectionUtilities.setValue(packet, "g", offsetZ);
             ReflectionUtilities.setValue(packet, "h", data);
             ReflectionUtilities.setValue(packet, "i", count);
+
+            if (dataArray != null)
+            {
+                ReflectionUtilities.setValue(packet, "k", dataArray);
+            }
+
             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(packet);
         }
         catch (Exception e)

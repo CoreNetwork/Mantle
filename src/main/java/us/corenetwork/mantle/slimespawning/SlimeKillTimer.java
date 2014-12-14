@@ -38,7 +38,7 @@ public class SlimeKillTimer implements Runnable {
         		{
         			if (e instanceof Player)
         			{
-                		ParticleLibrary.sendToPlayer(EnumParticle.EXPLOSION_NORMAL, (Player)e, slime.getLocation(), 0, 0, 0, 0, 10);
+                		ParticleLibrary.sendToPlayer(EnumParticle.EXPLOSION_NORMAL, (Player)e, slime.getLocation(), 0, 0, 0, 0, 10, null);
         			}
         		}
         		

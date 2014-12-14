@@ -983,7 +983,7 @@ public class RestockableChest {
 		World world = location.getWorld();
 
 		world.playSound(location, Sound.GLASS, 1f, 1f);
-		ParticleLibrary.broadcastParticle(EnumParticle.SPELL, location, 0, 0, 0, 0, 3);
+		ParticleLibrary.broadcastParticle(EnumParticle.SPELL, location, 0, 0, 0, 0, 3, null);
 	}
 	private String getCustomName()
 	{
