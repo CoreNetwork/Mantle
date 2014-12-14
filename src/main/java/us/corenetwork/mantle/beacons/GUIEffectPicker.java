@@ -11,7 +11,7 @@ import us.corenetwork.mantle.InventoryGUI;
  */
 public class GUIEffectPicker extends InventoryGUI
 {
-    private static final int ITEM_POSITION_HELP = 0;
+    private static final int ITEM_POSITION_HELP = 8;
 
     private CustomBeaconTileEntity beacon;
 
