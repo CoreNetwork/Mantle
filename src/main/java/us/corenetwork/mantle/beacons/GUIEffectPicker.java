@@ -46,6 +46,7 @@ public class GUIEffectPicker extends InventoryGUI
             return;
 
         beacon.setActiveEffect(selection);
+        beacon.updateFuel();
         player.openInventory(new GUIBeaconStatus(beacon));
     }
 

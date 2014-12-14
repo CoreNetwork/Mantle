@@ -96,6 +96,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             updateFurnaces();
         }
 
+        updateFuel();
+
         if (isActive())
         {
             if (activeEffect.getEffectType() == BeaconEffect.EffectType.POTION)
@@ -121,11 +123,14 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         {
             if (timeActive != 0)
                 timeActive = 0;
+        }
+    }
 
-            if (isReady())
-            {
-                refuel();
-            }
+    public void updateFuel()
+    {
+        if (fuelLeftTicks == 0 && isReady())
+        {
+            refuel();
         }
     }
 
