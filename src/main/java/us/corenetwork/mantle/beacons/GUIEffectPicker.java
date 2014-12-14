@@ -55,4 +55,10 @@ public class GUIEffectPicker extends InventoryGUI
     {
         return BeaconsSettings.GUI_TITLE_PICK_EFFECT.string();
     }
+
+    @Override
+    public int getHeight()
+    {
+        return 4;
+    }
 }

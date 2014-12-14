@@ -51,25 +51,31 @@ public abstract class InventoryGUI extends CraftInventory
 
     public abstract String getTitle();
 
+    public int getHeight()
+    {
+        return 3;
+    }
+
     public static class GUIVanillaInventory implements IInventory
     {
         private InventoryGUI parent;
-        private final ItemStack[] items;
+        private ItemStack[] items;
 
         protected GUIVanillaInventory()
         {
-            this.items = new ItemStack[InventoryType.CHEST.getDefaultSize()];
+
         }
 
         protected void setParent(InventoryGUI parent)
         {
             this.parent = parent;
+            this.items = new ItemStack[9 * parent.getHeight()];
         }
 
         @Override
         public int getSize()
         {
-            return InventoryType.CHEST.getDefaultSize();
+            return items.length;
         }
 
         @Override

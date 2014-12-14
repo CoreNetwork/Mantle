@@ -64,4 +64,10 @@ public class GUIBeaconStatus extends InventoryGUI
     {
         return BeaconsSettings.GUI_TITLE_BEACON_STATUS.string();
     }
+
+    @Override
+    public int getHeight()
+    {
+        return 4;
+    }
 }
