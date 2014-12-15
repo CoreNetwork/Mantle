@@ -8,6 +8,7 @@ import net.minecraft.server.v1_8_R1.IChatBaseComponent;
 import net.minecraft.server.v1_8_R1.IInventory;
 import net.minecraft.server.v1_8_R1.ItemStack;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
@@ -46,7 +47,6 @@ public abstract class InventoryGUI extends CraftInventory
 
     public void onClose(CraftHumanEntity player)
     {
-
     }
 
     public abstract String getTitle();

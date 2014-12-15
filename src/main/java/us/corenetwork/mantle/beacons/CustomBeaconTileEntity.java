@@ -9,7 +9,6 @@ import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.EnumParticle;
 import net.minecraft.server.v1_8_R1.Item;
-import net.minecraft.server.v1_8_R1.ItemBlock;
 import net.minecraft.server.v1_8_R1.MinecraftKey;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import net.minecraft.server.v1_8_R1.TileEntity;
@@ -24,12 +23,9 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.Furnace;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -55,6 +51,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private boolean redstoneBlocked = false;
     private boolean firstCheck;
     private int fuelParticleTicksLeft = 0;
+    private boolean prevActiveStatus = false;
 
     private Block lastFuelContainer;
     private List<TileEntity> overclockCache;
@@ -62,12 +59,18 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     private int effectToLoad = -1;
     private BeaconEffect activeEffect;
 
+    protected GUIBeaconStatus beaconStatusGUI;
+    protected GUIEffectPicker effectPickerGUI;
+
     public CustomBeaconTileEntity()
     {
         super();
 
         firstCheck = true;
         overclockCache = new ArrayList<TileEntity>();
+
+        beaconStatusGUI = new GUIBeaconStatus(this);
+        effectPickerGUI = new GUIEffectPicker(this);
 
         //Delay initialization for 1 tick to make sure stuff around has loaded
         Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
@@ -97,9 +100,14 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             updateFurnaces();
         }
 
-        updateFuel();
+        if (fuelLeftTicks == 0 && isReady())
+        {
+            refuel();
+        }
 
-        if (isActive())
+        boolean active = isActive();
+
+        if (active)
         {
             if (activeEffect.getEffectType() == BeaconEffect.EffectType.POTION)
             {
@@ -117,6 +125,12 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                 ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 10, null);
             }
 
+            // Update GUIs every 2 seconds if any is open
+            if (beaconStatusGUI.isAnyWindowOpened() && timeActive % 40L == 0L)
+            {
+                beaconStatusGUI.updateFuelStatus();
+            }
+
             fuelLeftTicks--;
             timeActive++;
         }
@@ -132,22 +146,20 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             ParticleLibrary.broadcastParticle(EnumParticle.ITEM_CRACK, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
             fuelParticleTicksLeft--;
         }
-    }
 
-    public void updateFuel()
-    {
-        if (fuelLeftTicks == 0 && isReady())
+        if (prevActiveStatus != active)
         {
-            refuel();
+            beaconStatusGUI.updateBeaconStatus();
+            prevActiveStatus = active;
         }
     }
 
     public void clicked(EntityHuman human)
     {
         if (activeEffect == null)
-            human.getBukkitEntity().openInventory(new GUIEffectPicker(this));
+            effectPickerGUI.openNewWindow(human.getBukkitEntity());
         else
-            human.getBukkitEntity().openInventory(new GUIBeaconStatus(this));
+            beaconStatusGUI.openNewWindow(human.getBukkitEntity());
     }
 
     public void physics()
@@ -181,6 +193,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     {
         this.activeEffect = activeEffect;
         fuelLeftTicks = 0;
+
+        if (activeEffect == null)
+            beaconStatusGUI.switchToEffectPicker();
+        else
+            effectPickerGUI.switchToEffectStatus();
     }
 
     public int getPyramidLevel()
@@ -606,7 +623,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
         //When pyramid changes, deplete all fuel
         if (!firstCheck && (oldStrongEffect != shouldUseStrongerEffect() || (oldLevel != 0 && pyramidLevel == 0)))
+        {
             fuelLeftTicks = 0;
+            beaconStatusGUI.updateFuelStatus();
+            beaconStatusGUI.updateRange();
+        }
 
         firstCheck = false;
     }
