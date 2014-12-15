@@ -42,7 +42,10 @@ public class RChestsListener implements Listener {
 		{
 			if(hand.getType() == Material.COMPASS)
 			{
-				player.openInventory(new GUICategoryPicker(player));
+				if(player.getWorld().getEnvironment() == World.Environment.NORMAL)
+					player.openInventory(new GUICategoryPicker(player));
+				else
+					return;
 			}
 		}
 		
