@@ -45,7 +45,7 @@ public class PathfinderPentagram extends AbstractPathfinderGoal {
 		for(int i = phase; phase < SKULL_COUNT;phase++)
 		{
 		float distanceFromWither = 4;
-		float angle = (float) (phase * (2* 3.141592653589793D)/ SKULL_COUNT);
+		float angle = (float) (i * (2* 3.141592653589793D)/ SKULL_COUNT);
 		float diffZ = MathHelper.sin(angle)* distanceFromWither;
 		float diffX = MathHelper.cos(angle)* distanceFromWither;
 		

@@ -26,7 +26,24 @@ public enum HardmodeSettings {
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),
 	WITHER_MINION_HEALTH("Wither.MinionHealth", 4),
 	WITHER_EXPLOSION_RADIUS("Wither.ExplosionRadius", 20),
-	WITHER_PROJECTILE_SPEED("Wither.ProjectileSpeed", 300),
+	WITHER_SHOW_TARGET("Wither.ShowTarget", false),
+
+	WITHER_BS_ENABLED("Wither.BlackSkull.Enabled", true),
+	WITHER_BS_SPEED("Wither.BlackSkull.Speed", 0.3),
+	WITHER_BS_SEARCH_HORIZ("Wither.BlackSkull.SearchHoriz", 30),
+	WITHER_BS_SEARCH_VERT("Wither.BlackSkull.SearchVert", 10),
+	WITHER_BS_SHOOT_MAX_DISTANCE("Wither.BlackSkull.ShootMaxDistance", 30),
+	WITHER_BS_SHOOT_BASIC_TIME("Wither.BlackSkull.ShootBasicTime", 50),
+	WITHER_BS_SHOOT_TIME_VARIANCE("Wither.BlackSkull.ShootTimeVariance", 10),
+	WITHER_BS_RE_SEARCH_TIME("Wither.BlackSkull.ReSearchTime", 50),
+
+	WITHER_PH_SA_MOVE_BASIC_TIME("Wither.Phases.StationaryArtillery.MoveBasicTime", 100),
+	WITHER_PH_SA_MOVE_TIME_VARIANCE("Wither.Phases.StationaryArtillery.MoveTimeVariance", 30),
+	WITHER_PH_SA_MIN_VERTICAL("Wither.Phases.StationaryArtillery.MinVertical", 3),
+	WITHER_PH_SA_MAX_VERTICAL("Wither.Phases.StationaryArtillery.MaxVertical", 10),
+	WITHER_PH_SA_MAX_HORIZONTAL("Wither.Phases.StationaryArtillery.MinHorizontal", 3),
+	WITHER_PH_SA_MIN_HORIZONTAL("Wither.Phases.StationaryArtillery.MaxHorizontal", 5),
+
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),
 	
 	APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN("Pigmen.ApplyDamageNodeOnSpawn", "SlownessNode"),
@@ -57,7 +74,10 @@ public enum HardmodeSettings {
 	{
 		return ((Number) HardmodeModule.instance.config.get(string, def)).doubleValue();
 	}
-	
+	public float floatNumber()
+	{
+		return ((Number) HardmodeModule.instance.config.get(string, def)).floatValue();
+	}
 	public Integer integer()
 	{
 		return (Integer) HardmodeModule.instance.config.get(string, def);
@@ -72,4 +92,10 @@ public enum HardmodeSettings {
 	{
 		return (List<String>) HardmodeModule.instance.config.get(string, def);
 	}
+
+	public Boolean bool()
+	{
+		return (Boolean) HardmodeModule.instance.config.get(string, def);
+	}
+
 }

@@ -57,7 +57,6 @@ public abstract class AbstractPathfinderGoal extends PathfinderGoal {
      */
     public int j()
     {
-    	// TODO Auto-generated method stub
     	return super.j();
     }
     
