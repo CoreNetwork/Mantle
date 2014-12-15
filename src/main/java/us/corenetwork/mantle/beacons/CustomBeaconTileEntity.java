@@ -159,7 +159,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                 @Override
                 public void run()
                 {
-                    findNewFuelContainer(true);
+                    if (isReady())
+                        findNewFuelContainer(true);
                 }
             });
         }
