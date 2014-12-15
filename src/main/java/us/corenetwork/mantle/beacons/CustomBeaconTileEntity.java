@@ -625,6 +625,10 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         if (!firstCheck && (oldStrongEffect != shouldUseStrongerEffect() || (oldLevel != 0 && pyramidLevel == 0)))
         {
             fuelLeftTicks = 0;
+        }
+
+        if (pyramidLevel != oldLevel)
+        {
             beaconStatusGUI.updateFuelStatus();
             beaconStatusGUI.updateRange();
         }
