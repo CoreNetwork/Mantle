@@ -116,7 +116,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             }
             else if (activeEffect.getEffectType() == BeaconEffect.EffectType.OVERCLOCK)
             {
-                if (timeActive % 1L == 0L || shouldUseStrongerEffect())
+                if (timeActive % 2L == 0L || shouldUseStrongerEffect())
                     applyOverclockEffect();
             }
 
