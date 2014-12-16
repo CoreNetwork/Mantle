@@ -108,46 +108,63 @@ public class CachedSchematic {
 		
 		List<String> stringVectorList = new ArrayList<String>();
 		List<Vector> vectorList = new ArrayList<Vector>();
-		
-		
-		Object oList = RegenerationModule.instance.storageConfig.get(path);
-		if(oList == null)
+
+
+
+		//if regeneration module is enabled, basically
+		if(RegenerationModule.instance.storageConfig != null)
 		{
-			try
+			Object oList = RegenerationModule.instance.storageConfig.get(path);
+
+			//if no value in config
+			if(oList == null)
 			{
-				Clipboard cc =  localSession.getClipboard().getClipboard();
-				for (int y = 0; y < ySize; y++)
+				vectorList = findChestsLoopThrough();
+
+				stringVectorList = vectorToStringVectorList(vectorList);
+				RegenerationModule.instance.storageConfig.set(path, stringVectorList);
+				RegenerationModule.instance.saveStorageYaml();
+			}
+			else
+			{
+				stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
+				vectorList = stringVectorToVecotrList(stringVectorList);
+			}
+		}
+		else
+		{
+			vectorList = findChestsLoopThrough();
+		}
+		handleChests(vectorList);
+	}
+
+	private List<Vector> findChestsLoopThrough()
+	{
+		List<Vector> vectorList = new ArrayList<Vector>();
+		try
+		{
+			Clipboard cc =  localSession.getClipboard().getClipboard();
+			for (int y = 0; y < ySize; y++)
+			{
+				for (int z = 0; z < zSize; z++)
 				{
-					for (int z = 0; z < zSize; z++)
+					for (int x = 0; x < xSize; x++)
 					{
-						for (int x = 0; x < xSize; x++)
+						Vector vector = new Vector(x,y,z);
+						BaseBlock baseBlock = cc.getBlock(vector);
+						if (Util.isInventoryContainer(baseBlock.getType()))
 						{
-							Vector vector = new Vector(x,y,z);
-							BaseBlock baseBlock = cc.getBlock(vector);
-							if (Util.isInventoryContainer(baseBlock.getType()))
-							{
-								vectorList.add(vector);
-							}
+							vectorList.add(vector);
 						}
 					}
 				}
 			}
-			catch (EmptyClipboardException e)
-			{
-				e.printStackTrace();
-			}
-			
-			stringVectorList = vectorToStringVectorList(vectorList);
-			RegenerationModule.instance.storageConfig.set(path, stringVectorList);
-			RegenerationModule.instance.saveStorageYaml();
 		}
-		else
+		catch (EmptyClipboardException e)
 		{
-			stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
-			vectorList = stringVectorToVecotrList(stringVectorList);
+			e.printStackTrace();
 		}
-		
-		handleChests(vectorList);
+		return vectorList;
 	}
 
 	private void handleChests(List<Vector> chestLocations)
@@ -309,45 +326,61 @@ public class CachedSchematic {
 		String path = "Villagers."+name;
 		
 		List<String> stringVectorList = new ArrayList<String>();
-		List<Vector> vectorList = new ArrayList<Vector>();
+		List<Vector> vectorList;
 		
-		
-		Object oList = RegenerationModule.instance.storageConfig.get(path);
-		if(oList == null)
+
+		//if regeneration module is enabled, basically
+		if(RegenerationModule.instance.storageConfig != null)
 		{
-			try
+			Object oList = RegenerationModule.instance.storageConfig.get(path);
+
+			//if no value in config
+			if(oList == null)
 			{
-				Clipboard cc =  localSession.getClipboard().getClipboard();
-				for (int x = 0; x < xSize; x++) {
-					for (int z = 0; z < zSize; z++)	{
-						for (int y = 0; y < ySize; y++)
+				vectorList = findVillagersLoopThrough();
+
+				stringVectorList = vectorToStringVectorList(vectorList);
+				RegenerationModule.instance.storageConfig.set(path, stringVectorList);
+				RegenerationModule.instance.saveStorageYaml();
+			}
+			else
+			{
+				stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
+				vectorList = stringVectorToVecotrList(stringVectorList);
+			}
+		}
+		else
+		{
+			vectorList = findVillagersLoopThrough();
+		}
+		handleVillagerSigns(vectorList);
+	}
+
+	private List<Vector> findVillagersLoopThrough()
+	{
+		List<Vector> vectorList = new ArrayList<Vector>();
+		try
+		{
+			Clipboard cc =  localSession.getClipboard().getClipboard();
+			for (int x = 0; x < xSize; x++) {
+				for (int z = 0; z < zSize; z++)	{
+					for (int y = 0; y < ySize; y++)
+					{
+						Vector vector = new Vector(x,y,z);
+						BaseBlock baseBlock = cc.getBlock(vector);
+						if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
 						{
-							Vector vector = new Vector(x,y,z);
-							BaseBlock baseBlock = cc.getBlock(vector);
-							if (baseBlock.getType() == Material.SIGN_POST.getId() || baseBlock.getType() == Material.WALL_SIGN.getId())
-							{
-								vectorList.add(vector);
-							}
+							vectorList.add(vector);
 						}
 					}
 				}
 			}
-			catch (EmptyClipboardException e)
-			{
-				e.printStackTrace();
-			}
-			
-			stringVectorList = vectorToStringVectorList(vectorList);
-			RegenerationModule.instance.storageConfig.set(path, stringVectorList);
-			RegenerationModule.instance.saveStorageYaml();
 		}
-		else
+		catch (EmptyClipboardException e)
 		{
-			stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
-			vectorList = stringVectorToVecotrList(stringVectorList);
+			e.printStackTrace();
 		}
-
-		handleVillagerSigns(vectorList);
+		return vectorList;
 	}
 
 	private List<String> vectorToStringVectorList(List<Vector> list)
