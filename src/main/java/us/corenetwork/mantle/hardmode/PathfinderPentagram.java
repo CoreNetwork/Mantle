@@ -9,18 +9,18 @@ public class PathfinderPentagram extends AbstractWitherMove {
 	private final static float SKULL_COUNT = 50;
 	
 	
-	private EntityCreature entity;
+
 	private int phase;
-	public PathfinderPentagram(EntityCreature entityCreature)
+	public PathfinderPentagram(CustomWither wither)
 	{
-		this.entity = entityCreature;
+		super(wither);
 		this.a(4);
 	}
 	
 	@Override
 	public boolean a()
 	{
-        if (entity.bb().nextInt(100) != 0) {
+        if (wither.bb().nextInt(100) != 0) {
             return false;
         }
         return true;
@@ -50,15 +50,15 @@ public class PathfinderPentagram extends AbstractWitherMove {
 		float diffX = MathHelper.cos(angle)* distanceFromWither;
 		
 		
-		double x = entity.locX;
-		double y = entity.locY;
-		double z = entity.locZ;
+		double x = wither.locX;
+		double y = wither.locY;
+		double z = wither.locZ;
 		
 		//EntityWitherSkull entitywitherskull = new EntityWitherSkull(entity.world, entity.locX, entity.locY, entity.locZ, i,0,j);
-		EntityWitherSkull entitywitherskull = new EntityWitherSkull(entity.world);
-		entitywitherskull.shooter = entity;
+		EntityWitherSkull entitywitherskull = new EntityWitherSkull(wither.world);
+		entitywitherskull.shooter = wither;
 		
-		entitywitherskull.setPositionRotation(x+diffX,y+3,z+diffZ, entity.yaw, entity.pitch);
+		entitywitherskull.setPositionRotation(x+diffX,y+3,z+diffZ, wither.yaw, wither.pitch);
 		entitywitherskull.setPosition(x+diffX,y+3,z+diffZ);
 		
 		entitywitherskull.motX =entitywitherskull.motY = entitywitherskull.motZ = 0.0D;
@@ -67,9 +67,9 @@ public class PathfinderPentagram extends AbstractWitherMove {
 		entitywitherskull.dirX = diffX / d3 *0.1D;
 		entitywitherskull.dirY = 0 / d3 *0.1D;
 		entitywitherskull.dirZ = diffZ / d3 *0.1D;
-		
-		
-		entity.world.addEntity(entitywitherskull);
+
+
+		wither.world.addEntity(entitywitherskull);
 		}
 		//phase++;
 		

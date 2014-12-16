@@ -4,14 +4,13 @@ import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 
 public class PathfinderGoalGoUpAndShoot extends AbstractWitherMove {
 
-	private CustomWither wither;
 	private boolean running;
 	private int countdown;
 
 
 	public PathfinderGoalGoUpAndShoot(CustomWither wither)
 	{
-		this.wither = wither;
+		super(wither);
 		this.a(1);
 	}
 

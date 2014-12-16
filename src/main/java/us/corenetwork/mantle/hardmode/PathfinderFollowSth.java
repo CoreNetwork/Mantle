@@ -20,6 +20,7 @@ public class PathfinderFollowSth extends AbstractWitherMove {
 
     public PathfinderFollowSth(CustomWither wither)
     {
+        super(wither);
         this.wither = wither;
         this.a(7);
     }
