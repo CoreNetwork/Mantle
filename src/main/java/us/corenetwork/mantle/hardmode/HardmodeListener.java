@@ -19,10 +19,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWither;
+import org.bukkit.craftbukkit.v1_8_R1.entity.*;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
@@ -48,20 +45,10 @@ import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.event.entity.EntityBreakDoorEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityInteractEvent;
-import org.bukkit.event.entity.EntityPortalEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -72,6 +59,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
@@ -463,7 +451,7 @@ public class HardmodeListener implements Listener {
 			}
 		}
 
-		// Wither timer
+		// Wither timer & replacement
 		if (event.getEntityType() == EntityType.WITHER)
 		{
 			GriefPreventionHandler.enableExplosions(event.getLocation().getWorld());
@@ -479,6 +467,7 @@ public class HardmodeListener implements Listener {
 						MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
 
 						CraftWither wither = new CraftWither((CraftServer) Bukkit.getServer(), customWither);
+						customWither.n();
 						wither.setMetadata("DespawningTime", value);
 					}
 				});
@@ -659,6 +648,7 @@ public class HardmodeListener implements Listener {
 			}
 		}
 	}
+
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onEntityPrime(ExplosionPrimeEvent event)

@@ -70,7 +70,6 @@ public class NMSWitherManager {
 
         CustomWither newWither = new CustomWither(world);
         newWither.setPosition(location.getX(), location.getY(), location.getZ());
-
         world.removeEntity(nmsWither);
         world.addEntity(newWither, CreatureSpawnEvent.SpawnReason.CUSTOM);
         return newWither;

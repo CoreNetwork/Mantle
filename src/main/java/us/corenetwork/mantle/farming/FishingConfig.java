@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
 
@@ -43,7 +44,7 @@ public class FishingConfig implements Listener {
                 groups.add(currentGroup);
             }
         } catch (Exception e) {
-            MantlePlugin.log.warning("[Farming] No fishing config found. Fishing loot will be untouched.");
+            MLog.warning("[Farming] No fishing config found. Fishing loot will be untouched.");
             groups = null;
         }
     }

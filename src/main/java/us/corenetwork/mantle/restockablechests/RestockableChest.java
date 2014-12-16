@@ -23,6 +23,7 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
@@ -156,7 +157,8 @@ public class RestockableChest {
 				rChest.perPlayer = set.getInt("perPlayer") == 1;
 				rChest.lootTable = set.getString("LootTable");
 				rChest.chestBlock = MantlePlugin.instance.getServer().getWorld(set.getString("World")).getBlockAt(set.getInt("X"),set.getInt("Y"),set.getInt("Z"));
-				rChest.inventoryHolder = (InventoryHolder) rChest.chestBlock.getState();
+				BlockState blockState = rChest.chestBlock.getState();
+				rChest.inventoryHolder = blockState instanceof InventoryHolder ? (InventoryHolder) blockState : null;
 				rChest.structureID = structureID;
 				chests.add(rChest);
 			}
@@ -549,12 +551,14 @@ public class RestockableChest {
 				}
 			}
 		}
-		
+
+		//Only null if no compass category found
 		if(basicCat == null)
 		{
 			categories = RChestsModule.basicCategories;
 			basicCat = Category.pickOne(categories);
 		}
+		//Only null if no compass category found
 		if(rareCat == null)
 		{
 			categories = RChestsModule.rareCategories;
@@ -644,6 +648,7 @@ public class RestockableChest {
 				statement2.setDouble(2, dimValue);
 				statement2.executeUpdate();
 				statement2.close();
+				playerTotal = new PlayerTotal(dimValue, null, -1);
 			}
 			statement.close();
 			IO.getConnection().commit();

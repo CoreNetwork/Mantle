@@ -62,7 +62,7 @@ public class RegenerationUtil {
 				final CachedSchematic schematic = new CachedSchematic(schematicName, world);
 				//schematic.rotateTo(rotation);
 
-				rotation = MantlePlugin.random.nextInt(4);
+				rotation = MantlePlugin.random.nextInt(2) * 2;
 				schematic.rotateTo(rotation);
 
 				if (clearClaims)

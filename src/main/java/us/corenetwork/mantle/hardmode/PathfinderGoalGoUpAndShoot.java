@@ -1,29 +1,36 @@
 package us.corenetwork.mantle.hardmode;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import us.corenetwork.mantle.MantlePlugin;
-import net.minecraft.server.v1_8_R1.EntityWither;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
-import net.minecraft.server.v1_8_R1.PathfinderGoal;
 
-public class PathfinderGoalGoUpAndShoot extends AbstractPathfinderGoal {
+public class PathfinderGoalGoUpAndShoot extends AbstractWitherMove {
 
-	private CustomWither wither;
-	static boolean done = false;
+	private boolean running;
+	private int countdown;
+
+
 	public PathfinderGoalGoUpAndShoot(CustomWither wither)
 	{
-		this.wither = wither;
+		super(wither);
+		this.a(1);
 	}
-	
+
+
+
+
 	@Override
 	public boolean a()
 	{
+		if(wither.bb().nextInt(100) < 2)
+		{
+			return true;
+		}
+/*
 		if(PathfinderGoalGoUpAndShoot.done == false)
 		{
 			PathfinderGoalGoUpAndShoot.done = true;
 			return true;
 		}
+		*/
 		return false;
 	}
 
@@ -31,30 +38,27 @@ public class PathfinderGoalGoUpAndShoot extends AbstractPathfinderGoal {
 	@Override
 	public boolean b()
 	{
-		return true;
+		return countdown > 0;
 	}
 	
 	@Override
 	public void c()
 	{
-		double x = wither.locX;
-		double y = wither.locY;
-		double z = wither.locZ;
-
-		wither.getNavigation().a(x, y + 10,z,1);
-			
-		
+		running = true;
+		countdown = 500;
 	}
 	
 	@Override
 	public void d()
 	{
-		PathfinderGoalGoUpAndShoot.done = false;
+		running = false;
 	}
 	
 	@Override
 	public void e()
 	{
+		--countdown;
+
 		if(wither.world.getTime() % 100 != 0)
 			return;
 		
@@ -66,6 +70,7 @@ public class PathfinderGoalGoUpAndShoot extends AbstractPathfinderGoal {
 					entitywitherskull.locX = wither.locX;
 					entitywitherskull.locY = wither.locY + 3;
 					entitywitherskull.locZ = wither.locZ;
+
 					entitywitherskull.setCharged(true);
 					wither.world.addEntity(entitywitherskull);
 			}
@@ -79,6 +84,6 @@ public class PathfinderGoalGoUpAndShoot extends AbstractPathfinderGoal {
 	@Override
 	public boolean i()
 	{
-		return super.i();
+		return !running;
 	}
 }
