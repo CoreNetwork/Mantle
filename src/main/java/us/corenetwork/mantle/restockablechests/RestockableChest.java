@@ -551,12 +551,14 @@ public class RestockableChest {
 				}
 			}
 		}
-		
+
+		//Only null if no compass category found
 		if(basicCat == null)
 		{
 			categories = RChestsModule.basicCategories;
 			basicCat = Category.pickOne(categories);
 		}
+		//Only null if no compass category found
 		if(rareCat == null)
 		{
 			categories = RChestsModule.rareCategories;
@@ -646,6 +648,7 @@ public class RestockableChest {
 				statement2.setDouble(2, dimValue);
 				statement2.executeUpdate();
 				statement2.close();
+				playerTotal = new PlayerTotal(dimValue, null, -1);
 			}
 			statement.close();
 			IO.getConnection().commit();
