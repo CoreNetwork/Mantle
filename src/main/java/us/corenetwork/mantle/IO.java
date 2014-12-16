@@ -89,7 +89,7 @@ public class IO {
             st.executeUpdate("CREATE TABLE IF NOT EXISTS regeneration_structures (ID INTEGER PRIMARY KEY NOT NULL, StructureName STRING NOT NULL, Schematic STRING NOT NULL, Rotation INT, World STRING, CornerX INTEGER, CornerZ INTEGER, PastingY INTEGER, SizeX INTEGER, SizeZ INTEGER, LastCheck INTEGER DEFAULT 0, LastRestore INTEGER DEFAULT 0, InspectionStatus INTEGER DEFAULT 0)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS chests (ID INTEGER PRIMARY KEY NOT NULL, LootTable STRING, Interval INTEGER, PerPlayer INTEGER, World STRING, X INTEGER, Y INTEGER, Z INTEGER, StructureID INTEGER)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS playerChests (ID INTEGER, PlayerUUID STRING, LastAccess INTEGER, Restocks INTEGER)");
-            st.executeUpdate("CREATE TABLE IF NOT EXISTS chestInventory (ID INTEGER, PlayerUUID STRING, Slot INTEGER, ItemID INTEGER, Damage INTEGER, Amount INTEGER)");
+            st.executeUpdate("CREATE TABLE IF NOT EXISTS chestInventory (ID INTEGER, PlayerUUID STRING, Slot INTEGER, ItemID INTEGER, Damage INTEGER, Amount INTEGER, NBT BLOB)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS horseSpeeds (ID STRING, Speed REAL)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS hydration (PlayerUUID STRING, Hydration REAL, Saturation REAL, FatigueLevel INTEGER, FatigueLevelStart INTEGER, DeliveredMessages STRING)");
             st.executeUpdate("CREATE TABLE IF NOT EXISTS ignoredSlimeChunks (World STRING, X INTEGER, Y INTEGER)");

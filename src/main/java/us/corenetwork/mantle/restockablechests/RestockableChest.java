@@ -30,6 +30,7 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -48,6 +49,7 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 
 public class RestockableChest {
@@ -894,16 +896,16 @@ public class RestockableChest {
 				int id = set.getInt("itemID");
 				int damage = set.getInt("damage");
 				int amount = set.getInt("amount");
+				byte[] nbt = set.getBytes("NBT");
 
 				ItemStack stack = new ItemStack(id, amount, (short) damage);
+				NanobotUtil.loadNBT(nbt, NanobotUtil.getInternalNMSStack(stack));
 
 				inventory.setItem(slot, stack);
 			}
 
 			statement.close();
 
-			NBTStorage.loadNbtTags(id, player.getName(), inventory);
-			
 			return inventory;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -929,7 +931,7 @@ public class RestockableChest {
 				return;
 			}
 
-			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, PlayerUUID, Slot, ItemID, Damage, Amount) VALUES (?,?,?,?,?,?)");
+			statement = IO.getConnection().prepareStatement("INSERT INTO chestInventory (ID, PlayerUUID, Slot, ItemID, Damage, Amount, NBT) VALUES (?,?,?,?,?,?,?)");
 
 			int size = inventory.getSize();
 			for (int i = 0; i < size; i++)
@@ -944,7 +946,7 @@ public class RestockableChest {
 				statement.setInt(4, stack.getTypeId());
 				statement.setInt(5, stack.getDurability());
 				statement.setInt(6, stack.getAmount());
-
+				statement.setBytes(7, NanobotUtil.getNBT(NanobotUtil.getInternalNMSStack(stack)));
 				statement.addBatch();
 			}
 
@@ -955,7 +957,6 @@ public class RestockableChest {
 		catch (SQLException e) {
 		}
 		
-		NBTStorage.saveNbtTags(id, player.getName(), inventory);
 	}
 
 

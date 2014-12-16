@@ -55,8 +55,7 @@ public class RChestsModule extends MantleModule {
 		saveConfig();
 		loadStorageYaml();
 		loadCategories();
-		NBTStorage.cleanStorage();
-		
+
 		MantlePlugin.instance.getServer().getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, new DiminishTimerChecker(), RChestSettings.DIMINISH_CHECKER_INTERNVAL.integer()*20, RChestSettings.DIMINISH_CHECKER_INTERNVAL.integer()*20);
 		return true;
 	}

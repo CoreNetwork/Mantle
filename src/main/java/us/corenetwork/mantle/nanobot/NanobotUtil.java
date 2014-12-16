@@ -1,13 +1,25 @@
 package us.corenetwork.mantle.nanobot;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
+import net.minecraft.server.v1_8_R1.NBTReadLimiter;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.TexturedMaterial;
@@ -156,4 +168,84 @@ public class NanobotUtil {
         item.setItemMeta(meta);
         return item;
     }
+
+	public static byte[] getNBT(net.minecraft.server.v1_8_R1.ItemStack stack)
+	{
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream dataOutput = new DataOutputStream(byteStream);
+		NBTTagCompound tag = stack.getTag();
+		if (tag == null)
+			return new byte[0];
+
+		try {
+			Method method = NBTTagCompound.class.getDeclaredMethod("write", DataOutput.class);
+			method.setAccessible(true);
+
+			method.invoke(tag, dataOutput);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
+		return byteStream.toByteArray();
+	}
+
+	public static NBTReadLimiter UNLIMTED_NBT_READER_INSTANCE = new UnlimitedNBTLimiter();
+	private static class UnlimitedNBTLimiter extends NBTReadLimiter
+	{
+		public UnlimitedNBTLimiter()
+		{
+			super(0);
+		}
+
+		@Override
+		public void a(long l)
+		{
+		}
+	}
+
+	public static void loadNBT(byte[] nbt, net.minecraft.server.v1_8_R1.ItemStack stack)
+	{
+		if (nbt == null || nbt.length == 0)
+			return;
+
+		NBTTagCompound tag = new NBTTagCompound();
+
+		ByteArrayInputStream stream = new ByteArrayInputStream(nbt);
+		DataInputStream dataInput = new DataInputStream(stream);
+
+		try {
+			Method method = NBTTagCompound.class.getDeclaredMethod("load", DataInput.class, Integer.TYPE, NBTReadLimiter.class);
+			method.setAccessible(true);
+
+			method.invoke(tag, dataInput, 0, UNLIMTED_NBT_READER_INSTANCE);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+
+		stack.setTag(tag);
+	}
+
+	public static net.minecraft.server.v1_8_R1.ItemStack getInternalNMSStack(ItemStack bukkitStack)
+	{
+		try
+		{
+			Field handleField = CraftItemStack.class.getDeclaredField("handle");
+			handleField.setAccessible(true);
+
+			return (net.minecraft.server.v1_8_R1.ItemStack) handleField.get(bukkitStack);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
 }
