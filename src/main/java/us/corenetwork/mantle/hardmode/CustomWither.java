@@ -83,11 +83,13 @@ public class CustomWither extends EntityWither {
 
         MoveStationaryArtillery moveStationaryArtillery = new MoveStationaryArtillery(this);
         MoveStomp moveStomp = new MoveStomp(this);
-
+        PathfinderPentagram pathfinderPentagram = new PathfinderPentagram(this);
         moves.add(moveStationaryArtillery);
-        moves.add(moveStomp);
+        //moves.add(moveStomp);
+        moves.add(pathfinderPentagram);
 
-        this.goalSelector.a(2, moveStomp);
+        this.goalSelector.a(2, pathfinderPentagram);
+        //this.goalSelector.a(2, moveStomp);
         this.goalSelector.a(3, moveStationaryArtillery);
 
         //this.goalSelector.a(4, new PathfinderSquare(this));
@@ -157,7 +159,7 @@ public class CustomWither extends EntityWither {
 
     public void tickShield()
     {
-        shieldLeft += MANA_REGEN;
+        shieldLeft += SHIELD_REGEN;
         shieldLeft = shieldLeft > shieldMax ? shieldMax : shieldLeft;
     }
 
