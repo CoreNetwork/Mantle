@@ -1,6 +1,5 @@
 package us.corenetwork.mantle.hardmode;
 
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -10,17 +9,16 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import us.corenetwork.mantle.MLog;
 
-public class PathfinderStationaryArtillery extends AbstractPathfinderGoal {
+public class MoveStationaryArtillery extends AbstractWitherMove {
 
-    private CustomWither wither;
-    private World world;
+    private World bukkitWorld;
 
-    private final int MIN_VERTICAL = HardmodeSettings.WITHER_PH_SA_MIN_VERTICAL.integer();
-    private final int MAX_VERTICAL = HardmodeSettings.WITHER_PH_SA_MAX_VERTICAL.integer();
-    private final int MAX_HORIZONTAL = HardmodeSettings.WITHER_PH_SA_MAX_HORIZONTAL.integer();
-    private final int MIN_HORIZONTAL = HardmodeSettings.WITHER_PH_SA_MIN_HORIZONTAL.integer();
-    private final int MOVE_BASIC_TIME = HardmodeSettings.WITHER_PH_SA_MOVE_BASIC_TIME.integer();
-    private final int MOVE_VARIANCE = HardmodeSettings.WITHER_PH_SA_MOVE_TIME_VARIANCE.integer();
+    private int MIN_VERTICAL;
+    private int MAX_VERTICAL;
+    private int MAX_HORIZONTAL;
+    private int MIN_HORIZONTAL;
+    private int MOVE_BASIC_TIME;
+    private int MOVE_VARIANCE;
 
 
     private double startLocX;
@@ -34,20 +32,35 @@ public class PathfinderStationaryArtillery extends AbstractPathfinderGoal {
     private TargetEntity targetEntity;
 
 
-    public PathfinderStationaryArtillery(CustomWither entityinsentient)
+    public MoveStationaryArtillery(CustomWither wither)
     {
-        this.wither = entityinsentient;
+        super(wither);
+
         this.a(5);
 
         //TODO dont hardcode this
-        this.world = Bukkit.getWorld("world_nether");
+        this.bukkitWorld = Bukkit.getWorld("world_nether");
+    }
+
+    @Override
+    protected void initializeMoveConfig()
+    {
+        MIN_VERTICAL = HardmodeSettings.WITHER_PH_SA_MIN_VERTICAL.integer();
+        MAX_VERTICAL = HardmodeSettings.WITHER_PH_SA_MAX_VERTICAL.integer();
+        MAX_HORIZONTAL = HardmodeSettings.WITHER_PH_SA_MAX_HORIZONTAL.integer();
+        MIN_HORIZONTAL = HardmodeSettings.WITHER_PH_SA_MIN_HORIZONTAL.integer();
+        MOVE_BASIC_TIME = HardmodeSettings.WITHER_PH_SA_MOVE_BASIC_TIME.integer();
+        MOVE_VARIANCE = HardmodeSettings.WITHER_PH_SA_MOVE_TIME_VARIANCE.integer();
+
+        MANA_COST = HardmodeSettings.WITHER_PH_SA_MANACOST.integer();
+        COOLDOWN = HardmodeSettings.WITHER_PH_SA_COOLDOWN.integer();
     }
 
     //can start?
     public boolean a()
     {
         //dont start if has target or if during startup phase
-        return wither.s(0) == 0 && wither.isInSpawningPhase() == false ;
+        return wither.s(0) == 0 && !wither.isInSpawningPhase();
     }
 
     //Should continue
@@ -106,23 +119,24 @@ public class PathfinderStationaryArtillery extends AbstractPathfinderGoal {
         }
     }
 
+    @Override
+    public boolean i()
+    {
+        return true;
+    }
+
+
+
     //Return average ground level about our "zero" level = 20;
     private void determineGroundLevel(double x, double z)
     {
         int counter=0;
-        Block block = world.getBlockAt((int) x,20,(int)z);
+        Block block = bukkitWorld.getBlockAt((int) x,20,(int)z);
         while(block.getType() != Material.AIR && counter < 20)
         {
             block = block.getRelative(BlockFace.UP);
             counter++;
         }
         groundY = 20 + counter;
-    }
-
-    //Interrupt
-    @Override
-    public boolean i()
-    {
-        return true;
     }
 }

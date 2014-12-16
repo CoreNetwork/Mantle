@@ -1,13 +1,8 @@
 package us.corenetwork.mantle.hardmode;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import us.corenetwork.mantle.MantlePlugin;
-import net.minecraft.server.v1_8_R1.EntityWither;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
-import net.minecraft.server.v1_8_R1.PathfinderGoal;
 
-public class PathfinderGoalGoUpAndShoot extends AbstractPathfinderGoal {
+public class PathfinderGoalGoUpAndShoot extends AbstractWitherMove {
 
 	private CustomWither wither;
 	private boolean running;

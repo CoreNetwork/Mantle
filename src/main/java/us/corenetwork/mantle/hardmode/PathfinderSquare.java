@@ -2,7 +2,7 @@ package us.corenetwork.mantle.hardmode;
 
 import net.minecraft.server.v1_8_R1.EntityCreature;
 
-public class PathfinderSquare extends AbstractPathfinderGoal {
+public class PathfinderSquare extends AbstractWitherMove {
 
 	private EntityCreature entity;
 	private int phase;

@@ -1,12 +1,11 @@
 package us.corenetwork.mantle.hardmode;
 
 import net.minecraft.server.v1_8_R1.EntityCreature;
-import net.minecraft.server.v1_8_R1.PathfinderGoal;
 import net.minecraft.server.v1_8_R1.RandomPositionGenerator;
 import net.minecraft.server.v1_8_R1.Vec3D;
 
 
-public class PathfinderGoalGoUpAndShoot2 extends AbstractPathfinderGoal {
+public class PathfinderGoalGoUpAndShoot2 extends AbstractWitherMove {
 
     private EntityCreature a;
     private double b;

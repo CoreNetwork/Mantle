@@ -28,6 +28,11 @@ public enum HardmodeSettings {
 	WITHER_EXPLOSION_RADIUS("Wither.ExplosionRadius", 20),
 	WITHER_SHOW_TARGET("Wither.ShowTarget", false),
 
+	WITHER_MANA_REGEN("Wither.ManaRegen", 10),
+	WITHER_SHIELD_REGEN("Wither.ShieldRegen", 10),
+
+	WITHER_BASE_DMG("Wither.BaseDmg", 4.5),
+
 	WITHER_BS_ENABLED("Wither.BlackSkull.Enabled", true),
 	WITHER_BS_SPEED("Wither.BlackSkull.Speed", 0.3),
 	WITHER_BS_SEARCH_HORIZ("Wither.BlackSkull.SearchHoriz", 30),
@@ -43,6 +48,8 @@ public enum HardmodeSettings {
 	WITHER_PH_SA_MAX_VERTICAL("Wither.Phases.StationaryArtillery.MaxVertical", 10),
 	WITHER_PH_SA_MAX_HORIZONTAL("Wither.Phases.StationaryArtillery.MinHorizontal", 3),
 	WITHER_PH_SA_MIN_HORIZONTAL("Wither.Phases.StationaryArtillery.MaxHorizontal", 5),
+	WITHER_PH_SA_COOLDOWN("Wither.Phases.StationaryArtillery.Cooldown", 0),
+	WITHER_PH_SA_MANACOST("Wither.Phases.StationaryArtillery.ManaCost", 0),
 
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),
 	

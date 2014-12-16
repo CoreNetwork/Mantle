@@ -4,7 +4,7 @@ import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 import net.minecraft.server.v1_8_R1.MathHelper;
 
-public class PathfinderPentagram extends AbstractPathfinderGoal {
+public class PathfinderPentagram extends AbstractWitherMove {
 
 	private final static float SKULL_COUNT = 50;
 	

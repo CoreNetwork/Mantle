@@ -1,10 +1,5 @@
 package us.corenetwork.mantle.hardmode;
 
-import net.minecraft.server.v1_8_R1.EntityArmorStand;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import us.corenetwork.mantle.MLog;
@@ -13,7 +8,7 @@ import us.corenetwork.mantle.MLog;
 /**
  * Created by Ginaf on 2014-12-14.
  */
-public class PathfinderFollowSth extends AbstractPathfinderGoal {
+public class PathfinderFollowSth extends AbstractWitherMove {
 
     private CustomWither wither;
     private boolean running;
