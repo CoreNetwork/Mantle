@@ -424,7 +424,10 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             {
                 TileEntityFurnace furnace = (TileEntityFurnace) tileEntity;
                 if (furnace.cookTime != 0)
+                {
                     furnace.cookTime++;
+                    furnace.burnTime--;
+                }
 
                 if (furnace.cookTime == 200)
                 {
