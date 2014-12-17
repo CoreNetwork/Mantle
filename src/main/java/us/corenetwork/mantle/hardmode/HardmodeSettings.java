@@ -13,8 +13,6 @@ public enum HardmodeSettings {
 	ENDERMAN_TELEPORT_MAX_TRIES("EndermanTeleport.MaxTries", 3),
 	ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT("EndermanTeleport.ApplyDamageEffect", "EndermanTeleport"),
 	
-	ZOMBIE_RESPAWN_CHANCE("ZombieRespawnChance", 20),
-		
 	GHAST_SPAWNING_CHANCE("Ghast.SpawningChance", 0.2),
 	GHAST_MINIMUM_SPAWNING_Y("Ghast.MinimumSpawningY", 80),
 	GHAST_MAXIMUM_ATTACK_RANGE("Ghast.MaxmimumHorizontalTargetRangeSquared", 70 * 70),
@@ -57,8 +55,6 @@ public enum HardmodeSettings {
 	PIGMEN_SWORD_CHANCE("Pigmen.SwordChance", 0.05),
 	
 	NETHER_MAX_SPAWN_LIGHT_LEVEL("Nether.MaxSpawnLightLevel", 7),
-	NETHER_HORSE_SPEED("Nether.HorseSpeed", 0.125),
-	NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN("Nether.VillagerApplyDamageNodeOnSpawn", "SlownessVillager"),
 
     NO_DEATH_DROPS_EXPERIENCE("NoDeathDrops.Experience", new ArrayList<String>()),
     NO_DEATH_DROPS_ITEMS("NoDeathDrops.Items", new ArrayList<String>()),

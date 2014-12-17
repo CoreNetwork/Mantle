@@ -217,37 +217,6 @@ public class HardmodeListener implements Listener {
 			entity.getEquipment().clear();
 		}
 
-		// Respawn zombie
-		if (entity.getType() == EntityType.ZOMBIE && entity.getFireTicks() == -1)
-		{
-			int chance = HardmodeSettings.ZOMBIE_RESPAWN_CHANCE.integer();
-			if (MantlePlugin.random.nextInt(100) < chance)
-			{
-				// Play effect
-				Builder builder = FireworkEffect.builder();
-
-				Util.showFirework(entity.getLocation(), builder.trail(false).withColor(Color.BLACK).build());
-				entity.getWorld().playSound(entity.getLocation(), Sound.ZOMBIE_UNFECT, 1, 1);
-
-				// Spawn new zombie
-
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
-
-					@Override
-					public void run()
-					{
-						Zombie newZombie = entity.getWorld().spawn(entity.getLocation(), Zombie.class);
-
-						newZombie.setHealth(newZombie.getMaxHealth() / 2);
-						newZombie.setMetadata("Respawned", new FixedMetadataValue(MantlePlugin.instance, true));
-					}
-
-				}, 10);
-
-				return;
-			}
-		}
-
 		if (event.getEntity() instanceof Animals)
 		{
 			if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
@@ -508,15 +477,6 @@ public class HardmodeListener implements Listener {
 			if (hasSword)
 			{
 				entity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD, 1));
-			}
-		}
-		// Add slowness to nether villagers
-		else if (entity.getType() == EntityType.VILLAGER)
-		{
-
-			if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER && event.getSpawnReason() != SpawnReason.DEFAULT)
-			{
-				HardmodeModule.applyDamageNode(event.getEntity(), HardmodeSettings.NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 			}
 		}
 		else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS)
