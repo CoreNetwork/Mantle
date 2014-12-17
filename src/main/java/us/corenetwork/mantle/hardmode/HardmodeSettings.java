@@ -40,6 +40,8 @@ public enum HardmodeSettings {
 	WITHER_BS_SHOOT_TIME_VARIANCE("Wither.BlackSkull.ShootTimeVariance", 10),
 	WITHER_BS_RE_SEARCH_TIME("Wither.BlackSkull.ReSearchTime", 50),
 
+
+	//-- basic moves --
 	WITHER_PH_SA_MOVE_BASIC_TIME("Wither.Phases.StationaryArtillery.MoveBasicTime", 100),
 	WITHER_PH_SA_MOVE_TIME_VARIANCE("Wither.Phases.StationaryArtillery.MoveTimeVariance", 30),
 	WITHER_PH_SA_MIN_VERTICAL("Wither.Phases.StationaryArtillery.MinVertical", 3),
@@ -48,6 +50,19 @@ public enum HardmodeSettings {
 	WITHER_PH_SA_MIN_HORIZONTAL("Wither.Phases.StationaryArtillery.MaxHorizontal", 5),
 	WITHER_PH_SA_COOLDOWN("Wither.Phases.StationaryArtillery.Cooldown", 0),
 	WITHER_PH_SA_MANACOST("Wither.Phases.StationaryArtillery.ManaCost", 0),
+
+	//-- advanced moves --
+	WITHER_PH_WA_DISTANCE_FROM_WITHER("Wither.Phases.WitherAura.DistFromWither",4),
+	WITHER_PH_WA_SEGMENTS_PER_TICK("Wither.Phases.WitherAura.SegmentsPerTick", 10),
+	WITHER_PH_WA_SKULLS_PER_SEGMENT("Wither.Phases.WitherAura.SkullsPerSegment", 3),
+	WITHER_PH_WA_DELAY_BETWEEN("Wither.Phases.WitherAura.DelayBetweenShots", 20),
+	WITHER_PH_WA_NUM_OF_SHOTS("Wither.Phases.WitherAura.NumberOfShots", 10),
+	WITHER_PH_WA_CIRCLE_SEGMENTS("Wither.Phases.WitherAura.CircleSegments", 120),
+	WITHER_PH_WA_MAX_ANGLE_FORWARD("Wither.Phases.WitherAura.MaxAngleForward", 60),
+	WITHER_PH_WA_MAX_ANGLE_BACKWARDS("Wither.Phases.WitherAura.MaxAngleBackward", 30),
+	//WITHER_PH_WA_("Wither.Phases.WitherAura."),
+
+
 
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),
 	
