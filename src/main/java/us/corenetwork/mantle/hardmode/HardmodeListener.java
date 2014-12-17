@@ -518,12 +518,18 @@ public class HardmodeListener implements Listener {
 			{
 				HardmodeModule.applyDamageNode(event.getEntity(), HardmodeSettings.NETHER_VILLAGER_APPLY_DAMAGE_NODE_ON_SPAWN.string());
 			}
-		} else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS)
+		}
+		else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS)
 		{
 			if (entity instanceof Zombie)
 			{
 				reinforcementZombies.add((Zombie) entity);
 			}
+		}
+		else if (event.getSpawnReason() == SpawnReason.MOUNT)
+		{
+			event.setCancelled(true);
+			return;
 		}
 
 		// assign spiders a random potion effect
