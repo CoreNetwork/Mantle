@@ -83,7 +83,7 @@ public class CustomWither extends EntityWither {
 
         MoveStationaryArtillery moveStationaryArtillery = new MoveStationaryArtillery(this);
         MoveStomp moveStomp = new MoveStomp(this);
-        PathfinderPentagram pathfinderPentagram = new PathfinderPentagram(this);
+        MoveWitherAura pathfinderPentagram = new MoveWitherAura(this);
         moves.add(moveStationaryArtillery);
         //moves.add(moveStomp);
         moves.add(pathfinderPentagram);
