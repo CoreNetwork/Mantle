@@ -24,6 +24,7 @@ public enum NetherSpawningSettings {
 	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Normal.Speed", 0.25),
 
     GHAST_SPAWNING_INTERVAL_TICKS("Ghast.SpawningIntervalTicks", 10),
+	GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
     GHAST_LIGHT_CHECK_Y("Ghast.LightCheckY", 183),
     GHAST_MIN_SPAWN_Y("Ghast.MinSpawnY", 163),
     GHAST_MAX_SPAWN_Y("Ghast.MaxSpawnY", 179),

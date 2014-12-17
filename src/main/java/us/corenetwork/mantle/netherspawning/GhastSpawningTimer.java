@@ -37,6 +37,9 @@ public class GhastSpawningTimer implements Runnable {
             if (netherCps.unloadQueue.contains(c.getX(), c.getZ())) //Don't spawn on unloading chunk
                 continue;
 
+            if (MantlePlugin.random.nextDouble() > NetherSpawningSettings.GHAST_SPAWN_CHANCE.doubleNumber())
+                continue;
+
             int randomX = MantlePlugin.random.nextInt(16);
             int randomY = MantlePlugin.random.nextInt(256);
             int randomZ = MantlePlugin.random.nextInt(16);
