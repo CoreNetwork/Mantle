@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -208,7 +209,17 @@ public class RestockableChest {
 			statement.setInt(5, chest.getX());
 			statement.setInt(6, chest.getY());
 			statement.setInt(7, chest.getZ());
-			statement.setInt(8, structureID);
+			if(structureID == null)
+			{
+				statement.setNull(8, Types.INTEGER);
+			}
+			else
+			{
+				statement.setInt(8, structureID);
+			}
+
+
+
 
 			statement.executeUpdate();
 			IO.getConnection().commit();
