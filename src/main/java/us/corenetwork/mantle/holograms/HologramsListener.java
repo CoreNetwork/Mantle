@@ -3,10 +3,13 @@ package us.corenetwork.mantle.holograms;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -23,5 +26,15 @@ public class HologramsListener implements Listener
         HologramsChunk hologramsChunk = HologramStorage.getChunkData(event.getWorld().getName(), event.getChunk().getX(), event.getChunk().getZ());
         if (hologramsChunk != null)
             hologramsChunk.update();
+    }
+
+    //WorldGuard workaround
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onCreatureSpawn(CreatureSpawnEvent event)
+    {
+        if (!event.isCancelled() || event.getEntityType() != EntityType.ARMOR_STAND)
+            return;
+
+        event.setCancelled(false);
     }
 }
