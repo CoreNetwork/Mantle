@@ -533,7 +533,7 @@ public class HardmodeListener implements Listener {
 		}
 
 		// assign spiders a random potion effect
-		if (!event.isCancelled() && event.getEntityType() == EntityType.SPIDER)
+		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER)
 		{
 			// clear vanilla effects so there aren't multiple on a spider in
 			// rare cases.
