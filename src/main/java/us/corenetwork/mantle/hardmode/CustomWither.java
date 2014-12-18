@@ -83,12 +83,16 @@ public class CustomWither extends EntityWither {
 
         MoveStationaryArtillery moveStationaryArtillery = new MoveStationaryArtillery(this);
         MoveStomp moveStomp = new MoveStomp(this);
-        MoveWitherAura pathfinderPentagram = new MoveWitherAura(this);
+        MoveWitherAura moveWitherAura = new MoveWitherAura(this);
+        MoveWitherAuraTestGround moveWitherAuraTestGround = new MoveWitherAuraTestGround(this);
         moves.add(moveStationaryArtillery);
         //moves.add(moveStomp);
-        moves.add(pathfinderPentagram);
+        moves.add(moveWitherAura);
+        moves.add(moveWitherAuraTestGround);
 
-        this.goalSelector.a(2, pathfinderPentagram);
+        this.goalSelector.a(1, moveWitherAuraTestGround);
+        this.goalSelector.a(2, moveWitherAura);
+
         //this.goalSelector.a(2, moveStomp);
         this.goalSelector.a(3, moveStationaryArtillery);
 
