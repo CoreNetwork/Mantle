@@ -24,15 +24,20 @@ public enum HardmodeSettings {
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),
 	WITHER_MINION_HEALTH("Wither.MinionHealth", 4),
 	WITHER_EXPLOSION_RADIUS("Wither.ExplosionRadius", 20),
-	WITHER_SHOW_TARGET("Wither.ShowTarget", false),
+	WITHER_DEBUG("Wither.Debug", false),
 
-	WITHER_MANA_REGEN("Wither.ManaRegen", 10),
-	WITHER_SHIELD_REGEN("Wither.ShieldRegen", 10),
+	WITHER_MANA_REGEN("Wither.Mana.Regen", 10),
+	WITHER_MANA_MAX_AMOUNTS("Wither.Mana.MaxAmounts", new Integer[]{1500, 2000, 2200, 2400, 2600, 2700}),
+
+	WITHER_SHIELD_REGEN("Wither.Shield.Regen", 10),
+	WITHER_SHIELD_MAX_AMOUNTS("Wither.Shield.MaxAmounts", new Integer[]{1500, 2000, 2200, 2400, 2600, 2700}),
+
+	WITHER_HEALTH_REGEN("Wither.Health.Regen", 10),
+	WITHER_HEALTH_MAX_AMOUNTS("Wither.Health.MaxAmounts", new Integer[]{300, 400, 500, 550, 600, 700}),
 
 	WITHER_BASE_DMG("Wither.BaseDmg", 4.5),
 
-	WITHER_BS_ENABLED("Wither.BlackSkull.Enabled", true),
-	WITHER_BS_SPEED("Wither.BlackSkull.Speed", 0.3),
+	//-- normal black skull attack --
 	WITHER_BS_SEARCH_HORIZ("Wither.BlackSkull.SearchHoriz", 30),
 	WITHER_BS_SEARCH_VERT("Wither.BlackSkull.SearchVert", 10),
 	WITHER_BS_SHOOT_MAX_DISTANCE("Wither.BlackSkull.ShootMaxDistance", 30),
@@ -50,6 +55,7 @@ public enum HardmodeSettings {
 	WITHER_PH_SA_MIN_HORIZONTAL("Wither.Phases.StationaryArtillery.MaxHorizontal", 5),
 	WITHER_PH_SA_COOLDOWN("Wither.Phases.StationaryArtillery.Cooldown", 0),
 	WITHER_PH_SA_MANACOST("Wither.Phases.StationaryArtillery.ManaCost", 0),
+	WITHER_PH_SA_NORMALATTACK("Wither.Phases.StationaryArtillery.NormalAttack", true),
 
 	//-- advanced moves --
 	WITHER_PH_WA_DISTANCE_FROM_WITHER("Wither.Phases.WitherAura.DistFromWither",4),
@@ -60,6 +66,11 @@ public enum HardmodeSettings {
 	WITHER_PH_WA_CIRCLE_SEGMENTS("Wither.Phases.WitherAura.CircleSegments", 120),
 	WITHER_PH_WA_MAX_ANGLE_FORWARD("Wither.Phases.WitherAura.MaxAngleForward", 60),
 	WITHER_PH_WA_MAX_ANGLE_BACKWARDS("Wither.Phases.WitherAura.MaxAngleBackward", 30),
+
+	WITHER_PH_WA_COOLDOWN("Wither.Phases.WitherAura.Cooldown", 600),
+
+	WITHER_PH_WA_MANACOST("Wither.Phases.WitherAura.ManaCost", 150),
+	WITHER_PH_WA_NORMALATTACK("Wither.Phases.WitherAura.NormalAttack", true),
 	//WITHER_PH_WA_("Wither.Phases.WitherAura."),
 
 
@@ -111,6 +122,10 @@ public enum HardmodeSettings {
 		return (List<String>) HardmodeModule.instance.config.get(string, def);
 	}
 
+	public List<Integer> intList()
+	{
+		return HardmodeModule.instance.config.getIntegerList(string);
+	}
 	public Boolean bool()
 	{
 		return (Boolean) HardmodeModule.instance.config.get(string, def);

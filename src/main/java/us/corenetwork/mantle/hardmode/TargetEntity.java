@@ -26,7 +26,7 @@ public class TargetEntity extends EntityArmorStand {
         setSmall(true);
         setBasePlate(false);
 
-        if(HardmodeSettings.WITHER_SHOW_TARGET.bool())
+        if(HardmodeSettings.WITHER_DEBUG.bool())
         {
             setCustomName("TARGET");
             setCustomNameVisible(true);
@@ -44,7 +44,7 @@ public class TargetEntity extends EntityArmorStand {
     @Override
     public void setPosition(double d0, double d1, double d2) {
         super.setPosition(d0, d1, d2);
-        MLog.debug("[WITHER] TARGET at " + d0 + " " + d1 + " " + d2);
+        MLog.debug("&f[&3Wither&f]&f TARGET at " + d0 + " " + d1 + " " + d2);
     }
 
     @Override

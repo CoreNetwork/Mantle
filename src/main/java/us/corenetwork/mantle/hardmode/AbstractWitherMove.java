@@ -1,26 +1,64 @@
 package us.corenetwork.mantle.hardmode;
 
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
+import us.corenetwork.mantle.MLog;
 
 public abstract class AbstractWitherMove extends PathfinderGoal {
+
+    //Move name, debug use only (probably)
+    private String name;
+    private String shortName;
 
     protected CustomWither wither;
     protected int MANA_COST;
     protected int COOLDOWN;
+    protected boolean NORMAL_ATTACK;
 
     protected int cooldownLeft;
+    protected boolean isActive;
 
-
-    public AbstractWitherMove(CustomWither wither)
+    public AbstractWitherMove(CustomWither wither, String name, String shortName)
     {
         this.wither = wither;
+        this.name = name;
+        this.shortName = shortName;
         initializeMoveConfig();
+        isActive = false;
+        cooldownLeft = 0;
     }
 
     /**
      * Initializez this Move, reading all required values from config.
      */
     protected void initializeMoveConfig() {}
+
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getShortName()
+    {
+        return shortName;
+    }
+
+
+    /**
+     * @return wheter the Move is currently in progress
+     */
+    public boolean isActive()
+    {
+        return isActive;
+    }
+
+    /**
+     * @return true if Move uses normal black skull attack
+     */
+    public boolean usesNormalAttack()
+    {
+        return NORMAL_ATTACK;
+    }
 
 
     /**
@@ -37,6 +75,21 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
     public boolean isOnCooldown()
     {
         return cooldownLeft > 0;
+    }
+
+    public int getManaCost()
+    {
+        return MANA_COST;
+    }
+
+    public int getCooldown()
+    {
+        return COOLDOWN;
+    }
+
+    public int getCooldownLeft()
+    {
+        return cooldownLeft;
     }
 
     /**
@@ -58,16 +111,15 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
      */
     public boolean a()
     {
-        return !isOnCooldown() && hasEnoughMana();
+        return !isOnCooldown() && hasEnoughMana() && !wither.isInSpawningPhase();
     }
-
 
     /**
      * Returns whether an in-progress Move should continue executing
      */
     public boolean b()
     {
-    	return super.b();
+    	return isActive;
     }
 	
     /**
@@ -75,7 +127,9 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
      */
     public void c()
     {
+        MLog.debug("&f[&3Wither&f]&f Starting " + name + " move.");
     	super.c();
+        isActive = true;
     }
     
     /**
@@ -83,7 +137,10 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
      */
     public void d()
     {
+        MLog.debug("&f[&3Wither&f]&f Stopping " + name + " move.");
     	super.d();
+        isActive = false;
+        cooldownLeft = COOLDOWN;
     }
     
     /**
@@ -99,7 +156,7 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
      */
     public boolean i()
     {
-    	return super.i();
+    	return false;
     }
     
     /**

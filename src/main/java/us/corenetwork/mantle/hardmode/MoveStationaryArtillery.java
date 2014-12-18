@@ -7,7 +7,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
-import us.corenetwork.mantle.MLog;
 
 public class MoveStationaryArtillery extends AbstractWitherMove {
 
@@ -34,9 +33,8 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
 
     public MoveStationaryArtillery(CustomWither wither)
     {
-        super(wither);
-
-        this.a(5);
+        super(wither, "Stationary Artillery", "SA");
+        this.a(1);
 
         //TODO dont hardcode this
         this.bukkitWorld = Bukkit.getWorld("world_nether");
@@ -54,27 +52,14 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
 
         MANA_COST = HardmodeSettings.WITHER_PH_SA_MANACOST.integer();
         COOLDOWN = HardmodeSettings.WITHER_PH_SA_COOLDOWN.integer();
-    }
-
-    //can start?
-    public boolean a()
-    {
-        //dont start if has target or if during startup phase
-        return wither.s(0) == 0 && !wither.isInSpawningPhase();
-    }
-
-    //Should continue
-    public boolean b()
-    {
-        //No logic for stopping other than interrupting yet
-        return true;
+        NORMAL_ATTACK = HardmodeSettings.WITHER_PH_SA_NORMALATTACK.bool();
     }
 
     //Init phase
     @Override
     public void c()
     {
-        MLog.debug("[WITHER] Starting Stationary Artillery");
+        super.c();
         determineGroundLevel(wither.locX, wither.locZ);
         finalHeight = groundY + MIN_VERTICAL;
 
@@ -86,7 +71,8 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
         startLocX = wither.locX;
         startLocZ = wither.locZ;
 
-        nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + wither.bb().nextInt(2*MOVE_VARIANCE)-MOVE_VARIANCE;
+        nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + wither.bb().nextInt(2 * MOVE_VARIANCE) - MOVE_VARIANCE;
+
     }
 
 
@@ -94,26 +80,23 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
     @Override
     public void d()
     {
-        MLog.debug("[WITHER] Stopping Stationary Artillery");
-
         wither.setGoalTarget(null);
         wither.world.removeEntity(targetEntity);
-
     }
 
     //Run phase (each tick)
     @Override
     public void e()
     {
-        if(wither.world.getTime() > nextMoveTime)
+        if (wither.world.getTime() > nextMoveTime)
         {
-            nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + wither.bb().nextInt(2*MOVE_VARIANCE)-MOVE_VARIANCE;
+            nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + wither.bb().nextInt(2 * MOVE_VARIANCE) - MOVE_VARIANCE;
 
             determineGroundLevel(wither.locX, wither.locZ);
 
-            finalHeight = groundY + wither.bb().nextDouble()*(MAX_VERTICAL - MIN_VERTICAL) + MIN_VERTICAL;
-            double diffX = wither.bb().nextDouble()*(MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
-            double diffZ = wither.bb().nextDouble()*(MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
+            finalHeight = groundY + wither.bb().nextDouble() * (MAX_VERTICAL - MIN_VERTICAL) + MIN_VERTICAL;
+            double diffX = wither.bb().nextDouble() * (MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
+            double diffZ = wither.bb().nextDouble() * (MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
 
             targetEntity.setPosition(startLocX + diffX, finalHeight, startLocZ + diffZ);
         }
@@ -126,13 +109,12 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
     }
 
 
-
     //Return average ground level about our "zero" level = 20;
     private void determineGroundLevel(double x, double z)
     {
-        int counter=0;
-        Block block = bukkitWorld.getBlockAt((int) x,20,(int)z);
-        while(block.getType() != Material.AIR && counter < 20)
+        int counter = 0;
+        Block block = bukkitWorld.getBlockAt((int) x, 20, (int) z);
+        while (block.getType() != Material.AIR && counter < 20)
         {
             block = block.getRelative(BlockFace.UP);
             counter++;

@@ -13,44 +13,14 @@ public class MoveStomp extends AbstractWitherMove {
 
     public MoveStomp(CustomWither wither)
     {
-        super(wither);
-        stompMove = false;
-        this.a(1);
+        super(wither, "Stomp", "St");
+        this.a(3);
     }
 
     @Override
     protected void initializeMoveConfig()
     {
 
-    }
-
-    public boolean a()
-    {
-        return super.a();
-    }
-
-    public boolean b()
-    {
-        return stompMove;
-    }
-
-    public void c()
-    {
-        MLog.debug("[WITHER] Starting Stomp");
-        super.c();
-        stompMove = true;
-
-
-        //Get a copy of target list
-        //fly 'away' from everyone
-        //check if enough air around?
-    }
-
-    @Override
-    public void d()
-    {
-        MLog.debug("[WITHER] Stoping Stomp");
-        stompMove = false;
     }
 
     @Override

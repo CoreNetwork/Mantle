@@ -2,6 +2,7 @@ package us.corenetwork.mantle.hardmode;
 
 import com.google.common.base.Predicate;
 import net.minecraft.server.v1_8_R1.*;
+import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 
 import java.lang.reflect.Field;
@@ -12,8 +13,6 @@ import java.util.List;
 public class CustomWither extends EntityWither {
 
 
-    private boolean BS_ENABLED;
-    private float BS_SPEED;
     private double BS_SEARCH_HORIZ;
     private double BS_SEARCH_VERT;
     private double BS_SHOOT_MAX_DISTANCE;
@@ -28,16 +27,22 @@ public class CustomWither extends EntityWither {
     private int nextShootTime;
 
 
-    private int manaMax;
-    private int manaLeft;
-    private int MANA_REGEN;
+    private float manaMax = 1;
+    private float manaLeft = 1;
+    private float MANA_REGEN;
+    private List<Integer> MANA_MAX_AMOUNTS;
 
-    private int shieldMax;
-    private int shieldLeft;
-    private int SHIELD_REGEN;
+    private float shieldMax = 1;
+    private float shieldLeft = 1;
+    private float SHIELD_REGEN;
+    private List<Integer> SHIELD_MAX_AMOUNTS;
 
-    private double baseDamage;
-    private double BASE_DMG;
+    private float healthMax = 1;
+    private float HEALTH_REGEN;
+    private List<Integer> HEALTH_MAX_AMOUNTS;
+
+    private float baseDamage;
+    private float BASE_DMG;
 
     //Used by E, here to initialize it before E
     private List targetList = new ArrayList();
@@ -45,14 +50,13 @@ public class CustomWither extends EntityWither {
     //Collection for all the moves, to iterate over & lower cooldowns
     //Only modify it in constructor
     private List<AbstractWitherMove> moves = new ArrayList<AbstractWitherMove>();
+    private List<AbstractWitherMove> activeMoves = new ArrayList<AbstractWitherMove>();
 
     public CustomWither(World world)
     {
         super(world);
         initializeFromConfig();
-
-
-
+        changeAmountsOnNumOfPlayers(0);
         try
         {
 
@@ -103,17 +107,22 @@ public class CustomWither extends EntityWither {
 
     protected void initializeFromConfig()
     {
-        BS_ENABLED = HardmodeSettings.WITHER_BS_ENABLED.bool();
-        BS_SPEED = HardmodeSettings.WITHER_BS_SPEED.floatNumber();
         BS_SEARCH_HORIZ = HardmodeSettings.WITHER_BS_SEARCH_HORIZ.doubleNumber();
         BS_SEARCH_VERT = HardmodeSettings.WITHER_BS_SEARCH_VERT.doubleNumber();
         BS_SHOOT_MAX_DISTANCE = HardmodeSettings.WITHER_BS_SHOOT_MAX_DISTANCE.doubleNumber() * HardmodeSettings.WITHER_BS_SHOOT_MAX_DISTANCE.doubleNumber();
         BS_SHOOT_BASIC_TIME = HardmodeSettings.WITHER_BS_SHOOT_BASIC_TIME.integer();
         BS_SHOOT_TIME_VARIANCE = HardmodeSettings.WITHER_BS_SHOOT_TIME_VARIANCE.integer();
         BS_RE_SEARCH_TIME = HardmodeSettings.WITHER_BS_RE_SEARCH_TIME.integer();
-        MANA_REGEN = HardmodeSettings.WITHER_MANA_REGEN.integer();
-        SHIELD_REGEN = HardmodeSettings.WITHER_SHIELD_REGEN.integer();
-        BASE_DMG = HardmodeSettings.WITHER_BASE_DMG.doubleNumber();
+
+        MANA_REGEN = HardmodeSettings.WITHER_MANA_REGEN.floatNumber();
+        MANA_MAX_AMOUNTS = HardmodeSettings.WITHER_MANA_MAX_AMOUNTS.intList();
+        SHIELD_REGEN = HardmodeSettings.WITHER_SHIELD_REGEN.floatNumber();
+        SHIELD_MAX_AMOUNTS = HardmodeSettings.WITHER_SHIELD_MAX_AMOUNTS.intList();
+        HEALTH_REGEN = HardmodeSettings.WITHER_HEALTH_REGEN.floatNumber();
+        HEALTH_MAX_AMOUNTS = HardmodeSettings.WITHER_HEALTH_MAX_AMOUNTS.intList();
+
+        BASE_DMG = HardmodeSettings.WITHER_BASE_DMG.floatNumber();
+
     }
 
     public boolean isInSpawningPhase()
@@ -128,12 +137,12 @@ public class CustomWither extends EntityWither {
      */
 
     //--MANA
-    public int getManaLeft()
+    public float getManaLeft()
     {
         return manaLeft;
     }
 
-    public void setManaLeft(int value)
+    public void setManaLeft(float value)
     {
         manaLeft = value;
     }
@@ -144,19 +153,23 @@ public class CustomWither extends EntityWither {
         manaLeft = manaLeft > manaMax ? manaMax : manaLeft;
     }
 
-    public void setManaMax(int value)
+    public void setManaMax(float value)
     {
         manaMax = value;
     }
 
+    public float getManaMax()
+    {
+        return manaMax;
+    }
 
     //--SHIELD
-    public int getShieldLeft()
+    public float getShieldLeft()
     {
         return shieldLeft;
     }
 
-    public void setShieldLeft(int value)
+    public void setShieldLeft(float value)
     {
         shieldLeft = value;
     }
@@ -167,18 +180,24 @@ public class CustomWither extends EntityWither {
         shieldLeft = shieldLeft > shieldMax ? shieldMax : shieldLeft;
     }
 
-    public void setShieldMax(int value)
+    public void setShieldMax(float value)
     {
         shieldMax = value;
     }
 
-    //--Damage
-    public double getBaseDamage()
+    public float getShieldMax()
+    {
+        return shieldMax;
+    }
+
+
+    //--DAMAGE
+    public float getBaseDamage()
     {
         return baseDamage;
     }
 
-    public void setBaseDamage(double value)
+    public void setBaseDamage(float value)
     {
         baseDamage = value;
     }
@@ -188,10 +207,57 @@ public class CustomWither extends EntityWither {
         baseDamage = BASE_DMG;
     }
 
-    //--Health
+    //--HEALTH
 
-    public void changeMaxAmountsOnNumOfPlayers(int numOfPlayer)
+    public void tickHealth()
     {
+        float health = this.getHealth() + HEALTH_REGEN;
+        health =  health > healthMax ? healthMax : health;
+        this.setHealth(health);
+    }
+
+    public void setHealthMax(float value)
+    {
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(value);
+        healthMax = value;
+    }
+
+    public float getHealthMax()
+    {
+        return healthMax;
+    }
+
+
+
+    public void changeAmountsOnNumOfPlayers(int numOfPlayer)
+    {
+        float newMaxValue = 100;
+        float percent;
+        int i;
+
+        percent = getManaLeft() / getManaMax();
+        for(i = 0; i <= numOfPlayer && i < MANA_MAX_AMOUNTS.size(); ++i)
+        {
+            newMaxValue = MANA_MAX_AMOUNTS.get(i);
+        }
+        setManaMax(newMaxValue);
+        setManaLeft(percent * newMaxValue);
+
+        percent = getShieldLeft() / getShieldMax();
+        for(i = 0; i <= numOfPlayer && i < SHIELD_MAX_AMOUNTS.size(); ++i)
+        {
+            newMaxValue = SHIELD_MAX_AMOUNTS.get(i);
+        }
+        setShieldMax(newMaxValue);
+        setShieldLeft(percent * newMaxValue);
+
+        percent = getHealth() / getHealthMax();
+        for(i = 0; i <= numOfPlayer && i < HEALTH_MAX_AMOUNTS.size(); ++i)
+        {
+            newMaxValue = HEALTH_MAX_AMOUNTS.get(i);
+        }
+        setHealthMax(newMaxValue);
+        setHealth(percent * newMaxValue);
 
     }
 
@@ -220,9 +286,11 @@ public class CustomWither extends EntityWither {
             }
 
             this.r(i);
-            if (this.ticksLived % 10 == 0)
+            if (this.ticksLived % 5 == 0)
             {
-                this.heal(10.0F);
+                tickHealth();
+                tickMana();
+                tickShield();
             }
 
         }
@@ -239,7 +307,7 @@ public class CustomWither extends EntityWither {
             }
 
             //Shoot them!
-            if (ticksLived > nextShootTime && BS_ENABLED)
+            if (ticksLived > nextShootTime && isNormalAttackEnabled())
             {
                 nextShootTime = ticksLived + BS_SHOOT_BASIC_TIME + this.bb().nextInt(2 * BS_SHOOT_TIME_VARIANCE) - BS_SHOOT_TIME_VARIANCE;
 
@@ -328,11 +396,26 @@ public class CustomWither extends EntityWither {
             }
             if (this.ticksLived % 20 == 0)
             {
-                this.heal(1.0F);
+                tickHealth();
+                tickMana();
+                tickShield();
+                changeAmountsOnNumOfPlayers(targetList.size());
+                updateDebugName();
             }
-
             tickCooldowns();
         }
+    }
+
+    private boolean isNormalAttackEnabled()
+    {
+        if(moves.size() == 0)
+            return false;
+        boolean enabled = true;
+        for(AbstractWitherMove move : moves)
+        {
+            enabled = move.isActive() ? enabled && move.usesNormalAttack() : enabled;
+        }
+        return enabled;
     }
 
     private void tickCooldowns()
@@ -340,6 +423,20 @@ public class CustomWither extends EntityWither {
         for(AbstractWitherMove move : moves)
         {
             move.tickCooldown();
+        }
+    }
+
+    private void updateDebugName()
+    {
+        if(HardmodeSettings.WITHER_DEBUG.bool())
+        {
+            String customName = "&4"+"H:"+getHealth()+"/"+getHealthMax()+" &B"+"M:"+getManaLeft()+"/"+getManaMax()
+                    + " &6"+"S:"+getShieldLeft()+"/"+getShieldMax();
+            for(AbstractWitherMove move : moves)
+            {
+                customName += " &F"+ move.getShortName()+":"+move.getCooldownLeft()+"/"+move.getCooldown();
+            }
+            setCustomName(ChatColor.translateAlternateColorCodes('&', customName));
         }
     }
 
@@ -392,7 +489,6 @@ public class CustomWither extends EntityWither {
         double d7 = d1 - d4;
         double d8 = d2 - d5;
         CustomWitherSkull entitywitherskull = new CustomWitherSkull(this.world, this, d6, d7, d8);
-        entitywitherskull.setCustomNormalSpeed(BS_SPEED);
         if (flag)
         {
             entitywitherskull.setCharged(true);
