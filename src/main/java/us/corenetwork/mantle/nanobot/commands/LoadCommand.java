@@ -81,10 +81,13 @@ public class LoadCommand extends NanobotBaseCommand {
 	public static NBTTagCompound load(String name)
 	{
 		YamlConfiguration yaml = new YamlConfiguration();
-		
+
+		File file = null;
 		try {
-			yaml.load(new File(NanobotModule.folder, name + ".yml"));
+			file = new File(NanobotModule.folder, name + ".yml");
+			yaml.load(file);
 		} catch (FileNotFoundException e) {
+			MLog.warning("[Nanobot] Could not find file - " + file.getAbsolutePath());
 			return null;
 		} catch (IOException e) {
 			MLog.severe("Error while loading tag yml file - " + e.getMessage());

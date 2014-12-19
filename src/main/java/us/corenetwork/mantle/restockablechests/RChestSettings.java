@@ -30,7 +30,9 @@ public enum RChestSettings {
 	DIMINISH_TOTAL("Diminish.Total.DiminishPerChest", 0.01),
 	DIMINISH_RESTORE_TOTAL("Diminish.Total.RestoreBy", 0.01),
 	DIMINISH_RESTORE_INTERVAL_TOTAL("Diminish.Total.RestoreInterval", 7200),
-	
+
+	COMPASS_NBT_TAG("CompassNBTTag", "Compass"),
+
 	BASIC_CATEGORIES("BasicCategories",new ArrayList<Map<String, Object>>(){{
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Organic");

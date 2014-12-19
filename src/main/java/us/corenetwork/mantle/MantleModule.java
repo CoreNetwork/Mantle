@@ -202,6 +202,14 @@ public abstract class MantleModule implements CommandExecutor {
 	{
 		MantleModule module;
 
+		//Nanobot
+		module = new NanobotModule();
+		if (module.loadModuleInternal())
+		{
+			module.active = true;
+			modules.add(module);
+		}
+
 		//Hard mode
 		module = new HardmodeModule();
 		if (module.loadModuleInternal())
@@ -273,14 +281,6 @@ public abstract class MantleModule implements CommandExecutor {
 			module.active = true;
 			modules.add(module);
 		}
-
-		//Nanobot
-		module = new NanobotModule();
-		if (module.loadModuleInternal())
-		{
-			module.active = true;
-			modules.add(module);
-		}        
 
 		//Game Tweaks
 		module = new GameTweaksModule();

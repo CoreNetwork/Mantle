@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.restockablechests;
 
+import com.comphenix.protocol.ProtocolLibrary;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,9 @@ public class RChestsModule extends MantleModule {
 	public static List<Category> basicCategories;
 	public static List<Category> rareCategories;
 	public static Map<String, Category> categories;
-	
+
+	private CompassProtocolListener compassProtocolListener;
+
 	public RChestsModule() {
 		super("Restockable chests", null, "rchests");
 		
@@ -56,6 +59,10 @@ public class RChestsModule extends MantleModule {
 		loadStorageYaml();
 		loadCategories();
 
+		compassProtocolListener = new CompassProtocolListener();
+		ProtocolLibrary.getProtocolManager().addPacketListener(compassProtocolListener);
+
+
 		MantlePlugin.instance.getServer().getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, new DiminishTimerChecker(), RChestSettings.DIMINISH_CHECKER_INTERNVAL.integer()*20, RChestSettings.DIMINISH_CHECKER_INTERNVAL.integer()*20);
 		return true;
 	}
@@ -70,6 +77,9 @@ public class RChestsModule extends MantleModule {
 		super.loadConfig();
 		loadStorageYaml();
 		loadCategories();
+
+		if (compassProtocolListener != null)
+			compassProtocolListener.loadConfig();
 	}
 	
 	private void loadCategories()
