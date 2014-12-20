@@ -15,9 +15,10 @@ import java.util.*;
 
 public class FishingConfig implements Listener {
     private List<FishingGroup> groups = new ArrayList<>();
-    private Random random = new Random();
+    private Random random = MantlePlugin.random;
 
     public void loadConfig() {
+        groups.clear();
         try {
             List<?> fishConfig =  FarmingModule.instance.config.getList("Fishing");
             for (Object groupObj : fishConfig) {

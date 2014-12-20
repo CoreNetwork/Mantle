@@ -226,15 +226,19 @@ public abstract class MantleModule implements CommandExecutor {
 			modules.add(module);
 		}
 
-		//Restockable chests
-		module = new RChestsModule();
-		if (module.loadModuleInternal())
-		{
-			module.active = true;
-			modules.add(module);
-		}
+        try {
+            //Restockable chests
+            module = new RChestsModule();
+            if (module.loadModuleInternal())
+            {
+                module.active = true;
+                modules.add(module);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		//Portals
+        //Portals
 		module = new PortalsModule();
 		if (module.loadModuleInternal())
 		{

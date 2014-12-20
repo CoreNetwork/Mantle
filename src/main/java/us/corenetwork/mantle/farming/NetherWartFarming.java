@@ -81,42 +81,25 @@ public class NetherWartFarming implements Listener {
         if (!FarmingModule.instance.active || event.isCancelled()) {
             return;
         }
-        Block trace = event.getBlock();
-        for (int i = 0; i < 13; i++) {
-            if (trace.getType() == Material.AIR || !trace.getType().isSolid()) {
-                break;
-            }
-
-            if (BlockTraits.NO_PISTON_PUSH_BLOCKS.contains(trace.getType())) {
-                break;
-            }
-
-            if (i == 12) {
-                return;
-            }
-        }
 
 
-        trace = event.getBlock();
-
-        for (int i = 0; i < 12; i++) {
-            trace = trace.getRelative(event.getDirection());
+        for (Block trace : event.getBlocks()) {
             if (trace.getType() == Material.NETHER_WARTS) {
                 dropBad(trace);
-                break;
             }
             Block warts = trace.getRelative(BlockFace.UP);
             if (trace.getType() == Material.SOUL_SAND && warts.getType() == Material.NETHER_WARTS) {
                 dropBad(warts);
             }
-
-            if (trace.getType() == Material.AIR || !trace.getType().isSolid()) {
-                break;
+            warts = trace.getRelative(event.getDirection());
+            if (warts.getType() == Material.NETHER_WARTS) {
+                dropBad(warts);
+            }
+            Block relative = warts.getRelative(BlockFace.UP);
+            if (warts.getType() == Material.SOUL_SAND && relative.getType() == Material.NETHER_WARTS) {
+                dropBad(relative);
             }
 
-            if (BlockTraits.NO_PISTON_PUSH_BLOCKS.contains(trace.getType())) {
-                break;
-            }
         }
     }
 

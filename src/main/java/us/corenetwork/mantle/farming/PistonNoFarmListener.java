@@ -16,15 +16,10 @@ public class PistonNoFarmListener implements Listener {
         }
         boolean pushesAPumpkin = false;
 
-        Block trace = event.getBlock();
-        for (int i = 0; i < 12; i++) {
-            trace = trace.getRelative(event.getDirection());
+        for (Block trace : event.getBlocks()) {
             Material mat = trace.getType();
             if (mat == Material.MELON_BLOCK || mat == Material.PUMPKIN) {
                 pushesAPumpkin = true;
-                break;
-            }
-            if (mat == Material.AIR || !mat.isSolid() || BlockTraits.NO_PISTON_PUSH_BLOCKS.contains(mat)) {
                 break;
             }
         }

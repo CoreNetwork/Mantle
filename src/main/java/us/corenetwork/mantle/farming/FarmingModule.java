@@ -8,6 +8,7 @@ import us.corenetwork.mantle.MantlePlugin;
 
 public class FarmingModule extends MantleModule {
     public static FarmingModule instance;
+    FishingConfig fishingConfig = new FishingConfig();
 
     public FarmingModule() {
         super("Farming", null, "farming");
@@ -18,11 +19,15 @@ public class FarmingModule extends MantleModule {
     protected boolean loadModule() {
         Bukkit.getPluginManager().registerEvents(new PistonNoFarmListener(), MantlePlugin.instance);
         Bukkit.getPluginManager().registerEvents(new NetherWartFarming(), MantlePlugin.instance);
-        FishingConfig fishingConfig = new FishingConfig();
-        fishingConfig.loadConfig();
         Bukkit.getPluginManager().registerEvents(fishingConfig, MantlePlugin.instance);
 
         return true;
+    }
+
+    @Override
+    public void loadConfig() {
+        super.loadConfig();
+        fishingConfig.loadConfig();
     }
 
     @Override
