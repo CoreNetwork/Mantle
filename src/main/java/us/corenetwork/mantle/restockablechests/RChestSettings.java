@@ -125,7 +125,7 @@ public enum RChestSettings {
 	MESSAGE_COMPASS_VILLAGE_CLAIMED("Messages.CompassVillageClaimed", "The village you are heading to got claimed! Recalculating new village"),
 	MESSAGE_COMPASS_NAME_WITH_DISTANCE("Messages.CompassNameWithDistance", "&5[<Category>] <Distance> blocks away"),
 	MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE("Messages.CompassNameWithoutDistance", "&5Tracking [<Category>]"),
-	MESSAGE_COMPASS_NAME_BLANK("Messages.CompassName", "&5Loot compass");
+	MESSAGE_COMPASS_NAME_BLANK("Messages.CompassNameBlank", "Loot compass");
 	protected String string;
 	protected Object def;
 	

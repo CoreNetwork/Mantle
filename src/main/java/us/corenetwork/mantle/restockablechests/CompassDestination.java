@@ -23,6 +23,8 @@ public class CompassDestination {
 	private int destZ;
 	private VillageInfoHelper vih;
 	private Category category;
+	public String compassName;
+
 	public CompassDestination(int x, int z, VillageInfoHelper vih, Category category)
 	{
 		this.destX = x;
@@ -30,8 +32,15 @@ public class CompassDestination {
 		this.vih = vih;
 		this.category = category;
 		lastPlayerLocation = new Location(Bukkit.getWorld("world"), 10000, 4, 10000);
+		setCompassName(RChestSettings.MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE.string().replace("<Category>", category.getLootTableName()));
 	}
-	
+
+	public void setCompassName(String value)
+	{
+		compassName = ChatColor.translateAlternateColorCodes('&', value);
+	}
+
+
 	public static void addDestination(HumanEntity player, CompassDestination destination)
 	{
 		((Player) player).setCompassTarget(new Location(Bukkit.getWorld("world"), destination.destX, 4, destination.destZ));
@@ -78,7 +87,8 @@ public class CompassDestination {
 		String message = RChestSettings.MESSAGE_COMPASS_NAME_WITH_DISTANCE.string();
 		message = message.replace("<Distance>", distance+"");
 		message = message.replace("<Category>", category.getLootTableName());
-		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', message));
+		setCompassName(message);
+		meta.setDisplayName(compassName);
 		compass.setItemMeta(meta);
 
         
