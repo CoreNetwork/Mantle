@@ -188,7 +188,7 @@ public class GUICategoryPicker extends InventoryGUI {
 			
 			for(RestockableChest rchest : RestockableChest.getChestsInStructure(vih.id))
 			{
-				if(rchest.chestExists())
+				if(rchest.chestExists() && !rchest.wasLootedByPlayer(player.getUniqueId()))
 				{
 					rc = rchest;
 					found = true;

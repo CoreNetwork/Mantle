@@ -8,6 +8,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EnumParticle;
 import net.minecraft.server.v1_8_R1.PacketPlayOutBlockAction;
@@ -187,6 +188,29 @@ public class RestockableChest {
 	public boolean chestExists()
 	{
 		return chestBlock.getType() == Material.CHEST;
+	}
+
+	public boolean wasLootedByPlayer(UUID player)
+	{
+		boolean looted = false;
+
+		try
+		{
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID FROM playerChests WHERE ID = ? AND PlayerUUID = ? LIMIT 1");
+			statement.setInt(1, id);
+			statement.setString(2, player.toString());
+			ResultSet set = statement.executeQuery();
+
+			looted = set.next();
+
+			statement.close();
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		return looted;
 	}
 	
 	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer, Integer structureID)
