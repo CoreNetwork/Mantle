@@ -1,7 +1,9 @@
 package us.corenetwork.mantle.hardmode;
 
+import net.minecraft.server.v1_8_R1.EntityWither;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWither;
 import org.bukkit.entity.Wither;
 import org.bukkit.metadata.MetadataValue;
 
@@ -35,7 +37,9 @@ public class HardmodeTimer implements Runnable {
 				if (value != null)
 				{
 					if (wither.getLocation().getY() > HardmodeSettings.WITHER_DESPAWNING_Y.integer() || value.asInt() < System.currentTimeMillis() / 1000)
-						wither.remove();
+					{
+						((CraftWither) wither).getHandle().die();
+					}
 				}
 			}
 		}

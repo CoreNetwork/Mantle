@@ -432,15 +432,13 @@ public class HardmodeListener implements Listener {
 					public void run()
 					{
 						CustomWither customWither = NMSWitherManager.convert((Wither) entity);
-						int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
-						MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
-
-						CraftWither wither = new CraftWither((CraftServer) Bukkit.getServer(), customWither);
 						customWither.n();
-						wither.setMetadata("DespawningTime", value);
 					}
 				});
 			}
+			int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
+			MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
+			entity.setMetadata("DespawningTime", value);
 
 		}
 		// Reduced ghast spawning
@@ -746,3 +744,4 @@ public class HardmodeListener implements Listener {
 	}
 
 }
+

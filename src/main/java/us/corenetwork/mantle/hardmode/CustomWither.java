@@ -13,6 +13,12 @@ import java.util.List;
 public class CustomWither extends EntityWither {
 
 
+    private int SPAWNING_PHASE_DURATION;
+    //Not in settings for now, not really needed there
+    private float SPAWNING_HP_FRACTION = 0.4F;
+    private float SPAWNING_PHASE_REGEN;
+
+
     private double BS_SEARCH_HORIZ;
     private double BS_SEARCH_VERT;
     private double BS_SHOOT_MAX_DISTANCE;
@@ -32,6 +38,7 @@ public class CustomWither extends EntityWither {
     private float MANA_REGEN;
     private List<Integer> MANA_MAX_AMOUNTS;
 
+    private boolean shieldActive;
     private float shieldMax = 1;
     private float shieldLeft = 1;
     private float SHIELD_REGEN;
@@ -40,6 +47,10 @@ public class CustomWither extends EntityWither {
     private float healthMax = 1;
     private float HEALTH_REGEN;
     private List<Integer> HEALTH_MAX_AMOUNTS;
+
+    private int delayBetweenMovesLeft = 1;
+    private int delayBetweenMovesMax;
+    private List<Integer> DELAY_MAX_AMOUNTS;
 
     private float baseDamage;
     private float BASE_DMG;
@@ -56,7 +67,12 @@ public class CustomWither extends EntityWither {
     {
         super(world);
         initializeFromConfig();
-        changeAmountsOnNumOfPlayers(0);
+        searchForTargets();
+        changeAmountsOnNumOfPlayers(targetList.size());
+        updateDebugName();
+        //Set delay left to current max, to not start the skill right away
+        startDelayAfterMove();
+
         try
         {
 
@@ -85,20 +101,23 @@ public class CustomWither extends EntityWither {
         }
 
 
-        MoveStationaryArtillery moveStationaryArtillery = new MoveStationaryArtillery(this);
+        MoveArtillery moveArtillery = new MoveArtillery(this);
         MoveStomp moveStomp = new MoveStomp(this);
         MoveWitherAura moveWitherAura = new MoveWitherAura(this);
         MoveWitherAuraTestGround moveWitherAuraTestGround = new MoveWitherAuraTestGround(this);
-        moves.add(moveStationaryArtillery);
+        MoveAcidCloud moveAcidCloud = new MoveAcidCloud(this);
+
+        moves.add(moveArtillery);
         //moves.add(moveStomp);
         moves.add(moveWitherAura);
         moves.add(moveWitherAuraTestGround);
+        moves.add(moveAcidCloud);
 
         this.goalSelector.a(1, moveWitherAuraTestGround);
         this.goalSelector.a(2, moveWitherAura);
-
+        this.goalSelector.a(3, moveAcidCloud);
         //this.goalSelector.a(2, moveStomp);
-        this.goalSelector.a(3, moveStationaryArtillery);
+        this.goalSelector.a(10, moveArtillery);
 
         //this.goalSelector.a(4, new PathfinderSquare(this));
         //this.goalSelector.a(5, new PathfinderGoalGoUpAndShoot(this));
@@ -107,6 +126,8 @@ public class CustomWither extends EntityWither {
 
     protected void initializeFromConfig()
     {
+        SPAWNING_PHASE_DURATION = HardmodeSettings.WITHER_SPAWNING_PHASE_DURATION.integer();
+
         BS_SEARCH_HORIZ = HardmodeSettings.WITHER_BS_SEARCH_HORIZ.doubleNumber();
         BS_SEARCH_VERT = HardmodeSettings.WITHER_BS_SEARCH_VERT.doubleNumber();
         BS_SHOOT_MAX_DISTANCE = HardmodeSettings.WITHER_BS_SHOOT_MAX_DISTANCE.doubleNumber() * HardmodeSettings.WITHER_BS_SHOOT_MAX_DISTANCE.doubleNumber();
@@ -121,14 +142,42 @@ public class CustomWither extends EntityWither {
         HEALTH_REGEN = HardmodeSettings.WITHER_HEALTH_REGEN.floatNumber();
         HEALTH_MAX_AMOUNTS = HardmodeSettings.WITHER_HEALTH_MAX_AMOUNTS.intList();
 
-        BASE_DMG = HardmodeSettings.WITHER_BASE_DMG.floatNumber();
+        DELAY_MAX_AMOUNTS = HardmodeSettings.WITHER_DELAY_BETWEEN_SKILLS_AMOUNTS.intList();
 
+        BASE_DMG = HardmodeSettings.WITHER_BASE_DMG.floatNumber();
     }
 
     public boolean isInSpawningPhase()
     {
         return inSpawningPhase;
     }
+
+    public boolean isOnDelayBetweenMoves()
+    {
+        return delayBetweenMovesLeft > 0;
+    }
+
+    public void startDelayAfterMove()
+    {
+        delayBetweenMovesLeft = delayBetweenMovesMax;
+    }
+
+    private void setDelayBetweenMovesMax(int value)
+    {
+         delayBetweenMovesMax = value;
+    }
+
+    public void tickDelay()
+    {
+        delayBetweenMovesLeft--;
+    }
+
+
+    public List getTargetList()
+    {
+        return targetList;
+    }
+
 
     /**
      * ========================
@@ -149,7 +198,7 @@ public class CustomWither extends EntityWither {
 
     public void tickMana()
     {
-        manaLeft += MANA_REGEN;
+        manaLeft += MANA_REGEN * manaMax;
         manaLeft = manaLeft > manaMax ? manaMax : manaLeft;
     }
 
@@ -176,7 +225,7 @@ public class CustomWither extends EntityWither {
 
     public void tickShield()
     {
-        shieldLeft += SHIELD_REGEN;
+        shieldLeft += SHIELD_REGEN * shieldMax;
         shieldLeft = shieldLeft > shieldMax ? shieldMax : shieldLeft;
     }
 
@@ -211,10 +260,16 @@ public class CustomWither extends EntityWither {
 
     public void tickHealth()
     {
-        float health = this.getHealth() + HEALTH_REGEN;
+        regenHealth(HEALTH_REGEN);
+    }
+
+    public void regenHealth(float regen)
+    {
+        float health = this.getHealth() + regen * healthMax;
         health =  health > healthMax ? healthMax : health;
         this.setHealth(health);
     }
+
 
     public void setHealthMax(float value)
     {
@@ -259,6 +314,13 @@ public class CustomWither extends EntityWither {
         setHealthMax(newMaxValue);
         setHealth(percent * newMaxValue);
 
+        int newDelayValue = 0;
+        for(i = 0; i <= numOfPlayer && i < DELAY_MAX_AMOUNTS.size(); ++i)
+        {
+            newDelayValue = DELAY_MAX_AMOUNTS.get(i);
+        }
+        setDelayBetweenMovesMax(newDelayValue);
+
     }
 
 
@@ -267,6 +329,12 @@ public class CustomWither extends EntityWither {
     public void m()
     {
         super.m();
+        if(shieldActive)
+        {
+            for (j = 0; j < 3; ++j) {
+                this.world.addParticle(EnumParticle.SPELL_MOB, this.locX + this.random.nextGaussian() * 1.0D, this.locY + (double) (this.random.nextFloat() * 3.3F), this.locZ + this.random.nextGaussian() * 1.0D, 0.699999988079071D, 0.699999988079071D, 0.8999999761581421D, new int[0]);
+            }
+        }
     }
 
     //Entity tick - removed some stuff from original
@@ -286,11 +354,9 @@ public class CustomWither extends EntityWither {
             }
 
             this.r(i);
-            if (this.ticksLived % 5 == 0)
+            if (this.ticksLived % 20 == 0)
             {
-                tickHealth();
-                tickMana();
-                tickShield();
+                regenHealth(SPAWNING_PHASE_REGEN);
             }
 
         }
@@ -303,7 +369,7 @@ public class CustomWither extends EntityWither {
             if (this.ticksLived >= nextTargetSearchTime)
             {
                 nextTargetSearchTime = ticksLived + BS_RE_SEARCH_TIME;
-                targetList = this.world.a(EntityLiving.class, this.getBoundingBox().grow(BS_SEARCH_HORIZ, BS_SEARCH_VERT, BS_SEARCH_HORIZ), new EntitySelectorHuman());
+                searchForTargets();
             }
 
             //Shoot them!
@@ -394,16 +460,31 @@ public class CustomWither extends EntityWither {
             {
                 e1.printStackTrace();
             }
+
             if (this.ticksLived % 20 == 0)
             {
                 tickHealth();
                 tickMana();
                 tickShield();
-                changeAmountsOnNumOfPlayers(targetList.size());
-                updateDebugName();
             }
+
             tickCooldowns();
+            tickDelay();
+            setInvulnerable(targetList.size() == 0);
         }
+
+        //Here alone to update during spawning phase
+        if (this.ticksLived % 20 == 0)
+        {
+            updateDebugName();
+            changeAmountsOnNumOfPlayers(targetList.size());
+        }
+        updateShield();
+    }
+
+    private void searchForTargets()
+    {
+        targetList = this.world.a(EntityLiving.class, this.getBoundingBox().grow(BS_SEARCH_HORIZ, BS_SEARCH_VERT, BS_SEARCH_HORIZ), new EntitySelectorHuman());
     }
 
     private boolean isNormalAttackEnabled()
@@ -434,10 +515,29 @@ public class CustomWither extends EntityWither {
                     + " &6"+"S:"+getShieldLeft()+"/"+getShieldMax();
             for(AbstractWitherMove move : moves)
             {
-                customName += " &F"+ move.getShortName()+":"+move.getCooldownLeft()+"/"+move.getCooldown();
+                if(move.isActive())
+                {
+                    customName += " &D"+ move.getShortName()+"&F:"+move.getCooldownLeft()+"/"+move.getCooldown();
+                }
+                else
+                {
+                    customName += " &F"+ move.getShortName()+":"+move.getCooldownLeft()+"/"+move.getCooldown();
+                }
+
             }
             setCustomName(ChatColor.translateAlternateColorCodes('&', customName));
         }
+    }
+
+    //Turn shield on or off
+    private void updateShield()
+    {
+        shieldActive = getHealth()*2 < getHealthMax();
+    }
+
+    private void setInvulnerable(boolean val)
+    {
+        this.r(val ? 2 : 0);
     }
 
     //With new armour idea, no armor for arrows
@@ -460,10 +560,32 @@ public class CustomWither extends EntityWither {
     public void n()
     {
         inSpawningPhase = true;
-        super.n();
+        this.r(SPAWNING_PHASE_DURATION);
+        this.setHealth(this.getMaxHealth() * SPAWNING_HP_FRACTION);
+        SPAWNING_PHASE_REGEN = (1 - SPAWNING_HP_FRACTION) / (SPAWNING_PHASE_DURATION / 20.0F);
     }
 
-	/*
+    @Override
+    public void die(DamageSource damagesource)
+    {
+        super.die(damagesource);
+        for(AbstractWitherMove move : moves)
+        {
+            move.cleanUp();
+        }
+    }
+
+    @Override
+    public void die()
+    {
+        super.die();
+        for(AbstractWitherMove move : moves)
+        {
+            move.cleanUp();
+        }
+    }
+
+    /*
      * =========================================
 	 * COPY-PASTA from EntityWither, without changes - coz its easier than reflection
 	 * =========================================

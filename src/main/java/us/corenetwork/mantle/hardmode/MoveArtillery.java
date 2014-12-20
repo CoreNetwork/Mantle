@@ -8,7 +8,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-public class MoveStationaryArtillery extends AbstractWitherMove {
+public class MoveArtillery extends AbstractWitherMove {
 
     private World bukkitWorld;
 
@@ -31,9 +31,9 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
     private TargetEntity targetEntity;
 
 
-    public MoveStationaryArtillery(CustomWither wither)
+    public MoveArtillery(CustomWither wither)
     {
-        super(wither, "Stationary Artillery", "SA");
+        super(wither, "Artillery", "Ar");
         this.a(1);
 
         //TODO dont hardcode this
@@ -53,6 +53,20 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
         MANA_COST = HardmodeSettings.WITHER_PH_SA_MANACOST.integer();
         COOLDOWN = HardmodeSettings.WITHER_PH_SA_COOLDOWN.integer();
         NORMAL_ATTACK = HardmodeSettings.WITHER_PH_SA_NORMALATTACK.bool();
+    }
+
+    @Override
+    public void cleanUp()
+    {
+        wither.world.removeEntity(targetEntity);
+    }
+
+
+    public boolean a()
+    {
+        //Not relying on super() here, coz we need the Artillery to happen right away.
+        //TODO refactor to something better.
+        return !isOnCooldown() && hasEnoughMana() && !wither.isInSpawningPhase();
     }
 
     //Init phase
@@ -81,7 +95,7 @@ public class MoveStationaryArtillery extends AbstractWitherMove {
     public void d()
     {
         wither.setGoalTarget(null);
-        wither.world.removeEntity(targetEntity);
+        cleanUp();
     }
 
     //Run phase (each tick)
