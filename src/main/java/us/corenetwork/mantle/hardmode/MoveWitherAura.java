@@ -32,6 +32,7 @@ public class MoveWitherAura extends AbstractWitherMove {
         super(wither, "Wither Aura", "WA");
         this.a(2);
 
+        //random segment helper, to keep random unique
         for(int i = 0;i<CIRCLE_SEGMENTS;i++)
             segmentList.add(i);
     }

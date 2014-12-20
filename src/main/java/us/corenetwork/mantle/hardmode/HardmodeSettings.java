@@ -81,6 +81,7 @@ public enum HardmodeSettings {
 	//--- acid cloud ---
 
 	WITHER_PH_AC_RANGE("Wither.Phases.AcidCloud.Range", 5),
+	WITHER_PH_AC_DURATION("Wither.Phases.AcidCloud.Duration", 200),
 
 	WITHER_PH_AC_COOLDOWN("Wither.Phases.AcidCloud.Cooldown", 400),
 	WITHER_PH_AC_MANACOST("Wither.Phases.AcidCloud.ManaCost", 400),
