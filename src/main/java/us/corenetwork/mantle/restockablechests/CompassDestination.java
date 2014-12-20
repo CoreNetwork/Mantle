@@ -75,7 +75,7 @@ public class CompassDestination {
 		int diffZ = playerLoc.getBlockZ() - destZ;
 		int distance = (int) Math.sqrt(diffX * diffX + diffZ * diffZ);
 		
-		String message = RChestSettings.MESSAGE_COMPASS_NAME.string();
+		String message = RChestSettings.MESSAGE_COMPASS_NAME_WITH_DISTANCE.string();
 		message = message.replace("<Distance>", distance+"");
 		message = message.replace("<Category>", category.getLootTableName());
 		meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', message));

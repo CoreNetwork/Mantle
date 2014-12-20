@@ -123,7 +123,9 @@ public enum RChestSettings {
 	MESSAGE_CHEST_INVINCIBLE("Messages.ChestInvicible", "Sorry, you can't use this chest while invincible. Use /RiddleFillThisInIforgotCommandName to disable your invincibility."),
 	MESSAGE_CHESTS_RESTOCKED("Messages.ChestsRestocked", "Chests Restocked"),
 	MESSAGE_COMPASS_VILLAGE_CLAIMED("Messages.CompassVillageClaimed", "The village you are heading to got claimed! Recalculating new village"),
-	MESSAGE_COMPASS_NAME("Messages.CompassName", "&5[<Category>] <Distance> blocks away");
+	MESSAGE_COMPASS_NAME_WITH_DISTANCE("Messages.CompassNameWithDistance", "&5[<Category>] <Distance> blocks away"),
+	MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE("Messages.CompassNameWithoutDistance", "&5Tracking [<Category>]"),
+	MESSAGE_COMPASS_NAME_BLANK("Messages.CompassName", "&5Loot compass");
 	protected String string;
 	protected Object def;
 	
