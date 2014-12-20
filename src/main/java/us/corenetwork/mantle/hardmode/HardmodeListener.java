@@ -406,6 +406,9 @@ public class HardmodeListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onCreatureSpawn(CreatureSpawnEvent event)
 	{
+		if (event.getSpawnReason() == SpawnReason.SPAWNER) //Do not modify any mobs spawned by mob spawners
+			return;
+
 		final LivingEntity entity = event.getEntity();
 
 		// Prevent spawning on some nether mobs if there is not enough light
