@@ -24,15 +24,19 @@ public enum HardmodeSettings {
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),
 	WITHER_MINION_HEALTH("Wither.MinionHealth", 4),
 	WITHER_EXPLOSION_RADIUS("Wither.ExplosionRadius", 20),
+	WITHER_SPAWNING_PHASE_DURATION("Wither.SpawningPhaseLength", 220),
+
 	WITHER_DEBUG("Wither.Debug", false),
 
-	WITHER_MANA_REGEN("Wither.Mana.Regen", 10),
+	WITHER_DELAY_BETWEEN_SKILLS_AMOUNTS("Wither.DelayBetweenSkillsAmounts", new Integer[]{80,70,60,50,40,30,20,10}),
+
+	WITHER_MANA_REGEN("Wither.Mana.Regen", 0.01),
 	WITHER_MANA_MAX_AMOUNTS("Wither.Mana.MaxAmounts", new Integer[]{1500, 2000, 2200, 2400, 2600, 2700}),
 
-	WITHER_SHIELD_REGEN("Wither.Shield.Regen", 10),
+	WITHER_SHIELD_REGEN("Wither.Shield.Regen", 0.01),
 	WITHER_SHIELD_MAX_AMOUNTS("Wither.Shield.MaxAmounts", new Integer[]{1500, 2000, 2200, 2400, 2600, 2700}),
 
-	WITHER_HEALTH_REGEN("Wither.Health.Regen", 10),
+	WITHER_HEALTH_REGEN("Wither.Health.Regen", 0.03),
 	WITHER_HEALTH_MAX_AMOUNTS("Wither.Health.MaxAmounts", new Integer[]{300, 400, 500, 550, 600, 700}),
 
 	WITHER_BASE_DMG("Wither.BaseDmg", 4.5),
@@ -58,8 +62,9 @@ public enum HardmodeSettings {
 	WITHER_PH_SA_NORMALATTACK("Wither.Phases.StationaryArtillery.NormalAttack", true),
 
 	//-- advanced moves --
+	//--- wither aura ---
 	WITHER_PH_WA_DISTANCE_FROM_WITHER("Wither.Phases.WitherAura.DistFromWither",4),
-	WITHER_PH_WA_SEGMENTS_PER_TICK("Wither.Phases.WitherAura.SegmentsPerTick", 10),
+	WITHER_PH_WA_SEGMENTS_PER_SHOT("Wither.Phases.WitherAura.SegmentsPerShot", 10),
 	WITHER_PH_WA_SKULLS_PER_SEGMENT("Wither.Phases.WitherAura.SkullsPerSegment", 3),
 	WITHER_PH_WA_DELAY_BETWEEN("Wither.Phases.WitherAura.DelayBetweenShots", 20),
 	WITHER_PH_WA_NUM_OF_SHOTS("Wither.Phases.WitherAura.NumberOfShots", 10),
@@ -73,6 +78,14 @@ public enum HardmodeSettings {
 	WITHER_PH_WA_NORMALATTACK("Wither.Phases.WitherAura.NormalAttack", true),
 	//WITHER_PH_WA_("Wither.Phases.WitherAura."),
 
+	//--- acid cloud ---
+
+	WITHER_PH_AC_RANGE("Wither.Phases.AcidCloud.Range", 5),
+
+	WITHER_PH_AC_COOLDOWN("Wither.Phases.AcidCloud.Cooldown", 400),
+	WITHER_PH_AC_MANACOST("Wither.Phases.AcidCloud.ManaCost", 400),
+	WITHER_PH_AC_NORMALATTACK("Wither.Phases.AcidCloud.NormalAttack", false),
+	//WITHER_PH_AC_("Wither.Phases.AcidCloud."),
 
 
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),

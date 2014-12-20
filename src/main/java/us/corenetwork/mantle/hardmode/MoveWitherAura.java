@@ -1,7 +1,13 @@
 package us.corenetwork.mantle.hardmode;
 
+import com.google.common.collect.Range;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 import net.minecraft.server.v1_8_R1.MathHelper;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class MoveWitherAura extends AbstractWitherMove {
 
@@ -18,17 +24,23 @@ public class MoveWitherAura extends AbstractWitherMove {
     private int shotNumber;
     private int delay;
 
+    //To not repeat segments in randomization
+    private List<Integer> segmentList = new ArrayList<Integer>();
+
     public MoveWitherAura(CustomWither wither)
     {
         super(wither, "Wither Aura", "WA");
         this.a(2);
+
+        for(int i = 0;i<CIRCLE_SEGMENTS;i++)
+            segmentList.add(i);
     }
 
     @Override
     protected void initializeMoveConfig()
     {
         DISTANCE_FROM_WITHER = HardmodeSettings.WITHER_PH_WA_DISTANCE_FROM_WITHER.integer();
-        SEGMENTS_PER_TICK = HardmodeSettings.WITHER_PH_WA_SEGMENTS_PER_TICK.integer();
+        SEGMENTS_PER_TICK = HardmodeSettings.WITHER_PH_WA_SEGMENTS_PER_SHOT.integer();
         SKULLS_PER_SEGMENT = HardmodeSettings.WITHER_PH_WA_SKULLS_PER_SEGMENT.integer();
         DELAY_BETWEEN = HardmodeSettings.WITHER_PH_WA_DELAY_BETWEEN.integer();
         NUM_OF_SHOTS = HardmodeSettings.WITHER_PH_WA_NUM_OF_SHOTS.integer();
@@ -66,9 +78,11 @@ public class MoveWitherAura extends AbstractWitherMove {
             shotNumber++;
             delay = DELAY_BETWEEN;
 
+            Collections.shuffle(segmentList);
+
             for (int i = 0; i < SEGMENTS_PER_TICK; i++)
             {
-                int randomSegment = wither.bb().nextInt(CIRCLE_SEGMENTS);
+                int randomSegment = segmentList.get(i % CIRCLE_SEGMENTS);
                 float angle = (float) (randomSegment * 6.28318530718 / CIRCLE_SEGMENTS);
                 float diffZ = MathHelper.sin(angle) * DISTANCE_FROM_WITHER;
                 float diffX = MathHelper.cos(angle) * DISTANCE_FROM_WITHER;

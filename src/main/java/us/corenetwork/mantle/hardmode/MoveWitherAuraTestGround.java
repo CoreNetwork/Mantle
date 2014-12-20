@@ -4,6 +4,10 @@ package us.corenetwork.mantle.hardmode;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 import net.minecraft.server.v1_8_R1.MathHelper;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class MoveWitherAuraTestGround extends AbstractWitherMove {
 
     private int DISTANCE_FROM_WITHER;
@@ -17,6 +21,8 @@ public class MoveWitherAuraTestGround extends AbstractWitherMove {
     private float forwardDist;
     private float backwardsDist;
 
+    //To not repeat segments in randomization
+    private List<Integer> segmentList = new ArrayList<Integer>();
     //to actually count if should turn off
     private int shotNumber;
     private int delay;
@@ -25,13 +31,16 @@ public class MoveWitherAuraTestGround extends AbstractWitherMove {
     {
         super(wither, "Wither Aura Test Ground", "WAtg");
         this.a(2);
+
+        for(int i = 0;i<CIRCLE_SEGMENTS;i++)
+            segmentList.add(i);
     }
 
     @Override
     protected void initializeMoveConfig()
     {
         DISTANCE_FROM_WITHER = HardmodeSettings.WITHER_PH_WA_DISTANCE_FROM_WITHER.integer();
-        SEGMENTS_PER_TICK = HardmodeSettings.WITHER_PH_WA_SEGMENTS_PER_TICK.integer();
+        SEGMENTS_PER_TICK = HardmodeSettings.WITHER_PH_WA_SEGMENTS_PER_SHOT.integer();
         SKULLS_PER_SEGMENT = HardmodeSettings.WITHER_PH_WA_SKULLS_PER_SEGMENT.integer();
         DELAY_BETWEEN = HardmodeSettings.WITHER_PH_WA_DELAY_BETWEEN.integer();
         NUM_OF_SHOTS = HardmodeSettings.WITHER_PH_WA_NUM_OF_SHOTS.integer();
@@ -72,9 +81,11 @@ public class MoveWitherAuraTestGround extends AbstractWitherMove {
             shotNumber++;
             delay = DELAY_BETWEEN;
 
+            Collections.shuffle(segmentList);
+
             for (int i = 0; i < SEGMENTS_PER_TICK; i++)
             {
-                int randomSegment = wither.bb().nextInt(CIRCLE_SEGMENTS);
+                int randomSegment = segmentList.get(i % CIRCLE_SEGMENTS);
                 float angle = (float) (randomSegment * 6.28318530718 / CIRCLE_SEGMENTS);
                 float diffZ = MathHelper.sin(angle) * DISTANCE_FROM_WITHER;
                 float diffX = MathHelper.cos(angle) * DISTANCE_FROM_WITHER;

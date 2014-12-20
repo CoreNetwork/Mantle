@@ -107,11 +107,16 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
     }
 
     /**
+     * Cleanup after move. Could include deleting the target entity or deleting particles.
+     */
+    public void cleanUp() {}
+
+    /**
      * Returns whether the Move should begin execution.
      */
     public boolean a()
     {
-        return !isOnCooldown() && hasEnoughMana() && !wither.isInSpawningPhase();
+        return !isOnCooldown() && hasEnoughMana() && !wither.isInSpawningPhase() && !wither.isOnDelayBetweenMoves();
     }
 
     /**
@@ -130,6 +135,7 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
         MLog.debug("&f[&3Wither&f]&f Starting " + name + " move.");
     	super.c();
         isActive = true;
+        wither.setManaLeft(wither.getManaLeft() - getManaCost());
     }
     
     /**
@@ -141,6 +147,7 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
     	super.d();
         isActive = false;
         cooldownLeft = COOLDOWN;
+        wither.startDelayAfterMove();
     }
     
     /**
