@@ -81,11 +81,17 @@ public enum HardmodeSettings {
 	//--- acid cloud ---
 
 	WITHER_PH_AC_RANGE("Wither.Phases.AcidCloud.Range", 5),
-	WITHER_PH_AC_DURATION("Wither.Phases.AcidCloud.Duration", 200),
+	WITHER_PH_AC_DURATION("Wither.Phases.AcidCloud.Duration", 400),
 
 	WITHER_PH_AC_COOLDOWN("Wither.Phases.AcidCloud.Cooldown", 400),
 	WITHER_PH_AC_MANACOST("Wither.Phases.AcidCloud.ManaCost", 400),
 	WITHER_PH_AC_NORMALATTACK("Wither.Phases.AcidCloud.NormalAttack", false),
+	WITHER_PH_AC_PARTICLE("Wither.Phases.AcidCloud.Particle", 29),
+	WITHER_PH_AC_PARTICLE_REFRESH_RATE("Wither.Phases.AcidCloud.ParticleRefreshRate", 5),
+	WITHER_PH_AC_PARTICLE_AMOUT("Wither.Phases.AcidCloud.ParticleAmout", 10),
+	WITHER_PH_AC_DEBUFF_REFRESH_RATE("Wither.Phases.AcidCloud.DebuffRefreshRate", 20),
+	WITHER_PH_AC_DEBUFF_DURA_REMOVED("Wither.Phases.AcidCloud.DebuffDurabilityRemoved",  new Integer[]{6, 5, 4, 3, 2}),
+	WITHER_PH_AC_DEBUFF_HUNGER("Wihter.Phases.AcidCloud.DebuffHunger", true),
 	//WITHER_PH_AC_("Wither.Phases.AcidCloud."),
 
 
