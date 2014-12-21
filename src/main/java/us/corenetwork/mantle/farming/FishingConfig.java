@@ -1,11 +1,13 @@
 package us.corenetwork.mantle.farming;
 
 import net.minecraft.server.v1_8_R1.EnchantmentManager;
+import org.bukkit.Statistic;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.bukkit.event.player.PlayerStatisticIncrementEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -18,13 +20,17 @@ public class FishingConfig implements Listener {
     private Random random = MantlePlugin.random;
 
     public void loadConfig() {
-        groups.clear();
+        groups = new ArrayList<>();
         try {
             List<?> fishConfig =  FarmingModule.instance.config.getList("Fishing");
             for (Object groupObj : fishConfig) {
                 Map<String, Object> groupMap = (Map<String, Object>) groupObj;
                 int weight = (Integer) groupMap.get("Weight");
-                FishingGroup currentGroup = new FishingGroup(weight);
+                Statistic statistic = Statistic.FISH_CAUGHT;
+                if (groupMap.containsKey("Statistic")) {
+                    statistic = Statistic.valueOf((String) groupMap.get("Statistic"));
+                }
+                FishingGroup currentGroup = new FishingGroup(weight, statistic);
 
                 List<?> items = (List<?>) groupMap.get("Items");
                 for (Object itemObj : items) {
@@ -44,11 +50,16 @@ public class FishingConfig implements Listener {
                 }
                 groups.add(currentGroup);
             }
+            allowStatIncrement = false;
         } catch (Exception e) {
             MLog.warning("[Farming] No fishing config found. Fishing loot will be untouched.");
+            e.printStackTrace();
             groups = null;
+            allowStatIncrement = true;
         }
     }
+
+    private boolean allowStatIncrement = false;
 
     @EventHandler(ignoreCancelled = true)
     public void onFished(PlayerFishEvent event) {
@@ -67,6 +78,24 @@ public class FishingConfig implements Listener {
                 replace = CraftItemStack.asBukkitCopy(nmsStack);
             }
             item.setItemStack(replace);
+            allowStatIncrement = true;
+            event.getPlayer().incrementStatistic(group.getStatistic());
+            allowStatIncrement = false;
+        }
+    }
+
+    private HashSet<Statistic> blockedStats = new HashSet<>();
+
+    {
+        blockedStats.add(Statistic.JUNK_FISHED);
+        blockedStats.add(Statistic.FISH_CAUGHT);
+        blockedStats.add(Statistic.TREASURE_FISHED);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onStatisticIncrement(PlayerStatisticIncrementEvent event) {
+        if (blockedStats.contains(event.getStatistic()) && !allowStatIncrement) {
+            event.setCancelled(true);
         }
     }
 
@@ -96,9 +125,11 @@ public class FishingConfig implements Listener {
     public static class FishingGroup implements Weighted {
         private int weight;
         private List<FishingItem> items = new ArrayList<>();
+        private Statistic statistic;
 
-        public FishingGroup(int weight) {
+        public FishingGroup(int weight, Statistic statistic) {
             this.weight = weight;
+            this.statistic = statistic;
         }
 
         public int getWeight() {
@@ -107,6 +138,10 @@ public class FishingConfig implements Listener {
 
         public List<FishingItem> getItems() {
             return items;
+        }
+
+        public Statistic getStatistic() {
+            return statistic;
         }
     }
 
