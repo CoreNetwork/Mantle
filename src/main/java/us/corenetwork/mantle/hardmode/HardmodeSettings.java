@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.hardmode;
 
+import org.bukkit.entity.Wither;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,10 +44,10 @@ public enum HardmodeSettings {
 	WITHER_BASE_DMG("Wither.BaseDmg", 4.5),
 
 	//-- normal black skull attack --
-	WITHER_BS_SEARCH_HORIZ("Wither.BlackSkull.SearchHoriz", 30),
-	WITHER_BS_SEARCH_VERT("Wither.BlackSkull.SearchVert", 10),
-	WITHER_BS_SHOOT_MAX_DISTANCE("Wither.BlackSkull.ShootMaxDistance", 30),
-	WITHER_BS_SHOOT_BASIC_TIME("Wither.BlackSkull.ShootBasicTime", 50),
+	WITHER_BS_SEARCH_HORIZ("Wither.BlackSkull.SearchHoriz", 60),
+	WITHER_BS_SEARCH_VERT("Wither.BlackSkull.SearchVert", 30),
+	WITHER_BS_SHOOT_MAX_DISTANCE("Wither.BlackSkull.ShootMaxDistance", 200),
+	WITHER_BS_SHOOT_BASIC_TIME("Wither.BlackSkull.ShootBasicTime", 30),
 	WITHER_BS_SHOOT_TIME_VARIANCE("Wither.BlackSkull.ShootTimeVariance", 10),
 	WITHER_BS_RE_SEARCH_TIME("Wither.BlackSkull.ReSearchTime", 50),
 
@@ -91,19 +93,34 @@ public enum HardmodeSettings {
 	WITHER_PH_AC_PARTICLE_AMOUT("Wither.Phases.AcidCloud.ParticleAmout", 10),
 	WITHER_PH_AC_DEBUFF_REFRESH_RATE("Wither.Phases.AcidCloud.DebuffRefreshRate", 20),
 	WITHER_PH_AC_DEBUFF_DURA_REMOVED("Wither.Phases.AcidCloud.DebuffDurabilityRemoved",  new Integer[]{6, 5, 4, 3, 2}),
-	WITHER_PH_AC_DEBUFF_HUNGER("Wihter.Phases.AcidCloud.DebuffHunger", true),
+	WITHER_PH_AC_DEBUFF_HUNGER("Wither.Phases.AcidCloud.DebuffHunger", true),
 	//WITHER_PH_AC_("Wither.Phases.AcidCloud."),
 
 
 	//--- minions ---
-	WITHER_PH_MI_COOLDOWN("Wihter.Phase.Minions.Cooldown", 400),
-	WITHER_PH_MI_MANACOST("Wihter.Phase.Minions.ManaCost", 400),
-	WITHER_PH_MI_NORMALATTACK("Wihter.Phase.Minions.NormalAttack", true),
+	WITHER_PH_MI_COOLDOWN("Wither.Phases.Minions.Cooldown", 400),
+	WITHER_PH_MI_MANACOST("Wither.Phases.Minions.ManaCost", 400),
+	WITHER_PH_MI_NORMALATTACK("Wither.Phases.Minions.NormalAttack", true),
 
-	WITHER_PH_MI_DURATION("Wihter.Phase.Minions.Duration", 400),
-	WITHER_PH_MI_MINION_SPAWN_RADIUS_MIN("Wihter.Phase.Minions.SpawnRadiusMin", 3),
-	WITHER_PH_MI_MINION_SPAWN_RADIUS_MAX("Wihter.Phase.Minions.SpawnRadiusMax", 7),
-	//WITHER_PH_MI_("Wihter.Phase.Minions")
+	WITHER_PH_MI_DURATION("Wither.Phases.Minions.Duration", 400),
+	WITHER_PH_MI_MINION_SPAWN_RADIUS_MIN("Wither.Phases.Minions.SpawnRadiusMin", 3),
+	WITHER_PH_MI_MINION_SPAWN_RADIUS_MAX("Wither.Phases.Minions.SpawnRadiusMax", 7),
+	//WITHER_PH_MI_("Wither.Phase.Minions")
+
+	//--- stomp ---
+	WITHER_PH_ST_COOLDOWN("Wither.Phases.Stomp.Cooldown", 400),
+	WITHER_PH_ST_MANACOST("Wither.Phases.Stomp.ManaCost", 400),
+	WITHER_PH_ST_NORMALATTACK("Wither.Phases.Stomp.NormalAttack", false),
+
+	WITHER_PH_ST_GROUND_TIME("Wither.Phases.Stomp.GroundTime",80),
+	WITHER_PH_ST_MIN_FOLLOWING_TIME("Wither.Phases.Stomp.MinFollowingTime",80),
+	WITHER_PH_ST_MAX_FOLLOWING_TIME("Wither.Phases.Stomp.MaxFollowingTime",800),
+
+	WITHER_PH_ST_STOMP_MAX_DISTANCE("Wither.Phases.Stomp.StompMaxDistance",4),
+	WITHER_PH_ST_DRILL_MAX_DISTANCE_FLAT("Wither.Phases.Stomp.DrillMaxDistanceFlat", 6),
+
+
+	//WITHER_PH_ST_("Wither.Phase.Stomp.",),
 
 
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),

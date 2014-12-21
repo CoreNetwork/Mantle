@@ -18,8 +18,8 @@ public class FishingConfig implements Listener {
     private Random random = MantlePlugin.random;
 
     public void loadConfig() {
-        groups.clear();
         try {
+            groups.clear();
             List<?> fishConfig =  FarmingModule.instance.config.getList("Fishing");
             for (Object groupObj : fishConfig) {
                 Map<String, Object> groupMap = (Map<String, Object>) groupObj;

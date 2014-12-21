@@ -27,6 +27,7 @@ public class MoveMinions extends AbstractWitherMove {
     public MoveMinions(CustomWither wither)
     {
         super(wither, "Minions", "Mi");
+        this.a(2);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class MoveMinions extends AbstractWitherMove {
         for(Object o : wither.getTargetList())
         {
             EntityLiving entityLiving = (EntityLiving) o;
-            Location loc = new Location(Bukkit.getWorld("world_nether"), entityLiving.locX, entityLiving.locY, entityLiving.locZ);
+            Location loc = new Location(wither.bukkitWorld, entityLiving.locX, entityLiving.locY, entityLiving.locZ);
             playerLocations.add(loc);
         }
 
@@ -86,7 +87,7 @@ public class MoveMinions extends AbstractWitherMove {
                 newX = loc.getBlockX() + offR * MathHelper.cos(angleLong);
                 newZ = loc.getBlockZ() + offR * MathHelper.sin(angleLong);
 
-                block = Bukkit.getWorld("world_nether").getBlockAt((int) newX, (int) loc.getY(), (int) newZ);
+                block = wither.bukkitWorld.getBlockAt((int) newX, (int) loc.getY(), (int) newZ);
 
                 int airLength = 0;
 

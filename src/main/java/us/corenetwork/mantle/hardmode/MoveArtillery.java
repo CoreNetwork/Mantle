@@ -1,16 +1,12 @@
 package us.corenetwork.mantle.hardmode;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 public class MoveArtillery extends AbstractWitherMove {
-
-    private World bukkitWorld;
 
     private int MIN_VERTICAL;
     private int MAX_VERTICAL;
@@ -35,9 +31,6 @@ public class MoveArtillery extends AbstractWitherMove {
     {
         super(wither, "Artillery", "Ar");
         this.a(1);
-
-        //TODO dont hardcode this
-        this.bukkitWorld = Bukkit.getWorld("world_nether");
     }
 
     @Override
@@ -127,12 +120,12 @@ public class MoveArtillery extends AbstractWitherMove {
     private void determineGroundLevel(double x, double z)
     {
         int counter = 0;
-        Block block = bukkitWorld.getBlockAt((int) x, 20, (int) z);
-        while (block.getType() != Material.AIR && counter < 20)
+        Block block = wither.bukkitWorld.getBlockAt((int) x, 1, (int) z);
+        while (block.getType() != Material.AIR && counter < 40)
         {
             block = block.getRelative(BlockFace.UP);
             counter++;
         }
-        groundY = 20 + counter;
+        groundY = counter;
     }
 }

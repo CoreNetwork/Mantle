@@ -81,7 +81,7 @@ public class MoveAcidCloud extends AbstractWitherMove {
         {
             playersInClouds.clear();
 
-            for(Player playerInNether : Bukkit.getWorld("world_nether").getEntitiesByClass(Player.class))
+            for(Player playerInNether : wither.bukkitWorld.getEntitiesByClass(Player.class))
             {
                 for(Location loc : acidCloudLocations)
                 {
@@ -136,11 +136,11 @@ public class MoveAcidCloud extends AbstractWitherMove {
 
     private void getLocations()
     {
-        acidCloudLocations = new ArrayList<Location>();
+         acidCloudLocations = new ArrayList<Location>();
         for(Object o : wither.getTargetList())
         {
             EntityLiving entityLiving = (EntityLiving) o;
-            Location loc = new Location(Bukkit.getWorld("world_nether"), entityLiving.locX, entityLiving.locY, entityLiving.locZ);
+            Location loc = new Location(wither.bukkitWorld, entityLiving.locX, entityLiving.locY, entityLiving.locZ);
             acidCloudLocations.add(loc);
         }
     }

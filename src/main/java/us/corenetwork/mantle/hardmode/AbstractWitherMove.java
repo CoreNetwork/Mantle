@@ -116,7 +116,7 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
      */
     public boolean a()
     {
-        return !isOnCooldown() && hasEnoughMana() && !wither.isInSpawningPhase() && !wither.isOnDelayBetweenMoves();
+        return !isOnCooldown() && hasEnoughMana() && !wither.isInSpawningPhase() && !wither.isOnDelayBetweenMoves() && wither.canUseMove(this);
     }
 
     /**
@@ -136,6 +136,7 @@ public abstract class AbstractWitherMove extends PathfinderGoal {
     	super.c();
         isActive = true;
         wither.setManaLeft(wither.getManaLeft() - getManaCost());
+        wither.useMove(this);
     }
     
     /**

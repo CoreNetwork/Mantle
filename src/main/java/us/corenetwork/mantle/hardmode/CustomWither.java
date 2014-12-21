@@ -2,7 +2,10 @@ package us.corenetwork.mantle.hardmode;
 
 import com.google.common.base.Predicate;
 import net.minecraft.server.v1_8_R1.*;
-import org.bukkit.ChatColor;
+import net.minecraft.server.v1_8_R1.Material;
+import net.minecraft.server.v1_8_R1.World;
+import org.bukkit.*;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 
 import java.lang.reflect.Field;
@@ -55,17 +58,34 @@ public class CustomWither extends EntityWither {
     private float baseDamage;
     private float BASE_DMG;
 
+    public org.bukkit.World bukkitWorld;
+
     //Used by E, here to initialize it before E
     private List targetList = new ArrayList();
 
     //Collection for all the moves, to iterate over & lower cooldowns
     //Only modify it in constructor
     private List<AbstractWitherMove> moves = new ArrayList<AbstractWitherMove>();
-    private List<AbstractWitherMove> activeMoves = new ArrayList<AbstractWitherMove>();
+
+    //to cast all spells before they are cast again?
+    private List<AbstractWitherMove> movesOrdering = new ArrayList<AbstractWitherMove>();
+    private List<AbstractWitherMove> allButOne = new ArrayList<AbstractWitherMove>();
 
     public CustomWither(World world)
     {
         super(world);
+
+
+        //Fuckit, hacky way to get bukkit world.
+        if(((CraftWorld)Bukkit.getWorld("world")).getHandle().equals(world))
+        {
+            bukkitWorld = Bukkit.getWorld("world");
+        }
+        else if(((CraftWorld)Bukkit.getWorld("world_nether")).getHandle().equals(world))
+        {
+            bukkitWorld = Bukkit.getWorld("world_nether");
+        }
+
         initializeFromConfig();
         searchForTargets();
         changeAmountsOnNumOfPlayers(targetList.size());
@@ -110,17 +130,25 @@ public class CustomWither extends EntityWither {
 
 
         moves.add(moveArtillery);
-        //moves.add(moveStomp);
+        moves.add(moveStomp);
         moves.add(moveWitherAura);
         moves.add(moveWitherAuraTestGround);
         moves.add(moveAcidCloud);
         moves.add(moveMinions);
 
-        //this.goalSelector.a(1, moveWitherAuraTestGround);
-        //this.goalSelector.a(2, moveWitherAura);
-        this.goalSelector.a(2, moveMinions);
-        //this.goalSelector.a(3, moveAcidCloud);
-        //this.goalSelector.a(2, moveStomp);
+
+        //Move order stuff
+        allButOne.addAll(moves);
+        allButOne.remove(moveArtillery);
+        movesOrdering.addAll(allButOne);
+
+        //To start with random order
+        Collections.shuffle(allButOne);
+        for(int i = 0; i < allButOne.size();i++)
+        {
+            this.goalSelector.a(i, allButOne.get(i));
+        }
+        //This has to be last, coz its like a basic move.
         this.goalSelector.a(10, moveArtillery);
 
 
@@ -152,6 +180,21 @@ public class CustomWither extends EntityWither {
         BASE_DMG = HardmodeSettings.WITHER_BASE_DMG.floatNumber();
     }
 
+    public void useMove(AbstractWitherMove move)
+    {
+        movesOrdering.remove(move);
+        if(movesOrdering.size() == 0)
+        {
+            movesOrdering.addAll(allButOne);
+        }
+    }
+
+    public boolean canUseMove(AbstractWitherMove move)
+    {
+        return movesOrdering.contains(move);
+    }
+
+
     public boolean isInSpawningPhase()
     {
         return inSpawningPhase;
@@ -175,6 +218,8 @@ public class CustomWither extends EntityWither {
     public void tickDelay()
     {
         delayBetweenMovesLeft--;
+        if(delayBetweenMovesLeft < 0)
+            delayBetweenMovesLeft = 0;
     }
 
 
@@ -390,10 +435,9 @@ public class CustomWither extends EntityWither {
                     EntityLiving entityliving = (EntityLiving) o;
                     if (entityliving != null && entityliving.isAlive() && this.h(entityliving) <= BS_SHOOT_MAX_DISTANCE && this.hasLineOfSight(entityliving))
                     {
-                        if (entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.isInvulnerable)
-                        {
-                            continue;
-                        }
+                        //lets target gm1 too for now
+                        //if (entityliving instanceof EntityHuman && ((EntityHuman) entityliving).abilities.isInvulnerable) continue;
+
                         this.b(i, entityliving.getId());
                         this.a(i + 1, entityliving, false);
                         i = i == 1 ? 2 : 1;
@@ -487,6 +531,21 @@ public class CustomWither extends EntityWither {
         updateShield();
     }
 
+    public void setSuffCounter(int value)
+    {
+        try
+        {
+
+            //reflection to get/set value of suffocation counter
+            Field suffCounter = EntityWither.class.getDeclaredField("bo");
+            suffCounter.setAccessible(true);
+            suffCounter.setInt(this, value);
+        } catch (Exception e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
     private void searchForTargets()
     {
         targetList = this.world.a(EntityLiving.class, this.getBoundingBox().grow(BS_SEARCH_HORIZ, BS_SEARCH_VERT, BS_SEARCH_HORIZ), new EntitySelectorHuman());
@@ -516,7 +575,7 @@ public class CustomWither extends EntityWither {
     {
         if(HardmodeSettings.WITHER_DEBUG.bool())
         {
-            String customName = "&4"+"H:"+getHealth()+"/"+getHealthMax()+" &B"+"M:"+getManaLeft()+"/"+getManaMax()
+            String customName =  "&D"+"D:"+delayBetweenMovesLeft+"/"+delayBetweenMovesMax+" &4"+"H:"+getHealth()+"/"+getHealthMax()+" &B"+"M:"+getManaLeft()+"/"+getManaMax()
                     + " &6"+"S:"+getShieldLeft()+"/"+getShieldMax();
             for(AbstractWitherMove move : moves)
             {
@@ -540,7 +599,7 @@ public class CustomWither extends EntityWither {
         shieldActive = getHealth()*2 < getHealthMax();
     }
 
-    private void setInvulnerable(boolean val)
+    public void setInvulnerable(boolean val)
     {
         this.r(val ? 2 : 0);
     }
