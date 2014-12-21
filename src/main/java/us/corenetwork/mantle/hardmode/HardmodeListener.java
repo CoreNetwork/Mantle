@@ -620,43 +620,53 @@ public class HardmodeListener implements Listener {
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onEntityPrime(ExplosionPrimeEvent event)
 	{
+		//spawn minions only if customSkull & spawningMinions == true
 		if (event.getEntityType() == EntityType.WITHER_SKULL)
 		{
-			final Location location = event.getEntity().getLocation();
+			CraftWitherSkull cws = (CraftWitherSkull) event.getEntity();
+			if(!(cws.getHandle() instanceof CustomWitherSkull))
+				return;
+			CustomWitherSkull customSkull = (CustomWitherSkull) cws.getHandle();
 
-			Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+			if(customSkull.shouldSpawnMinions)
+			{
 
-				@Override
-				public void run()
-				{
-					int amount = MantlePlugin.random.nextInt(2);
+				final Location location = event.getEntity().getLocation();
 
-					//TODO Remove
-					//Testing is a pain with all them minions around
-					amount = 0;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 
-					for (int i = 0; i < amount; i++)
+					@Override
+					public void run()
 					{
-						Block spawningBlock = location.getBlock();
-						if (spawningBlock.getType().isOccluding())
-							continue;
-						Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
-						if (aboveBlock.getType().isOccluding())
-							continue;
+						int amount = MantlePlugin.random.nextInt(2);
 
-						Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
-						if (minion == null)
-							continue;
+						//TODO Remove
+						//Testing is a pain with all them minions around
+						amount = 2;
 
-						minion.setHealth(HardmodeSettings.WITHER_MINION_HEALTH.doubleNumber());
+						for (int i = 0; i < amount; i++)
+						{
+							Block spawningBlock = location.getBlock();
+							if (spawningBlock.getType().isOccluding())
+								continue;
+							Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
+							if (aboveBlock.getType().isOccluding())
+								continue;
 
-						minion.setCustomName("Wither Minion");
-						minion.setCustomNameVisible(false);
+							Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
+							if (minion == null)
+								continue;
 
+							minion.setHealth(HardmodeSettings.WITHER_MINION_HEALTH.doubleNumber());
+
+							minion.setCustomName("Wither Minion");
+							minion.setCustomNameVisible(false);
+
+						}
 					}
-				}
-			}, 5); // Spawn minions after 5 ticks to ensure they won't be hit by
-					// explosion
+				}, 5); // Spawn minions after 5 ticks to ensure they won't be hit by
+				// explosion
+			}
 		} else if (event.getEntityType() == EntityType.WITHER)
 		{
 			event.setFire(true);

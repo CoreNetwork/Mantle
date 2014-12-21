@@ -106,18 +106,23 @@ public class CustomWither extends EntityWither {
         MoveWitherAura moveWitherAura = new MoveWitherAura(this);
         MoveWitherAuraTestGround moveWitherAuraTestGround = new MoveWitherAuraTestGround(this);
         MoveAcidCloud moveAcidCloud = new MoveAcidCloud(this);
+        MoveMinions moveMinions = new MoveMinions(this);
+
 
         moves.add(moveArtillery);
         //moves.add(moveStomp);
         moves.add(moveWitherAura);
         moves.add(moveWitherAuraTestGround);
         moves.add(moveAcidCloud);
+        moves.add(moveMinions);
 
         //this.goalSelector.a(1, moveWitherAuraTestGround);
         //this.goalSelector.a(2, moveWitherAura);
-        this.goalSelector.a(3, moveAcidCloud);
+        this.goalSelector.a(2, moveMinions);
+        //this.goalSelector.a(3, moveAcidCloud);
         //this.goalSelector.a(2, moveStomp);
         this.goalSelector.a(10, moveArtillery);
+
 
         //this.goalSelector.a(4, new PathfinderSquare(this));
         //this.goalSelector.a(5, new PathfinderGoalGoUpAndShoot(this));

@@ -95,6 +95,17 @@ public enum HardmodeSettings {
 	//WITHER_PH_AC_("Wither.Phases.AcidCloud."),
 
 
+	//--- minions ---
+	WITHER_PH_MI_COOLDOWN("Wihter.Phase.Minions.Cooldown", 400),
+	WITHER_PH_MI_MANACOST("Wihter.Phase.Minions.ManaCost", 400),
+	WITHER_PH_MI_NORMALATTACK("Wihter.Phase.Minions.NormalAttack", true),
+
+	WITHER_PH_MI_DURATION("Wihter.Phase.Minions.Duration", 400),
+	WITHER_PH_MI_MINION_SPAWN_RADIUS_MIN("Wihter.Phase.Minions.SpawnRadiusMin", 3),
+	WITHER_PH_MI_MINION_SPAWN_RADIUS_MAX("Wihter.Phase.Minions.SpawnRadiusMax", 7),
+	//WITHER_PH_MI_("Wihter.Phase.Minions")
+
+
 	NAMED_MOBS_NO_DROP("NoDropMobNames", Arrays.asList(new String[] {"Guard" })),
 	
 	APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN("Pigmen.ApplyDamageNodeOnSpawn", "SlownessNode"),

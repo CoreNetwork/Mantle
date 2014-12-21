@@ -11,6 +11,7 @@ public class CustomWitherSkull extends EntityWitherSkull {
 
     private float customNormalSpeed;
     private float customChargedSpeed;
+    public boolean shouldSpawnMinions = false;
 
     public CustomWitherSkull(World world)
     {
@@ -23,6 +24,7 @@ public class CustomWitherSkull extends EntityWitherSkull {
         super(world, entityliving, d0, d1, d2);
         initSpeeds();
     }
+
 
     private void initSpeeds()
     {
