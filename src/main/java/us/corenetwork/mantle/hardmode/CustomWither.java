@@ -612,6 +612,29 @@ public class CustomWither extends EntityWither {
         return 0.8F;
     }
 
+    public boolean damageEntity(DamageSource damagesource, float damage)
+    {
+        if(shieldActive && shieldLeft > 0)
+        {
+            float toHP = 0.001F;
+            if(damage >= shieldLeft)
+            {
+                toHP = damage - shieldLeft;
+                setShieldLeft(0);
+
+            }
+            else
+            {
+                setShieldLeft(shieldLeft - damage);
+            }
+            //makeSound(this.bn(), 1.0F, 1.0F);
+            return this.damageEntity(damagesource, toHP);
+        }
+        else
+            return super.damageEntity(damagesource, damage);
+    }
+
+
 
     //Setting up spawning phase
     @Override
