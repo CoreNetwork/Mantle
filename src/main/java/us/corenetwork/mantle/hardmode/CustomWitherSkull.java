@@ -1,60 +1,77 @@
 package us.corenetwork.mantle.hardmode;
 
+import net.minecraft.server.v1_8_R1.DamageSource;
 import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
+import net.minecraft.server.v1_8_R1.EnumDifficulty;
+import net.minecraft.server.v1_8_R1.MobEffect;
+import net.minecraft.server.v1_8_R1.MobEffectList;
+import net.minecraft.server.v1_8_R1.MovingObjectPosition;
 import net.minecraft.server.v1_8_R1.World;
+import org.bukkit.event.entity.ExplosionPrimeEvent;
 
-/**
- * Created by Ginaf on 2014-12-15.
- */
 public class CustomWitherSkull extends EntityWitherSkull {
 
-    private float customNormalSpeed;
-    private float customChargedSpeed;
     public boolean shouldSpawnMinions = false;
+    public float damage = 8F;
+    public float explosionRadius = 1F;
 
     public CustomWitherSkull(World world)
     {
         super(world);
-        initSpeeds();
     }
 
     public CustomWitherSkull(World world, EntityLiving entityliving, double d0, double d1, double d2)
     {
         super(world, entityliving, d0, d1, d2);
-        initSpeeds();
     }
 
 
-    private void initSpeeds()
-    {
-        customNormalSpeed = super.j();
-        customChargedSpeed = 0.73F;
-    }
+    protected void a(MovingObjectPosition movingobjectposition) {
+        if (!this.world.isStatic) {
+            if (movingobjectposition.entity != null) {
+                // Spigot start
+                boolean didDamage = false;
+                if (this.shooter != null) {
+                    didDamage = movingobjectposition.entity.damageEntity(DamageSource.mobAttack(this.shooter), damage);
+                    if (didDamage) {
+                        if (!movingobjectposition.entity.isAlive()) {
+                            this.shooter.heal(5.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.WITHER); // CraftBukkit
+                        } else {
+                            this.a(this.shooter, movingobjectposition.entity);
+                        }
+                    }
+                } else {
+                    didDamage = movingobjectposition.entity.damageEntity(DamageSource.MAGIC, 5.0F);
+                }
 
-    public void setCustomNormalSpeed(float value)
-    {
-        customNormalSpeed = value;
-    }
+                if (didDamage && movingobjectposition.entity instanceof EntityLiving) {
+                    // Spigot end
+                    byte b0 = 0;
 
-    public void setCustomChargedSpeed(float value)
-    {
-        customChargedSpeed = value;
-    }
+                    if (this.world.getDifficulty() == EnumDifficulty.NORMAL) {
+                        b0 = 10;
+                    } else if (this.world.getDifficulty() == EnumDifficulty.HARD) {
+                        b0 = 40;
+                    }
 
-    //Return speed of the skull
-    @Override
-    protected float j()
-    {
-        //return 0.5F;
-        //TODO Fixit fixit fixit
-        return super.j();
-        //return isCharged() ? customChargedSpeed : customNormalSpeed;
-    }
+                    if (b0 > 0) {
+                        ((EntityLiving) movingobjectposition.entity).addEffect(new MobEffect(MobEffectList.WITHER.id, 20 * b0, 1));
+                    }
+                }
+            }
 
-    @Override
-    public void s_() {
-        super.s_();
+            // CraftBukkit start
+            // this.world.createExplosion(this, this.locX, this.locY, this.locZ, 1.0F, false, this.world.getGameRules().getBoolean("mobGriefing"));
+            ExplosionPrimeEvent event = new ExplosionPrimeEvent(this.getBukkitEntity(), 1.0F, false);
+            this.world.getServer().getPluginManager().callEvent(event);
+
+            if (!event.isCancelled()) {
+                this.world.createExplosion(this, this.locX, this.locY, this.locZ, explosionRadius, event.getFire(), this.world.getGameRules().getBoolean("mobGriefing"));
+            }
+            // CraftBukkit end
+            this.die();
+        }
 
     }
 

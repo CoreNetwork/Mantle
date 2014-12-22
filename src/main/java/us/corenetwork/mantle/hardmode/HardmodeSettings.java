@@ -38,11 +38,11 @@ public enum HardmodeSettings {
 	WITHER_SHIELD_REGEN("Wither.Shield.Regen", 0.01),
 	WITHER_SHIELD_MAX_AMOUNTS("Wither.Shield.MaxAmounts", new Integer[]{1500, 2000, 2200, 2400, 2600, 2700}),
 
-	WITHER_HEALTH_REGEN("Wither.Health.Regen", 0.03),
+	WITHER_HEALTH_REGEN("Wither.Health.Regen", 0.01),
 	WITHER_HEALTH_MAX_AMOUNTS("Wither.Health.MaxAmounts", new Integer[]{300, 400, 500, 550, 600, 700}),
 
 	WITHER_BASE_DMG("Wither.BaseDmg", 4.5),
-
+	WITHER_KNOCKBACK_POWER("Wither.KnockbackPower", 1),
 	//-- normal black skull attack --
 	WITHER_BS_SEARCH_HORIZ("Wither.BlackSkull.SearchHoriz", 60),
 	WITHER_BS_SEARCH_VERT("Wither.BlackSkull.SearchVert", 30),
@@ -50,9 +50,9 @@ public enum HardmodeSettings {
 	WITHER_BS_SHOOT_BASIC_TIME("Wither.BlackSkull.ShootBasicTime", 30),
 	WITHER_BS_SHOOT_TIME_VARIANCE("Wither.BlackSkull.ShootTimeVariance", 10),
 	WITHER_BS_RE_SEARCH_TIME("Wither.BlackSkull.ReSearchTime", 50),
+	WITHER_BS_RADIUS("Wither.BlackSkull.Radius", 1.5),
 
-
-	//-- basic moves --
+	//-- basic move --
 	WITHER_PH_SA_MOVE_BASIC_TIME("Wither.Phases.StationaryArtillery.MoveBasicTime", 100),
 	WITHER_PH_SA_MOVE_TIME_VARIANCE("Wither.Phases.StationaryArtillery.MoveTimeVariance", 30),
 	WITHER_PH_SA_MIN_VERTICAL("Wither.Phases.StationaryArtillery.MinVertical", 3),
@@ -73,9 +73,10 @@ public enum HardmodeSettings {
 	WITHER_PH_WA_CIRCLE_SEGMENTS("Wither.Phases.WitherAura.CircleSegments", 120),
 	WITHER_PH_WA_MAX_ANGLE_FORWARD("Wither.Phases.WitherAura.MaxAngleForward", 60),
 	WITHER_PH_WA_MAX_ANGLE_BACKWARDS("Wither.Phases.WitherAura.MaxAngleBackward", 30),
+	WITHER_PH_WA_DAMAGE_MULTIPLIER("Wither.Phases.WitherAura.DamageMultiplier", 1.1),
+	WITHER_PH_WA_RADIUS_MULTIPLIER("Wither.Phases.WitherAura.RadiusMultiplier", 0.5),
 
 	WITHER_PH_WA_COOLDOWN("Wither.Phases.WitherAura.Cooldown", 600),
-
 	WITHER_PH_WA_MANACOST("Wither.Phases.WitherAura.ManaCost", 150),
 	WITHER_PH_WA_NORMALATTACK("Wither.Phases.WitherAura.NormalAttack", true),
 	//WITHER_PH_WA_("Wither.Phases.WitherAura."),
@@ -111,6 +112,8 @@ public enum HardmodeSettings {
 	WITHER_PH_ST_COOLDOWN("Wither.Phases.Stomp.Cooldown", 400),
 	WITHER_PH_ST_MANACOST("Wither.Phases.Stomp.ManaCost", 400),
 	WITHER_PH_ST_NORMALATTACK("Wither.Phases.Stomp.NormalAttack", false),
+
+	WITHER_PH_ST_DAMAGE_MULTIPLIER("Wither.Phases.Stomp.DamageMultiplier", 2),
 
 	WITHER_PH_ST_GROUND_TIME("Wither.Phases.Stomp.GroundTime",80),
 	WITHER_PH_ST_MIN_FOLLOWING_TIME("Wither.Phases.Stomp.MinFollowingTime",80),

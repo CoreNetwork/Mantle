@@ -28,6 +28,9 @@ public class CustomWither extends EntityWither {
     private int BS_SHOOT_BASIC_TIME;
     private int BS_SHOOT_TIME_VARIANCE;
     private int BS_RE_SEARCH_TIME;
+    public float BS_RADIUS;
+
+    public float KNOCKBACK_POWER;
 
     private boolean inSpawningPhase;
 
@@ -55,8 +58,7 @@ public class CustomWither extends EntityWither {
     private int delayBetweenMovesMax;
     private List<Integer> DELAY_MAX_AMOUNTS;
 
-    private float baseDamage;
-    private float BASE_DMG;
+    public float BASE_DMG;
 
     public org.bukkit.World bukkitWorld;
 
@@ -167,6 +169,9 @@ public class CustomWither extends EntityWither {
         BS_SHOOT_BASIC_TIME = HardmodeSettings.WITHER_BS_SHOOT_BASIC_TIME.integer();
         BS_SHOOT_TIME_VARIANCE = HardmodeSettings.WITHER_BS_SHOOT_TIME_VARIANCE.integer();
         BS_RE_SEARCH_TIME = HardmodeSettings.WITHER_BS_RE_SEARCH_TIME.integer();
+        BS_RADIUS = HardmodeSettings.WITHER_BS_RADIUS.floatNumber();
+
+        KNOCKBACK_POWER = HardmodeSettings.WITHER_KNOCKBACK_POWER.floatNumber();
 
         MANA_REGEN = HardmodeSettings.WITHER_MANA_REGEN.floatNumber();
         MANA_MAX_AMOUNTS = HardmodeSettings.WITHER_MANA_MAX_AMOUNTS.intList();
@@ -287,23 +292,6 @@ public class CustomWither extends EntityWither {
     public float getShieldMax()
     {
         return shieldMax;
-    }
-
-
-    //--DAMAGE
-    public float getBaseDamage()
-    {
-        return baseDamage;
-    }
-
-    public void setBaseDamage(float value)
-    {
-        baseDamage = value;
-    }
-
-    public void resetBaseDamage()
-    {
-        baseDamage = BASE_DMG;
     }
 
     //--HEALTH
@@ -563,6 +551,12 @@ public class CustomWither extends EntityWither {
         return enabled;
     }
 
+    public boolean shouldKnockback()
+    {
+        return isNormalAttackEnabled();
+    }
+
+
     private void tickCooldowns()
     {
         for(AbstractWitherMove move : moves)
@@ -675,6 +669,8 @@ public class CustomWither extends EntityWither {
         double d7 = d1 - d4;
         double d8 = d2 - d5;
         CustomWitherSkull entitywitherskull = new CustomWitherSkull(this.world, this, d6, d7, d8);
+        entitywitherskull.damage = BASE_DMG;
+        entitywitherskull.explosionRadius = BS_RADIUS;
         if (flag)
         {
             entitywitherskull.setCharged(true);

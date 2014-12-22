@@ -7,7 +7,9 @@ import java.util.Set;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
+import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -756,5 +758,67 @@ public class HardmodeListener implements Listener {
 
 	}
 
+	@EventHandler(ignoreCancelled = true)
+	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
+	{
+		Entity damager = event.getDamager();
+		Entity damaged = event.getEntity();
+
+		if(damaged instanceof Player)
+		{
+			if(damager instanceof  Wither)
+			{
+				if(((CraftWither) damager).getHandle() instanceof  CustomWither)
+				{
+					CustomWither customWither = (CustomWither) (((CraftWither) damager).getHandle());
+					if (customWither.shouldKnockback())
+					{
+						Location loc = damaged.getLocation();
+						double diffX = loc.getX() - customWither.locX;
+						double diffZ = loc.getZ() - customWither.locZ;
+
+						Vector vec = new Vector(diffX,0, diffZ);
+						vec = vec.normalize();
+						vec = vec.setY(MathHelper.sqrt(vec.getX() * vec.getX() + vec.getZ() * vec.getZ()));
+						vec.normalize();
+						vec = vec.multiply(customWither.KNOCKBACK_POWER);
+						damaged.setVelocity(vec);
+					}
+				}
+			}
+			else
+			//off for now, coz weird shit is happenign
+			if(damager instanceof WitherSkull && false)
+			{
+				if(((CraftWitherSkull)damager).getHandle() instanceof CustomWitherSkull)
+				{
+					CustomWitherSkull cws = (CustomWitherSkull) (((CraftWitherSkull) damager).getHandle());
+					if(cws.shooter != null)
+					{
+						if(cws.shooter instanceof CustomWither)
+						{
+							CustomWither customWither = (CustomWither) cws.shooter;
+
+							//TODO oh god copypasta, remove that
+							if (customWither.shouldKnockback())
+							{
+								Location loc = damaged.getLocation();
+								double diffX = loc.getX() - customWither.locX;
+								double diffZ = loc.getZ() - customWither.locZ;
+
+								Vector vec = new Vector(diffX, MathHelper.sqrt(diffX * diffX + diffZ * diffZ), diffZ);
+								vec = vec.normalize();
+								vec = vec.multiply(customWither.KNOCKBACK_POWER);
+								damaged.setVelocity(vec);
+							}
+						}
+
+					}
+				}
+			}
+
+		}
+
+	}
 }
 

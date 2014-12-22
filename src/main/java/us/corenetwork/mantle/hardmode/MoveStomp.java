@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.hardmode;
 
+import net.minecraft.server.v1_8_R1.DamageSource;
 import net.minecraft.server.v1_8_R1.EntityLiving;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,6 +20,7 @@ public class MoveStomp extends AbstractWitherMove {
     private int MAX_FOLLOWING_TIME;
     private double STOMP_MAX_DISTANCE;
     private double DRILL_MAX_DISTANCE_FLAT;
+    private double DAMAGE_MULTIPLIER;
 
     private StompPhase phase;
 
@@ -47,6 +48,7 @@ public class MoveStomp extends AbstractWitherMove {
         MAX_FOLLOWING_TIME = HardmodeSettings.WITHER_PH_ST_MAX_FOLLOWING_TIME.integer();
         STOMP_MAX_DISTANCE = HardmodeSettings.WITHER_PH_ST_STOMP_MAX_DISTANCE.doubleNumber();
         DRILL_MAX_DISTANCE_FLAT = HardmodeSettings.WITHER_PH_ST_DRILL_MAX_DISTANCE_FLAT.doubleNumber();
+        DAMAGE_MULTIPLIER = HardmodeSettings.WITHER_PH_ST_DAMAGE_MULTIPLIER.floatNumber();
 
         MANA_COST = HardmodeSettings.WITHER_PH_ST_MANACOST.integer();
         COOLDOWN = HardmodeSettings.WITHER_PH_ST_COOLDOWN.integer();
@@ -89,6 +91,20 @@ public class MoveStomp extends AbstractWitherMove {
                     wither.motY = 0;
                     wither.setSuffCounter(1);
                     wither.setInvulnerable(false);
+
+                    for(Object object : wither.getTargetList())
+                    {
+                        EntityLiving entityLiving = (EntityLiving) object;
+                        double distanceSq = (wither.locX - entityLiving.locX)*(wither.locX - entityLiving.locX) + (wither.locZ - entityLiving.locZ)*(wither.locZ - entityLiving.locZ) + (wither.locY - entityLiving.locY)*(wither.locY - entityLiving.locY);
+                        double maxDistSq = STOMP_MAX_DISTANCE * STOMP_MAX_DISTANCE;
+                        if(distanceSq <= maxDistSq)
+                        {
+                            double damageFull = DAMAGE_MULTIPLIER * wither.BASE_DMG;
+                            double multip = (maxDistSq - distanceSq) / maxDistSq;
+                            entityLiving.damageEntity(DamageSource.GENERIC, (float) (damageFull * multip));
+                        }
+
+                    }
                 }
 
                 if(touchedGround)
@@ -107,7 +123,12 @@ public class MoveStomp extends AbstractWitherMove {
 
                 break;
             case DRILLING:
-                //one tick something, probably, maybe with delay
+                double xx = wither.locX;
+                double zz = wither.locZ;
+                double yy = groundYUnderWither() + 0.5;
+                target.setPosition(wither.locX, groundYUnderWither() + 0.5, wither.locZ);
+                target.damageEntity(DamageSource.STUCK, 4);
+                phase = StompPhase.FINISHED;
                 break;
             case FOLLOWING:
 

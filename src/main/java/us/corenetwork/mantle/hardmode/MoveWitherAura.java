@@ -19,6 +19,8 @@ public class MoveWitherAura extends AbstractWitherMove {
     private int CIRCLE_SEGMENTS;
     private int MAX_ANGLE_FORWARD;
     private int MAX_ANGLE_BACKWARDS;
+    private float DAMAGE_MULTIPLIER;
+    private float RADIUS_MULTIPLIER;
 
     //to actually count if should turn off
     private int shotNumber;
@@ -48,10 +50,13 @@ public class MoveWitherAura extends AbstractWitherMove {
         CIRCLE_SEGMENTS = HardmodeSettings.WITHER_PH_WA_CIRCLE_SEGMENTS.integer();
         MAX_ANGLE_FORWARD = HardmodeSettings.WITHER_PH_WA_MAX_ANGLE_FORWARD.integer();
         MAX_ANGLE_BACKWARDS = HardmodeSettings.WITHER_PH_WA_MAX_ANGLE_BACKWARDS.integer();
+        DAMAGE_MULTIPLIER = HardmodeSettings.WITHER_PH_WA_DAMAGE_MULTIPLIER.floatNumber();
+        RADIUS_MULTIPLIER = HardmodeSettings.WITHER_PH_WA_RADIUS_MULTIPLIER.floatNumber();
 
         MANA_COST = HardmodeSettings.WITHER_PH_WA_MANACOST.integer();
         COOLDOWN = HardmodeSettings.WITHER_PH_WA_COOLDOWN.integer();
         NORMAL_ATTACK = HardmodeSettings.WITHER_PH_WA_NORMALATTACK.bool();
+
     }
 
     @Override
@@ -114,11 +119,12 @@ public class MoveWitherAura extends AbstractWitherMove {
                     double y = wither.locY;
                     double z = wither.locZ;
 
-                    EntityWitherSkull entitywitherskull = new EntityWitherSkull(wither.world);
+                    CustomWitherSkull entitywitherskull = new CustomWitherSkull(wither.world);
+                    entitywitherskull.damage = wither.BASE_DMG * DAMAGE_MULTIPLIER;
+                    entitywitherskull.explosionRadius = wither.BS_RADIUS * RADIUS_MULTIPLIER;
                     entitywitherskull.shooter = wither;
 
                     entitywitherskull.setPositionRotation(x + diffXSpawn, y + 3, z + diffZSpawn, randomSegment, randomAngle);
-
                     entitywitherskull.motX = entitywitherskull.motY = entitywitherskull.motZ = 0.0D;
 
                     double d3 = (double) MathHelper.sqrt(diffX * diffX + DISTANCE_FROM_WITHER * DISTANCE_FROM_WITHER + diffZ * diffZ);
