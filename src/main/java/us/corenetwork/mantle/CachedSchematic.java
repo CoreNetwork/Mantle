@@ -577,8 +577,10 @@ public class CachedSchematic {
 
 		Location placement = new Location(world, x - xSize / 2 + randX, y, z - zSize / 2 + randZ);
 
+		MantleListener.disablePhysics = true;
 		if (actuallyPlace)
 			place(placement, ignoreAir);
+		MantleListener.disablePhysics = false;
 
 		return placement;
 	}

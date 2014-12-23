@@ -14,9 +14,17 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 
 public class MantleListener implements Listener {
 
-    @EventHandler(ignoreCancelled = true)
+    public static boolean disablePhysics = false;
+
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBlockPhysics(BlockPhysicsEvent event)
     {
+        if (disablePhysics)
+        {
+            event.setCancelled(true);
+            return;
+        }
+
         //Do not drop colored sign
         if (event.getBlock().getState() instanceof Sign)
         {
