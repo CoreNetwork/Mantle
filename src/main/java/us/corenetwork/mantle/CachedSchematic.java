@@ -577,16 +577,16 @@ public class CachedSchematic {
 
 		Location placement = new Location(world, x - xSize / 2 + randX, y, z - zSize / 2 + randZ);
 
-		MantleListener.disablePhysics = true;
 		if (actuallyPlace)
 			place(placement, ignoreAir);
-		MantleListener.disablePhysics = false;
 
 		return placement;
 	}
 
 	public void place(Location placement, boolean ignoreAir)
 	{
+
+		MantleListener.disablePhysics = true;
 		try {
 			Vector to = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
 			Vector origin = localSession.getClipboard().getClipboard().getOrigin();
@@ -615,6 +615,10 @@ public class CachedSchematic {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
+		}
+		finally
+		{
+			MantleListener.disablePhysics = false;
 		}
 	}
 	
