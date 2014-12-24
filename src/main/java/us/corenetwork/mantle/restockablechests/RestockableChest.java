@@ -38,6 +38,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -933,8 +934,8 @@ public class RestockableChest {
 				int amount = set.getInt("amount");
 				byte[] nbt = set.getBytes("NBT");
 
-				ItemStack stack = new ItemStack(id, amount, (short) damage);
-				NanobotUtil.loadNBT(nbt, NanobotUtil.getInternalNMSStack(stack));
+				CraftItemStack stack = CraftItemStack.asCraftCopy(new ItemStack(id, amount, (short) damage));
+				NanobotUtil.loadNBT(nbt, NanobotUtil.getInternalNMSStack((CraftItemStack) stack));
 
 				inventory.setItem(slot, stack);
 			}
@@ -971,9 +972,11 @@ public class RestockableChest {
 			int size = inventory.getSize();
 			for (int i = 0; i < size; i++)
 			{
-				ItemStack stack = inventory.getItem(i);
-				if (stack == null || stack.getTypeId() == 0)
+				ItemStack bukkitStack = inventory.getItem(i);
+				if (bukkitStack == null || bukkitStack.getTypeId() == 0)
 					continue;
+
+				CraftItemStack stack = CraftItemStack.asCraftCopy(bukkitStack);
 
 				statement.setInt(1, id);
 				statement.setString(2, player.getUniqueId().toString());
@@ -981,7 +984,7 @@ public class RestockableChest {
 				statement.setInt(4, stack.getTypeId());
 				statement.setInt(5, stack.getDurability());
 				statement.setInt(6, stack.getAmount());
-				statement.setBytes(7, NanobotUtil.getNBT(NanobotUtil.getInternalNMSStack(stack)));
+				statement.setBytes(7, NanobotUtil.getNBT(NanobotUtil.getInternalNMSStack((CraftItemStack) stack)));
 				statement.addBatch();
 			}
 

@@ -233,7 +233,7 @@ public class NanobotUtil {
 		stack.setTag(tag);
 	}
 
-	public static net.minecraft.server.v1_8_R1.ItemStack getInternalNMSStack(ItemStack bukkitStack)
+	public static net.minecraft.server.v1_8_R1.ItemStack getInternalNMSStack(CraftItemStack bukkitStack)
 	{
 		try
 		{

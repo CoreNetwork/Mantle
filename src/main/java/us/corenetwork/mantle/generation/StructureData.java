@@ -99,7 +99,8 @@ public class StructureData {
 		}
 		return result;
 	}
-		
+
+
 	public boolean shouldIgnoreAir()
 	{
 		Boolean result = (Boolean) configNode.get("IgnoreAir");
