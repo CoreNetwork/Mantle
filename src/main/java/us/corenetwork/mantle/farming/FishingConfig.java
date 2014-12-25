@@ -34,7 +34,7 @@ public class FishingConfig implements Listener {
             for (String groupNodeName : fishing.getValues(false).keySet()) {
                 ConfigurationSection groupSection = fishing.getConfigurationSection(groupNodeName);
                 int weight = groupSection.getInt("Weight");
-                Statistic statistic = Statistic.valueOf(groupSection.getString("Statistic", "FISH_CAUGHT"));
+                Statistic statistic = Statistic.valueOf(groupSection.getString("Statistic", "FISH_CAUGHT").toUpperCase());
 
                 Map<Enchantment, Integer> enchantments = new HashMap<>();
                 if (groupSection.isConfigurationSection("Enchantments")) {
