@@ -3,7 +3,6 @@ package us.corenetwork.mantle.farming;
 import net.minecraft.server.v1_8_R1.EnchantmentManager;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
@@ -52,10 +51,13 @@ public class FishingConfig implements Listener {
 
                 List<?> items = (List<?>) groupSection.getMapList("Items");
                 for (Object itemObj : items) {
-                    Map<String, Object> itemMap = (Map<String, Object>) itemObj;
-                    ItemStack mat = YamlUtils.readItemStack((Map<String, Object>) itemMap.get("Item"));
-                    int itemWeight = (Integer) itemMap.get("Weight");
-                    int xp = FishingItem.DONT_CHANGE_XP;
+                    Map<String, Object> itemMap = (Map<String, Object>) ((Map<String, Object>) itemObj).get("Item"); // ridel pls
+                    ItemStack mat = YamlUtils.readItemStack(itemMap); // ridel pls
+                    int itemWeight = 1;
+                    if (itemMap.containsKey("Weight")) {
+                        itemWeight = (Integer) itemMap.get("Weight");
+                    }
+                    int xp = 0;
                     if (itemMap.containsKey("Exp")) {
                         xp = (Integer) itemMap.get("Exp");
                     }
@@ -63,7 +65,11 @@ public class FishingConfig implements Listener {
                     if (itemMap.containsKey("EnchantLevel")) {
                         enchantLevel = (Integer) itemMap.get("EnchantLevel");
                     }
-                    FishingItem currentItem = new FishingItem(mat, itemWeight, xp, enchantLevel);
+                    int penalty = 0;
+                    if (itemMap.containsKey("Penalty")) {
+                        penalty = (Integer) itemMap.get("Penalty");
+                    }
+                    FishingItem currentItem = new FishingItem(mat, itemWeight, xp, enchantLevel, penalty);
                     currentGroup.getItems().add(currentItem);
                 }
                 groups.add(currentGroup);
@@ -84,8 +90,9 @@ public class FishingConfig implements Listener {
         if (groups != null && event.getCaught() instanceof Item) {
             Item item = (Item) event.getCaught();
 
-            FishingGroup group = (FishingGroup) selectWeighted(groups, event.getPlayer().getItemInHand());
-            FishingItem selectedItem = (FishingItem) selectWeighted(group.getItems(), event.getPlayer().getItemInHand());
+            ItemStack itemInHand = event.getPlayer().getItemInHand();
+            FishingGroup group = (FishingGroup) selectWeighted(groups, itemInHand);
+            FishingItem selectedItem = (FishingItem) selectWeighted(group.getItems(), itemInHand);
             ItemStack replace = selectedItem.getItem().clone();
             if (selectedItem.getXp() != FishingItem.DONT_CHANGE_XP) {
                 event.setExpToDrop(selectedItem.getXp());
@@ -94,6 +101,10 @@ public class FishingConfig implements Listener {
                 net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(replace);
                 nmsStack = EnchantmentManager.a(random, nmsStack, selectedItem.getEnchantLevel());
                 replace = CraftItemStack.asBukkitCopy(nmsStack);
+            }
+            if (selectedItem.getPenalty() > 0) {
+                itemInHand.setDurability((short) (itemInHand.getDurability() + selectedItem.getPenalty()));
+                event.getPlayer().setItemInHand(itemInHand);
             }
             item.setItemStack(replace);
             allowStatIncrement = true;
@@ -176,12 +187,14 @@ public class FishingConfig implements Listener {
         private int weight;
         private int xp;
         private int enchantLevel;
+        private int penalty;
 
-        public FishingItem(ItemStack item, int weight, int xp, int enchantLevel) {
+        public FishingItem(ItemStack item, int weight, int xp, int enchantLevel, int penalty) {
             this.item = item;
             this.weight = weight;
             this.xp = xp;
             this.enchantLevel = enchantLevel;
+            this.penalty = penalty;
         }
 
         public ItemStack getItem() {
@@ -198,6 +211,10 @@ public class FishingConfig implements Listener {
 
         public int getEnchantLevel() {
             return enchantLevel;
+        }
+
+        public int getPenalty() {
+            return penalty;
         }
     }
 }

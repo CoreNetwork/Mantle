@@ -7,6 +7,7 @@ import java.util.Map;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
@@ -36,6 +37,18 @@ public class YamlUtils
             return null;
 
         Integer id = (Integer) node.get("ID");
+        if (id == null) {
+            if (node.containsKey("Name")) {
+                String name = (String) node.get("Name");
+                Material material = Material.getMaterial(name);
+                if (material != null) {
+                    id = material.getId();
+                } else {
+                    MLog.severe("Can't find material for name " + name);
+                }
+            }
+        }
+
         if (id == null)
         {
             MLog.severe("Invalid config! Item ID is missing!");
