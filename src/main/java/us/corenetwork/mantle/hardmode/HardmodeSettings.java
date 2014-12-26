@@ -42,7 +42,7 @@ public enum HardmodeSettings {
 	WITHER_HEALTH_MAX_AMOUNTS("Wither.Health.MaxAmounts", new Integer[]{300, 400, 500, 550, 600, 700}),
 
 	WITHER_SHIELD_COLOR("Wither.ShieldColor", "&6"),
-	WITHER_NAMES("Wither.Names", new String[]{"Wither", "| Wihter |", "|| Wihter ||", "||| Wihter |||", "|||| Wither ||||", "||||| Wither |||||"}),
+	WITHER_NAMES("Wither.Names", new ArrayList<String>(){{add( "Wither");add("| Wihter |");add("|| Wihter ||");add("||| Wihter |||");add("|||| Wither ||||");add("||||| Wither |||||");}}),
 	WITHER_BASE_DMG("Wither.BaseDmg", 4.5),
 	WITHER_KNOCKBACK_POWER("Wither.KnockbackPower", 1),
 	//-- normal black skull attack --
