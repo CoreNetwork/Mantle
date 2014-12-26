@@ -19,6 +19,7 @@ import us.corenetwork.mantle.NodeParser;
 import com.gadberry.utility.expression.ArgumentCastException;
 import com.gadberry.utility.expression.Expression;
 import com.gadberry.utility.expression.InvalidExpressionException;
+import us.corenetwork.mantle.util.MinecraftNames;
 
 public class DamageNodeParser extends NodeParser {
 	private EntityDamageEvent event;
@@ -119,12 +120,24 @@ public class DamageNodeParser extends NodeParser {
 			return;
 		}
 
-		final Integer id = (Integer) node.get("id");
+		Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			MLog.warning("Invalid Damage modifiers config! Effect id is missing!");
-			return;
-		}		
+			if (node.containsKey("Name")) {
+				String name = (String) node.get("Name");
+				Integer effect = MinecraftNames.getPotionEffectId(name);
+				if (effect != null) {
+					id = effect;
+				} else {
+					MLog.warning("Can't find effect for name " + name);
+					return;
+				}
+			}
+			else
+			{
+				MLog.warning("Invalid Damage modifiers config! Effect id is missing!");
+			}
+		}
 		
 		Object durationNode = node.get("duration");
 		int duration = 0;
@@ -194,10 +207,11 @@ public class DamageNodeParser extends NodeParser {
 
 		final Boolean ambient = (Boolean) node.get("ambient");
 
+		final int finalId = id;
 		Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 			@Override
 			public void run() {
-				((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.getById(id), fDuration, fAmplifier, ambient == null ? false : ambient));
+				((LivingEntity) event.getEntity()).addPotionEffect(new PotionEffect(PotionEffectType.getById(finalId), fDuration, fAmplifier, ambient == null ? false : ambient));
 			}
 		});
 

@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
+import us.corenetwork.mantle.util.MinecraftNames;
 
 
 public class LootTableNodeParser extends NodeParser {
@@ -78,8 +79,20 @@ public class LootTableNodeParser extends NodeParser {
 		Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			MLog.warning("Invalid Loot tables config! Item ID is missing!");
-			return;
+			if (node.containsKey("Name")) {
+				String name = (String) node.get("Name");
+				Integer material = MinecraftNames.getMaterialId(name);
+				if (material != null) {
+					id = material;
+				} else {
+					MLog.warning("Can't find material for name " + name);
+					return;
+				}
+			}
+			else
+			{
+				MLog.warning("Invalid Loot tables config! Item ID is missing!");
+			}
 		}
 
 		Integer amount = (Integer) node.get("amount");

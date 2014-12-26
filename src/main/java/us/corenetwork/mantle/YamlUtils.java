@@ -18,6 +18,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import us.corenetwork.mantle.hardmode.HardmodeListener;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
+import us.corenetwork.mantle.util.MinecraftNames;
 
 /**
  * Created by Matej on 28.10.2014.
@@ -40,9 +41,9 @@ public class YamlUtils
         if (id == null) {
             if (node.containsKey("Name")) {
                 String name = (String) node.get("Name");
-                Material material = Material.getMaterial(name);
+                Integer material = MinecraftNames.getMaterialId(name);
                 if (material != null) {
-                    id = material.getId();
+                    id = material;
                 } else {
                     MLog.severe("Can't find material for name " + name);
                 }
