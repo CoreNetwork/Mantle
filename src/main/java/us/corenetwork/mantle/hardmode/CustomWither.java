@@ -7,6 +7,7 @@ import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.*;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
+import us.corenetwork.mantle.MLog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,6 +16,9 @@ import java.util.List;
 
 public class CustomWither extends EntityWither {
 
+    private boolean WITHER_DEBUG;
+    private String WITHER_SHIELD_COLOR;
+    private List<String> WITHER_NAMES;
 
     private int SPAWNING_PHASE_DURATION;
     //Not in settings for now, not really needed there
@@ -73,6 +77,8 @@ public class CustomWither extends EntityWither {
     private List<AbstractWitherMove> movesOrdering = new ArrayList<AbstractWitherMove>();
     private List<AbstractWitherMove> allButOne = new ArrayList<AbstractWitherMove>();
 
+
+
     public CustomWither(World world)
     {
         super(world);
@@ -91,7 +97,7 @@ public class CustomWither extends EntityWither {
         initializeFromConfig();
         searchForTargets();
         changeAmountsOnNumOfPlayers(targetList.size());
-        updateDebugName();
+        updateName();
         //Set delay left to current max, to not start the skill right away
         startDelayAfterMove();
 
@@ -161,6 +167,12 @@ public class CustomWither extends EntityWither {
 
     protected void initializeFromConfig()
     {
+
+        WITHER_DEBUG = HardmodeSettings.WITHER_DEBUG.bool();
+        WITHER_SHIELD_COLOR = HardmodeSettings.WITHER_SHIELD_COLOR.string();
+
+        WITHER_NAMES = HardmodeSettings.WITHER_NAMES.stringList();
+
         SPAWNING_PHASE_DURATION = HardmodeSettings.WITHER_SPAWNING_PHASE_DURATION.integer();
 
         BS_SEARCH_HORIZ = HardmodeSettings.WITHER_BS_SEARCH_HORIZ.doubleNumber();
@@ -513,7 +525,7 @@ public class CustomWither extends EntityWither {
         //Here alone to update during spawning phase
         if (this.ticksLived % 20 == 0)
         {
-            updateDebugName();
+            updateName();
             changeAmountsOnNumOfPlayers(targetList.size());
         }
         updateShield();
@@ -565,9 +577,9 @@ public class CustomWither extends EntityWither {
         }
     }
 
-    private void updateDebugName()
+    private void updateName()
     {
-        if(HardmodeSettings.WITHER_DEBUG.bool())
+        if(WITHER_DEBUG)
         {
             String customName =  "&D"+"D:"+delayBetweenMovesLeft+"/"+delayBetweenMovesMax+" &4"+"H:"+getHealth()+"/"+getHealthMax()+" &B"+"M:"+getManaLeft()+"/"+getManaMax()
                     + " &6"+"S:"+getShieldLeft()+"/"+getShieldMax();
@@ -584,6 +596,21 @@ public class CustomWither extends EntityWither {
 
             }
             setCustomName(ChatColor.translateAlternateColorCodes('&', customName));
+        }
+        else
+        {
+            if(!shieldActive || (shieldActive && shieldLeft == 0))
+            {
+                setCustomName(WITHER_NAMES.get(0));
+            }
+            else
+            {
+                int per = 100 / (WITHER_NAMES.size() - 1);
+                int whichOne = ((int)(100* shieldLeft / shieldMax)) / per ;
+                //MLog.debug(per + "  " + whichOne);
+                setCustomName(ChatColor.translateAlternateColorCodes('&', WITHER_SHIELD_COLOR + WITHER_NAMES.get(whichOne)));
+            }
+
         }
     }
 
@@ -616,7 +643,7 @@ public class CustomWither extends EntityWither {
     {
         if(shieldActive && shieldLeft > 0)
         {
-            float toHP = 0.001F;
+            float toHP = 0F;
             if(damage >= shieldLeft)
             {
                 toHP = damage - shieldLeft;
@@ -627,8 +654,7 @@ public class CustomWither extends EntityWither {
             {
                 setShieldLeft(shieldLeft - damage);
             }
-            //makeSound(this.bn(), 1.0F, 1.0F);
-            return this.damageEntity(damagesource, toHP);
+            return super.damageEntity(damagesource, toHP);
         }
         else
             return super.damageEntity(damagesource, damage);

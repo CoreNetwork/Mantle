@@ -267,6 +267,25 @@ public class HardmodeListener implements Listener {
 			if (cube.getSize() == 3 && MantlePlugin.random.nextBoolean())
 				event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, 1));
 		}
+
+		if(event.getEntityType() == EntityType.WITHER)
+		{
+			Player killer = event.getEntity().getKiller();
+
+			if(killer != null)
+			{
+				//MLog.debug(killer.getInventory().getContents().length + "");
+				for(ItemStack stack : killer.getInventory().getContents())
+				{
+					if(stack.getType() == Material.AIR || (stack.getType() == Material.NETHER_STAR && stack.getAmount() < stack.getMaxStackSize()))
+					{
+						killer.getInventory().addItem(new ItemStack(Material.NETHER_STAR, 1));
+						event.getDrops().clear();
+						return;
+					}
+				}
+			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
