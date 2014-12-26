@@ -138,10 +138,16 @@ public class NetherSpawner {
 
 	public static Skeleton spawnWitherSkeleton(Block block, SpawnReason reason)
 	{
-        if (block.getY() > NetherSpawningSettings.WITHER_SKELETON_MAX_Y.integer() && reason == SpawnReason.NATURAL)
-            return null;
+        if (reason == SpawnReason.NATURAL)
+        {
+            if (block.getY() > NetherSpawningSettings.WITHER_SKELETON_MAX_Y.integer() || block.getY() < NetherSpawningSettings.WITHER_SKELETON_MIN_Y.integer())
+                return null;
 
-		Block thirdBlock = block.getRelative(BlockFace.UP, 2);
+            if (MantlePlugin.random.nextDouble() > NetherSpawningSettings.WITHER_SKELETON_SPAWN_CHANCE.doubleNumber())
+                return null;
+        }
+
+        Block thirdBlock = block.getRelative(BlockFace.UP, 2);
 		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !(thirdBlock.getType().isTransparent() && thirdBlock.getType() != Material.CARPET))
 			return null;
 

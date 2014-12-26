@@ -17,11 +17,12 @@ public enum NetherSpawningSettings {
     MAGMA_CUBE_MIN_Y("MagmaCube.MinY", 0),
 
     WITHER_SKELETON_SPAWNING_INTERVAL_TICKS("WitherSkeleton.SpawningIntervalTicks", 10),
-    WITHER_SKELETON_MAX_Y("WitherSkeleton.MaxY", 56),
+	WITHER_SKELETON_SPAWN_CHANCE("WitherSkeleton.SpawnChance", 1),
+	WITHER_SKELETON_MIN_Y("WitherSkeleton.MinY", 1),
+	WITHER_SKELETON_MAX_Y("WitherSkeleton.MaxY", 56),
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
-	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.Normal.BowChance", 0.03),
-	WITHER_SKELETON_RARE_MAX_SPAWN_Y("WitherSkeleton.Rare.MaxSpawnY", 60),
-	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Normal.Speed", 0.25),
+	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.BowChance", 0.03),
+	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Speed", 0.25),
 
     GHAST_SPAWNING_INTERVAL_TICKS("Ghast.SpawningIntervalTicks", 10),
 	GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
