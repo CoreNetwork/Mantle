@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +110,18 @@ public class StructureGenerator {
 
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (ID, Schematic, StructureName, Rotation, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?,?,?)");
 			int id = 0;
+
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT MAX(id) FROM regeneration_structures");
+			ResultSet set = statement.executeQuery();
+			if (set.next())
+				id = set.getInt(1) + 1;
+			statement.close();
+
+			statement = IO.getConnection().prepareStatement("INSERT INTO regeneration_structures (ID, Schematic, StructureName, Rotation, World, CornerX, CornerZ, PastingY, SizeX, SizeZ) VALUES (?,?,?,?,?,?,?,?,?,?)");
 
 			while (mapEntries.advance())
 			{
-				id++;
 				int x = mapEntries.getCurX();
 				int z = mapEntries.getCurZ();
 				StructureData structure = mapEntries.getCurStructure();
@@ -223,7 +230,7 @@ public class StructureGenerator {
 				}
 
 
-
+				id++;
 			}
 
 			statement.executeBatch();
