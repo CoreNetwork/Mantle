@@ -128,7 +128,7 @@ public class AnimalSpawningIO {
 		AnimalSpawningModule.spawnedAnimals.clear();
 		AnimalSpawningModule.killedAnimals.clear();
 		AnimalSpawningModule.animalCounts = getAnimalCounts();
-		MLog.info("[AnimalSpawning] SavingTime :    " + (System.currentTimeMillis() - startTime));
+		MLog.debug("[AnimalSpawning] SavingTime :    " + (System.currentTimeMillis() - startTime));
 		
 	}
 
