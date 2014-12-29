@@ -8,6 +8,7 @@ import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.EntityWitherSkull;
+import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
 import net.minecraft.server.v1_8_R1.MathHelper;
 import org.bukkit.Bukkit;
@@ -443,6 +444,20 @@ public class HardmodeListener implements Listener {
 				return;
 			}
 		}
+
+
+		if (entity.getType() == EntityType.ZOMBIE)
+		{
+			//Fix door breaking
+			if (random.nextDouble() < HardmodeSettings.ZOMBIE_DOOR_BREAKING_CHANCE.doubleNumber())
+			{
+				Zombie zombie = (Zombie) event.getEntity();
+				EntityZombie nmsZombie = ((CraftZombie) zombie).getHandle();
+
+				nmsZombie.a(true);
+			}
+		}
+
 
 		// Wither timer & replacement
 		if (event.getEntityType() == EntityType.WITHER)

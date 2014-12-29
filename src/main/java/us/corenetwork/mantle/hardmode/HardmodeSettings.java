@@ -136,6 +136,8 @@ public enum HardmodeSettings {
     NO_DEATH_DROPS_EXPERIENCE("NoDeathDrops.Experience", new ArrayList<String>()),
     NO_DEATH_DROPS_ITEMS("NoDeathDrops.Items", new ArrayList<String>()),
 
+	ZOMBIE_DOOR_BREAKING_CHANCE("ZombieDoorBreakingChance", 1),
+
     MESSAGE_NO_WITHER_SURFACE("Messages.NoWitherSurface", "Sorry, you can't build wither on the surface!"),
 	MESSAGE_NO_MILKING_NETHER("Messages.NoMilkingNether", "Sorry, you can't milk cows in nether!"),
 
