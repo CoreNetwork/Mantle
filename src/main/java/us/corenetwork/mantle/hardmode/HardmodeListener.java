@@ -465,16 +465,6 @@ public class HardmodeListener implements Listener {
 			entity.setMetadata("DespawningTime", value);
 
 		}
-		// Reduced ghast spawning
-		else if (event.getEntityType() == EntityType.GHAST)
-		{
-			if (MantlePlugin.random.nextDouble() > HardmodeSettings.GHAST_SPAWNING_CHANCE.doubleNumber()
-					|| event.getLocation().getY() < HardmodeSettings.GHAST_MINIMUM_SPAWNING_Y.integer())
-			{
-				event.setCancelled(true);
-				return;
-			}
-		}
 		// Pigmen spawning adjust
 		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
 		{

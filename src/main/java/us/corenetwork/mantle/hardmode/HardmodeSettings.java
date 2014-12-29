@@ -15,8 +15,6 @@ public enum HardmodeSettings {
 	ENDERMAN_TELEPORT_MAX_TRIES("EndermanTeleport.MaxTries", 3),
 	ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT("EndermanTeleport.ApplyDamageEffect", "EndermanTeleport"),
 	
-	GHAST_SPAWNING_CHANCE("Ghast.SpawningChance", 0.2),
-	GHAST_MINIMUM_SPAWNING_Y("Ghast.MinimumSpawningY", 80),
 	GHAST_MAXIMUM_ATTACK_RANGE("Ghast.MaxmimumHorizontalTargetRangeSquared", 70 * 70),
 	GHAST_FIREBALL_DAMAGE_MULTIPLIER("Ghast.Fireball.DamageMultiplier", 4.0),
 	GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER("Ghast.Fireball.BlastRadiusMultiplier", 2.0),
