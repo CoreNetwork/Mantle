@@ -22,6 +22,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.regeneration.RegenerationSettings;
 import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
@@ -91,15 +92,19 @@ public class RChestsListener implements Listener {
 		RestockableChest chest = RestockableChest.getChest(block);
 		if (chest != null)
 		{
+			boolean isReal = chest.isReal();
 			if (isVillageClaimed(chest.getStructureID()))
 			{
 				return;
 			}		
 			else
 			{
-				event.setCancelled(true);
-				Util.Message(RChestSettings.MESSAGE_CHEST_DESTROYED.string(), event.getPlayer());
-				return;
+				if(isReal)
+				{
+					event.setCancelled(true);
+					Util.Message(RChestSettings.MESSAGE_CHEST_DESTROYED.string(), event.getPlayer());
+					return;
+				}
 			}
 			
 		}

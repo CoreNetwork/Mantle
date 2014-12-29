@@ -66,6 +66,7 @@ public class RestockableChest {
 	private boolean perPlayer;
 	private String lootTable;
 	private Integer structureID;
+	private boolean realChestBlock;
 	
 	private RestockableChest()
 	{
@@ -74,7 +75,9 @@ public class RestockableChest {
 
 	public static RestockableChest getChest(Block chest)
 	{
+		Block blockInQuestion = chest;
 		Block alternativeChest = chest;
+		boolean isReal = false;
 		boolean checkBoth = false;
 		if (!Util.isInventoryContainer(chest.getTypeId()))
 			return null;
@@ -85,8 +88,7 @@ public class RestockableChest {
 			DoubleChestInventory doubleChestInventory = (DoubleChestInventory) inventory;
 			Chest leftChest = (Chest) doubleChestInventory.getLeftSide().getHolder();
 			Chest rightChest = (Chest) doubleChestInventory.getRightSide().getHolder();
-			chest = leftChest.getBlock();
-			alternativeChest = rightChest.getBlock();
+			alternativeChest = chest.equals(leftChest.getBlock()) ? rightChest.getBlock() : leftChest.getBlock();
 			checkBoth = true;
 		}
 
@@ -112,7 +114,7 @@ public class RestockableChest {
 					statement.setInt(3, alternativeChest.getY());
 					statement.setInt(4, alternativeChest.getZ());
 					set = statement.executeQuery();
-					
+
 					if (!set.next())
 					{
 						return null;
@@ -122,6 +124,10 @@ public class RestockableChest {
 				{
 					return null;
 				}
+			}
+			else
+			{
+				isReal = true;
 			}
 
 			RestockableChest rChest = new RestockableChest();
@@ -133,6 +139,8 @@ public class RestockableChest {
 			rChest.chestBlock = chest;
 			rChest.inventoryHolder = (InventoryHolder) chest.getState();
 			rChest.structureID = set.getInt("StructureID");
+			rChest.realChestBlock = isReal;
+
 			statement.close();
 			return rChest;
 			
@@ -1155,4 +1163,10 @@ public class RestockableChest {
 	{
 		return chestBlock;
 	}
+
+	public boolean isReal()
+	{
+		return realChestBlock;
+	}
+
 }
