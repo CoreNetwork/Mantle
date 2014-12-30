@@ -129,8 +129,12 @@ public class GUICategoryPicker extends InventoryGUI {
 		Location location = player.getLocation();
 		int x = location.getBlockX();
 		int z = location.getBlockZ();
-		int minkw = selectedCategory.getMinDistance() * selectedCategory.getMinDistance();
-		int maxkw = selectedCategory.getMaxDistance() * selectedCategory.getMaxDistance();
+		int distanceRange = selectedCategory.getDistanceRange((Player) player);
+
+		int minkw = selectedCategory.getMinDistance(distanceRange);
+		minkw *= minkw;
+		int maxkw = selectedCategory.getMaxDistance(distanceRange);
+		maxkw *= maxkw;
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, CornerX, CornerZ, SizeX, SizeZ, World, ((CornerX - ? + sizeX / 2) * (CornerX - ? + sizeX / 2) + (CornerZ - ? + sizeZ / 2) * (CornerZ - ? + sizeZ / 2)) as dist FROM regeneration_structures WHERE StructureName = 'Villages' AND LastCheck <= LastRestore AND dist > ? AND dist < ? ORDER BY dist ASC ");

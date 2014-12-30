@@ -39,24 +39,24 @@ public enum RChestSettings {
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
 			put("icon", RChestSettings.iconHelper(6));
-			put("compassMinDistance", 200);
-			put("compassMaxDistance", 800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(200);add(200);add(200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(800);add(800);add(800);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Tools");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
 			put("icon", RChestSettings.iconHelper(257));
-			put("compassMinDistance", 200);
-			put("compassMaxDistance", 800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(200);add(200);add(200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(800);add(800);add(800);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "CombatGear");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
 			put("icon", RChestSettings.iconHelper(307));
-			put("compassMinDistance", 200);
-			put("compassMaxDistance", 800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(200);add(200);add(200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(800);add(800);add(800);}});
 		}});
 	}}),
 	RARE_CATEGORIES("RareCategories",new ArrayList<Map<String, Object>>(){{
@@ -67,8 +67,8 @@ public enum RChestSettings {
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(49));
-			put("compassMinDistance", 2200);
-			put("compassMaxDistance", 4800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Gold");
@@ -77,8 +77,8 @@ public enum RChestSettings {
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(266));
-			put("compassMinDistance", 2200);
-			put("compassMaxDistance", 4800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "Diamond");
@@ -87,8 +87,8 @@ public enum RChestSettings {
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(264));
-			put("compassMinDistance", 2200);
-			put("compassMaxDistance", 4800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "EnchantedBook");
@@ -97,8 +97,8 @@ public enum RChestSettings {
 			put("perPlayerTotalLimit", 50);
 			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(403));
-			put("compassMinDistance", 2200);
-			put("compassMaxDistance", 4800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "IronHorseArmor");
@@ -108,8 +108,8 @@ public enum RChestSettings {
 			put("perPlayerDayLimit", 5);
 			put("preReqCategories", new ArrayList<String>(){{ add("Organic"); add("Tools");}});
 			put("icon", RChestSettings.iconHelper(417));
-			put("compassMinDistance", 2200);
-			put("compassMaxDistance", 4800);
+			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
+			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
 		}});
 	}}),
 	

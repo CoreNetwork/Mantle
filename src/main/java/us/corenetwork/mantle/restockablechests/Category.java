@@ -21,8 +21,8 @@ public class Category {
 	private int perPlayerTotalLimit;
 	private List<String> preReqCategories;
 	private ItemStack iconItem;
-	private int minDist;
-	private int maxDist;
+	private ArrayList<Integer> minDist;
+	private ArrayList<Integer> maxDist;
 	
 	public Category(Map<?, ?> categoryMap)
 	{
@@ -32,8 +32,13 @@ public class Category {
 		this.preReqCategories = categoryMap.get("preReqCategories") == null ? new ArrayList<String>() : (ArrayList<String>) categoryMap.get("preReqCategories");
 		this.perPlayerTotalLimit = categoryMap.get("perPlayerTotalLimit") == null ? -1 : (Integer) categoryMap.get("perPlayerTotalLimit");
 		this.iconItem = YamlUtils.readItemStack((Map<String, Object>) categoryMap.get("icon"));
-		this.minDist = (Integer) categoryMap.get("compassMinDistance");
-		this.maxDist = (Integer) categoryMap.get("compassMaxDistance");
+		this.minDist = (ArrayList<Integer>) categoryMap.get("compassMinDistance");
+		this.maxDist = (ArrayList<Integer>) categoryMap.get("compassMaxDistance");
+	}
+
+	public int getPerPlayerTotalLimit()
+	{
+		return perPlayerTotalLimit;
 	}
 
 	public static List<Category> getCategories(List<Map<?, ?>> categoriesListMap)
@@ -71,14 +76,25 @@ public class Category {
 		return name;
 	}
 
-	public int getMinDistance()
+	public int getDistanceRange(Player player)
 	{
-		return minDist;
+		float timesFoundPerc = (float)getTimesFound(player) / perPlayerTotalLimit;
+		if(timesFoundPerc < 0.33)
+			return 0;
+		else if(timesFoundPerc <  0.66)
+			return 1;
+		else return 2;
+
+	}
+
+	public int getMinDistance(int range)
+	{
+		return minDist.get(range);
 	}
 	
-	public int getMaxDistance()
+	public int getMaxDistance(int range)
 	{
-		return maxDist;
+		return maxDist.get(range);
 	}
 	
 	public boolean isRare()
@@ -145,7 +161,7 @@ public class Category {
 		return timesFound < perPlayerTotalLimit;
 	}
 	
-	private int getTimesFound(Player player)
+	public int getTimesFound(Player player)
 	{
 		try
 		{
