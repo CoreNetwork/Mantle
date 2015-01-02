@@ -214,7 +214,7 @@ public class Hologram
             for (int i = 0; i < linkedEntities.size(); i++)
             {
                 if (entity.getUniqueId().equals(linkedEntities.get(i)))
-                    ((ArmorStand) entity).setCustomName(text.get(i));
+                    ((ArmorStand) entity).setCustomName(NanobotUtil.fixFormatting(text.get(i)));
             }
         }
 
