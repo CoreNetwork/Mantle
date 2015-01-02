@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import net.minecraft.server.v1_8_R1.EntityArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -208,11 +210,14 @@ public class Hologram
         Entity[] entitiesInChunk = getChunk().getEntities();
         for (Entity entity : entitiesInChunk)
         {
+            Bukkit.broadcastMessage("Entity " + entity);
             if (entity.getType() != EntityType.ARMOR_STAND)
                 continue;
 
             for (int i = 0; i < linkedEntities.size(); i++)
             {
+                Bukkit.broadcastMessage("Linked " + linkedEntities.get(i));
+
                 if (entity.getUniqueId().equals(linkedEntities.get(i)))
                     ((ArmorStand) entity).setCustomName(NanobotUtil.fixFormatting(text.get(i)));
             }
@@ -254,13 +259,18 @@ public class Hologram
             if (line.trim().isEmpty())
                 continue;
 
-            ArmorStand armorStand = (ArmorStand) world.spawnEntity(new Location(world, x, y, z), EntityType.ARMOR_STAND);
-            armorStand.setCustomName(NanobotUtil.fixFormatting(line));
-            armorStand.setCustomNameVisible(true);
-            armorStand.setGravity(false);
-            armorStand.setVisible(false);
+            net.minecraft.server.v1_8_R1.World nmsWorld = ((CraftWorld) world).getHandle();
 
-            linkedEntities.add(armorStand.getUniqueId());
+            EntityArmorStand armorStand = new EntityArmorStand(nmsWorld);
+            armorStand.setPosition(x, y, z);
+            armorStand.setCustomNameVisible(true);
+            armorStand.setCustomName(NanobotUtil.fixFormatting(line));
+            armorStand.setGravity(true); //This actually means setNoGravity... SPIGOT!
+            armorStand.setInvisible(true);
+
+            nmsWorld.addEntity(armorStand);
+
+            linkedEntities.add(armorStand.uniqueID);
 
             y -= 0.25;
         }
@@ -289,8 +299,6 @@ public class Hologram
     {
         text.clear();
         parseSingleLine(newText);
-
-        updateEntities();
     }
 
     public void updateLine(int line, String newText)
@@ -299,8 +307,6 @@ public class Hologram
             return;
 
         text.set(line, newText);
-
-        updateEntities();
     }
 
     public void delete()
