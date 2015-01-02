@@ -16,7 +16,7 @@ public class HologramSetCommand extends BaseHologramCommand
 	{
 		permission = "set";
 		desc = "Add/set hologram - PERSISTENT";
-		needPlayer = true;
+		needPlayer = false;
 	}
 
 
@@ -50,15 +50,21 @@ public class HologramSetCommand extends BaseHologramCommand
 
         text = text.replace("<EMPTY>", "");
 
-        Player player = (Player) sender;
-        Location location = player.getLocation();
-
         Hologram hologram = null;
         if (name != null)
             hologram = HologramStorage.namedHolograms.get(name);
 
         if (hologram == null)
         {
+            if (!(sender instanceof Player))
+            {
+                Util.Message("Sorry, but you need to execute this command as player.", sender);
+                return;
+            }
+
+            Player player = (Player) sender;
+            Location location = player.getLocation();
+
             hologram = new Hologram(name, location.getWorld(), location.getX(), location.getY(), location.getZ(), text);
             HologramStorage.add(hologram);
             hologram.updateEntities();
