@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.portals;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -10,6 +11,7 @@ public class SchematicBlock {
 	public int modX;
 	public int modY;
 	public int modZ;
+	public int rotation;
 	public Material material;
 	public boolean onlyInAir;
 	
@@ -20,6 +22,7 @@ public class SchematicBlock {
 		this.modZ = modZ;
 		this.material = material;
 		this.onlyInAir = false;
+		rotation = 0;
 	}
 	
 	public SchematicBlock(int modX, int modY, int modZ, Material material, boolean onlyInAir)
@@ -29,6 +32,7 @@ public class SchematicBlock {
 		this.modZ = modZ;
 		this.material = material;
 		this.onlyInAir = onlyInAir;
+		rotation = 0;
 	}
 	
 	public static void placeSchematic(SchematicBlock[] schematic, Block origin)
@@ -52,7 +56,14 @@ public class SchematicBlock {
 			
 			if (sBlock.material == Material.PORTAL)
 			{
-				block.setTypeId(Material.PORTAL.getId(), false);
+				byte data;
+				if (sBlock.rotation == 1 || sBlock.rotation == 3)
+					data = 2;
+				else
+					data = 1;
+
+				block.setTypeIdAndData(Material.PORTAL.getId(), data, false);
+				continue;
 			}
 			
 			block.setType(sBlock.material);
@@ -71,6 +82,7 @@ public class SchematicBlock {
 			for (int i = 0; i < original.length; i++)
 			{
 				schematic[i] = new SchematicBlock(-original[i].modZ, original[i].modY, original[i].modX, original[i].material, original[i].onlyInAir);
+				schematic[i].rotation = rotation;
 			}
 			return schematic;
 		}
@@ -80,6 +92,7 @@ public class SchematicBlock {
 			for (int i = 0; i < original.length; i++)
 			{
 				schematic[i] = new SchematicBlock(original[i].modZ, original[i].modY, -original[i].modX, original[i].material, original[i].onlyInAir);
+				schematic[i].rotation = rotation;
 			}
 			return schematic;
 		}
@@ -89,6 +102,7 @@ public class SchematicBlock {
 			for (int i = 0; i < original.length; i++)
 			{
 				schematic[i] = new SchematicBlock(-original[i].modZ, original[i].modY, original[i].modX, original[i].material, original[i].onlyInAir);
+				schematic[i].rotation = rotation;
 			}
 			return schematic;
 		}

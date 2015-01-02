@@ -1,5 +1,8 @@
 package us.corenetwork.mantle.portals;
 
+import com.sk89q.worldedit.math.MathUtils;
+import javax.print.attribute.standard.NumberUp;
+import org.apache.commons.lang.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,21 +17,34 @@ import java.util.ArrayList;
 public class PortalUtil {	
 	public static Location processTeleport(Entity entity, Block currentPortalBlock)
 	{
-		Block portalBlock = getLowestNorthestWestestPortalBlock(currentPortalBlock);
-		Block destination = getOtherSide(portalBlock);
+		PortalInfo portalInfo = getPortalInfo(currentPortalBlock);
+		Block portalBlock = portalInfo.lowestNorthestWestestBlock;
+		Block destination = getOtherSide(portalInfo);
 
 		
 		destination.getChunk().load();
 		
 		if (destination.getType() != Material.PORTAL)
 		{
-			int orientation = 0;
-			if (portalBlock.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL)
+			//If portal is in upper part of the rounding zone, use block with higher coordinatest as opposed to lower one
+			if (currentPortalBlock.getWorld().getEnvironment() == Environment.NORMAL)
 			{
-				orientation = 1;
+				double ratio = Math.max(Math.ceil(PortalsSettings.PORTAL_RATIO.doubleNumber()), 1);
+
+				double dividedCoordinatesX = (double) portalBlock.getX() / ratio;
+				double dividedCoordinatesZ = (double) portalBlock.getX() / ratio;
+
+				if (portalInfo.sizeX > 1 && dividedCoordinatesX > 1 && getFractionPart(dividedCoordinatesX) > 0.5)
+				{
+					destination = destination.getRelative(-(portalInfo.sizeX - 1), 0, 0);
+				}
+				else if (portalInfo.sizeZ > 1 && dividedCoordinatesZ > 1 && getFractionPart(dividedCoordinatesZ) > 0.5)
+				{
+					destination = destination.getRelative(0, 0, -(portalInfo.sizeX - 1));
+				}
 			}
-			
-			buildPortal(destination, orientation);
+
+			buildPortal(destination, portalInfo.orientation);
 		}
 				
 		Location blockLocation = getLocation(destination);
@@ -40,13 +56,23 @@ public class PortalUtil {
 
 	public static Block getOtherSide(Block block)
 	{
-		Location currentSide = block.getLocation();
+		PortalInfo dummy = new PortalInfo();
+		dummy.lowestNorthestWestestBlock = block;
+		dummy.sizeZ = 1;
+		dummy.sizeX = 1;
+
+		return getOtherSide(dummy);
+	}
+
+	public static Block getOtherSide(PortalInfo info)
+	{
+		Block portalBlock = info.lowestNorthestWestestBlock;
 
 		double modifier = PortalsSettings.PORTAL_RATIO.doubleNumber();
 		Environment destEnvironment;
 		int maxY = 0;
 		int minY = 0;
-		if (currentSide.getWorld().getEnvironment() == Environment.NETHER)
+		if (portalBlock.getWorld().getEnvironment() == Environment.NETHER)
 		{
 			destEnvironment = Environment.NORMAL;
 			maxY = PortalsSettings.OVERWORLD_MOVE_PORTALS_WITH_HIGHER_Y.integer();
@@ -70,46 +96,44 @@ public class PortalUtil {
 			}
 		}
 
-		Location destination = new Location(destWorld, (int) (currentSide.getBlockX() * modifier), currentSide.getBlockY(), (int) (currentSide.getBlockZ() * modifier));
+		portalBlock = destWorld.getBlockAt((int) (portalBlock.getX() * modifier), portalBlock.getY(), (int) (portalBlock.getZ() * modifier));
 
-		if (destination.getY() > maxY)
-			destination.setY(maxY);
-		else if (destination.getY() < minY)
-			destination.setY(minY);
+		if (portalBlock.getY() > maxY)
+			portalBlock = destWorld.getBlockAt(portalBlock.getX(), maxY, portalBlock.getZ());
+		else if (portalBlock.getY() < minY)
+			portalBlock = destWorld.getBlockAt(portalBlock.getX(), minY, portalBlock.getZ());
 
 		//Find possible existing portal
-		Block existing = getExistingPortal(destination);
+		info.lowestNorthestWestestBlock = portalBlock;
+		Block existing = getExistingPortal(info);
 		if (existing != null)
 			return existing;
-
-		//Increase height if original dest is inside java
-		Block destBlock = destination.getBlock();
-		if (destBlock.getType() == Material.LAVA || destBlock.getType() == Material.STATIONARY_LAVA)
-		{
-			destBlock = destination.getWorld().getBlockAt(destination.getBlockX(), 40, destination.getBlockZ());
-		}
 
 		//Try to get to the ground
 		if (destEnvironment == Environment.NORMAL)
 		{
-			Block belowBlock = destBlock.getRelative(BlockFace.DOWN, 2);
+			Block belowBlock = portalBlock.getRelative(BlockFace.DOWN, 2);
 
 			int startingY = belowBlock.getY();
 			while (belowBlock != null && belowBlock.getType() == Material.AIR && belowBlock.getY() <= startingY)
 			{
-				destBlock = destBlock.getRelative(BlockFace.DOWN);
-				belowBlock = destBlock.getRelative(BlockFace.DOWN, 2);
+				portalBlock = portalBlock.getRelative(BlockFace.DOWN);
+				belowBlock = portalBlock.getRelative(BlockFace.DOWN, 2);
 			}
 		}
 
-		return destBlock;
+		return portalBlock;
 	}
 
-	private static Block getExistingPortal(Location curLocation)
-	{		
+	private static Block getExistingPortal(PortalInfo portalInfo)
+	{
+		Block portalBlock = portalInfo.lowestNorthestWestestBlock;
+		World world = portalBlock.getWorld();
+
 		int minY;
 		int maxY;
-		if (curLocation.getWorld().getEnvironment() == Environment.NETHER)
+
+		if (world.getEnvironment() == Environment.NETHER)
 		{
 			minY = PortalsSettings.NETHER_MIN_Y.integer();
 			maxY = PortalsSettings.NETHER_MAX_Y.integer();
@@ -120,102 +144,82 @@ public class PortalUtil {
 			minY = PortalsSettings.OVERWORLD_MIN_Y.integer();
 			maxY = PortalsSettings.OVERWORLD_MAX_Y.integer();
 		}
-		
-		int radius = Math.max(curLocation.getWorld().getEnvironment() == Environment.NETHER ? 1 : (int) Math.ceil(PortalsSettings.PORTAL_RATIO.doubleNumber()), 1);
-		
-		int x = 0;
-		int y = 0;
-		int dir = 0;
-		int trenutniMax = 1;
-
-		int startX = 0;
-		int startY = 0;
 
 		int closestPortalDistance = Integer.MAX_VALUE;
 		Block closestPortal = null;
-		
-		for (int h = minY; h < maxY; h++)
+
+		//Find existing portal in 2D spiral
+		int ratio = Math.max(world.getEnvironment() == Environment.NETHER ? 1 : (int) Math.ceil(PortalsSettings.PORTAL_RATIO.doubleNumber()), 1);
+
+		//Spiral size depends on the size of origin portal
+
+		int width = 1;
+		int height = 1;
+		int centerX = portalBlock.getX();
+		int centerZ = portalBlock.getZ();
+
+		if (portalInfo.sizeX > 1 || ratio > 1)
 		{
-			Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
-			if (block != null)
-			{
-				if (block.getType() == Material.PORTAL)
-				{
-					Location portalLoc = block.getLocation();
-					int distance = (int) Math.round(portalLoc.distanceSquared(curLocation));
-					if (distance < closestPortalDistance)
-					{
-						closestPortalDistance = distance;
-						closestPortal = block;
-					}
-				}
-			}			
+			width = ratio * (portalInfo.sizeX + 1);
+
+			//Make sure height and width of the spiral are even
+			if (width % 2 == 0)
+				width++;
+
+			centerX = centerX - ratio + width / 2;
 		}
-		
-		while (true)
+
+		if (portalInfo.sizeZ > 1 || ratio > 1)
 		{
-			switch (dir)
-			{
-			case 0:
-				y--;
-				break;
-			case 1:
-				x++;
-				break;
-			case 2:
-				y++;
-				break;
-			case 3:
-				x--;
-				break;
-			}
+			height = ratio * (portalInfo.sizeZ + 1);
 
-			if (Math.abs(x - startX) >= trenutniMax && dir % 2 == 1)
-			{
-				trenutniMax++;
-				dir++;
-				if (dir > 3)
-				{
-					dir = 0;
-				}
+			if (height % 2 == 0)
+				height++;
 
-				startY = y;					
-			}
-			else if (Math.abs(y - startY)  >= trenutniMax && dir % 2 == 0)
-			{
-				dir++;
-				if (dir > 3)
-				{
-					dir = 0;
-				}
+			centerZ = portalBlock.getZ() - ratio + height / 2;
+		}
 
-				startX = x;
-			}
-			
-			if (Math.abs(x) > radius || Math.abs(y) > radius)
-			{
-				break;
-			}
-						
-			for (int h = minY; h < maxY; h++)
-			{
-				Block block = curLocation.getWorld().getBlockAt(x + curLocation.getBlockX(), h, y + curLocation.getBlockZ());
-				if (block != null)
+		int x=0, z=0, dx = 0, dz = -1;
+		int t = Math.max(width,height);
+		int maxI = t*t;
+
+		for (int i=0; i < maxI; i++){
+
+
+			if ((-width/2 <= x) && (x <= width/2) && (-height/2 <= z) && (z <= height/2)) {
+				Bukkit.broadcastMessage((centerX + x) + " " + (centerZ + z));
+
+				for (int y = minY; y < maxY; y++)
 				{
-					if (block.getType() == Material.PORTAL)
+					Block block = world.getBlockAt(centerX + x, y, centerZ + z);
+					if (block != null)
 					{
-						Location portalLoc = block.getLocation();
-						int distance = (int) Math.round(portalLoc.distanceSquared(curLocation));
-						if (distance < closestPortalDistance)
+						if (block.getType() == Material.PORTAL)
 						{
-							closestPortalDistance = distance;
-							closestPortal = block;
+							Location portalLoc = block.getLocation();
+							int distance = Math.abs(y - portalBlock.getY());
+							if (distance < closestPortalDistance)
+							{
+								closestPortalDistance = distance;
+								closestPortal = block;
+							}
 						}
 					}
-				}			
-			}			
+				}
+
+				if (closestPortal != null)
+					break;
+			}
+
+			if( (x == z) || ((x < 0) && (x == -z)) || ((x > 0) && (x == 1-z))) {
+				t=dx;
+				dx=-dz;
+				dz=t;
+			}
+			x+=dx;
+			z+=dz;
 		}
-		
+
 		if (closestPortal == null)
 			return null;
 
@@ -331,16 +335,73 @@ public class PortalUtil {
 		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
-	public static Block getLowestNorthestWestestPortalBlock(Block block)
+	public static PortalInfo getPortalInfo(Block block)
 	{
 		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
 			block = block.getRelative(BlockFace.DOWN);
-		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.NORTH);
-		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
-			block = block.getRelative(BlockFace.WEST);
 
-		return block;
+		PortalInfo info = new PortalInfo();
+		info.sizeX = 1;
+		info.sizeZ = 1;
+
+		//Find size in Z+
+		Block secondBlock = block;
+		while (secondBlock.getRelative(BlockFace.SOUTH).getType() == Material.PORTAL)
+		{
+			info.sizeZ++;
+			secondBlock = secondBlock.getRelative(BlockFace.SOUTH);
+		}
+
+		//Find size in X+
+		secondBlock = block;
+		while (secondBlock.getRelative(BlockFace.EAST).getType() == Material.PORTAL)
+		{
+			info.sizeX++;
+			secondBlock = secondBlock.getRelative(BlockFace.EAST);
+		}
+
+		//Find size in Z-
+		secondBlock = block;
+		while (secondBlock.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
+		{
+			info.sizeZ++;
+			secondBlock = secondBlock.getRelative(BlockFace.NORTH);
+		}
+
+		//Find size in X+
+		secondBlock = block;
+		while (secondBlock.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
+		{
+			info.sizeX++;
+			secondBlock = secondBlock.getRelative(BlockFace.WEST);
+		}
+
+		byte data = block.getData();
+		if ((data & 3) == 2) //Portal block is rotated Z way
+		{
+			info.orientation = 1;
+
+			//Find northest portal block
+			while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
+			{
+				block = block.getRelative(BlockFace.NORTH);
+			}
+
+		}
+		else
+		{
+			info.orientation = 0;
+
+			//Find westest portal block
+			while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
+			{
+				block = block.getRelative(BlockFace.WEST);
+			}
+		}
+
+		info.lowestNorthestWestestBlock = block;
+
+		return info;
 	}
 	
 	public static Block findBestSignLocation(ArrayList<Block> blocks)
@@ -352,22 +413,22 @@ public class PortalUtil {
 			if (!b.getType().isSolid())
 				continue;
 
-			for (BlockFace face : new BlockFace[] {BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
+			for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
 			{
 				Block neighbour = b.getRelative(face);
 				if (!neighbour.isEmpty())
 					continue;
-				
+
 				for (Block potentialFacingBlock : blocks)
 				{
 					if (potentialFacingBlock == b)
 						continue;
-					
+
 					if (b.getY() == potentialFacingBlock.getY() &&
-						(face.getModX() != 0 || potentialFacingBlock.getX() == b.getX()) && 
-						(face.getModZ() != 0 || potentialFacingBlock.getZ() == b.getZ())&& 
-						face.getModX() < 0 == potentialFacingBlock.getX() < b.getX() &&
-						face.getModZ() < 0 == potentialFacingBlock.getZ() < b.getZ())
+							(face.getModX() != 0 || potentialFacingBlock.getX() == b.getX()) &&
+							(face.getModZ() != 0 || potentialFacingBlock.getZ() == b.getZ()) &&
+							face.getModX() < 0 == potentialFacingBlock.getX() < b.getX() &&
+							face.getModZ() < 0 == potentialFacingBlock.getZ() < b.getZ())
 					{
 						return neighbour;
 					}
@@ -389,67 +450,14 @@ public class PortalUtil {
 		for (Block b : blocks)
 		{
 			if (b.isEmpty())
-				return b;			
+				return b;
 		}
 
 		return blocks.get(0);
 	}
-	
-//	public static Block getPortalBlock(Location location)
-//	{
-//		Block block = location.getBlock();
-//		if (block.getType() != Material.PORTAL)
-//		{
-//			double diffX = location.getX() - Math.floor(location.getX());
-//			
-//			if (diffX < 0.5)
-//			{
-//				Block newBlock = block.getRelative(-1, 0, 0);
-//				if (newBlock.getType() == Material.PORTAL)
-//					block = newBlock;
-//			}
-//			else
-//			{
-//				Block newBlock = block.getRelative(1, 0, 0);
-//				if (newBlock.getType() == Material.PORTAL)
-//					block = newBlock;
-//			}
-//			
-//			if (block.getType() != Material.PORTAL)
-//			{
-//				double diffZ = location.getZ() - Math.floor(location.getZ());
-//				
-//				if (diffZ < 0.5)
-//				{
-//					Block newBlock = block.getRelative(0, 0, -1);
-//					if (newBlock.getType() == Material.PORTAL)
-//						block = newBlock;
-//				}
-//				else
-//				{
-//					Block newBlock = block.getRelative(0, 0, 1);
-//					if (newBlock.getType() == Material.PORTAL)
-//						block = newBlock;				
-//				}
-//
-//			}
-//
-//		}		
-//		
-//		if (block.getType()  != Material.PORTAL)
-//		{
-//			MLog.severe("Unable to find portal block at " + block.toString());
-//			return block;
-//		}
-//		
-//		//Always pick northest, westest,lowest portal block
-//		while (block.getRelative(BlockFace.DOWN).getType() == Material.PORTAL)
-//			block = block.getRelative(BlockFace.DOWN);
-//		while (block.getRelative(BlockFace.NORTH).getType() == Material.PORTAL)
-//			block = block.getRelative(BlockFace.NORTH);
-//		while (block.getRelative(BlockFace.WEST).getType() == Material.PORTAL)
-//			block = block.getRelative(BlockFace.WEST);
-//				
-//		return block;
-//	}
+
+	public static double getFractionPart(double a)
+	{
+		return a - (int) a;
+	}
 }

@@ -152,8 +152,6 @@ public class LoadCommand extends NanobotBaseCommand {
 								
 				for (Entry<String, Object> ee : map.entrySet())
 				{
-					Bukkit.getServer().broadcastMessage("ee - " + ee.getKey());
-
 					NBTBase eTag = loadTag(ee.getValue(), ee.getKey().equals("compound"));
 					compound.set(ee.getKey(), eTag);
 				}
