@@ -210,14 +210,11 @@ public class Hologram
         Entity[] entitiesInChunk = getChunk().getEntities();
         for (Entity entity : entitiesInChunk)
         {
-            Bukkit.broadcastMessage("Entity " + entity);
             if (entity.getType() != EntityType.ARMOR_STAND)
                 continue;
 
             for (int i = 0; i < linkedEntities.size(); i++)
             {
-                Bukkit.broadcastMessage("Linked " + linkedEntities.get(i));
-
                 if (entity.getUniqueId().equals(linkedEntities.get(i)))
                     ((ArmorStand) entity).setCustomName(NanobotUtil.fixFormatting(text.get(i)));
             }
