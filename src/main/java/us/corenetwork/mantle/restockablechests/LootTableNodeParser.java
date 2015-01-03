@@ -79,7 +79,7 @@ public class LootTableNodeParser extends NodeParser {
 		Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			if (node.containsKey("Name")) {
+			if (node.containsKey("name")) {
 				String name = (String) node.get("Name");
 				Integer material = MinecraftNames.getMaterialId(name);
 				if (material != null) {
