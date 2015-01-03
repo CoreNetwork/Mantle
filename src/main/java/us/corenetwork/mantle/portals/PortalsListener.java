@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.portals;
 
+import java.util.LinkedList;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
@@ -108,7 +109,6 @@ public class PortalsListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPortalCreate(PortalCreateEvent event)
 	{
-
 		if (event.getReason() == CreateReason.FIRE)
 		{
 			//Prevent creating portal out of boundaries
@@ -167,32 +167,25 @@ public class PortalsListener implements Listener {
 
 			//Prevent creating portals into other claims
 			Location destination = PortalUtil.getOtherSide(event.getBlocks().get(0)).getLocation();
-			Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
-						
-			if (claim == null)
+			List<Claim> claims = new LinkedList<Claim>();
+
+			//Search for 5x3x5 area around portals
+			Block portalBlock = destination.getBlock();
+			for (int x = -2; x <= 2; x++)
 			{
-				Block portalBlock = destination.getBlock();
-				for (int x = -2; x < 4; x++)
+				for (int y = -1; y <= 2; y++)
 				{
-					for (int y = -1; y < 3; y++)
+					for (int z = -2; z <= 2; z++)
 					{
-						for (int z = -2; z < 3; z++)
-						{
-							claim = GriefPrevention.instance.dataStore.getClaimAt(portalBlock.getLocation(), true, null);
-							if (claim != null)
-								break;
-						}
-						
+
+						Claim claim = GriefPrevention.instance.dataStore.getClaimAt(portalBlock.getRelative(x,y,z).getLocation(), true, null);
 						if (claim != null)
-							break;
+							claims.add(claim);
 					}
-					
-					if (claim != null)
-						break;
 				}
 			}
-			
-			if (claim != null)
+
+			if (claims.size() > 0)
 			{
 				FlintSteelData creator = null;
 
@@ -205,7 +198,6 @@ public class PortalsListener implements Listener {
 								
 				if (creator == null)
 				{
-					
 					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
@@ -214,12 +206,15 @@ public class PortalsListener implements Listener {
 
 				Player player = Bukkit.getServer().getPlayer(creator.player);
 
-				if (player == null || claim.allowBuild(player, Material.STONE) != null)
+				for (Claim claim : claims)
 				{
-					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+					if (player == null || claim.allowBuild(player, Material.STONE) != null)
+					{
+						Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
-					event.setCancelled(true);
-					return;
+						event.setCancelled(true);
+						return;
+					}
 				}
 			}
 		}
