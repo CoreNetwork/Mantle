@@ -60,8 +60,7 @@ public class PortalsListener implements Listener {
 		//Investigation tool for portals
 		if (hand != null && hand.getTypeId() == PortalsSettings.INVESTIGATION_TOOL.integer())
 		{
-			Location source = player.getLocation();
-			Claim sourceClaim = GriefPrevention.instance.dataStore.getClaimAt(source, true, null);
+			Claim sourceClaim = GriefPrevention.instance.dataStore.getClaimAt(clicked.getLocation(), true, null);
 			if (sourceClaim == null || sourceClaim.allowBuild(player, Material.STONE) == null)
 			{
 				Location destination = PortalUtil.getOtherSide(clicked).getLocation();
