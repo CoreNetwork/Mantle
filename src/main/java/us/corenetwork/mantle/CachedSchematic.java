@@ -128,7 +128,7 @@ public class CachedSchematic {
 			else
 			{
 				stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
-				vectorList = stringVectorToVecotrList(stringVectorList);
+				vectorList = stringVectorToVectorList(stringVectorList);
 			}
 		}
 		else
@@ -346,7 +346,7 @@ public class CachedSchematic {
 			else
 			{
 				stringVectorList = RegenerationModule.instance.storageConfig.getStringList(path);
-				vectorList = stringVectorToVecotrList(stringVectorList);
+				vectorList = stringVectorToVectorList(stringVectorList);
 			}
 		}
 		else
@@ -396,7 +396,7 @@ public class CachedSchematic {
 		return returnList;
 	}
 	
-	private List<Vector> stringVectorToVecotrList(List<String> list)
+	private List<Vector> stringVectorToVectorList(List<String> list)
 	{
 		List<Vector> returnList = new ArrayList<Vector>();
 		
