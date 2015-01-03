@@ -132,13 +132,13 @@ public class PortalUtil {
                         case MINUS_PLUS:
                         case PLUS_PLUS:
                             if(occupiedOnZ.contains(destZ-1))
-                                buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                                buildDestination = buildDestination.getRelative(BlockFace.NORTH);
                             break;
 
                         case PLUS_MINUS:
                         case MINUS_MINUS:
                             if(!occupiedOnZ.contains(destZ+1))
-                                buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                                buildDestination = buildDestination.getRelative(BlockFace.NORTH);
                             break;
                     }
                 }
