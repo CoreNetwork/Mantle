@@ -225,7 +225,8 @@ public class PortalUtil {
 		Bukkit.broadcastMessage("Square offsets to search X:" + squaresX);
 		Bukkit.broadcastMessage("Square offsets to search Z:" + squaresZ);
 
-		List<Integer> yRange = Arrays.asList(new Integer[]{targetBlock.getY()});//getIncrementingNumbersInRange(targetBlock.getY(), minY, maxY);
+		//List<Integer> yRange = Arrays.asList(new Integer[]{targetBlock.getY()});
+		List<Integer> yRange = getIncrementingNumbersInRange(targetBlock.getY(), minY, maxY);
 
 		// Loop through all RxR squares in X range
 		for (Integer squareOffsetX : squaresX)
@@ -233,16 +234,17 @@ public class PortalUtil {
 			// Loop through all RxR squares in Z range
 			for (Integer squareOffsetZ : squaresZ)
 			{
+
+				// Loop through all block in square
+				int startX = originalSquareStartX + squareOffsetX * ratio;
+				int endX = startX + ratio;
+
+				int startZ = originalSquareStartZ + squareOffsetZ * ratio;
+				int endZ = startZ + ratio;
+
 				// Loop through all RxR squares in Y range
 				for (Integer y : yRange)
 				{
-					// Loop through all block in square
-					int startX = originalSquareStartX + squareOffsetX * ratio;
-					int endX = startX + ratio;
-
-					int startZ = originalSquareEndX + squareOffsetZ * ratio;
-					int endZ = startZ + ratio;
-
 					for (int x = startX; x < endX; x++)
 					{
 						for (int z = startZ; z < endZ; z++)
