@@ -11,6 +11,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import us.corenetwork.mantle.MLog;
 
 import java.util.ArrayList;
 
@@ -26,50 +27,69 @@ public class PortalUtil {
 		
 		if (destination.getType() != Material.PORTAL)
 		{
+			//Added separate ref to the place we want to build at. We still want to port the player to correct ratio calculated destination, not where we build.
+			Block buildDestination = destination;
 			//Portal placement in nether needs some extra care
-			if (destination.getWorld().getEnvironment() == Environment.NETHER)
+			if (buildDestination.getWorld().getEnvironment() == Environment.NETHER)
 			{
 				// Base portal placing on different blocks in different world quadrants to make sure portals do not cut corners
 				// Initially we base it on westest, southest block so to rebase, we just need to move base
 
-				if (destination.getX() > 0 && destination.getZ() > 0) // ++ quadrant
+
+				//In general removed moving buildDestination by sizeX/sizeZ - 1 blocks. The final build destination will only differ by one block from calculated destination
+				//so it wasnt needed.
+				//Also merged axis X and Z to >0 parts
+
+
+				if (buildDestination.getX() >= 0 && buildDestination.getZ() >= 0) // ++ quadrant
 				{
 					Bukkit.broadcastMessage("++ quadrant");
-					Bukkit.broadcastMessage("before moving: " + destination.getX() + " " + destination.getY() + " " + destination.getZ());
+					Bukkit.broadcastMessage("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
 
 					// Base on NORTH/WEST
 					if (portalInfo.orientation == 1)
-						destination = destination.getRelative(BlockFace.NORTH, portalInfo.sizeZ - 1);
+						buildDestination = buildDestination.getRelative(BlockFace.NORTH);
 					else
-						destination = destination.getRelative(BlockFace.WEST, portalInfo.sizeX - 1);
+						buildDestination = buildDestination.getRelative(BlockFace.WEST);
 
-					Bukkit.broadcastMessage("after moving: " + destination.getX() + " " + destination.getY() + " " + destination.getZ());
+					Bukkit.broadcastMessage("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
 
 				}
-				else if (destination.getX() < 0 && destination.getZ() < 0) // -- quadrant
+				else if (buildDestination.getX() < 0 && buildDestination.getZ() < 0) // -- quadrant
 				{
 					// Base on SOUTH/EAST
+					// -- is ok by default
+					/*
 					if (portalInfo.orientation == 1)
-						destination = destination.getRelative(BlockFace.SOUTH, portalInfo.sizeZ - 1);
+						buildDestination = buildDestination.getRelative(BlockFace.SOUTH);
 					else
-						destination = destination.getRelative(BlockFace.EAST, portalInfo.sizeX - 1);
+						buildDestination = buildDestination.getRelative(BlockFace.EAST);
+					*/
 				}
-				else if (destination.getX() < 0 && destination.getZ() > 0) // +- quadrant
+				else if (buildDestination.getX() < 0 && buildDestination.getZ() >= 0) // -+ quadrant
 				{
 					// Base on NORTH/EAST
+					// in -+ orientation 0 is ok, it starts on western side by default
 					if (portalInfo.orientation == 1)
-						destination = destination.getRelative(BlockFace.NORTH, portalInfo.sizeZ - 1);
-					else
-						destination = destination.getRelative(BlockFace.EAST, portalInfo.sizeX - 1);
+						buildDestination = buildDestination.getRelative(BlockFace.NORTH);
+					//else
+					//	buildDestination = buildDestination.getRelative(BlockFace.EAST);
 				}
-				else // +- quadrant and (0,0)
+				else if(buildDestination.getX() >= 0 && buildDestination.getZ() < 0) // +- quadrant
+				//in old ways, also X=0 axis and Z=0 axis, all the way from 0,0 till the end, which would be bad
 				{
 					// Base on SOUTH/WEST
-					if (portalInfo.orientation == 1)
-						destination = destination.getRelative(BlockFace.SOUTH, portalInfo.sizeZ - 1);
-					else
-						destination = destination.getRelative(BlockFace.WEST, portalInfo.sizeX - 1);
+					// in +- orientation 1 is ok (it already starts on southest part, leave it)
+					if (portalInfo.orientation == 0)
+						buildDestination = buildDestination.getRelative(BlockFace.WEST);
+					//else
+					//	buildDestination = buildDestination.getRelative(BlockFace.SOUTH);
 
+				}
+				else
+				{
+					//Yeah it is useless and we could remove if from last else, but just to have it for now
+					MLog.warning("Portal destination is not in any quadrant! probably something wrong with math.");
 				}
 			}
 
@@ -87,13 +107,21 @@ public class PortalUtil {
 				minY = PortalsSettings.NETHER_MOVE_PORTALS_WITH_LOWER_Y.integer();
 			}
 
-			if (destination.getY() > maxY)
+
+			//if Y requires a change, change it in both buildDestination & teleport destination, otherwise player would end up somewhere weird
+			//Probably could use a small refactor to a method
+			if (buildDestination.getY() > maxY)
+			{
+				buildDestination = buildDestination.getWorld().getBlockAt(buildDestination.getX(), maxY, buildDestination.getZ());
 				destination = destination.getWorld().getBlockAt(destination.getX(), maxY, destination.getZ());
-			else if (destination.getY() < minY)
+			}
+			else if (buildDestination.getY() < minY)
+			{
+				buildDestination = buildDestination.getWorld().getBlockAt(buildDestination.getX(), minY, buildDestination.getZ());
 				destination = destination.getWorld().getBlockAt(destination.getX(), minY, destination.getZ());
+			}
 
-
-			buildPortal(destination, portalInfo.orientation);
+			buildPortal(buildDestination, portalInfo.orientation);
 		}
 				
 		Location blockLocation = getLocation(destination);
@@ -145,6 +173,9 @@ public class PortalUtil {
 		Block existing = getExistingPortal(info, portalBlock);
 		if (existing != null)
 			return existing;
+
+
+		//Portal doesnt exist, find apprioprate location to put a new portal
 
 		//Try to get to the ground
 		if (destEnvironment == Environment.NORMAL)
@@ -203,7 +234,6 @@ public class PortalUtil {
 				for (Integer z : zCoordinates)
 				{
 					//System.out.println("searching " + x + " " + z);
-
 					Block block = targetWorld.getBlockAt(x, y, z);
 					if (block != null && block.getType() == Material.PORTAL)
 					{
