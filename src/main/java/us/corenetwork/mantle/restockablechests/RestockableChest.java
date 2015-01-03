@@ -1117,7 +1117,11 @@ public class RestockableChest {
 			size = (int) (Math.ceil(size / 9.0) * 9);
 		}
 
-		Inventory inventory = new CraftInventoryCustom(inventoryHolder, size, getCustomName() + " (" + numberDisplay + ")");
+
+
+		Inventory inventory = new CraftInventoryCustom(inventoryHolder, size, getCustomName());
+		//else
+		//	inventory = new CraftInventoryCustom(inventoryHolder, size, getCustomName() + " (" + numberDisplay + ")");
 
 		if (!onlyChest && type != InventoryType.CHEST)
 		{
