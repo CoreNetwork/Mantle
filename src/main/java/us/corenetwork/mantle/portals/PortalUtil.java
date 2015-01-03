@@ -68,36 +68,86 @@ public class PortalUtil {
 	private static Block findBestBuildDestination(Block teleportDestination, PortalInfo originalPortalInfo)
 	{
 		Block buildDestination = teleportDestination;
+        int destX = buildDestination.getX();
+        int destZ = buildDestination.getZ();
 		if (buildDestination.getWorld().getEnvironment() == Environment.NETHER)
 		{
-			if (buildDestination.getX() >= 0 && buildDestination.getZ() >= 0) // ++ quadrant
+			List<Integer> occupiedOnX = getOccupiedSquaresInOwAxisX(originalPortalInfo);
+			List<Integer> occupiedOnZ = getOccupiedSquaresInOwAxisZ(originalPortalInfo);
+            Quadrant quadrant = getQuadrant(buildDestination);
+
+            Bukkit.broadcastMessage(quadrant.name());
+            Bukkit.broadcastMessage("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
+
+
+			//Case 1, original portal fits in one RxR square
+			if (occupiedOnX.size() == 1 && occupiedOnZ.size() == 1)
 			{
-				//Bukkit.broadcastMessage("++ quadrant");
-				//Bukkit.broadcastMessage("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
-				// Base on NORTH/WEST
-				if (originalPortalInfo.orientation == 1)
-					buildDestination = buildDestination.getRelative(BlockFace.NORTH);
-				else
-					buildDestination = buildDestination.getRelative(BlockFace.WEST);
-				//Bukkit.broadcastMessage("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
+                Bukkit.broadcastMessage("original portal fits in one RxR square");
+                switch (quadrant)
+                {
+                    case PLUS_PLUS:
+                        // Base on NORTH/WEST
+                        if (originalPortalInfo.orientation == 1)
+                            buildDestination = buildDestination.getRelative(BlockFace.NORTH);
+                        else
+                            buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                        break;
+                    case MINUS_PLUS:
+                        // Base on NORTH/EAST
+                        if (originalPortalInfo.orientation == 1)
+                            buildDestination = buildDestination.getRelative(BlockFace.NORTH);
+                        break;
+                    case PLUS_MINUS:
+                        // Base on SOUTH/WEST
+                        if (originalPortalInfo.orientation == 0)
+                            buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                        break;
+                }
 			}
-			else if (buildDestination.getX() < 0 && buildDestination.getZ() >= 0) // -+ quadrant
-			{
-				// Base on NORTH/EAST
-				if (originalPortalInfo.orientation == 1)
-					buildDestination = buildDestination.getRelative(BlockFace.NORTH);
-			}
-			else if(buildDestination.getX() >= 0 && buildDestination.getZ() < 0) // +- quadrant
-			{
-				// Base on SOUTH/WEST
-				if (originalPortalInfo.orientation == 0)
-					buildDestination = buildDestination.getRelative(BlockFace.WEST);
-			}
-			else
-			{
-				MLog.warning("Portal destination is not in any quadrant! probably something wrong with math.");
-			}
+            else
+            {
+                Bukkit.broadcastMessage("original portal doesnt fit in one RxR square");
+                //portal is looking north/south, move east/west
+                if (originalPortalInfo.orientation == 0)
+                {
+                    switch (quadrant)
+                    {
+                        case PLUS_MINUS:
+                        case PLUS_PLUS:
+                            if(occupiedOnX.contains(destX-1))
+                                buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                            break;
+
+                        case MINUS_PLUS:
+                        case MINUS_MINUS:
+                            if(!occupiedOnX.contains(destX+1))
+                                buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                            break;
+                    }
+                }
+                //portal is looking east/west, move north/south
+                else
+                {
+                    switch (quadrant)
+                    {
+                        case MINUS_PLUS:
+                        case PLUS_PLUS:
+                            if(occupiedOnX.contains(destZ-1))
+                                buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                            break;
+
+                        case PLUS_MINUS:
+                        case MINUS_MINUS:
+                            if(!occupiedOnX.contains(destZ+1))
+                                buildDestination = buildDestination.getRelative(BlockFace.WEST);
+                            break;
+                    }
+                }
+            }
+            Bukkit.broadcastMessage("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
 		}
+
 		return buildDestination;
 	}
 
@@ -277,7 +327,7 @@ public class PortalUtil {
 				}
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -313,7 +363,7 @@ public class PortalUtil {
 	{
 		SchematicBlock[] rotatedPortal = SchematicBlock.getRotatedSchematic(SchematicBlock.portal, rotation);
 		SchematicBlock.placeSchematic(rotatedPortal, startingBlock);
- 		
+
 		//Clear out nearby lava
 		for (int x = -2; x < 4; x++)
 		{
@@ -322,7 +372,7 @@ public class PortalUtil {
 				for (int z = -2; z < 4; z++)
 				{
 					Block block = startingBlock.getRelative(x, y, z);
-					
+
 					if (block.getType() == Material.LAVA || block.getType() == Material.STATIONARY_LAVA)
 						block.setType(Material.AIR);
 				}
@@ -356,10 +406,10 @@ public class PortalUtil {
 
 		return block;
 	}
-	
+
 	public static Block findBestSignLocation(ArrayList<Block> blocks)
 	{
-		//Try to find block that has something on the opposite side (for example two sides of portal frame). 
+		//Try to find block that has something on the opposite side (for example two sides of portal frame).
 		// That ensures sign will be inside portal
 		for (Block b : blocks)
 		{
@@ -437,4 +487,31 @@ public class PortalUtil {
 
 		return list;
 	}
+
+    enum Quadrant{
+        PLUS_PLUS,
+        MINUS_MINUS,
+        MINUS_PLUS,
+        PLUS_MINUS
+    }
+
+    private static Quadrant getQuadrant(Block block)
+    {
+        if (block.getX() >= 0 && block.getZ() >= 0)
+        {
+            return Quadrant.PLUS_PLUS;
+        }
+        else if (block.getX() < 0 && block.getZ() >= 0)
+        {
+            return Quadrant.MINUS_PLUS;
+        }
+        else if (block.getX() >= 0 && block.getZ() < 0)
+        {
+            return  Quadrant.PLUS_MINUS;
+        }
+        else
+        {
+            return Quadrant.MINUS_MINUS;
+        }
+    }
 }
