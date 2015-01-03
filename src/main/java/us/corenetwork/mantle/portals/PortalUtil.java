@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.portals;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.server.v1_8_R1.BlockDoor;
@@ -205,43 +206,57 @@ public class PortalUtil {
 		int ratio = targetWorld.getEnvironment() == Environment.NETHER ? 1 : PortalsSettings.PORTAL_RATIO.integer();
 
 		//We search in RxR square in overworld where R = ratio of the portal
-		int overworldSquareStartX = targetBlock.getX();
-		int overworldSquareEndX = overworldSquareStartX + (ratio - 1);
-		int overworldSquareStartZ = targetBlock.getZ();
-		int overworldSquareEndZ = overworldSquareStartZ + (ratio - 1);
-		int centerX = overworldSquareStartX + ratio / 2;
-		int centerZ = overworldSquareStartZ + ratio / 2;
+		int originalSquareStartX = targetBlock.getX();
+		int originalSquareStartZ = targetBlock.getZ();
 
-		//Increase search range for additional portal blocks
-		overworldSquareStartX -= sourcePortalInfo.portalBlocksLeftWest * ratio;
-		overworldSquareEndX += sourcePortalInfo.portalBlocksLeftEast * ratio;
-		overworldSquareStartZ -= sourcePortalInfo.portalBlocksLeftNorth * ratio;
-		overworldSquareEndZ += sourcePortalInfo.portalBlocksLeftSouth * ratio;
+		//Remove after removing debug:
+		int originalSquareEndX = originalSquareStartX + (ratio - 1);
+		int originalSquareEndZ = originalSquareStartZ + (ratio - 1);
 
 		Bukkit.broadcastMessage("PBL:" + sourcePortalInfo.portalBlocksLeftNorth + " " + sourcePortalInfo.portalBlocksLeftSouth + " " + sourcePortalInfo.portalBlocksLeftEast + " " + sourcePortalInfo.portalBlocksLeftWest);
 		Bukkit.broadcastMessage("Source coordinates:" + sourcePortalBlock.getX() + " " + sourcePortalBlock.getY() + " " + sourcePortalBlock.getZ());
 		Bukkit.broadcastMessage("Direct coordinates:" + targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
-		Bukkit.broadcastMessage("Searching X:" + overworldSquareStartX + "-" + overworldSquareEndX + " Z:" + overworldSquareStartZ + "-" + overworldSquareEndZ + " Center:" + centerX + "," + centerZ);
+		Bukkit.broadcastMessage("Original square:" + originalSquareStartX + "-" + originalSquareEndX + " Z:" + originalSquareStartZ + "-" + originalSquareEndZ);
 
-		List<Integer> xCoordinates = getIncrementingNumbersInRange(centerX, overworldSquareStartX, overworldSquareEndX);
-		List<Integer> zCoordinates = getIncrementingNumbersInRange(centerZ, overworldSquareStartZ, overworldSquareEndZ);
+		//Additional squares we search based on number of portal blocks
+		List<Integer> squaresX = getIncrementingNumbersInRange(0, -sourcePortalInfo.portalBlocksLeftWest, sourcePortalInfo.portalBlocksLeftEast);
+		List<Integer> squaresZ = getIncrementingNumbersInRange(0, -sourcePortalInfo.portalBlocksLeftNorth, sourcePortalInfo.portalBlocksLeftSouth);
 
-		for (Integer y : getIncrementingNumbersInRange(targetBlock.getY(), minY, maxY))
+		Bukkit.broadcastMessage("Square offsets to search X:" + squaresX);
+		Bukkit.broadcastMessage("Square offsets to search Z:" + squaresZ);
+
+		List<Integer> yRange = Arrays.asList(new Integer[]{targetBlock.getY()});//getIncrementingNumbersInRange(targetBlock.getY(), minY, maxY);
+
+		// Loop through all RxR squares in X range
+		for (Integer squareOffsetX : squaresX)
 		{
-			//int y = targetBlock.getY();
-			for (Integer x : xCoordinates)
+			// Loop through all RxR squares in Z range
+			for (Integer squareOffsetZ : squaresZ)
 			{
-				for (Integer z : zCoordinates)
+				// Loop through all RxR squares in Y range
+				for (Integer y : yRange)
 				{
-					//System.out.println("searching " + x + " " + z);
-					Block block = targetWorld.getBlockAt(x, y, z);
-					if (block != null && block.getType() == Material.PORTAL)
+					// Loop through all block in square
+					int startX = originalSquareStartX + squareOffsetX * ratio;
+					int endX = startX + ratio;
+
+					int startZ = originalSquareEndX + squareOffsetZ * ratio;
+					int endZ = startZ + ratio;
+
+					for (int x = startX; x < endX; x++)
 					{
-						block = getFarthestPortalBlock(block, BlockFace.DOWN);
-						return block;
+						for (int z = startZ; z < endZ; z++)
+						{
+							Block block = targetWorld.getBlockAt(x, y, z);
+							if (block != null && block.getType() == Material.PORTAL)
+							{
+								block = getFarthestPortalBlock(block, BlockFace.DOWN);
+								return block;
+							}
+						}
 					}
 				}
-			}
+		}
 		}
 		
 		return null;
