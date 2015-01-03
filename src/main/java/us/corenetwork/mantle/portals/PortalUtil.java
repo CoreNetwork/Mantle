@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,7 +12,6 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
-import us.corenetwork.mantle.MLog;
 
 import java.util.ArrayList;
 
@@ -350,7 +348,14 @@ public class PortalUtil {
 
 		for(int i = start; i <= end; i++)
 		{
-			int sqaureCoord = i / ratio;
+			int sqaureCoord;
+
+            if (i < 0)
+                //sqaureCoord = -((Math.abs(i)-1) / ratio + 1);
+                sqaureCoord = (int) Math.floor(i * (1.0/ratio));
+            else
+                sqaureCoord = i / ratio;
+
 			if(!occupiedSquares.contains(sqaureCoord))
 			{
 				occupiedSquares.add(sqaureCoord);
