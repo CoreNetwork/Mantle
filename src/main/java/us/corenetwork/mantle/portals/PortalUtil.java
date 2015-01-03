@@ -1,9 +1,10 @@
 package us.corenetwork.mantle.portals;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.BlockDoor;
+
+import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,88 +17,35 @@ import us.corenetwork.mantle.MLog;
 
 import java.util.ArrayList;
 
-public class PortalUtil {	
-	public static Location processTeleport(Entity entity, Block currentPortalBlock)
+public class PortalUtil {
+
+	public static Location processTeleport(Entity entity, Block entryPortalBlock)
 	{
-		PortalInfo portalInfo = getPortalInfo(currentPortalBlock);
-		Block portalBlock = portalInfo.entryBlock;
-		Block destination = getOtherSide(portalInfo);
+		Block destinationBlock = prepareDestinationBlock(entryPortalBlock);
+		return finalizeTeleportDestination(entity, destinationBlock);
+	}
 
-		
-		destination.getChunk().load();
-		
-		if (destination.getType() != Material.PORTAL)
+	/**
+	 * Return block to which portal leads. Create new portal on the other side if necessary.
+	 * @param entryPortalBlock - portal block that initiaded the teleport.
+	 * @return teleportDestination - block where entryPortalBlock leads
+	 */
+	private static Block prepareDestinationBlock(Block entryPortalBlock)
+	{
+		PortalInfo portalInfo = PortalInfo.getPortalInfo(entryPortalBlock);
+		Block teleportDestination = getOtherSide(portalInfo);
+
+		teleportDestination.getChunk().load();
+
+		//If != PORTAL, create a new portal.
+		if (teleportDestination.getType() != Material.PORTAL)
 		{
-			//Added separate ref to the place we want to build at. We still want to port the player to correct ratio calculated destination, not where we build.
-			Block buildDestination = destination;
-			//Portal placement in nether needs some extra care
-			if (buildDestination.getWorld().getEnvironment() == Environment.NETHER)
-			{
-				// Base portal placing on different blocks in different world quadrants to make sure portals do not cut corners
-				// Initially we base it on westest, southest block so to rebase, we just need to move base
+			Block buildDestination = findBestBuildDestination(teleportDestination, portalInfo);
 
-
-				//In general removed moving buildDestination by sizeX/sizeZ - 1 blocks. The final build destination will only differ by one block from calculated destination
-				//so it wasnt needed.
-				//Also merged axis X and Z to >0 parts
-
-
-				if (buildDestination.getX() >= 0 && buildDestination.getZ() >= 0) // ++ quadrant
-				{
-					Bukkit.broadcastMessage("++ quadrant");
-					Bukkit.broadcastMessage("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
-
-					// Base on NORTH/WEST
-					if (portalInfo.orientation == 1)
-						buildDestination = buildDestination.getRelative(BlockFace.NORTH);
-					else
-						buildDestination = buildDestination.getRelative(BlockFace.WEST);
-
-					Bukkit.broadcastMessage("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
-
-				}
-				else if (buildDestination.getX() < 0 && buildDestination.getZ() < 0) // -- quadrant
-				{
-					// Base on SOUTH/EAST
-					// -- is ok by default
-					/*
-					if (portalInfo.orientation == 1)
-						buildDestination = buildDestination.getRelative(BlockFace.SOUTH);
-					else
-						buildDestination = buildDestination.getRelative(BlockFace.EAST);
-					*/
-				}
-				else if (buildDestination.getX() < 0 && buildDestination.getZ() >= 0) // -+ quadrant
-				{
-					// Base on NORTH/EAST
-					// in -+ orientation 0 is ok, it starts on western side by default
-					if (portalInfo.orientation == 1)
-						buildDestination = buildDestination.getRelative(BlockFace.NORTH);
-					//else
-					//	buildDestination = buildDestination.getRelative(BlockFace.EAST);
-				}
-				else if(buildDestination.getX() >= 0 && buildDestination.getZ() < 0) // +- quadrant
-				//in old ways, also X=0 axis and Z=0 axis, all the way from 0,0 till the end, which would be bad
-				{
-					// Base on SOUTH/WEST
-					// in +- orientation 1 is ok (it already starts on southest part, leave it)
-					if (portalInfo.orientation == 0)
-						buildDestination = buildDestination.getRelative(BlockFace.WEST);
-					//else
-					//	buildDestination = buildDestination.getRelative(BlockFace.SOUTH);
-
-				}
-				else
-				{
-					//Yeah it is useless and we could remove if from last else, but just to have it for now
-					MLog.warning("Portal destination is not in any quadrant! probably something wrong with math.");
-				}
-			}
-
-
-			int maxY = 0;
-			int minY = 0;
-			if (portalBlock.getWorld().getEnvironment() == Environment.NETHER)
+			//Moving teleportDestination & buildDestination to config limits.
+			int minY;
+			int maxY;
+			if (buildDestination.getWorld().getEnvironment() == Environment.NORMAL)
 			{
 				maxY = PortalsSettings.OVERWORLD_MOVE_PORTALS_WITH_HIGHER_Y.integer();
 				minY = PortalsSettings.OVERWORLD_MOVE_PORTALS_WITH_LOWER_Y.integer();
@@ -108,28 +56,69 @@ public class PortalUtil {
 				minY = PortalsSettings.NETHER_MOVE_PORTALS_WITH_LOWER_Y.integer();
 			}
 
-
-			//if Y requires a change, change it in both buildDestination & teleport destination, otherwise player would end up somewhere weird
-			//Probably could use a small refactor to a method
-			if (buildDestination.getY() > maxY)
-			{
-				buildDestination = buildDestination.getWorld().getBlockAt(buildDestination.getX(), maxY, buildDestination.getZ());
-				destination = destination.getWorld().getBlockAt(destination.getX(), maxY, destination.getZ());
-			}
-			else if (buildDestination.getY() < minY)
-			{
-				buildDestination = buildDestination.getWorld().getBlockAt(buildDestination.getX(), minY, buildDestination.getZ());
-				destination = destination.getWorld().getBlockAt(destination.getX(), minY, destination.getZ());
-			}
+			teleportDestination = moveToYRange(teleportDestination, minY, maxY);
+			buildDestination = moveToYRange(buildDestination, minY, maxY);
 
 			buildPortal(buildDestination, portalInfo.orientation);
 		}
-				
-		Location blockLocation = getLocation(destination);
-		blockLocation.setPitch(entity.getLocation().getPitch());
-		blockLocation.setYaw(entity.getLocation().getYaw());
 
-		return blockLocation;		
+		return teleportDestination;
+	}
+
+	private static Block findBestBuildDestination(Block teleportDestination, PortalInfo originalPortalInfo)
+	{
+		Block buildDestination = teleportDestination;
+		if (buildDestination.getWorld().getEnvironment() == Environment.NETHER)
+		{
+			if (buildDestination.getX() >= 0 && buildDestination.getZ() >= 0) // ++ quadrant
+			{
+				//Bukkit.broadcastMessage("++ quadrant");
+				//Bukkit.broadcastMessage("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
+				// Base on NORTH/WEST
+				if (originalPortalInfo.orientation == 1)
+					buildDestination = buildDestination.getRelative(BlockFace.NORTH);
+				else
+					buildDestination = buildDestination.getRelative(BlockFace.WEST);
+				//Bukkit.broadcastMessage("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
+			}
+			else if (buildDestination.getX() < 0 && buildDestination.getZ() >= 0) // -+ quadrant
+			{
+				// Base on NORTH/EAST
+				if (originalPortalInfo.orientation == 1)
+					buildDestination = buildDestination.getRelative(BlockFace.NORTH);
+			}
+			else if(buildDestination.getX() >= 0 && buildDestination.getZ() < 0) // +- quadrant
+			{
+				// Base on SOUTH/WEST
+				if (originalPortalInfo.orientation == 0)
+					buildDestination = buildDestination.getRelative(BlockFace.WEST);
+			}
+			else
+			{
+				MLog.warning("Portal destination is not in any quadrant! probably something wrong with math.");
+			}
+		}
+		return buildDestination;
+	}
+
+
+	private static Block moveToYRange(Block block, int minY, int maxY)
+	{
+		int targetY = block.getY();
+		if (block.getY() > maxY)
+			targetY = maxY;
+		else if (block.getY() < minY)
+			targetY = minY;
+		return block.getWorld().getBlockAt(block.getX(), targetY, block.getZ());
+	}
+
+	private static Location finalizeTeleportDestination(Entity entity, Block teleportDestinationBlock)
+	{
+		Location teleportDestinationLocation = new Location(teleportDestinationBlock.getWorld(), teleportDestinationBlock.getX() + 0.5, teleportDestinationBlock.getY(), teleportDestinationBlock.getZ() + 0.5);
+		teleportDestinationLocation.setPitch(entity.getLocation().getPitch());
+		teleportDestinationLocation.setYaw(entity.getLocation().getYaw());
+
+		return teleportDestinationLocation;
 	}
 
 	public static Block getOtherSide(Block block)
@@ -157,7 +146,7 @@ public class PortalUtil {
 			modifier = 1 / modifier;
 			destEnvironment = Environment.NETHER;
 		}
-		
+
 		World destWorld = null;
 		for (World world : Bukkit.getServer().getWorlds())
 		{
@@ -178,6 +167,7 @@ public class PortalUtil {
 
 		//Portal doesnt exist, find apprioprate location to put a new portal
 
+		//Not really sure what is going on here
 		//Try to get to the ground
 		if (destEnvironment == Environment.NORMAL)
 		{
@@ -199,34 +189,62 @@ public class PortalUtil {
 		Block sourcePortalBlock = sourcePortalInfo.entryBlock;
 		World targetWorld = targetBlock.getWorld();
 
-		// Nether -> Overworld
-
-		int minY = PortalsSettings.OVERWORLD_MIN_Y.integer();
-		int maxY = PortalsSettings.OVERWORLD_MAX_Y.integer();
+		//Init stuff based on world
 		int ratio = targetWorld.getEnvironment() == Environment.NETHER ? 1 : PortalsSettings.PORTAL_RATIO.integer();
+		//Search only where portals can exist
+		int minY = 0;
+		int maxY = 256;
+		if(targetWorld.getEnvironment() == Environment.NORMAL)
+		{
+			minY = PortalsSettings.OVERWORLD_MIN_Y.integer();
+			maxY = PortalsSettings.OVERWORLD_MAX_Y.integer();
+		}
+		else if(targetWorld.getEnvironment() == Environment.NETHER)
+		{
+			minY = PortalsSettings.NETHER_MIN_Y.integer();
+			maxY = PortalsSettings.NETHER_MAX_Y.integer();
+		}
+		List<Integer> yRange = getIncrementingNumbersInRange(targetBlock.getY(), minY, maxY);
 
 		//We search in RxR square in overworld where R = ratio of the portal
 		int originalSquareStartX = targetBlock.getX();
 		int originalSquareStartZ = targetBlock.getZ();
 
-		//Remove after removing debug:
-		int originalSquareEndX = originalSquareStartX + (ratio - 1);
-		int originalSquareEndZ = originalSquareStartZ + (ratio - 1);
+				//Remove after removing debug:
+				int originalSquareEndX = originalSquareStartX + (ratio - 1);
+				int originalSquareEndZ = originalSquareStartZ + (ratio - 1);
 
-		Bukkit.broadcastMessage("PBL:" + sourcePortalInfo.portalBlocksLeftNorth + " " + sourcePortalInfo.portalBlocksLeftSouth + " " + sourcePortalInfo.portalBlocksLeftEast + " " + sourcePortalInfo.portalBlocksLeftWest);
-		Bukkit.broadcastMessage("Source coordinates:" + sourcePortalBlock.getX() + " " + sourcePortalBlock.getY() + " " + sourcePortalBlock.getZ());
-		Bukkit.broadcastMessage("Direct coordinates:" + targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
-		Bukkit.broadcastMessage("Original square:" + originalSquareStartX + "-" + originalSquareEndX + " Z:" + originalSquareStartZ + "-" + originalSquareEndZ);
+				Bukkit.broadcastMessage("PBL:" + sourcePortalInfo.portalBlocksLeftNorth + " " + sourcePortalInfo.portalBlocksLeftSouth + " " + sourcePortalInfo.portalBlocksLeftEast + " " + sourcePortalInfo.portalBlocksLeftWest);
+				Bukkit.broadcastMessage("Source coordinates:" + sourcePortalBlock.getX() + " " + sourcePortalBlock.getY() + " " + sourcePortalBlock.getZ());
+				Bukkit.broadcastMessage("Direct coordinates:" + targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
+				Bukkit.broadcastMessage("Original square:" + originalSquareStartX + "-" + originalSquareEndX + " Z:" + originalSquareStartZ + "-" + originalSquareEndZ);
 
 		//Additional squares we search based on number of portal blocks
-		List<Integer> squaresX = getIncrementingNumbersInRange(0, -sourcePortalInfo.portalBlocksLeftWest, sourcePortalInfo.portalBlocksLeftEast);
-		List<Integer> squaresZ = getIncrementingNumbersInRange(0, -sourcePortalInfo.portalBlocksLeftNorth, sourcePortalInfo.portalBlocksLeftSouth);
+		List<Integer> squaresX;
+		List<Integer> squaresZ;
+		if(targetWorld.getEnvironment() == Environment.NORMAL)
+		{
+			squaresX = getIncrementingNumbersInRange(0, -sourcePortalInfo.portalBlocksLeftWest, sourcePortalInfo.portalBlocksLeftEast);
+			squaresZ = getIncrementingNumbersInRange(0, -sourcePortalInfo.portalBlocksLeftNorth, sourcePortalInfo.portalBlocksLeftSouth);
+		}
+		else
+		{
 
-		Bukkit.broadcastMessage("Square offsets to search X:" + squaresX);
-		Bukkit.broadcastMessage("Square offsets to search Z:" + squaresZ);
+			//Ugly way of getting min/max
+			List<Integer> rawSquaresInNX = getOccupiedSquaresInOwAxisX(sourcePortalInfo);
+			int minXSquare = Collections.min(rawSquaresInNX) - originalSquareStartX;
+			int maxXSquare = Collections.max(rawSquaresInNX) - originalSquareStartX;
 
-		//List<Integer> yRange = Arrays.asList(new Integer[]{targetBlock.getY()});
-		List<Integer> yRange = getIncrementingNumbersInRange(targetBlock.getY(), minY, maxY);
+			List<Integer> rawSquaresInNZ = getOccupiedSquaresInOwAxisZ(sourcePortalInfo);
+			int minZSquare = Collections.min(rawSquaresInNZ) - originalSquareStartZ;
+			int maxZSquare = Collections.max(rawSquaresInNZ) - originalSquareStartZ;
+
+			squaresX = getIncrementingNumbersInRange(0, minXSquare, maxXSquare);
+			squaresZ = getIncrementingNumbersInRange(0, minZSquare, maxZSquare);
+		}
+				Bukkit.broadcastMessage("Square offsets to search X:" + squaresX);
+				Bukkit.broadcastMessage("Square offsets to search Z:" + squaresZ);
+
 
 		// Loop through all RxR squares in X range
 		for (Integer squareOffsetX : squaresX)
@@ -234,8 +252,6 @@ public class PortalUtil {
 			// Loop through all RxR squares in Z range
 			for (Integer squareOffsetZ : squaresZ)
 			{
-
-				// Loop through all block in square
 				int startX = originalSquareStartX + squareOffsetX * ratio;
 				int endX = startX + ratio;
 
@@ -245,6 +261,7 @@ public class PortalUtil {
 				// Loop through all RxR squares in Y range
 				for (Integer y : yRange)
 				{
+					// Loop through all block in square
 					for (int x = startX; x < endX; x++)
 					{
 						for (int z = startZ; z < endZ; z++)
@@ -258,87 +275,43 @@ public class PortalUtil {
 						}
 					}
 				}
-		}
+			}
 		}
 		
 		return null;
 	}
 
-	private static final SchematicBlock[] portal = new SchematicBlock[] {
-		//Front view:
-		// OOOO
-		// OPPO
-		// OPPO
-		// OXPO
-		// OOOO
-		// O = Obsidian
-		// P = Portal
-		// X = Origin portal block
-	
-		//Side view:
-		// AOA
-		// AOA
-		// AOA
-		// AOA
-		// OOO
-		// A = Air
-		
-		//Top frame
-		new SchematicBlock(-1, 3, 0, Material.OBSIDIAN),
-		new SchematicBlock(0, 3, 0, Material.OBSIDIAN),
-		new SchematicBlock(1, 3, 0, Material.OBSIDIAN),
-		new SchematicBlock(2, 3, 0, Material.OBSIDIAN),
-		
-		//Bottom frame
-		new SchematicBlock(-1, -1, 0, Material.OBSIDIAN),
-		new SchematicBlock(0, -1, 0, Material.OBSIDIAN),
-		new SchematicBlock(1, -1, 0, Material.OBSIDIAN),
-		new SchematicBlock(2, -1, 0, Material.OBSIDIAN),
-		
-		//Left side
-		new SchematicBlock(-1, -1, 0, Material.OBSIDIAN),
-		new SchematicBlock(-1, 0, 0, Material.OBSIDIAN),
-		new SchematicBlock(-1, 1, 0, Material.OBSIDIAN),
-		new SchematicBlock(-1, 2, 0, Material.OBSIDIAN),
+	//Get a list of X coords of occupied squares. This will assume you are asking with OW portal, wont check on its own
+	private static List<Integer> getOccupiedSquaresInOwAxisX(PortalInfo portalInfo)
+	{
+		return getOccupiedSquaresInOwInRange(portalInfo.entryBlock.getX() - portalInfo.portalBlocksLeftWest, portalInfo.entryBlock.getX() + portalInfo.portalBlocksLeftEast);
+	}
 
-		//Right side
-		new SchematicBlock(2, -1, 0, Material.OBSIDIAN),
-		new SchematicBlock(2, 0, 0, Material.OBSIDIAN),
-		new SchematicBlock(2, 1, 0, Material.OBSIDIAN),
-		new SchematicBlock(2, 2, 0, Material.OBSIDIAN),
-		
-		//Obsidian ledge
-		new SchematicBlock(0, -1, 1, Material.OBSIDIAN, true),
-		new SchematicBlock(1, -1, 1, Material.OBSIDIAN, true),
-		new SchematicBlock(0, -1, -1, Material.OBSIDIAN, true),
-		new SchematicBlock(1, -1, -1, Material.OBSIDIAN, true),
-		
-		//Portal blocks
-		new SchematicBlock(0, 0, 0, Material.PORTAL),
-		new SchematicBlock(0, 1, 0, Material.PORTAL),
-		new SchematicBlock(0, 2, 0, Material.PORTAL),
-		new SchematicBlock(1, 0, 0, Material.PORTAL),
-		new SchematicBlock(1, 1, 0, Material.PORTAL),
-		new SchematicBlock(1, 2, 0, Material.PORTAL),
-		
-		//Air pockets around portal
-		new SchematicBlock(0, 0, 1, Material.AIR),
-		new SchematicBlock(0, 1, 1, Material.AIR),
-		new SchematicBlock(0, 2, 1, Material.AIR),
-		new SchematicBlock(1, 0, 1, Material.AIR),
-		new SchematicBlock(1, 1, 1, Material.AIR),
-		new SchematicBlock(1, 2, 1, Material.AIR),
-		new SchematicBlock(0, 0, -1, Material.AIR),
-		new SchematicBlock(0, 1, -1, Material.AIR),
-		new SchematicBlock(0, 2, -1, Material.AIR),
-		new SchematicBlock(1, 0, -1, Material.AIR),
-		new SchematicBlock(1, 1, -1, Material.AIR),
-		new SchematicBlock(1, 2, -1, Material.AIR)
+	//Get a list of Z coords of occupied squares. This will assume you are asking with OW portal, wont check on its own
+	private static List<Integer> getOccupiedSquaresInOwAxisZ(PortalInfo portalInfo)
+	{
+		return getOccupiedSquaresInOwInRange(portalInfo.entryBlock.getZ() - portalInfo.portalBlocksLeftNorth, portalInfo.entryBlock.getZ() + portalInfo.portalBlocksLeftSouth);
+	}
 
-	};
+	private static List<Integer> getOccupiedSquaresInOwInRange(int start, int end)
+	{
+		List<Integer> occupiedSquares = new LinkedList<>();
+		int ratio = PortalsSettings.PORTAL_RATIO.integer();
+
+		for(int i = start; i <= end; i++)
+		{
+			int sqaureCoord = i / ratio;
+			if(!occupiedSquares.contains(sqaureCoord))
+			{
+				occupiedSquares.add(sqaureCoord);
+			}
+		}
+		return occupiedSquares;
+	}
+
 	public static void buildPortal(Block startingBlock, int rotation)
 	{
-		SchematicBlock[] rotatedPortal = SchematicBlock.getRotatedSchematic(portal, rotation);
+		SchematicBlock[] rotatedPortal = SchematicBlock.getRotatedSchematic(SchematicBlock.portal, rotation);
 		SchematicBlock.placeSchematic(rotatedPortal, startingBlock);
  		
 		//Clear out nearby lava
@@ -355,93 +328,19 @@ public class PortalUtil {
 				}
 			}
 		}
-
-	}
-	
-	private static Location getLocation(Block block)
-	{
-		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
 	}
 
-	public static PortalInfo getPortalInfo(Block block)
+	public static int getPortalBlockOrientation(Block block)
 	{
-		block = getFarthestPortalBlock(block, BlockFace.DOWN);
-
-		PortalInfo info = new PortalInfo();
-		info.sizeX = 1;
-		info.sizeZ = 1;
-		info.orientation = getPortalBlockOrientation(block);
-
-		Block secondBlock = block;
-		if (info.orientation == 1)
+		byte data = block.getData();
+		if ((data & 3) == 2) //Portal block is rotated Z way
 		{
-			//Find size in Z-
-			while (true)
-			{
-				Block neighbour = secondBlock.getRelative(BlockFace.SOUTH);
-				if (neighbour.getType() != Material.PORTAL)
-					break;
-
-				info.portalBlocksLeftSouth++;
-				info.sizeZ++;
-
-				secondBlock = neighbour;
-			}
-
-			//Find size in Z+
-			secondBlock = block;
-			while (true)
-			{
-				Block neighbour = secondBlock.getRelative(BlockFace.NORTH);
-				if (neighbour.getType() != Material.PORTAL)
-					break;
-
-				info.portalBlocksLeftNorth++;
-				info.sizeZ++;
-
-				secondBlock = neighbour;
-			}
+			return 1;
 		}
 		else
 		{
-			//Find size in X+
-			secondBlock = block;
-			while (true)
-			{
-				Block neighbour = secondBlock.getRelative(BlockFace.EAST);
-				if (neighbour.getType() != Material.PORTAL)
-					break;
-
-				info.portalBlocksLeftEast++;
-				info.sizeX++;
-
-				secondBlock = neighbour;
-			}
-
-			secondBlock = block;
-			//Find size in X-
-			while (true)
-			{
-				Block neighbour = secondBlock.getRelative(BlockFace.WEST);
-				if (neighbour.getType() != Material.PORTAL)
-					break;
-
-				info.portalBlocksLeftWest++;
-				info.sizeX++;
-
-				secondBlock = neighbour;
-			}
+			return 0;
 		}
-
-		info.entryBlock = block;
-
-		return info;
-	}
-
-	public static Block getPortalBlockWithLowestCoordinates(Block block, int portalOrientation)
-	{
-		BlockFace direction = portalOrientation == 0 ? BlockFace.WEST : BlockFace.SOUTH;
-		return getFarthestPortalBlock(block, direction);
 	}
 
 	public static Block getFarthestPortalBlock(Block block, BlockFace direction)
@@ -510,32 +409,11 @@ public class PortalUtil {
 		return blocks.get(0);
 	}
 
-	public static double getFractionPart(double a)
-	{
-		return a - (int) a;
-	}
-
-	public static int getPortalBlockOrientation(Block block)
-	{
-		byte data = block.getData();
-		if ((data & 3) == 2) //Portal block is rotated Z way
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-
-	}
-
 	// Return list of numbers that will move away equally from center
 	// For example for parameters 0,-2,2: 0, 1, -1, 2, -2
-	// Can anyone come up with better name please?
 	public static List<Integer> getIncrementingNumbersInRange(int start, int min, int max)
 	{
-		LinkedList list = new LinkedList<Integer>();
-
+		LinkedList<Integer> list = new LinkedList<Integer>();
 
 		int stop = Math.max(Math.abs(min), Math.abs(max));
 		max-= start;
