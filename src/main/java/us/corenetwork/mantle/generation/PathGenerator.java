@@ -103,6 +103,12 @@ public class PathGenerator {
 
 		processTile(firstTile, startX, startZ, 1, -1);
 
+		if (pixels.isEmpty())
+		{
+			MLog.warning("Nothing was generated!");
+			return;
+		}
+
 		MLog.info("Generating image");
 		
 		int highestX = 0;
