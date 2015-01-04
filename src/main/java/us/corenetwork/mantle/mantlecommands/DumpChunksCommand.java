@@ -62,7 +62,7 @@ public class DumpChunksCommand extends BaseMantleCommand {
             Method methodGetPlayerChunk = map.getClass().getDeclaredMethod("a", int.class, int.class, boolean.class);
             methodGetPlayerChunk.setAccessible(true);
 
-            Class playerChunkClass = Class.forName("net.minecraft.server.v1_7_R4.PlayerChunk");
+            Class playerChunkClass = Class.forName("net.minecraft.server.v1_8_R1.PlayerChunk");
             Field fieldPlayerList = playerChunkClass.getDeclaredField("b");
             fieldPlayerList.setAccessible(true);
 
