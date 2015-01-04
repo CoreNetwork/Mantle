@@ -98,6 +98,7 @@ public class AnimalSpawner {
 			break;
 		case RABBIT:
 			handleRabbit(configSection, entity);
+			break;
 
 		}
 	}
