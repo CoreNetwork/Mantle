@@ -65,22 +65,35 @@ public class PortalsListener implements Listener {
 			Claim sourceClaim = GriefPrevention.instance.dataStore.getClaimAt(clicked.getLocation(), true, null);
 			if (sourceClaim == null || sourceClaim.allowBuild(player, Material.STONE) == null)
 			{
-				Location destination = PortalUtil.getOtherSide(clicked).getLocation();
-				Claim claim = GriefPrevention.instance.dataStore.getClaimAt(destination, true, null);
+				Block otherSide = PortalUtil.getOtherSideExact(clicked);
 
-				if (claim != null && claim.allowBuild(player, Material.STONE) != null)
+				Set<Claim> claims = new HashSet<>();
+				claims.addAll(getClaimsAround(otherSide));
+
+				Block otherOtherSide = PortalUtil.getOtherSideExact(otherSide);
+				claims.addAll(getClaimsAround(otherOtherSide));
+				
+				boolean foundConflict = false;
+				for(Claim claim : claims)
 				{
-					String owner = claim.getOwnerName();
-					if (owner == null)
-						owner = "ADMIN";
-					
-					String message = PortalsSettings.MESSAGE_CANT_MAKE_PORTAL.string();
-					message = message.replace("<OtherDimension>", clicked.getWorld().getEnvironment() == Environment.NORMAL ? "Nether" : "Overworld");
-					message = message.replace("<Owner>", owner);
+					if (claim.allowBuild(player, Material.STONE) != null)
+					{
+						String owner = claim.getOwnerName();
 
-					Util.Message(message, player);
+						if (owner == null)
+							owner = "ADMIN";
+
+						String message = PortalsSettings.MESSAGE_CANT_MAKE_PORTAL.string();
+						message = message.replace("<OtherDimension>", claim.getLesserBoundaryCorner().getWorld().getEnvironment() == Environment.NETHER ? "Nether" : "Overworld");
+						message = message.replace("<Owner>", owner);
+
+						Util.Message(message, player);
+						foundConflict = true;
+						break;
+					}
 				}
-				else
+
+				if(!foundConflict)
 				{
 					Util.Message(PortalsSettings.MESSAGE_CAN_MAKE_PORTAL.string(), player);
 				}
