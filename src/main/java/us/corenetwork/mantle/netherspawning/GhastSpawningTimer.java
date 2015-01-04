@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class GhastSpawningTimer implements Runnable {
@@ -56,6 +57,10 @@ public class GhastSpawningTimer implements Runnable {
 
             if (!spawnBlock.isEmpty())
                 continue;
+
+            if (!Util.isInWorldBorderBounds(spawnBlock))
+                continue;
+
 
             int[] playerDistances = NetherSpawningTimer.getDistanceToNearestFarthestPlayer(spawnBlock.getLocation());
             if (playerDistances[0] < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer() || playerDistances[1] > NetherSpawningSettings.FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED.integer())

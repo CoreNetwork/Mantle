@@ -12,6 +12,7 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.Util;
 
 public class NetherSpawningTimer implements Runnable {
     private static World nether;
@@ -58,6 +59,10 @@ public class NetherSpawningTimer implements Runnable {
                 continue;
             if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
                 continue;
+
+            if (!Util.isInWorldBorderBounds(block))
+                continue;
+
 
             int[] playerDistances = getDistanceToNearestFarthestPlayer(block.getLocation());
             if (playerDistances[0] < NetherSpawningSettings.NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED.integer() || playerDistances[1] > NetherSpawningSettings.FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED.integer())
