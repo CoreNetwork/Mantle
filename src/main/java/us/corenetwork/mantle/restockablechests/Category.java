@@ -36,11 +36,6 @@ public class Category {
 		this.maxDist = (ArrayList<Integer>) categoryMap.get("compassMaxDistance");
 	}
 
-	public int getPerPlayerTotalLimit()
-	{
-		return perPlayerTotalLimit;
-	}
-
 	public static List<Category> getCategories(List<Map<?, ?>> categoriesListMap)
 	{
 		List<Category> categories = new ArrayList<Category>();

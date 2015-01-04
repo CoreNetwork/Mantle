@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
@@ -70,9 +71,28 @@ public class PortalsListener implements Listener {
 				Set<Claim> claims = new HashSet<>();
 				claims.addAll(getClaimsAround(otherSide));
 
-				Block otherOtherSide = PortalUtil.getOtherSideExact(otherSide);
-				claims.addAll(getClaimsAround(otherOtherSide));
-				
+
+				List<Block> otherSideBlocks = new LinkedList<Block>();
+				otherSideBlocks.add(otherSide);
+
+				if(otherSide.getWorld().getEnvironment() == Environment.NETHER)
+				{
+					//If checking from O->N->O, then add all blocks around otherSide block in + pattern to check
+					//in O again.
+
+					otherSideBlocks.add(otherSide.getRelative(BlockFace.EAST));
+					otherSideBlocks.add(otherSide.getRelative(BlockFace.WEST));
+					otherSideBlocks.add(otherSide.getRelative(BlockFace.NORTH));
+					otherSideBlocks.add(otherSide.getRelative(BlockFace.SOUTH));
+				}
+
+				for(Block otherSideBlock : otherSideBlocks)
+				{
+					Block otherOtherSide = PortalUtil.getOtherSideExact(otherSideBlock);//original
+					MLog.debug(otherOtherSide.getX() + " " + otherOtherSide.getZ() + " " + otherOtherSide.getWorld().getName());
+					claims.addAll(getClaimsAround(otherOtherSide));
+				}
+
 				boolean foundConflict = false;
 				for(Claim claim : claims)
 				{
@@ -202,7 +222,7 @@ public class PortalsListener implements Listener {
 			int rotation = minXBlock == maxXBlock ? 1 : 0;
 
 			List<Block> listOfBlocksToCheck = new LinkedList<>();
-			List<Block> listOfOnTheOtherSide = new LinkedList<>();
+			Set<Block> setOfOnTheOtherSide = new HashSet<>();
 
 			//move one up to represent purplish portal block
 			minYBlock++;
@@ -227,13 +247,57 @@ public class PortalsListener implements Listener {
 			for(Block block : listOfBlocksToCheck)
 			{
 				Block otherSide = PortalUtil.getOtherSideExact(block);
-				listOfOnTheOtherSide.add(otherSide);
+				setOfOnTheOtherSide.add(otherSide);
 				claims.addAll(getClaimsAround(otherSide));
 			}
 
+			//add one block on each side of the strip on the otherSide
+			//this is only needed in case of otherSide being nether.
+			//If other side is overworld, then the created portal will always lead to the same nether coord
+
+			Block otherSideHelper = setOfOnTheOtherSide.iterator().next();
+
+			if(otherSideHelper.getWorld().getEnvironment() == Environment.NETHER)
+			{
+				int minStrip = 300000;
+				int maxStrip = -300000;
+				for (Block otherSideBlock : setOfOnTheOtherSide)
+				{
+					int value;
+					if (rotation == 0)
+					{
+						value = otherSideBlock.getX();
+					} else
+					{
+						value = otherSideBlock.getZ();
+					}
+
+					if (value < minStrip)
+						minStrip = value;
+					if (value > maxStrip)
+						maxStrip = value;
+				}
+
+				//Adding
+				if (setOfOnTheOtherSide.size() > 0)
+				{
+
+
+					if (rotation == 0)
+					{
+						setOfOnTheOtherSide.add(otherSideHelper.getWorld().getBlockAt(minStrip - 1, otherSideHelper.getY(), otherSideHelper.getZ()));
+						setOfOnTheOtherSide.add(otherSideHelper.getWorld().getBlockAt(maxStrip + 1, otherSideHelper.getY(), otherSideHelper.getZ()));
+					} else
+					{
+						setOfOnTheOtherSide.add(otherSide.getWorld().getBlockAt(otherSideHelper.getX(), otherSideHelper.getY(), minStrip - 1));
+						setOfOnTheOtherSide.add(otherSide.getWorld().getBlockAt(otherSideHelper.getX(), otherSideHelper.getY(), maxStrip + 1));
+					}
+				}
+			}
+			
 			//Here are the blocks that might host the portal on the other side. Now for each we should check other-other side, to see if
 			//portal created on other side could possibly lead to other-other side in someones claim
-			for(Block otherSideBlock : listOfOnTheOtherSide)
+			for(Block otherSideBlock : setOfOnTheOtherSide)
 			{
 				Block otherOtherSide = PortalUtil.getOtherSideExact(otherSideBlock);
 				claims.addAll(getClaimsAround(otherOtherSide));

@@ -65,7 +65,6 @@ public enum RChestSettings {
 			put("weight",20);
 			put("chances", new ArrayList<Double>(){{ add(0.15); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
-			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(49));
 			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
 			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
@@ -75,7 +74,6 @@ public enum RChestSettings {
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(0.10); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
-			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(266));
 			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
 			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
@@ -85,7 +83,6 @@ public enum RChestSettings {
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(0.10); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
-			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(264));
 			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
 			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
@@ -95,7 +92,6 @@ public enum RChestSettings {
 			put("weight",15);
 			put("chances", new ArrayList<Double>(){{ add(0.20); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
-			put("perPlayerDayLimit", 5);
 			put("icon", RChestSettings.iconHelper(403));
 			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
 			put("compassMaxDistance", new ArrayList<Integer>(){{add(4800);add(4800);add(4800);}});
@@ -105,7 +101,6 @@ public enum RChestSettings {
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(0.10); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
-			put("perPlayerDayLimit", 5);
 			put("preReqCategories", new ArrayList<String>(){{ add("Organic"); add("Tools");}});
 			put("icon", RChestSettings.iconHelper(417));
 			put("compassMinDistance", new ArrayList<Integer>(){{add(2200);add(2200);add(2200);}});
