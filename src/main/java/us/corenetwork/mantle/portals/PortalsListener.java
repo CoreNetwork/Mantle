@@ -289,8 +289,8 @@ public class PortalsListener implements Listener {
 						setOfOnTheOtherSide.add(otherSideHelper.getWorld().getBlockAt(maxStrip + 1, otherSideHelper.getY(), otherSideHelper.getZ()));
 					} else
 					{
-						setOfOnTheOtherSide.add(otherSide.getWorld().getBlockAt(otherSideHelper.getX(), otherSideHelper.getY(), minStrip - 1));
-						setOfOnTheOtherSide.add(otherSide.getWorld().getBlockAt(otherSideHelper.getX(), otherSideHelper.getY(), maxStrip + 1));
+						setOfOnTheOtherSide.add(otherSideHelper.getWorld().getBlockAt(otherSideHelper.getX(), otherSideHelper.getY(), minStrip - 1));
+						setOfOnTheOtherSide.add(otherSideHelper.getWorld().getBlockAt(otherSideHelper.getX(), otherSideHelper.getY(), maxStrip + 1));
 					}
 				}
 			}
