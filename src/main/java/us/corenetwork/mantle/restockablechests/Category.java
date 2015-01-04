@@ -50,6 +50,9 @@ public class Category {
 
 	public static Category pickOne(List<Category> categories)
 	{
+		if (categories.size() == 0)
+			return null;
+
 		int weightSum = 0;
 		for(Category cat : categories)
 			weightSum += cat.weight;
