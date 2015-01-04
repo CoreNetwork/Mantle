@@ -204,6 +204,7 @@ public class GUICategoryPicker extends InventoryGUI {
 		
 		if(found == false)
 		{
+			Util.Message(RChestSettings.MESSAGE_COMPASS_CANT_FIND_VILLAGE.string(), (Player)player);
 			MLog.warning("Compass - No viable village + chest found!");
 			return;
 		}
