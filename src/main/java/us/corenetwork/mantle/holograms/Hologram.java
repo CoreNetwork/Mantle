@@ -253,9 +253,6 @@ public class Hologram
 
         for (String line : text)
         {
-            if (line.trim().isEmpty())
-                continue;
-
             net.minecraft.server.v1_8_R1.World nmsWorld = ((CraftWorld) world).getHandle();
 
             EntityArmorStand armorStand = new EntityArmorStand(nmsWorld);
