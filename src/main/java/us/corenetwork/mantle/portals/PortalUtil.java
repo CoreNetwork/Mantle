@@ -12,6 +12,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import us.corenetwork.mantle.MLog;
 
 import java.util.ArrayList;
 
@@ -74,14 +75,14 @@ public class PortalUtil {
 			List<Integer> occupiedOnZ = getOccupiedSquaresInOwAxisZ(originalPortalInfo);
             Quadrant quadrant = getQuadrant(buildDestination);
 
-            Bukkit.broadcastMessage(quadrant.name());
-            Bukkit.broadcastMessage("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
+			MLog.debug(quadrant.name());
+			MLog.debug("before moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
 
 
 			//Case 1, original portal fits in one RxR square
 			if (occupiedOnX.size() == 1 && occupiedOnZ.size() == 1)
 			{
-                Bukkit.broadcastMessage("original portal fits in one RxR square");
+				MLog.debug("original portal fits in one RxR square");
                 switch (quadrant)
                 {
                     case PLUS_PLUS:
@@ -105,7 +106,7 @@ public class PortalUtil {
 			}
             else
             {
-                Bukkit.broadcastMessage("original portal doesnt fit in one RxR square");
+				MLog.debug("original portal doesnt fit in one RxR square");
                 //portal is looking north/south, move east/west
                 if (originalPortalInfo.orientation == 0)
                 {
@@ -143,7 +144,7 @@ public class PortalUtil {
                     }
                 }
             }
-            Bukkit.broadcastMessage("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
+			MLog.debug("after moving: " + buildDestination.getX() + " " + buildDestination.getY() + " " + buildDestination.getZ());
 		}
 
 		return buildDestination;
@@ -249,10 +250,10 @@ public class PortalUtil {
 				int originalSquareEndX = originalSquareStartX + (ratio - 1);
 				int originalSquareEndZ = originalSquareStartZ + (ratio - 1);
 
-				Bukkit.broadcastMessage("PBL:" + sourcePortalInfo.portalBlocksLeftNorth + " " + sourcePortalInfo.portalBlocksLeftSouth + " " + sourcePortalInfo.portalBlocksLeftEast + " " + sourcePortalInfo.portalBlocksLeftWest);
-				Bukkit.broadcastMessage("Source coordinates:" + sourcePortalBlock.getX() + " " + sourcePortalBlock.getY() + " " + sourcePortalBlock.getZ());
-				Bukkit.broadcastMessage("Direct coordinates:" + targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
-				Bukkit.broadcastMessage("Original square:" + originalSquareStartX + "-" + originalSquareEndX + " Z:" + originalSquareStartZ + "-" + originalSquareEndZ);
+		MLog.debug("PBL:" + sourcePortalInfo.portalBlocksLeftNorth + " " + sourcePortalInfo.portalBlocksLeftSouth + " " + sourcePortalInfo.portalBlocksLeftEast + " " + sourcePortalInfo.portalBlocksLeftWest);
+		MLog.debug("Source coordinates:" + sourcePortalBlock.getX() + " " + sourcePortalBlock.getY() + " " + sourcePortalBlock.getZ());
+		MLog.debug("Direct coordinates:" + targetBlock.getX() + " " + targetBlock.getY() + " " + targetBlock.getZ());
+		MLog.debug("Original square:" + originalSquareStartX + "-" + originalSquareEndX + " Z:" + originalSquareStartZ + "-" + originalSquareEndZ);
 
 		//Additional squares we search based on number of portal blocks
 		List<Integer> squaresX;
@@ -277,8 +278,8 @@ public class PortalUtil {
 			squaresX = getIncrementingNumbersInRange(0, minXSquare, maxXSquare);
 			squaresZ = getIncrementingNumbersInRange(0, minZSquare, maxZSquare);
 		}
-				Bukkit.broadcastMessage("Square offsets to search X:" + squaresX);
-				Bukkit.broadcastMessage("Square offsets to search Z:" + squaresZ);
+		MLog.debug("Square offsets to search X:" + squaresX);
+		MLog.debug("Square offsets to search Z:" + squaresZ);
 
 
 		// Loop through all RxR squares in X range

@@ -281,8 +281,6 @@ public class PortalsListener implements Listener {
 				//Adding
 				if (setOfOnTheOtherSide.size() > 0)
 				{
-
-
 					if (rotation == 0)
 					{
 						setOfOnTheOtherSide.add(otherSideHelper.getWorld().getBlockAt(minStrip - 1, otherSideHelper.getY(), otherSideHelper.getZ()));
