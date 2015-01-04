@@ -284,5 +284,18 @@ public class Util
 			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 		}
 		return name;
-	}	
+	}
+
+    public static Object findEnum(Object[] enumList, String name)
+    {
+        for (Object enumEntry : enumList)
+        {
+            String entryName = ((Enum) enumEntry).name();
+            entryName = entryName.replace("_", " ");
+            if (entryName.equalsIgnoreCase(name))
+                return enumEntry;
+        }
+
+        return null;
+    }
 }

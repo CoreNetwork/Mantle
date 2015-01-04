@@ -14,17 +14,20 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Variant;
+import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import us.corenetwork.core.CorePlugin;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.NodeParser;
+import us.corenetwork.mantle.Util;
 
 public class AnimalSpawner {
-		
+
+
+
 	public static void spawnAnimal(Block block)
 	{
-		
 		String animalSectionKey = NodeParser.pickNodeChance((MemorySection) AnimalSpawningModule.instance.config.get("Animals"));
 		MemorySection animalSection = (MemorySection) AnimalSpawningModule.instance.config.get("Animals.".concat(animalSectionKey));
 		
@@ -93,6 +96,8 @@ public class AnimalSpawner {
 		case HORSE:
 			handleHorse(configSection, entity);
 			break;
+		case RABBIT:
+			handleRabbit(configSection, entity);
 
 		}
 	}
@@ -166,5 +171,21 @@ public class AnimalSpawner {
 			attributes.setValue(0.1);
 		else
 			attributes.setValue(0.25 * (0.45 + MantlePlugin.random.nextInt(2) * 0.3 + MantlePlugin.random.nextInt(2) * 0.3 + CorePlugin.random.nextInt(2) * 0.3));
+	}
+
+	private static void handleRabbit(MemorySection section, Entity entity)
+	{
+		Rabbit rabbit = (Rabbit) entity;
+
+		String rabbitTypeName = NodeParser.pickNodeChance((MemorySection) section.get("Types"));
+		Rabbit.Type rabbitType = (Rabbit.Type) Util.findEnum(Rabbit.Type.values(), rabbitTypeName);
+		if (rabbitType != null)
+		{
+			rabbit.setRabbitType(rabbitType);
+		}
+		else
+		{
+			MLog.severe("Unknown rabbit type: " + rabbitTypeName);
+		}
 	}
 }
