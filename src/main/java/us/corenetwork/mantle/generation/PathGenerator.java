@@ -86,7 +86,18 @@ public class PathGenerator {
 		}
 
 
-        BufferedImage imageMap = null;
+		int startTileX = 0;
+		int startTileZ = 0;
+		String startTileSetting = (String) pathConfig.get("StartTile");
+		if (startTileSetting != null)
+		{
+			String[] startTileSplit = startTileSetting.split(" ");
+			startTileX = Integer.parseInt(startTileSplit[0]);
+			startTileZ = Integer.parseInt(startTileSplit[1]);
+
+		}
+
+		BufferedImage imageMap = null;
 		try
 		{
             imageMap = ImageIO.read(imageMapFile);
@@ -99,7 +110,7 @@ public class PathGenerator {
 
 		PathTileMap tileMap = new PathTileMap(imageMap);
 
-		PathTile firstTile = tileMap.tileMap[0][0];
+		PathTile firstTile = tileMap.tileMap[startTileX][startTileZ];
 
 		processTile(firstTile, startX, startZ, 1, -1);
 
