@@ -181,11 +181,21 @@ public class PortalUtil {
 
 	public static Block getOtherSide(PortalInfo info)
 	{
-		Block portalBlock = info.entryBlock;
+		Block portalBlock = getOtherSideExact(info.entryBlock);
 
+		//Find possible existing portal
+		Block existing = getExistingPortal(info, portalBlock);
+		if (existing != null)
+			return existing;
+
+		return portalBlock;
+	}
+
+	public static Block getOtherSideExact(Block entryBlock)
+	{
 		double modifier = PortalsSettings.PORTAL_RATIO.doubleNumber();
 		Environment destEnvironment;
-		if (portalBlock.getWorld().getEnvironment() == Environment.NETHER)
+		if (entryBlock.getWorld().getEnvironment() == Environment.NETHER)
 		{
 			destEnvironment = Environment.NORMAL;
 		}
@@ -205,31 +215,8 @@ public class PortalUtil {
 			}
 		}
 
-		portalBlock = destWorld.getBlockAt((int) Math.floor(portalBlock.getX() * modifier), portalBlock.getY(), (int) Math.floor(portalBlock.getZ() * modifier));
+		return destWorld.getBlockAt((int) Math.floor(entryBlock.getX() * modifier), entryBlock.getY(), (int) Math.floor(entryBlock.getZ() * modifier));
 
-		//Find possible existing portal
-		Block existing = getExistingPortal(info, portalBlock);
-		if (existing != null)
-			return existing;
-
-
-		//Portal doesnt exist, find apprioprate location to put a new portal
-
-		//Not really sure what is going on here
-		//Try to get to the ground
-		if (destEnvironment == Environment.NORMAL)
-		{
-			Block belowBlock = portalBlock.getRelative(BlockFace.DOWN, 2);
-
-			int startingY = belowBlock.getY();
-			while (belowBlock != null && belowBlock.getType() == Material.AIR && belowBlock.getY() <= startingY)
-			{
-				portalBlock = portalBlock.getRelative(BlockFace.DOWN);
-				belowBlock = portalBlock.getRelative(BlockFace.DOWN, 2);
-			}
-		}
-
-		return portalBlock;
 	}
 
 	private static Block getExistingPortal(PortalInfo sourcePortalInfo, Block targetBlock)

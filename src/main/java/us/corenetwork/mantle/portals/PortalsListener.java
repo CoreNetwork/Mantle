@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.portals;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
@@ -35,6 +36,7 @@ import us.corenetwork.mantle.Util;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -164,24 +166,64 @@ public class PortalsListener implements Listener {
 
 			}
 
-			//Prevent creating portals into other claims
-			Location destination = PortalUtil.getOtherSide(event.getBlocks().get(0)).getLocation();
-			List<Claim> claims = new LinkedList<Claim>();
+			int minYBlock = 30000;
+			int minXBlock = 30000;
+			int maxXBlock = -30000;
+			int minZBlock = 30000;
+			int maxZBlock = -30000;
 
-			//Search for 5x3x5 area around portals
-			Block portalBlock = destination.getBlock();
-			for (int x = -2; x <= 2; x++)
+			for(Block b : event.getBlocks())
 			{
-				for (int y = -1; y <= 2; y++)
-				{
-					for (int z = -2; z <= 2; z++)
-					{
+				if (b.getY() < minYBlock)
+					minYBlock = b.getY();
+				if (b.getZ() < minZBlock)
+					minZBlock = b.getZ();
+				if (b.getX() < minXBlock)
+					minXBlock = b.getX();
+				if (b.getZ() > maxZBlock)
+					maxZBlock = b.getZ();
+				if (b.getX() > maxXBlock)
+					maxXBlock = b.getX();
+			}
 
-						Claim claim = GriefPrevention.instance.dataStore.getClaimAt(portalBlock.getRelative(x,y,z).getLocation(), true, null);
-						if (claim != null)
-							claims.add(claim);
-					}
+			int rotation = minXBlock == maxXBlock ? 1 : 0;
+
+			List<Block> listOfBlocksToCheck = new LinkedList<>();
+			List<Block> listOfOnTheOtherSide = new LinkedList<>();
+
+			//move one up to represent purplish portal block
+			minYBlock++;
+			if(rotation == 0)
+			{
+				for(int x = minXBlock + 1; x < maxXBlock;x++)
+				{
+					listOfBlocksToCheck.add(event.getWorld().getBlockAt(x, minYBlock, maxZBlock));
 				}
+			}
+			else
+			{
+				for(int z = minZBlock + 1; z < maxZBlock; z++)
+				{
+					listOfBlocksToCheck.add(event.getWorld().getBlockAt(maxXBlock, minYBlock, z));
+				}
+			}
+
+
+			Set<Claim> claims = new HashSet<>();
+			//Check first travel, if any block and area around it that will be created contains any foreign claims
+			for(Block block : listOfBlocksToCheck)
+			{
+				Block otherSide = PortalUtil.getOtherSideExact(block);
+				listOfOnTheOtherSide.add(otherSide);
+				claims.addAll(getClaimsAround(otherSide));
+			}
+
+			//Here are the blocks that might host the portal on the other side. Now for each we should check other-other side, to see if
+			//portal created on other side could possibly lead to other-other side in someones claim
+			for(Block otherSideBlock : listOfOnTheOtherSide)
+			{
+				Block otherOtherSide = PortalUtil.getOtherSideExact(otherSideBlock);
+				claims.addAll(getClaimsAround(otherOtherSide));
 			}
 
 			if (claims.size() > 0)
@@ -219,6 +261,26 @@ public class PortalsListener implements Listener {
 		}
 	}	
 
+
+	private List<Claim> getClaimsAround(Block block)
+	{
+		List<Claim> claims = new LinkedList<Claim>();
+
+		//Search for 5x3x5 area around block
+		for (int x = -2; x <= 2; x++)
+		{
+			for (int y = -1; y <= 2; y++)
+			{
+				for (int z = -2; z <= 2; z++)
+				{
+					Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getRelative(x,y,z).getLocation(), true, null);
+					if (claim != null)
+						claims.add(claim);
+				}
+			}
+		}
+		return claims;
+	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
 	public void onPlayerPortal(final PlayerPortalEvent event)
