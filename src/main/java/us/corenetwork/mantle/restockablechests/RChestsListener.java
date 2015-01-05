@@ -68,10 +68,22 @@ public class RChestsListener implements Listener {
 			RestockableChest chest = RestockableChest.getChest(clicked);
 			if (chest != null)
 			{
-				if (isVillageClaimed(chest.getStructureID()))
+				//This can probably be simplified, but my brain doesnt work
+				//#S04
+				if (chest.getBlock().getWorld().getEnvironment() == World.Environment.NORMAL)
 				{
-					return;
-				}		
+					if (isVillageClaimed(chest.getStructureID()))
+					{
+						return;
+					}
+					else
+					{
+						if (chest.open(player))
+						{
+							event.setCancelled(true);
+						}
+					}
+				}
 				else
 				{
 					if (chest.open(player))
@@ -79,6 +91,8 @@ public class RChestsListener implements Listener {
 						event.setCancelled(true);
 					}
 				}
+
+
 			}
 		}
 
