@@ -11,8 +11,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Queue;
 
 import javax.imageio.ImageIO;
 
@@ -57,17 +59,8 @@ public class PathGenerator {
 			return;
 		}
 
-		pixels = new ArrayDeque<ImagePixel>();
-		
-		String[] startPos = ((String) pathConfig.get("Start")).split(" ");
-
-		startX = Integer.parseInt(startPos[0]);
-		startZ = Integer.parseInt(startPos[1]);
-
 		MLog.info("Preparing structures...");
-
 		structures = new HashMap<Integer, StructureData>();
-
 		MemorySection structuresConfig = (MemorySection) pathConfig.get("Structures");
 		for (Entry<String,Object> e : structuresConfig.getValues(false).entrySet())
 		{
@@ -75,16 +68,10 @@ public class PathGenerator {
 			structures.put(structure.getImageColor(), structure);
 		}
 
-		MLog.info("Loading imagemap...");
 
-		File imageMapFile = new File(MantlePlugin.instance.getDataFolder(), (String) pathConfig.get("ImageMapFileName"));
-
-		if (!imageMapFile.exists())
-		{
-			MLog.info("Image map file for path " + path + " does not exist. Aborting...");
-			return;
-		}
-
+		String[] startPos = ((String) pathConfig.get("Start")).split(" ");
+		startX = Integer.parseInt(startPos[0]);
+		startZ = Integer.parseInt(startPos[1]);
 
 		int startTileX = 0;
 		int startTileZ = 0;
@@ -94,25 +81,21 @@ public class PathGenerator {
 			String[] startTileSplit = startTileSetting.split(" ");
 			startTileX = Integer.parseInt(startTileSplit[0]);
 			startTileZ = Integer.parseInt(startTileSplit[1]);
-
 		}
 
-		BufferedImage imageMap = null;
-		try
+		MLog.info("Loading imagemap...");
+		BufferedImage imageMap = loadImageMap(path, (String) pathConfig.get("ImageMapFileName"));
+		if (imageMap == null)
 		{
-            imageMap = ImageIO.read(imageMapFile);
-			}
-		catch (IOException e)
-		{
-			e.printStackTrace();
+			return;
 		}
-
 
 		PathTileMap tileMap = new PathTileMap(imageMap);
-
 		PathTile firstTile = tileMap.tileMap[startTileX][startTileZ];
+		pixels = new ArrayDeque<ImagePixel>();
 
-		processTile(firstTile, startX, startZ, 1, -1);
+		MLog.info("Generating paths");
+		generateTiles(firstTile);
 
 		if (pixels.isEmpty())
 		{
@@ -121,69 +104,77 @@ public class PathGenerator {
 		}
 
 		MLog.info("Generating image");
-		
-		int highestX = 0;
-		int highestZ = 0;
-		int lowestX = Integer.MAX_VALUE;
-		int lowestZ = Integer.MAX_VALUE;
-		for (ImagePixel pixel : pixels)
-		{
-			if (highestX < pixel.x)
-				highestX = pixel.x;
-			
-			if (highestZ < pixel.z)
-				highestZ = pixel.z;
-			
-			if (lowestX > pixel.x)
-				lowestX = pixel.x;
-			
-			if (lowestZ > pixel.z)
-				lowestZ = pixel.z;
-		}
-		
-		int xSize = highestX - lowestX + 1;
-		int zSize = highestZ - lowestZ + 1;
-		
-		
-		BufferedImage pathImage = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_RGB);
-				
-		for (int x = 0; x < xSize; x++)
-		{
-			for (int z = 0; z < zSize; z++)
-			{
-				pathImage.setRGB(x, z, 0xffffff);
-			}
-		}
-		
-		for (ImagePixel pixel : pixels)
-		{
-			pathImage.setRGB(pixel.x - lowestX, pixel.z - lowestZ, pixel.color);
-		}
-		
-		File imageFile = new File(MantlePlugin.instance.getDataFolder(), "path_" + path + ".png");
-		
-		try {
-			ImageIO.write(pathImage, "png", imageFile);
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
+		generateImage(path);
 		
 		MLog.info("Generation finished");
 	}
 
-	private void processTile(PathTile tile, int x, int z, int coordCorner, int cornerSize)
+	private BufferedImage loadImageMap(String path, String name)
 	{
-		if (visitedTiles.contains(tile))
-			return;
+		BufferedImage imageMap = null;
 
-		visitedTiles.add(tile);
+		File imageMapFile = new File(MantlePlugin.instance.getDataFolder(), name);
+		if (!imageMapFile.exists())
+		{
+			MLog.info("Image map file for path " + path + " does not exist. Aborting...");
+			return null;
+		}
+		try
+		{
+			imageMap = ImageIO.read(imageMapFile);
+		}
+		catch (IOException e)
+		{
+			MLog.severe("Couldn't load the path image file. Aborting...");
+			e.printStackTrace();
+		}
 
-		StructureData structure = structures.get(tile.structure);
-		if (structure == null)
-			return;
+		return  imageMap;
+	}
 
+	private class ProcessTileHelper
+	{
+		PathTile tile;
+		int x;
+		int z;
+		int coordCorner;
+		int cornerSize;
+		public ProcessTileHelper(PathTile tile, int x, int z, int coordCorner, int cornerSize)
+		{
+			this.tile = tile;
+			this.x = x;
+			this.z = z;
+			this.coordCorner = coordCorner;
+			this.cornerSize = cornerSize;
+		}
+	}
+
+	private void generateTiles(PathTile firstTile)
+	{
+		Queue<ProcessTileHelper> queue = new LinkedList<>();
+		queue.add(new ProcessTileHelper(firstTile, startX, startZ, 1, -1));
+		visitedTiles.add(firstTile);
+		ProcessTileHelper pth;
+
+		int levelSize = queue.size();
+		while (levelSize > 0)
+		{
+			levelSize = queue.size();
+			for (int i = 0; i < levelSize; i++)
+			{
+				pth = queue.remove();
+				processTile(queue, pth.tile, pth.x, pth.z, pth.coordCorner, pth.cornerSize);
+			}
+		}
+	}
+
+	private void processTile(Queue<ProcessTileHelper> queue, PathTile tile, int x, int z, int coordCorner, int cornerSize)
+	{
 		tile.printTile();
 
+		StructureData structure = structures.get(tile.structure);
+		if(structure == null)
+			return;
 		CachedSchematic schematic = structure.getRandomSchematic();
 		schematic.rotateTo(tile.rotation);
 
@@ -202,7 +193,7 @@ public class PathGenerator {
 		{
 			int myCornerSize = (coordCorner == 0 || coordCorner == 2) ? schematic.xSize : schematic.zSize;
 			int diff = cornerSize - myCornerSize;
-			MLog.info("Corned diff " + diff);
+			//MLog.info("Corned diff " + diff);
 			diff /= 2;
 
 			if (coordCorner == 0 || coordCorner == 2)
@@ -211,10 +202,10 @@ public class PathGenerator {
 				z += diff;
 		}
 
-		Location placingLocation = new Location(world, x, structure.getPasteHeight(), z);
-		
-		schematic.place(placingLocation, structure.shouldIgnoreAir());
+
 		schematic.drawBitmap(pixels, x, z);
+		Location placingLocation = new Location(world, x, structure.getPasteHeight(), z);
+		schematic.place(placingLocation, structure.shouldIgnoreAir());
 		
 		StructureData.WorldGuard region = structure.getWorldGuardData();
 		if (region != null)
@@ -245,6 +236,15 @@ public class PathGenerator {
 			if (neighbour == null)
 				continue;
 
+			if (visitedTiles.contains(neighbour))
+				continue;
+
+			visitedTiles.add(neighbour);
+
+			StructureData neighbourStructure = structures.get(neighbour.structure);
+			if (neighbourStructure == null)
+				continue;
+
 			int newX = x;
 			int newZ = z;
 			int sideSize = (i == 0 || i == 2) ? xSize : zSize;
@@ -259,10 +259,56 @@ public class PathGenerator {
 				break;
 			}
 
-			processTile(neighbour, newX, newZ, i, sideSize);
-			
+			queue.add(new ProcessTileHelper(neighbour, newX, newZ, i, sideSize));
 		}
 	}
 
+	private void generateImage(String path)
+	{
+		int highestX = 0;
+		int highestZ = 0;
+		int lowestX = Integer.MAX_VALUE;
+		int lowestZ = Integer.MAX_VALUE;
+		for (ImagePixel pixel : pixels)
+		{
+			if (highestX < pixel.x)
+				highestX = pixel.x;
 
+			if (highestZ < pixel.z)
+				highestZ = pixel.z;
+
+			if (lowestX > pixel.x)
+				lowestX = pixel.x;
+
+			if (lowestZ > pixel.z)
+				lowestZ = pixel.z;
+		}
+
+		int xSize = highestX - lowestX + 1;
+		int zSize = highestZ - lowestZ + 1;
+
+
+		BufferedImage pathImage = new BufferedImage(xSize, zSize, BufferedImage.TYPE_INT_RGB);
+
+		for (int x = 0; x < xSize; x++)
+		{
+			for (int z = 0; z < zSize; z++)
+			{
+				pathImage.setRGB(x, z, 0xffffff);
+			}
+		}
+
+		for (ImagePixel pixel : pixels)
+		{
+			pathImage.setRGB(pixel.x - lowestX, pixel.z - lowestZ, pixel.color);
+		}
+
+		File imageFile = new File(MantlePlugin.instance.getDataFolder(), "path_" + path + ".png");
+
+		try {
+			ImageIO.write(pathImage, "png", imageFile);
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+	}
 }
