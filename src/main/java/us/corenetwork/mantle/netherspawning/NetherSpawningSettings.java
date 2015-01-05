@@ -28,7 +28,9 @@ public enum NetherSpawningSettings {
 	GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
     GHAST_LIGHT_CHECK_Y("Ghast.LightCheckY", 183),
     GHAST_MIN_SPAWN_Y("Ghast.MinSpawnY", 163),
-    GHAST_MAX_SPAWN_Y("Ghast.MaxSpawnY", 179),
+	GHAST_MAX_SPAWN_Y("Ghast.MaxSpawnY", 179),
+	GHAST_MIN_MOVE_DOWN("Ghast.MinMoveDown", 4),
+	GHAST_MAX_MOVE_DOWN("Ghast.MaxMoveDown", 6),
 
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);

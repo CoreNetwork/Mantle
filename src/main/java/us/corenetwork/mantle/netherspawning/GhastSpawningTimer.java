@@ -53,7 +53,9 @@ public class GhastSpawningTimer implements Runnable {
                 continue;
 
             Block spawnBlock = c.getBlock(randomX, randomY, randomZ);
-            spawnBlock = spawnBlock.getRelative(BlockFace.DOWN, MantlePlugin.random.nextInt(10) + 5);
+            int maxDown = NetherSpawningSettings.GHAST_MAX_MOVE_DOWN.integer();
+            int minDown = NetherSpawningSettings.GHAST_MIN_MOVE_DOWN.integer();
+            spawnBlock = spawnBlock.getRelative(BlockFace.DOWN, MantlePlugin.random.nextInt(maxDown - minDown + 1) + minDown);
 
             if (!spawnBlock.isEmpty())
                 continue;
