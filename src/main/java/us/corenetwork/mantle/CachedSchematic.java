@@ -50,6 +50,7 @@ public class CachedSchematic {
 	public String name;
 	private Random random;
 	private List<ChestInfo> chests;
+	private int rotation;
 
 	private List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
 
@@ -79,6 +80,7 @@ public class CachedSchematic {
 
 	public void rotateTo(int rotateBy)
 	{
+		rotation = rotateBy;
 		rotateBy = (rotateBy % 5) * 90;
 
 		try {
@@ -593,6 +595,19 @@ public class CachedSchematic {
 			Vector min = localSession.getClipboard().getClipboard().getMinimumPoint();
 			Vector max = localSession.getClipboard().getClipboard().getMaximumPoint();
 			to = origin.subtract(max).add(to).add(max.subtract(min));
+
+
+			if(rotation % 2 == 1)
+			{
+				if(xSize % 2 == 1)
+				{
+					to = to.add(0, 0, 0.5);
+				}
+				if(zSize % 2 == 1)
+				{
+					to = to.add(0.5, 0, 0);
+				}
+			}
 
 			EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
 
