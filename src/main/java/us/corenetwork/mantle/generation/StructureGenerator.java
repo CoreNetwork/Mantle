@@ -40,6 +40,14 @@ public class StructureGenerator {
 	{
 		Runtime runtime = Runtime.getRuntime();
 		String worldName = world.getName();
+		if(worldName.equalsIgnoreCase("world_nether"))
+		{
+			CachedSchematic.isNether = true;
+		}
+		else
+		{
+			CachedSchematic.isNether = false;
+		}
 
 		MemorySection worldConfig = (MemorySection) GenerationModule.instance.config.get("Worlds." + worldName);
 

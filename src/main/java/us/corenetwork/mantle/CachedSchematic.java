@@ -54,6 +54,10 @@ public class CachedSchematic {
 
 	private List<VillagerInfo> villagers = new ArrayList<VillagerInfo>();
 
+
+	//HACK to get nether schematics to work during generation.
+	public static boolean isNether = false;
+
 	public CachedSchematic(String name, World world)
 	{
 		this.name = name;
@@ -152,11 +156,17 @@ public class CachedSchematic {
 				{
 					for (int x = 0; x < xSize; x++)
 					{
+
 						Vector vector = new Vector(x,y,z);
+						if(isNether)
+							vector = vector.add(cc.getMinimumPoint());
 						BaseBlock baseBlock = cc.getBlock(vector);
 						if (Util.isInventoryContainer(baseBlock.getType()))
 						{
-							vectorList.add(vector);
+							if(isNether)
+								vectorList.add(vector.subtract(cc.getMinimumPoint()));
+							else
+								vectorList.add(vector);
 						}
 					}
 				}
@@ -204,11 +214,21 @@ public class CachedSchematic {
 		
 							boolean properSign = true;
 							String[] signText = sign.getText();
-							for(int i = 0;i<signText.length;i++)
-							{
-								signText[i] = signText[i].substring(1, signText[i].length()-1);
-							}
 
+							if(isNether)
+							{
+								for (int i = 0; i < signText.length; i++)
+								{
+									signText[i] = signText[i].substring(11, signText[i].indexOf(',')-2);
+								}
+							}
+							else
+							{
+								for (int i = 0; i < signText.length; i++)
+								{
+									signText[i] = signText[i].substring(1, signText[i].length() - 1);
+								}
+							}
 							if (sign.getText()[0].trim().startsWith("[loot]"))
 							{
 								ChestInfo info = new ChestInfo();
