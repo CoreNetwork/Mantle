@@ -369,6 +369,7 @@ public class PortalsListener implements Listener {
 			Location destination = PortalUtil.processTeleport(event.getPlayer(), portalBlock);
 			event.setTo(destination);
 			event.useTravelAgent(false);
+			event.getPortalTravelAgent().setCanCreatePortal(false);
 		}
 	}
 
@@ -388,10 +389,10 @@ public class PortalsListener implements Listener {
         Block portalBlock = lastPortalBlocks.get(event.getEntity().getUniqueId());
         lastPortalBlocks.remove(event.getEntity().getUniqueId());
 
-
         Location destination = PortalUtil.processTeleport(event.getEntity(), portalBlock);
 		event.setTo(destination);
 		event.useTravelAgent(false);
+		event.getPortalTravelAgent().setCanCreatePortal(false);
 		
 	}
 		
