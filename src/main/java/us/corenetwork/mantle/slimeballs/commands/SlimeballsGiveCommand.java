@@ -25,7 +25,7 @@ public class SlimeballsGiveCommand extends BaseSlimeballsCommand
 	public void run(CommandSender sender, String[] args) {
 		if (args.length < 1)
 		{
-			sender.sendMessage("Usage: /slimeballs give <Player>");
+			sender.sendMessage("Usage: /slimeballs give <Player> [<Slot>]");
 			return;
 		}
 
@@ -35,7 +35,17 @@ public class SlimeballsGiveCommand extends BaseSlimeballsCommand
 
 		int slimeballs = SlimeballsStorage.getSlimeballs(player.getUniqueId());
 
-		player.getInventory().addItem(SlimeballItem.create(Math.min(slimeballs, 64)));
+		if (args.length > 1 && Util.isInteger(args[1]))
+		{
+			int slot = Integer.parseInt(args[1]);
+			player.getInventory().setItem(slot, SlimeballItem.create(Math.min(slimeballs, 64)));
+		}
+		else
+		{
+			player.getInventory().addItem(SlimeballItem.create(Math.min(slimeballs, 64)));
+
+		}
+
 	}
 	
 
