@@ -133,7 +133,6 @@ public class SaveCommand extends NanobotBaseCommand {
 				List<NBTBase> tags = (List) listField.get(listTag);
 				
 				List list = new ArrayList();
-				System.out.println(tags.toString());
 				if (tags.get(0).getTypeId() == 8)
 				{
 					for (int i = 0; i < tags.size(); i++) {
