@@ -130,21 +130,22 @@ public class SaveCommand extends NanobotBaseCommand {
 				Field listField = NBTTagList.class.getDeclaredField("list");
 				listField.setAccessible(true);
 				
-				List tags = (List) listField.get(listTag);
+				List<NBTBase> tags = (List) listField.get(listTag);
 				
 				List list = new ArrayList();
-				if (listTag.get(0).getTypeId() == 8)
+				System.out.println(tags.toString());
+				if (tags.get(0).getTypeId() == 8)
 				{
-					for (int i = 0; i < listTag.size(); i++) {
+					for (int i = 0; i < tags.size(); i++) {
 						list.add(((NBTTagString)tags.get(i)).a_());
 					}
 				}
 				else
 				{
-					for (int i = 0; i < listTag.size(); i++) {
+					for (int i = 0; i < tags.size(); i++) {
 						ConfigurationSection listSection = new YamlConfiguration()
 								.createSection("foo");
-						addTagWithoutName(listSection, listTag.get(i));
+						addTagWithoutName(listSection, tags.get(i));
 						list.add(listSection);
 					}
 				}
