@@ -27,6 +27,13 @@ public class AnimalSpawningTimer implements Runnable {
 	public void run() {		
 		MLog.debug("Starting animal spawning PREPARE!");
 
+		if (overworld.getTime() > 13000 && overworld.getTime() < 23000)
+		{
+			MLog.debug("Night! Cancelling...");
+			Bukkit.getScheduler().runTaskLaterAsynchronously(MantlePlugin.instance, AnimalSpawningTimer.timerSingleton, AnimalSpawningSettings.SPAWNING_INTERVAL_TICKS.integer());
+			return;
+		}
+
 		long start = System.nanoTime();
 		
 		int amount = AnimalSpawningSettings.CHUNKS_SPAWNING_AMOUNT.integer();
@@ -66,13 +73,6 @@ public class AnimalSpawningTimer implements Runnable {
 		public void run() {
 			MLog.debug("Starting animal spawning SYNC!");
 
-			if (overworld.getTime() > 13000 && overworld.getTime() < 23000)
-			{
-				MLog.debug("Night! Cancelling...");
-				Bukkit.getScheduler().runTaskLaterAsynchronously(MantlePlugin.instance, AnimalSpawningTimer.timerSingleton, AnimalSpawningSettings.SPAWNING_INTERVAL_TICKS.integer());
-				return;
-			}
-			
 			int unloaded = 0;
 			long start = System.nanoTime();
 			
