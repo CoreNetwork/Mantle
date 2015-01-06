@@ -41,7 +41,6 @@ public class SlimeballsPayCommand extends BaseSlimeballsCommand
 			if (Util.hasPermission(mod, "mantle.slimeballs.command.pay.notification"))
 				Util.Message(modMessage, mod);
 		}
-		System.out.println(modMessage);
 
 		SlimeballsStorage.setSlimeballs(player.getUniqueId(), slimeballs);
 
