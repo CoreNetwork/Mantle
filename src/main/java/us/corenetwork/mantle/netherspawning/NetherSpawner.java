@@ -22,7 +22,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.MagmaCube;
 import org.bukkit.entity.Skeleton;
-import org.bukkit.entity.Slime;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Stairs;
@@ -33,8 +32,6 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
 import us.corenetwork.mantle.slimespawning.SlimeSpawner;
-import us.corenetwork.mantle.slimespawning.SlimeSpawningHelper;
-import us.corenetwork.mantle.slimespawning.SlimeSpawningSettings;
 
 public class NetherSpawner {
 
@@ -85,8 +82,8 @@ public class NetherSpawner {
             case SKELETON:
                 spawnWitherSkeleton(block, SpawnReason.NATURAL);
                 break;
-            case SLIME:
-                spawnSlime(block);
+            case MAGMA_CUBE:
+                spawnMagmaCube(block);
                 break;
 
         }
@@ -201,7 +198,7 @@ public class NetherSpawner {
         return skeleton;
 	}
 
-    public static void spawnSlime(Block block)
+    public static void spawnMagmaCube(Block block)
     {
         if (block.getY() < NetherSpawningSettings.MAGMA_CUBE_MIN_Y.integer())
             return;
