@@ -23,6 +23,7 @@ public class Category {
 	private ItemStack iconItem;
 	private ArrayList<Integer> minDist;
 	private ArrayList<Integer> maxDist;
+	private String displayName;
 	
 	public Category(Map<?, ?> categoryMap)
 	{
@@ -34,6 +35,7 @@ public class Category {
 		this.iconItem = YamlUtils.readItemStack((Map<String, Object>) categoryMap.get("icon"));
 		this.minDist = (ArrayList<Integer>) categoryMap.get("compassMinDistance");
 		this.maxDist = (ArrayList<Integer>) categoryMap.get("compassMaxDistance");
+		this.displayName = categoryMap.get("displayName") == null ? name : (String) categoryMap.get("displayName");
 	}
 
 	public static List<Category> getCategories(List<Map<?, ?>> categoriesListMap)
@@ -72,6 +74,11 @@ public class Category {
 	public String getLootTableName()
 	{
 		return name;
+	}
+
+	public String getDisplayName()
+	{
+		return displayName;
 	}
 
 	public int getDistanceRange(Player player)

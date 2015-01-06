@@ -32,7 +32,7 @@ public class CompassDestination {
 		this.vih = vih;
 		this.category = category;
 		lastPlayerLocation = new Location(Bukkit.getWorld("world"), 10000, 4, 10000);
-		setCompassName(RChestSettings.MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE.string().replace("<Category>", category.getLootTableName()));
+		setCompassName(RChestSettings.MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE.string().replace("<Category>", category.getDisplayName()));
 	}
 
 	public void setCompassName(String value)
@@ -86,7 +86,7 @@ public class CompassDestination {
 		
 		String message = RChestSettings.MESSAGE_COMPASS_NAME_WITH_DISTANCE.string();
 		message = message.replace("<Distance>", distance+"");
-		message = message.replace("<Category>", category.getLootTableName());
+		message = message.replace("<Category>", category.getDisplayName());
 		setCompassName(message);
 		meta.setDisplayName(compassName);
 		compass.setItemMeta(meta);

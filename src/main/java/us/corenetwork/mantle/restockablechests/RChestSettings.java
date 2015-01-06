@@ -52,6 +52,7 @@ public enum RChestSettings {
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "CombatGear");
+			put("displayName", "Combat Gear");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(1.0); add(0.05); add(0.01);}});
 			put("icon", RChestSettings.iconHelper(307));
@@ -89,6 +90,7 @@ public enum RChestSettings {
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "EnchantedBook");
+			put("displayName", "Enchanted Book");
 			put("weight",15);
 			put("chances", new ArrayList<Double>(){{ add(0.20); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
@@ -98,6 +100,7 @@ public enum RChestSettings {
 		}});
 		add(new HashMap<String, Object>(){{
 			put("lootTable", "IronHorseArmor");
+			put("displayName", "Iron Horse Armor");
 			put("weight",10);
 			put("chances", new ArrayList<Double>(){{ add(0.10); add(0.01); add(0.001);}});
 			put("perPlayerTotalLimit", 50);
