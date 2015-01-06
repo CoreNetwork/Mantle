@@ -40,8 +40,10 @@ public class NetherSpawningModule extends MantleModule {
 		    Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new NetherSpawningTimer(EntityType.SKELETON), 20, NetherSpawningSettings.WITHER_SKELETON_SPAWNING_INTERVAL_TICKS.integer());
         if (NetherSpawningSettings.BLAZE_SPAWNING_INTERVAL_TICKS.integer() > 0)
             Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new NetherSpawningTimer(EntityType.BLAZE), 20, NetherSpawningSettings.BLAZE_SPAWNING_INTERVAL_TICKS.integer());
-        if (NetherSpawningSettings.GHAST_SPAWNING_INTERVAL_TICKS.integer() > 0)
-            Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new GhastSpawningTimer(), 20, NetherSpawningSettings.GHAST_SPAWNING_INTERVAL_TICKS.integer());
+		if (NetherSpawningSettings.MAGMA_CUBE_SPAWNING_INTERVAL_TICKS.integer() > 0)
+			Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new NetherSpawningTimer(EntityType.MAGMA_CUBE), 20, NetherSpawningSettings.MAGMA_CUBE_SPAWNING_INTERVAL_TICKS.integer());
+		if (NetherSpawningSettings.GHAST_SPAWNING_INTERVAL_TICKS.integer() > 0)
+			Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new GhastSpawningTimer(), 20, NetherSpawningSettings.GHAST_SPAWNING_INTERVAL_TICKS.integer());
 
 		return true;
 	}
