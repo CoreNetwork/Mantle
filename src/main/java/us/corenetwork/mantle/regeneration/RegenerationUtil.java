@@ -80,7 +80,16 @@ public class RegenerationUtil {
 					rc.delete();
 				
 				//Searching for loot chests, removing signs
+
+				if (worldName.equalsIgnoreCase("world_nether"))
+				{
+					CachedSchematic.isNether = true;
+				}
 				schematic.findChests();
+				if (worldName.equalsIgnoreCase("world_nether"))
+				{
+					CachedSchematic.isNether = false;
+				}
 				//find villagers before placing the schematic, so findVillagers can remove the signs from the schematic
 				// YAY for side effects in methods~!
 				if (structure.shouldRespawnVillagers())
@@ -108,7 +117,6 @@ public class RegenerationUtil {
 				}
 
 
-				
 				ChestInfo[] chests = schematic.getChests(pastingLocation, rotation);
 				for (ChestInfo chest : chests)
 				{
@@ -141,11 +149,12 @@ public class RegenerationUtil {
 		int z = location.getBlockZ();
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, ((CornerX - ? + sizeX / 2) * (CornerX - ? + sizeX / 2) + (CornerZ - ? + sizeZ / 2) * (CornerZ - ? + sizeZ / 2)) as dist FROM regeneration_structures ORDER BY dist ASC LIMIT 1");
+			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT ID, ((CornerX - ? + sizeX / 2) * (CornerX - ? + sizeX / 2) + (CornerZ - ? + sizeZ / 2) * (CornerZ - ? + sizeZ / 2)) as dist FROM regeneration_structures WHERE World = ? ORDER BY dist ASC LIMIT 1");
 			statement.setInt(1, x);
 			statement.setInt(2, x);
 			statement.setInt(3, z);
 			statement.setInt(4, z);
+			statement.setString(5, location.getWorld().getName());
 
 			ResultSet set = statement.executeQuery();
 			if (!set.next())
