@@ -39,10 +39,10 @@ public class HardmodeModule extends MantleModule {
 
 		Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new HardmodeTimer(), 20, 20);
 
-        //BabyZombieBurner burner = new BabyZombieBurner();
+        BabyZombieBurner burner = new BabyZombieBurner();
 
-        //Bukkit.getPluginManager().registerEvents(burner, MantlePlugin.instance);
-        //Bukkit.getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, burner, 20, 20); //TODO config
+        Bukkit.getPluginManager().registerEvents(burner, MantlePlugin.instance);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, burner, 20, 20); //TODO config
 
 		NMSWitherManager.register();
         
