@@ -74,6 +74,7 @@ public class RChestsListener implements Listener {
 				{
 					if (isVillageClaimed(chest.getStructureID()))
 					{
+						Util.Message(RChestSettings.MESSAGE_OPENING_CHEST_IN_CLAIMED_VILLAGE.string(), player);
 						return;
 					}
 					else

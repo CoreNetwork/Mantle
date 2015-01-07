@@ -124,7 +124,8 @@ public enum RChestSettings {
 	MESSAGE_COMPASS_NAME_WITH_DISTANCE("Messages.CompassNameWithDistance", "&5[<Category>] <Distance> blocks away"),
 	MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE("Messages.CompassNameWithoutDistance", "&5Tracking [<Category>]"),
 	MESSAGE_COMPASS_NAME_BLANK("Messages.CompassNameBlank", "Loot compass"),
-	MESSAGE_COMPASS_CANT_FIND_VILLAGE("Messages.CompassCantFindVillage", "&cCouldn't find any villages close nearby, walk a bit and try again");
+	MESSAGE_COMPASS_CANT_FIND_VILLAGE("Messages.CompassCantFindVillage", "&cCouldn't find any villages close nearby, walk a bit and try again"),
+	MESSAGE_OPENING_CHEST_IN_CLAIMED_VILLAGE("Messages.OpeningChestInClaimedVillage", "&cThis chest won't give you loot as the village is claimed!");
 	protected String string;
 	protected Object def;
 	
