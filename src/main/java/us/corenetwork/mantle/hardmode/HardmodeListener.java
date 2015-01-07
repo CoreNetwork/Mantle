@@ -42,6 +42,7 @@ import org.bukkit.entity.WitherSkull;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockFromToEvent;
@@ -633,6 +634,9 @@ public class HardmodeListener implements Listener {
 	public void onEntityDamageEntity(EntityDamageEvent event)
 	{
 
+		double damage = event.getDamage();
+		double origDamage = event.getFinalDamage();
+		HandlerList list = event.getHandlers();
 		if (event.getEntity().getType() == EntityType.SKELETON && event.getEntity().getWorld().getEnvironment() == Environment.NETHER)
 		{
 			if (event.getCause() == DamageCause.THORNS)

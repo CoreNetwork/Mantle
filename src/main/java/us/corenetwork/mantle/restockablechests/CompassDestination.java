@@ -2,11 +2,9 @@ package us.corenetwork.mantle.restockablechests;
 
 import java.util.HashMap;
 import java.util.UUID;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -43,8 +41,13 @@ public class CompassDestination {
 
 	public static void addDestination(HumanEntity player, CompassDestination destination)
 	{
-		((Player) player).setCompassTarget(new Location(Bukkit.getWorld("world"), destination.destX, 4, destination.destZ));
+		destination.refreshCompassTarget((Player) player);
 		destinations.put(player.getUniqueId(), destination);
+	}
+
+	public void refreshCompassTarget(Player player)
+	{
+		player.setCompassTarget(new Location(Bukkit.getWorld("world"), this.destX, 4, this.destZ));
 	}
 	
 	public VillageInfoHelper getVih()
@@ -77,7 +80,7 @@ public class CompassDestination {
 	{
 		Location playerLoc = player.getLocation();
 		ItemStack compass = player.getItemInHand();
-		
+
 		ItemMeta meta = compass.getItemMeta();
 		
 		int diffX = playerLoc.getBlockX() - destX;

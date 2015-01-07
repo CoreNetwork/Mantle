@@ -1,12 +1,18 @@
 package us.corenetwork.mantle.restockablechests;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import net.minecraft.server.v1_8_R1.EntityPlayer;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,14 +21,17 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.regeneration.RegenerationSettings;
 import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
@@ -39,15 +48,11 @@ public class RChestsListener implements Listener {
 		ItemStack hand = player.getItemInHand();
 
 		
-		if(event.getAction() == Action.RIGHT_CLICK_AIR)
+		if(hand.getType() == Material.COMPASS  && player.getWorld().getEnvironment() == World.Environment.NORMAL)
 		{
-			if(hand.getType() == Material.COMPASS)
-			{
-				if(player.getWorld().getEnvironment() == World.Environment.NORMAL)
-					player.openInventory(new GUICategoryPicker(player));
-				else
-					return;
-			}
+			player.openInventory(new GUICategoryPicker(player));
+			event.setCancelled(true);
+			return;
 		}
 		
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
@@ -276,6 +281,17 @@ public class RChestsListener implements Listener {
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerChangedWorldEvent(final PlayerChangedWorldEvent event)
+	{
+		if (event.getPlayer().getWorld().getEnvironment() == World.Environment.NORMAL)
+		{
+			CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
+			if(destination != null)
+				destination.refreshCompassTarget(event.getPlayer());
 		}
 	}
 }
