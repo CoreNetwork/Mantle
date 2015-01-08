@@ -208,6 +208,7 @@ public class RChestsListener implements Listener {
 		//Destination already in memory
 		if(CompassDestination.destinations.containsKey(player.getUniqueId()))
 		{
+			CompassDestination.destinations.get(player.getUniqueId()).refreshCompassTarget(player);
 			return;
 		}
 		
