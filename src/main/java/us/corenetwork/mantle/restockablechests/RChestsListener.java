@@ -48,7 +48,8 @@ public class RChestsListener implements Listener {
 		ItemStack hand = player.getItemInHand();
 
 		
-		if(hand.getType() == Material.COMPASS  && player.getWorld().getEnvironment() == World.Environment.NORMAL)
+		if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+				&& hand.getType() == Material.COMPASS  && player.getWorld().getEnvironment() == World.Environment.NORMAL)
 		{
 			player.openInventory(new GUICategoryPicker(player));
 			event.setCancelled(true);
