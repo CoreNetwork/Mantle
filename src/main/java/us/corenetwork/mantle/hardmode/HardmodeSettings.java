@@ -141,7 +141,9 @@ public enum HardmodeSettings {
     MESSAGE_NO_WITHER_SURFACE("Messages.NoWitherSurface", "Sorry, you can't build wither on the surface!"),
 	MESSAGE_NO_MILKING_NETHER("Messages.NoMilkingNether", "Sorry, you can't milk cows in nether!"),
 
-    REINFORCEMENTS_DISTANCE("Reinforcements.Distance", 10);
+    REINFORCEMENTS_DISTANCE("Reinforcements.Distance", 10),
+    REINFORCEMENTS_ENABLED("Reinforcements.Enabled", false)
+    ;
 	
 	protected String string;
 	protected Object def;

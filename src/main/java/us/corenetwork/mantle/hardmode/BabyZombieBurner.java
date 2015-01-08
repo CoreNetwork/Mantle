@@ -51,7 +51,10 @@ public class BabyZombieBurner implements Listener, Runnable{
                 float f = nmsZombie.c(1.0F);
 
                 if ((f > 0.5F) && (nmsZombie.world.i(new BlockPosition(MathHelper.floor(nmsZombie.locX), MathHelper.floor(nmsZombie.locY), MathHelper.floor(nmsZombie.locZ))))) {
-                    zombie.setFireTicks(30); // TODO config
+                    long time = zombie.getWorld().getTime();
+                    if (zombie.getLocation().getBlock().getLightFromSky() >= 15 && time <= 12000) {
+                        zombie.setFireTicks(30); // TODO config
+                    }
                 }
                 //end
             } catch (IllegalAccessException e) {

@@ -203,7 +203,6 @@ public class HardmodeListener implements Listener {
 				return;
 			}
 		}
-
 	}
 
 	@EventHandler(ignoreCancelled = true)
@@ -509,7 +508,7 @@ public class HardmodeListener implements Listener {
 		}
 		else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS)
 		{
-			if (entity instanceof Zombie)
+			if (entity instanceof Zombie && HardmodeSettings.REINFORCEMENTS_ENABLED.bool())
 			{
 				reinforcementZombies.add((Zombie) entity);
 			}
@@ -601,7 +600,7 @@ public class HardmodeListener implements Listener {
 				}
 			}
 		} else if (event.getEntity() instanceof Zombie && reinforcementZombies.contains(event.getEntity())
-				&& event.getTarget() instanceof Player)
+				&& event.getTarget() instanceof Player && event.getReason() == TargetReason.REINFORCEMENT_TARGET && event.getEntity().getTicksLived() <= 30)
 		{
 			Zombie zombie = (Zombie) event.getEntity();
 			Vector newDistance = event.getTarget().getLocation().subtract(zombie.getLocation()).toVector().normalize()
@@ -612,8 +611,10 @@ public class HardmodeListener implements Listener {
 
 			zombie.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
 			reinforcementZombies.remove(zombie);
-		}
-	}
+		} else if (reinforcementZombies.contains(event.getEntity())) {
+            reinforcementZombies.remove(event.getEntity());
+        }
+    }
 
 	@EventHandler(ignoreCancelled = true)
 	public void onZombieBreakDoor(EntityBreakDoorEvent event)
