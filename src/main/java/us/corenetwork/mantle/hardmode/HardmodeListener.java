@@ -603,8 +603,10 @@ public class HardmodeListener implements Listener {
 				&& event.getTarget() instanceof Player && event.getReason() == TargetReason.REINFORCEMENT_TARGET && event.getEntity().getTicksLived() <= 30)
 		{
 			Zombie zombie = (Zombie) event.getEntity();
-			Vector newDistance = event.getTarget().getLocation().subtract(zombie.getLocation()).toVector().normalize()
+			Vector newDistance = zombie.getLocation().subtract(target.getLocation()).toVector().normalize()
 					.multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
+			//Vector newDistance = event.getTarget().getLocation().subtract(zombie.getLocation()).toVector().normalize()
+			//		.multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
 
 			Location newLocation = event.getTarget().getLocation().add(newDistance);
 			newLocation.setY(newLocation.getWorld().getHighestBlockYAt(newLocation) + 1d);
