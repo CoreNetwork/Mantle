@@ -549,7 +549,7 @@ public class HardmodeListener implements Listener {
 				break;
 			}
 
-			event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 1));
+			event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 0));
 		}
 	}
 
