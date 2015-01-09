@@ -265,7 +265,7 @@ public class HardmodeListener implements Listener {
 			event.getDrops().clear();
 
 			MagmaCube cube = (MagmaCube) event.getEntity();
-			if (cube.getSize() == 3 && MantlePlugin.random.nextBoolean())
+			if (cube.getSize() == 4 && MantlePlugin.random.nextBoolean())
 				event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, 1));
 		}
 
