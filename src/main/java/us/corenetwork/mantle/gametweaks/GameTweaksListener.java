@@ -38,7 +38,7 @@ public class GameTweaksListener implements Listener {
 				
 				if (isRepairRecipe)
 				{
-					event.getWhoClicked().getWorld().playSound(event.getWhoClicked().getLocation(), Sound.ANVIL_USE, 1f, 1f);
+					event.getWhoClicked().getWorld().playSound(event.getWhoClicked().getLocation(), Sound.ANVIL_USE, 0.5f, 2f);
 				}
 			}
 		}		
