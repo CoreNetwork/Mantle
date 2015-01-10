@@ -129,10 +129,9 @@ public class CompassDestination {
 		Iterator<CompassDestinationHelper> it = oldDestinations.iterator();
 		while(it.hasNext())
 		{
-			CompassDestinationHelper cdh = it.next();
-			if(System.currentTimeMillis() - cdh.timestamp > RChestSettings.COMPASS_OLD_DESTINATION_EXPIRATION_TIME_SECONDS.integer() * 1000)
+			if(System.currentTimeMillis() - it.next().timestamp > RChestSettings.COMPASS_OLD_DESTINATION_EXPIRATION_TIME_SECONDS.integer() * 1000)
 			{
-				oldDestinations.remove(cdh);
+				it.remove();
 			}
 		}
 	}
