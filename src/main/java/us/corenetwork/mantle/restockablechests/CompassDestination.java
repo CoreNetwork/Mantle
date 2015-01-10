@@ -106,8 +106,11 @@ public class CompassDestination {
 	public static void removeDestinationSlow(UUID uuid)
 	{
 		CompassDestination oldDest = destinations.get(uuid);
-		destinations.remove(uuid);
-		oldDestinations.add(new CompassDestinationHelper(oldDest));
+		if(oldDest != null)
+		{
+			destinations.remove(uuid);
+			oldDestinations.add(new CompassDestinationHelper(oldDest));
+		}
 	}
 
 	public static List<CompassDestination> getOldDestinations()
