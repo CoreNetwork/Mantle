@@ -221,8 +221,13 @@ public class RestockableChest {
 
 		return looted;
 	}
-	
+
 	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer, Integer structureID)
+	{
+		createChest(chest, lootTable, interval, perPlayer, structureID, false);
+	}
+
+	public static void createChest(Block chest, String lootTable, int interval, boolean perPlayer, Integer structureID, boolean shouldCommit)
 	{
 		Inventory inventory = ((InventoryHolder) chest.getState()).getInventory();
 		if (inventory instanceof DoubleChestInventory)
@@ -255,7 +260,8 @@ public class RestockableChest {
 
 
 			statement.executeUpdate();
-			IO.getConnection().commit();
+			if(shouldCommit)
+				IO.getConnection().commit();
 			statement.close();
 		}
 		catch (SQLException e) {
@@ -264,6 +270,11 @@ public class RestockableChest {
 	}
 
 	public void delete()
+	{
+		delete(false);
+	}
+
+	public void delete(boolean shouldCommit)
 	{
 		try
 		{
@@ -282,7 +293,8 @@ public class RestockableChest {
 			statement.executeUpdate();
 			statement.close();
 
-			IO.getConnection().commit();
+			if(shouldCommit)
+				IO.getConnection().commit();
 
 		}
 		catch (SQLException e) {

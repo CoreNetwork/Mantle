@@ -308,4 +308,11 @@ public class Util
 
         return nmsWorldBorder.a(new BlockPosition(block.getX(), block.getY(), block.getZ()));
     }
+
+    private static long debugTimer = System.currentTimeMillis();
+    public static void debugTime(String message)
+    {
+        MLog.debug(message + " " + (System.currentTimeMillis() - debugTimer));
+        debugTimer = System.currentTimeMillis();
+    }
 }

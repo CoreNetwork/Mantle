@@ -14,6 +14,7 @@ import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.generation.VillagerSpawner;
 import us.corenetwork.mantle.restockablechests.RestockableChest;
@@ -28,6 +29,7 @@ public class RegenerationUtil {
 	
 	public static void regenerateStructure(int id, int time, boolean clearClaims)
 	{
+		Util.debugTime("RG Start");
 		try
 		{
 			PreparedStatement statement = IO.getConnection().prepareStatement("SELECT StructureName, Schematic, Rotation, World, CornerX, CornerZ, SizeX, SizeZ, PastingY FROM regeneration_structures WHERE id = ? LIMIT 1");
@@ -47,6 +49,8 @@ public class RegenerationUtil {
 				final int zSize = set.getInt("SizeZ");
 				int pastingY = set.getInt("PastingY");
 				int rotation = set.getInt("Rotation");
+
+				Util.debugTime("RG SQL parsed");
 				//Ginaw
 				//hacky solution to randomizing a schematic for overworld village
 				if(structureName.equalsIgnoreCase("villages"))
@@ -57,28 +61,38 @@ public class RegenerationUtil {
 					schematicName = newSchematicName;
 				}
 				//End
-				
+
+				Util.debugTime("RG Schematic name randomized");
+
 				World world = Bukkit.getWorld(worldName);
 				final CachedSchematic schematic = new CachedSchematic(schematicName, world);
+				Util.debugTime("RG CachedSchematic object created");
 				//schematic.rotateTo(rotation);
 
 				rotation = MantlePlugin.random.nextInt(2) * 2;
 				schematic.rotateTo(rotation);
+
+				Util.debugTime("RG schematic rotated");
 
 				if (clearClaims)
 				{
 					int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 					GriefPreventionHandler.deleteClaimsInside(world, cornerX, cornerZ, xSize, zSize, padding, false, null);
 				}
-				
+
+				Util.debugTime("RG cleared claims");
+
 				final Location pastingLocation = new Location(world, cornerX, pastingY, cornerZ);
 				RegStructure structure = RegenerationModule.instance.structures.get(structureName);
 
+				Util.debugTime("RG got RegStructure object");
+
 				List<RestockableChest> oldRestockableChests = RestockableChest.getChestsInStructure(id);
-				
+				Util.debugTime("RG got oldRestockChests");
 				for(RestockableChest rc : oldRestockableChests)
-					rc.delete();
-				
+					rc.delete(false);
+				Util.debugTime("RG deleted old restock chests");
+
 				//Searching for loot chests, removing signs
 
 				if (worldName.equalsIgnoreCase("world_nether"))
@@ -90,15 +104,18 @@ public class RegenerationUtil {
 				{
 					CachedSchematic.isNether = false;
 				}
+
+				Util.debugTime("RG found chests");
 				//find villagers before placing the schematic, so findVillagers can remove the signs from the schematic
 				// YAY for side effects in methods~!
 				if (structure.shouldRespawnVillagers())
 				{
 					schematic.findVillagers();
 				}
-				
-				schematic.place(pastingLocation, structure.shouldIgnoreAir());
 
+				Util.debugTime("RG found villagers");
+				schematic.place(pastingLocation, structure.shouldIgnoreAir());
+				Util.debugTime("RG placed");
 				final int rot = rotation;
 				if (structure.shouldRespawnVillagers())
 				{
@@ -115,26 +132,28 @@ public class RegenerationUtil {
 					});	
 
 				}
-
+				Util.debugTime("RG scheduled villager spawning");
 
 				ChestInfo[] chests = schematic.getChests(pastingLocation, rotation);
 				for (ChestInfo chest : chests)
 				{
 					if (chest.restockable)
-						RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer, id);
+						RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer, id, false);
 				}
+				Util.debugTime("RG created restock chests");
 			}
 			
 			statement.close();
 			
 			statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
+
 			statement.setInt(1, time);
 			statement.setInt(2, time);
 			statement.setInt(3, id);
 			statement.executeUpdate();
 			IO.getConnection().commit();
 			statement.close();
-
+			Util.debugTime("RG saved last shit");
 		}
 		catch (SQLException e)
 		{

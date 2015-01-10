@@ -1,5 +1,6 @@
 package us.corenetwork.mantle;
 
+import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
@@ -7,6 +8,7 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.function.operation.RunContext;
 import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.registry.WorldData;
@@ -607,7 +609,7 @@ public class CachedSchematic {
 
 	public void place(Location placement, boolean ignoreAir)
 	{
-
+		Util.debugTime("CS Start");
 		MantleListener.disablePhysics = true;
 		try {
 			Vector to = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
@@ -628,20 +630,23 @@ public class CachedSchematic {
 					to = to.add(0.5, 0, 0);
 				}
 			}
-
-			EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
-
+			Util.debugTime("CS Boring stuff");
+			//EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
+			EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(placement.getWorld()), -1);
+			Util.debugTime("CS created editsession");
 			editSession.enableQueue();
 			Operation operation = localSession.getClipboard()
 					.createPaste(editSession, localSession.getClipboard().getWorldData())
 					.to(to)
 					.ignoreAirBlocks(ignoreAir)
 					.build();
+			Util.debugTime("CS whatever that is, operation, building");
 			Operations.completeLegacy(operation);
+			Util.debugTime("CS legacy operation, woot");
 			editSession.flushQueue();
-			
+			Util.debugTime("CS flusshhh");
 			localSession.clearHistory();
-
+			Util.debugTime("CS clearhistory");
 		} catch (MaxChangedBlocksException e) {
 			e.printStackTrace();
 		} catch (EmptyClipboardException e) {
@@ -650,10 +655,13 @@ public class CachedSchematic {
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
-		}
-		finally
+		} catch (WorldEditException e)
+		{
+			e.printStackTrace();
+		} finally
 		{
 			MantleListener.disablePhysics = false;
+			Util.debugTime("CS End");
 		}
 	}
 	
