@@ -23,7 +23,7 @@ public class HydrationUtil {
 		}
 	}
 	
-	public static boolean updateNegativeEffects(Player player, PlayerData playerData, WorldLayer layer)
+	public static void updateNegativeEffects(Player player, PlayerData playerData, WorldLayer layer)
 	{
 		int neededHydrationToStop = (int) (playerData.fatigueLevel * 100 / 5);
 		if (neededHydrationToStop == 0)
@@ -37,7 +37,7 @@ public class HydrationUtil {
 			if (timePassed < HydrationSettings.MINING_FATIGUE_DURATION_SECONDS.integer() * 1000)
 			{
 				if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING) && player.hasPotionEffect(PotionEffectType.SLOW) && player.hasPotionEffect(PotionEffectType.HUNGER))
-					return false;
+					return;
 				else
 				{
 					//Player lost negative effects somehow, lets reward him by giving it again
@@ -71,16 +71,15 @@ public class HydrationUtil {
 				player.addPotionEffect(effect, true);
 
 				playerData.fatigueEffectStart = System.currentTimeMillis();
-				
-				return true;
+				playerData.save();
+
 			}
 			// 3. Player's effect has worn off, he does not have it anymore.
 			else
 			{
 				playerData.fatigueEffectStart = 0;
 				playerData.fatigueLevel = 0;
-				
-				return true;
+				playerData.save();
 
 			}
 		}
@@ -92,10 +91,8 @@ public class HydrationUtil {
 			player.removePotionEffect(PotionEffectType.HUNGER);
 			playerData.fatigueEffectStart = 0;
 			playerData.fatigueLevel = 0;
-			
-			return true;
+			playerData.save();
 		}
-		return false;
 	}
 	
 	public static void notify(PlayerData data, Player player)

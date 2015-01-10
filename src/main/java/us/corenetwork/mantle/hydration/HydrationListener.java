@@ -8,11 +8,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import us.corenetwork.mantle.MantlePlugin;
@@ -22,7 +24,7 @@ public class HydrationListener implements Listener {
 	
 	public static HashMap<UUID, Long> lavaPlayer = new HashMap<UUID, Long>();
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{		
 		final Player player = event.getPlayer();
@@ -32,7 +34,7 @@ public class HydrationListener implements Listener {
 		HydrationUtil.updateScoreboard(player.getName(), (int) Math.round(playerData.hydrationLevel));
 	}
 
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerConsume(final PlayerItemConsumeEvent event)
 	{
 		ItemStack consumed = event.getItem();
@@ -64,12 +66,19 @@ public class HydrationListener implements Listener {
 		});
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onEntityDamage(EntityDamageEvent event)
 	{
 		if (event.getCause() == DamageCause.LAVA && event.getEntityType() == EntityType.PLAYER)
 		{
 			lavaPlayer.put(event.getEntity().getUniqueId(), System.currentTimeMillis());
 		}
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onWorldSave(WorldSaveEvent event)
+	{
+		if (event.getWorld().getName().equals("world")) //All worlds save at the same time and we only need to save once
+			PlayerData.saveAll();
 	}
 }

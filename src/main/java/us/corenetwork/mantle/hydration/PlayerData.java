@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.hydration;
 
+import com.sk89q.worldedit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,8 +12,8 @@ import java.util.UUID;
 import us.corenetwork.mantle.IO;
 
 public class PlayerData {	
-	private static HashMap<UUID, PlayerData> pendingSaves = new HashMap<UUID, PlayerData>();
-	
+	private static HashMap<UUID, PlayerData> playerCache = new HashMap<UUID, PlayerData>();
+
 	private UUID playerUUID;
 	
 	public int fatigueLevel;
@@ -24,7 +25,7 @@ public class PlayerData {
 	
 	public static PlayerData getPlayer(UUID uuid)
 	{		
-		PlayerData data = pendingSaves.get(uuid);
+		PlayerData data = playerCache.get(uuid);
 		if (data != null)
 			return data;
 		
@@ -48,50 +49,17 @@ public class PlayerData {
 		{
 			e.printStackTrace();
 		}
-						
+
+		playerCache.put(uuid, data);
+
 		return data;
 	}
 			
 	public void save()
 	{
 		waitingToSave = true;
-		pendingSaves.put(playerUUID, this);
-//		try
-//		{
-//			PreparedStatement delStatement = IO.getConnection().prepareStatement("DELETE FROM hydration WHERE Player = ?");
-//			PreparedStatement insertStatement = IO.getConnection().prepareStatement("INSERT INTO hydration (Player, Hydration, Saturation, FatigueLevel, FatigueLevelStart, DeliveredMessages) (?,?,?,?,?,?)");
-//		
-//			save(delStatement, insertStatement);
-//			
-//			delStatement.executeUpdate();
-//			delStatement.close();
-//			
-//			insertStatement.executeUpdate();
-//			insertStatement.close();
-//			
-//			IO.getConnection().commit();
-//		}
-//		catch (SQLException e)
-//		{
-//			e.printStackTrace();
-//		}	
 	}
-	
-	public void save(PreparedStatement delStatement, PreparedStatement insertStatement) throws SQLException
-	{
-		delStatement.setString(1, playerUUID.toString());
-		
-		insertStatement.setString(1, playerUUID.toString());
-		insertStatement.setDouble(2, hydrationLevel);
-		insertStatement.setDouble(3, saturationLevel);
-		insertStatement.setInt(4, fatigueLevel);
-		insertStatement.setLong(5, fatigueEffectStart);
-		insertStatement.setString(6, serializeIntegerList(deliveredMessages));
-		
-		waitingToSave = false;
-		pendingSaves.remove(playerUUID);
-	}
-	
+
 	private PlayerData(UUID uuid)
 	{
 		playerUUID = uuid;
@@ -136,6 +104,39 @@ public class PlayerData {
 		}
 		
 		return builder.toString();
+	}
+
+	public static void saveAll()
+	{
+		try
+		{
+			PreparedStatement insertStatement = IO.getConnection().prepareStatement("REPLACE INTO hydration (PlayerUUID, Hydration, Saturation, FatigueLevel, FatigueLevelStart, DeliveredMessages) VALUES (?,?,?,?,?,?)");
+
+			for (PlayerData playerData : playerCache.values())
+			{
+				if (playerData.waitingToSave)
+				{
+					insertStatement.setString(1, playerData.playerUUID.toString());
+					insertStatement.setDouble(2, playerData.hydrationLevel);
+					insertStatement.setDouble(3, playerData.saturationLevel);
+					insertStatement.setInt(4, playerData.fatigueLevel);
+					insertStatement.setLong(5, playerData.fatigueEffectStart);
+					insertStatement.setString(6, serializeIntegerList(playerData.deliveredMessages));
+					insertStatement.addBatch();
+
+					playerData.waitingToSave = false;
+				}
+			}
+
+			insertStatement.executeBatch();
+			insertStatement.close();
+			IO.getConnection().commit();
+
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
 	}
 	
 }

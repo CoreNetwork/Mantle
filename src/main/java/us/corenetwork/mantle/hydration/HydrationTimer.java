@@ -13,91 +13,58 @@ import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
 public class HydrationTimer implements Runnable {
 
 	@Override
-	public void run() {	
-		boolean updated = false;
-
-		try
+	public void run() {
+		for (Player player : Bukkit.getServer().getOnlinePlayers())
 		{
-			PreparedStatement delStatement = IO.getConnection().prepareStatement("DELETE FROM hydration WHERE PlayerUUID = ?");
-			PreparedStatement insertStatement = IO.getConnection().prepareStatement("INSERT INTO hydration (PlayerUUID, Hydration, Saturation, FatigueLevel, FatigueLevelStart, DeliveredMessages) VALUES (?,?,?,?,?,?)");
+			PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 
-			for (Player player : Bukkit.getServer().getOnlinePlayers())
+			int oldHydration = (int) Math.round(playerData.hydrationLevel);
+
+			WorldLayer layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
+			if (layer != null)
 			{
-				PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
-				boolean playerUpdated = playerData.waitingToSave;
+				double drain = layer.getDrain(player);
 
-				int oldHydration = (int) Math.round(playerData.hydrationLevel);
-
-				WorldLayer layer = CachedDrainConfig.getWoldLayer(player.getWorld().getName(), player.getLocation().getBlockY());
-				if (layer != null)
+				if (drain != 0 && (drain < 0 || player.getGameMode() != GameMode.CREATIVE))
 				{
-					double drain = layer.getDrain(player);
 
-					if (drain != 0 && (drain < 0 || player.getGameMode() != GameMode.CREATIVE))
+					if (drain < 0)
 					{
-
-						if (drain < 0)
+						playerData.hydrationLevel -= drain;
+						if (playerData.hydrationLevel > 100)
 						{
+							playerData.hydrationLevel = 100;
+						}
+					}
+					else
+					{
+						playerData.saturationLevel -= drain;
+						if (playerData.saturationLevel < 0)
+						{
+							drain = -playerData.saturationLevel;
+							playerData.saturationLevel = 0;
+
 							playerData.hydrationLevel -= drain;
-							if (playerData.hydrationLevel > 100)
-							{
-								playerData.hydrationLevel = 100;
-							}
-						}
-						else
-						{
-							playerData.saturationLevel -= drain;
-							if (playerData.saturationLevel < 0)
-							{
-								drain = -playerData.saturationLevel;
-								playerData.saturationLevel = 0;
-
-								playerData.hydrationLevel -= drain;
-								if (playerData.hydrationLevel < 0)
-									playerData.hydrationLevel = 0;
-							}
+							if (playerData.hydrationLevel < 0)
+								playerData.hydrationLevel = 0;
 						}
 					}
+				}
 
 
-					int newHydration = (int) Math.round(playerData.hydrationLevel);
+				int newHydration = (int) Math.round(playerData.hydrationLevel);
 
-					if (oldHydration != newHydration)
-					{
-						HydrationUtil.updateScoreboard(player.getName(), newHydration);
-						HydrationUtil.notify(playerData, player);
-					}
-
-					playerUpdated = true;
-				} 
-
-				playerUpdated |= HydrationUtil.updateNegativeEffects(player, playerData, layer);
-
-				if (playerUpdated || playerData.waitingToSave)
+				if (oldHydration != newHydration)
 				{
-					playerData.save(delStatement, insertStatement);
-					delStatement.addBatch();
-					insertStatement.addBatch();
-
-					updated = true;
+					HydrationUtil.updateScoreboard(player.getName(), newHydration);
+					HydrationUtil.notify(playerData, player);
 				}
 			}
 
-			if (updated)
-			{
-				delStatement.executeBatch();
-				insertStatement.executeBatch();
+			HydrationUtil.updateNegativeEffects(player, playerData, layer);
 
-				IO.getConnection().commit();
-			}
+		}
 
-			delStatement.close();
-			insertStatement.close();
-		}
-		catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
 
 
 	}
