@@ -73,6 +73,11 @@ public class StructureChecker implements Runnable {
 						structuresToSkip.add(CompassDestination.destinations.get(uuid).getVih().id);
 					}
 				}
+
+				for(CompassDestination destination : CompassDestination.getOldDestinations())
+				{
+					structuresToSkip.add(destination.getVih().id);
+				}
 				
 				
 				while (set.next())

@@ -1,6 +1,9 @@
 package us.corenetwork.mantle.restockablechests;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,7 +18,8 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.regeneration.RegenerationSettings;
 
 public class CompassDestination {
-	public static HashMap<UUID, CompassDestination> destinations = new HashMap<UUID, CompassDestination>();	
+	public static HashMap<UUID, CompassDestination> destinations = new HashMap<UUID, CompassDestination>();
+	public static List<CompassDestinationHelper> oldDestinations = new LinkedList<CompassDestinationHelper>();
 	private Location lastPlayerLocation;
 	private int destX;
 	private int destZ;
@@ -95,5 +99,38 @@ public class CompassDestination {
 		compass.setItemMeta(meta);
 
         
+	}
+
+	//Removed destination from 'destinations' collection and adds it to 'oldDestinations' with timestamp
+	//The purpouse is to not regenerate village that was set as a destination of a player who recently went offline
+	public static void removeDestinationSlow(UUID uuid)
+	{
+		CompassDestination oldDest = destinations.get(uuid);
+		destinations.remove(uuid);
+		oldDestinations.add(new CompassDestinationHelper(oldDest));
+	}
+
+	public static List<CompassDestination> getOldDestinations()
+	{
+		clearExpiredOldDestinations();
+		List<CompassDestination> oldDests = new LinkedList<>();
+		for(CompassDestinationHelper cdh : oldDestinations)
+		{
+			oldDests.add(cdh.destination);
+		}
+		return oldDests;
+	}
+
+	private static void clearExpiredOldDestinations()
+	{
+		Iterator<CompassDestinationHelper> it = oldDestinations.iterator();
+		while(it.hasNext())
+		{
+			CompassDestinationHelper cdh = it.next();
+			if(System.currentTimeMillis() - cdh.timestamp > RChestSettings.COMPASS_OLD_DESTINATION_EXPIRATION_TIME_SECONDS.integer() * 1000)
+			{
+				oldDestinations.remove(cdh);
+			}
+		}
 	}
 }

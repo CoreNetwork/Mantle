@@ -32,6 +32,7 @@ public enum RChestSettings {
 	DIMINISH_RESTORE_INTERVAL_TOTAL("Diminish.Total.RestoreInterval", 7200),
 
 	COMPASS_NBT_TAG("CompassNBTTag", "Compass"),
+	COMPASS_OLD_DESTINATION_EXPIRATION_TIME_SECONDS("CompassOldDestinationExpirationTimeSeconds", 600),
 
 	BASIC_CATEGORIES("BasicCategories",new ArrayList<Map<String, Object>>(){{
 		add(new HashMap<String, Object>(){{
@@ -125,6 +126,7 @@ public enum RChestSettings {
 	MESSAGE_COMPASS_NAME_WITHOUT_DISTANCE("Messages.CompassNameWithoutDistance", "&5Tracking [<Category>]"),
 	MESSAGE_COMPASS_NAME_BLANK("Messages.CompassNameBlank", "Loot compass"),
 	MESSAGE_COMPASS_CANT_FIND_VILLAGE("Messages.CompassCantFindVillage", "&cCouldn't find any villages close nearby, walk a bit and try again"),
+	MESSAGE_COMPASS_VILLAGE_REGENRATED_WHILE_GONE("Messages.CompassVillageRegeneratedWhileGone", "&cTargeted village regenerated while you were gone. Please pick a new one."),
 	MESSAGE_OPENING_CHEST_IN_CLAIMED_VILLAGE("Messages.OpeningChestInClaimedVillage", "&cThis chest won't give you loot as the village is claimed!");
 	protected String string;
 	protected Object def;

@@ -16,6 +16,7 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
@@ -199,12 +201,11 @@ public class RChestsListener implements Listener {
 			destination.playerMoved(event);
 	}
 	
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
 		Player player = event.getPlayer();
-		
-		
+
 		//Destination already in memory
 		if(CompassDestination.destinations.containsKey(player.getUniqueId()))
 		{
@@ -270,6 +271,7 @@ public class RChestsListener implements Listener {
 		}
 		else
 		{
+			Util.Message(RChestSettings.MESSAGE_COMPASS_VILLAGE_REGENRATED_WHILE_GONE.string(), player);
 			try
 			{
 				PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE playerTotal SET CompassCategory = ?, CompassChestID = 0 WHERE PlayerUUID = ?");
@@ -287,8 +289,16 @@ public class RChestsListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerQuitEvent(PlayerQuitEvent event)
+	{
+		CompassDestination.removeDestinationSlow(event.getPlayer().getUniqueId());
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerChangedWorldEvent(final PlayerChangedWorldEvent event)
 	{
+		//Refeshing compass after coming back from nether.
+		//Nether causes compass to loss direction.
 		if (event.getPlayer().getWorld().getEnvironment() == World.Environment.NORMAL)
 		{
 			CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
