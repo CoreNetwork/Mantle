@@ -39,7 +39,7 @@ public class IgnoredSlimeChunks {
 		
 		try
 		{
-			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO ignoredSlimeChunks (World, X ,Y) VALUES (?,?)");
+			PreparedStatement statement = IO.getConnection().prepareStatement("INSERT INTO ignoredSlimeChunks (World, X ,Y) VALUES (?,?,?)");
             statement.setString(1, world);
 			statement.setInt(2, x);
 			statement.setInt(3, y);
