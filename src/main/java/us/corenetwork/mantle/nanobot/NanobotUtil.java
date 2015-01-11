@@ -143,6 +143,9 @@ public class NanobotUtil {
 		return source;
 	}
 
+	/*
+		Replaces
+	 */
     public static ItemStack replaceStringInItem(ItemStack item, String source, String replacement)
     {
         if (!item.hasItemMeta())
@@ -170,6 +173,9 @@ public class NanobotUtil {
         return item;
     }
 
+	/*
+		Extracts NBT tags from the item as byte array
+	 */
 	public static byte[] getNBT(net.minecraft.server.v1_8_R1.ItemStack stack)
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
@@ -208,6 +214,9 @@ public class NanobotUtil {
 		}
 	}
 
+	/*
+		Loads NBT tags from byte array and inserts it into provided ItemStack.
+	 */
 	public static void loadNBT(byte[] nbt, net.minecraft.server.v1_8_R1.ItemStack stack)
 	{
 		if (nbt == null || nbt.length == 0)
@@ -234,6 +243,9 @@ public class NanobotUtil {
 		stack.setTag(tag);
 	}
 
+	/*
+		Get NMS item stack from CraftItemStack. This is much faster than CraftItemStack.asNMSCopy() as it just retrieves internal variable rather than rebuilding whole NMS stack from scratch.
+	 */
 	public static net.minecraft.server.v1_8_R1.ItemStack getInternalNMSStack(CraftItemStack bukkitStack)
 	{
 		try
@@ -250,6 +262,9 @@ public class NanobotUtil {
 		}
 	}
 
+	/*
+		@return true if item contains specific tag at NBT root
+	 */
 	public static boolean hasTag(ItemStack bukkitStack, String tag)
 	{
 		if (!(bukkitStack instanceof CraftItemStack))
