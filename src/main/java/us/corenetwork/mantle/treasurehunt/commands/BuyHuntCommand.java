@@ -13,8 +13,8 @@ public class BuyHuntCommand extends BaseMantleCommand {
 
 	public BuyHuntCommand()
 	{
-		permission = "treasureraid.buy";
-		desc = "Adds one hunt to callers pool, run later with /mantle runhunt";
+		permission = "treasurechase.buy";
+		desc = "Adds one chase to callers pool, run later with /chase run";
 		needPlayer = false;
 	}
 	
@@ -23,7 +23,7 @@ public class BuyHuntCommand extends BaseMantleCommand {
 	{
 		if(args.length != 1 && args.length != 2)
 		{
-			Util.Message("Usage: /raid buy <playerName> [<amount>]", sender);
+			Util.Message("Usage: /chase buy <playerName> [<amount>]", sender);
 			return;
 		}
 		

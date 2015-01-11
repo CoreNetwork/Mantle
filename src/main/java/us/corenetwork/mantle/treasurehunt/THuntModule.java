@@ -24,7 +24,7 @@ public class THuntModule extends MantleModule {
 	
 	public THuntModule()
 	{
-		super("Treasure Hunt", new String[] {"raid"}, "treasureraid");
+		super("Treasure Chase", new String[] {"chase"}, "treasurechase");
 		instance = this;
 	}
 

@@ -11,8 +11,8 @@ public class RunHuntCommand extends BaseMantleCommand {
 
 	public RunHuntCommand()
 	{
-		permission = "treasureraid.run";
-		desc = "Adds a treasure hunt to the queue";
+		permission = "treasurechase.run";
+		desc = "Adds a treasure chase to the queue";
 		needPlayer = true;
 	}
 

@@ -12,8 +12,8 @@ public class JoinHuntCommand extends BaseMantleCommand  {
 
 	public JoinHuntCommand()
 	{
-		permission = "treasureraid.join";
-		desc = "Callers joins the treasure raid";
+		permission = "treasurechase.join";
+		desc = "Callers joins the treasure chase";
 		needPlayer = true;
 	}
 	

@@ -9,8 +9,8 @@ public class LeaveHuntCommand extends BaseMantleCommand  {
 
 	public LeaveHuntCommand()
 	{
-		permission = "treasureraid.leave";
-		desc = "Callers leaves the treasure raid";
+		permission = "treasurechase.leave";
+		desc = "Callers leaves the treasure chase";
 		needPlayer = true;
 	}
 	

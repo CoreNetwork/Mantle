@@ -12,8 +12,8 @@ commands:
         description: Nanobot
     inspect:
         description: Structure inspector
-    raid:
-        description: Treasure Raid commands
+    chase:
+        description: Treasure Chase commands
     holo:
         description: 1.8 holograms
     title:

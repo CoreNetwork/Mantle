@@ -11,8 +11,8 @@ public class CheckHuntCommand extends BaseMantleCommand  {
 
 	public CheckHuntCommand()
 	{
-		permission = "treasureraid.check";
-		desc = "Returns amount of treasure hunts owned by caller.";
+		permission = "treasurechase.check";
+		desc = "Returns amount of treasure chases owned by caller.";
 		needPlayer = true;
 	}
 	
