@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import org.bukkit.event.player.PlayerPortalEvent;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -33,7 +34,10 @@ public class PortalsModule extends MantleModule {
 		saveConfig();
 				
 		Bukkit.getServer().getPluginManager().registerEvents(new PortalsListener(), MantlePlugin.instance);
-		
+
+		//Nuke GP event into oblivion
+		us.corenetwork.core.Util.removeListener("me.ryanhamshire.GriefPrevention.PlayerEventHandler", PlayerPortalEvent.class);
+
 		return true;
 	}
 	@Override
