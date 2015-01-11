@@ -19,6 +19,7 @@ import org.bukkit.GrassSpecies;
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -247,5 +248,17 @@ public class NanobotUtil {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public static boolean hasTag(ItemStack bukkitStack, String tag)
+	{
+		if (!(bukkitStack instanceof CraftItemStack))
+			return false;
+
+		net.minecraft.server.v1_8_R1.ItemStack nmsStack = getInternalNMSStack((CraftItemStack) bukkitStack);
+		if (!nmsStack.hasTag())
+			return false;
+
+		return nmsStack.getTag().hasKey(tag);
 	}
 }
