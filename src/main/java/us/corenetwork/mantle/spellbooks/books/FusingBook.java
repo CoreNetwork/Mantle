@@ -50,6 +50,7 @@ public class FusingBook extends Spellbook {
 		FUSEITEMS.put(new ItemStack(Material.WHEAT, 9), new ItemStack(Material.HAY_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.MELON, 9), new ItemStack(Material.MELON_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.NETHER_BRICK_ITEM, 4), new ItemStack(Material.NETHER_BRICK, 1));
+		FUSEITEMS.put(new ItemStack(Material.SLIME_BALL, 9), new ItemStack(Material.SLIME_BLOCK, 1));
 		
 		settings.setDefault(SETTING_TEMPLATE, "spell-fusing");
 	}
