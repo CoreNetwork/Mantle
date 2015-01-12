@@ -39,8 +39,8 @@ public class NetherSpawner {
 	{
 		spawn(block, type);
 
-		int	maxAdditionalPackMobs = AnimalSpawningSettings.MAX_ADDITIONAL_PACK_MOBS.integer();		
-		int	minAdditionalPackMobs = AnimalSpawningSettings.MIN_ADDITIONAL_PACK_MOBS.integer();
+		int	maxAdditionalPackMobs = NetherSpawningSettings.MAX_ADDITIONAL_PACK_MOBS.integer();
+		int	minAdditionalPackMobs = NetherSpawningSettings.MIN_ADDITIONAL_PACK_MOBS.integer();
 		int diff = maxAdditionalPackMobs - minAdditionalPackMobs;
 
 		if (diff <= 0)
