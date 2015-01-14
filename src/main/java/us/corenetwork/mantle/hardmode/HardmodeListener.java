@@ -80,7 +80,7 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-	public void onEntityDamage(EntityDamageEvent event)
+	public void onEntityDamage(final EntityDamageEvent event)
 	{
 		// Do not apply anything to End or void
 		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
@@ -194,7 +194,7 @@ public class HardmodeListener implements Listener {
 			}
 		}
 
-		else if (event.getCause() == DamageCause.WITHER && event.getEntity() instanceof LivingEntity)
+		if (event.getCause() == DamageCause.WITHER && event.getEntity() instanceof LivingEntity)
 		{
 			LivingEntity living = (LivingEntity) event.getEntity();
 			if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion"))
@@ -498,7 +498,6 @@ public class HardmodeListener implements Listener {
 			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
 
 			entity.getEquipment().clear();
-			((PigZombie) entity).setAnger(Integer.MAX_VALUE);
 
 			boolean hasSword = MantlePlugin.random.nextDouble() < HardmodeSettings.PIGMEN_SWORD_CHANCE.doubleNumber();
 			if (hasSword)

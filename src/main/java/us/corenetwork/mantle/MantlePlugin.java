@@ -3,17 +3,22 @@ package us.corenetwork.mantle;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
+import javax.swing.text.html.parser.Entity;
+import net.minecraft.server.v1_8_R1.EntityPig;
+import net.minecraft.server.v1_8_R1.EntityPigZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
+import us.corenetwork.mantle.hardmode.CustomPigman;
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
 import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
+import us.corenetwork.mantle.util.VanillaReplacingUtil;
 
 
 public class MantlePlugin extends JavaPlugin {
@@ -65,6 +70,7 @@ public class MantlePlugin extends JavaPlugin {
         });
 
         CustomBeaconTileEntity.inject();
+		VanillaReplacingUtil.replaceMob("PigZombie", 57, EntityPigZombie.class, CustomPigman.class);
 
 		log.info("[Mantle] " + getDescription().getFullName() + " initialized!");
 	}

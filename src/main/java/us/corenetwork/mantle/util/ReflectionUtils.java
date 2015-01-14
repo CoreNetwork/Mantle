@@ -1,4 +1,4 @@
-package us.corenetwork.mantle.hardmode;
+package us.corenetwork.mantle.util;
 
 import java.lang.reflect.Field;
 
@@ -50,18 +50,17 @@ public class ReflectionUtils {
         }
     }
 
-    public static Object set(Object obj, String field)
+    public static void set(Object obj, String field, Object value)
     {
         try {
             Class cls = obj.getClass();
             Field fieldObj = cls.getDeclaredField(field);
             fieldObj.setAccessible(true);
-            return fieldObj.get(obj);
+            fieldObj.set(obj, value);
         }
         catch (Exception e)
         {
             e.printStackTrace();
-            return null;
         }
     }
 }

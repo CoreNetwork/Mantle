@@ -15,6 +15,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import us.corenetwork.mantle.util.ReflectionUtils;
 
 public class NMSWitherManager {
     public static void register()
