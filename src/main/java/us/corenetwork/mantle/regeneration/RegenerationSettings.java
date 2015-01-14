@@ -4,6 +4,8 @@ package us.corenetwork.mantle.regeneration;
 
 public enum RegenerationSettings {
 	RESORATION_VILLAGE_CHECK_PADDING("Restoration.VillageCheckPadding", 10),
+	//Wont restore a village if player is inside village + visual padding range
+	RESORATION_VILLAGE_CHECK_VISUAL_PADDING("Restoration.VillageCheckVisualPadding", 128),
 	RESTORATION_WARN_PERCENTAGE("Restoration.WarnPercentage", 60),
 	REGENERATE_LAYER_EVERY_X_TICKS("RegenerateLayerEveryXTicks", 10),
 	MESSAGE_ANALYZING("Messages.Analyzing", "Analyzing regenerative structures. Please wait..."),

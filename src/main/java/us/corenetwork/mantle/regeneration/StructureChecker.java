@@ -151,7 +151,7 @@ public class StructureChecker implements Runnable {
 
 	private static boolean isPlayerInside(int centerX, int centerZ, int xSize, int zSize)
 	{
-		int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
+		int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_VISUAL_PADDING.integer();
 		
 		int minX = centerX - padding;
 		int maxX = centerX + xSize + padding;
