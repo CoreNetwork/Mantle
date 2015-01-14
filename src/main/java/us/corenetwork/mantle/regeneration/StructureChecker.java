@@ -4,7 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -50,6 +52,7 @@ public class StructureChecker implements Runnable {
 	public void run() {
 		int generated = 0;
 		int tries = 0;
+		Set<Integer> ids = new HashSet<>();
 		while (generated < structure.getNumberToGenerateAtOnce())
 		{
 			tries++;
@@ -106,13 +109,18 @@ public class StructureChecker implements Runnable {
 					{
 						MLog.info("Will not restore - player inside.");
 					}
+					else if (ids.contains(id))
+					{
+						MLog.info("Will not restore - already restored in this cycle.");
+					}
 					else if (!GriefPreventionHandler.containsClaim(world, cornerX, cornerZ, xSize, zSize, padding, false, null))
 					{
 						generated++;
 
 						RegenerationUtil.regenerateStructure(id, now, false);
-						MLog.info("Restored!");
-					}		
+
+						ids.add(id);
+					}
 					else
 					{
 						MLog.info("Will not restore - claim exist there.");

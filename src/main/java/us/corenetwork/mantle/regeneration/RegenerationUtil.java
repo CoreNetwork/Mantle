@@ -3,8 +3,10 @@ package us.corenetwork.mantle.regeneration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,6 +23,10 @@ import us.corenetwork.mantle.restockablechests.RestockableChest;
 
 
 public class RegenerationUtil {
+
+
+	private static Map<CachedSchematic, RegStructure> mapp = new HashMap<CachedSchematic, RegStructure>();
+	private static Map<CachedSchematic, Integer> mappId = new HashMap<CachedSchematic, Integer>();
 
 	public static void regenerateStructure(int id)
 	{
@@ -62,17 +68,8 @@ public class RegenerationUtil {
 				}
 				//End
 
-				Util.debugTime("RG Schematic name randomized");
-
 				World world = Bukkit.getWorld(worldName);
 				final CachedSchematic schematic = new CachedSchematic(schematicName, world);
-				Util.debugTime("RG CachedSchematic object created");
-				//schematic.rotateTo(rotation);
-
-				rotation = MantlePlugin.random.nextInt(2) * 2;
-				schematic.rotateTo(rotation);
-
-				Util.debugTime("RG schematic rotated");
 
 				if (clearClaims)
 				{
@@ -80,18 +77,14 @@ public class RegenerationUtil {
 					GriefPreventionHandler.deleteClaimsInside(world, cornerX, cornerZ, xSize, zSize, padding, false, null);
 				}
 
-				Util.debugTime("RG cleared claims");
 
 				final Location pastingLocation = new Location(world, cornerX, pastingY, cornerZ);
 				RegStructure structure = RegenerationModule.instance.structures.get(structureName);
 
-				Util.debugTime("RG got RegStructure object");
 
 				List<RestockableChest> oldRestockableChests = RestockableChest.getChestsInStructure(id);
-				Util.debugTime("RG got oldRestockChests");
 				for(RestockableChest rc : oldRestockableChests)
 					rc.delete(false);
-				Util.debugTime("RG deleted old restock chests");
 
 				//Searching for loot chests, removing signs
 
@@ -105,7 +98,6 @@ public class RegenerationUtil {
 					CachedSchematic.isNether = false;
 				}
 
-				Util.debugTime("RG found chests");
 				//find villagers before placing the schematic, so findVillagers can remove the signs from the schematic
 				// YAY for side effects in methods~!
 				if (structure.shouldRespawnVillagers())
@@ -113,47 +105,20 @@ public class RegenerationUtil {
 					schematic.findVillagers();
 				}
 
-				Util.debugTime("RG found villagers");
+				mapp.put(schematic, structure);
+				mappId.put(schematic, id);
 				schematic.place(pastingLocation, structure.shouldIgnoreAir());
-				Util.debugTime("RG placed");
-				final int rot = rotation;
-				if (structure.shouldRespawnVillagers())
-				{
-					Bukkit.getServer().getScheduler().runTask(MantlePlugin.instance, new Runnable() {
-
-						@Override
-						public void run() {
-							schematic.clearVillagers(pastingLocation);
-
-							VillagerSpawner villagerSpawner = new VillagerSpawner();
-							schematic.spawnVillagers(pastingLocation, villagerSpawner, rot);
-							villagerSpawner.close();
-						}
-					});	
-
-				}
-				Util.debugTime("RG scheduled villager spawning");
-
-				ChestInfo[] chests = schematic.getChests(pastingLocation, rotation);
-				for (ChestInfo chest : chests)
-				{
-					if (chest.restockable)
-						RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer, id, false);
-				}
-				Util.debugTime("RG created restock chests");
 			}
-			
 			statement.close();
-			
-			statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
 
+			statement = IO.getConnection().prepareStatement("UPDATE regeneration_structures SET LastCheck = ?, LastRestore = ? WHERE ID = ?");
 			statement.setInt(1, time);
 			statement.setInt(2, time);
 			statement.setInt(3, id);
+
 			statement.executeUpdate();
 			IO.getConnection().commit();
 			statement.close();
-			Util.debugTime("RG saved last shit");
 		}
 		catch (SQLException e)
 		{
@@ -161,6 +126,39 @@ public class RegenerationUtil {
 		}
 
 	}
+
+	public static void finishRegenerateStructure(CachedSchematic schematic, final int rotation, Location pastingLocation)
+	{
+		RegStructure structure = mapp.get(schematic);
+		int id = mappId.get(schematic);
+		if (structure.shouldRespawnVillagers())
+		{
+			schematic.clearVillagers(pastingLocation);
+			VillagerSpawner villagerSpawner = new VillagerSpawner();
+			schematic.spawnVillagers(pastingLocation, villagerSpawner, rotation);
+			villagerSpawner.close();
+		}
+
+		ChestInfo[] chests = schematic.getChests(pastingLocation, rotation);
+		for (ChestInfo chest : chests)
+		{
+			if (chest.restockable)
+				RestockableChest.createChest(chest.loc.getBlock(), chest.lootTable, chest.interval, chest.perPlayer, id, false);
+		}
+
+		try
+		{
+			IO.getConnection().commit();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+
+		mapp.remove(schematic);
+		mappId.remove(schematic);
+		MLog.info("Restored!");
+	}
+
 
 	public static StructureData pickNearestStructure(Location location)
 	{

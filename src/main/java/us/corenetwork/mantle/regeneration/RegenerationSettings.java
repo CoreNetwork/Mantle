@@ -5,7 +5,7 @@ package us.corenetwork.mantle.regeneration;
 public enum RegenerationSettings {
 	RESORATION_VILLAGE_CHECK_PADDING("Restoration.VillageCheckPadding", 10),
 	RESTORATION_WARN_PERCENTAGE("Restoration.WarnPercentage", 60),
-	
+	REGENERATE_LAYER_EVERY_X_TICKS("RegenerateLayerEveryXTicks", 10),
 	MESSAGE_ANALYZING("Messages.Analyzing", "Analyzing regenerative structures. Please wait..."),
 	MESSAGE_ANALYZE_HEADER("Messages.AnalyzeHeader", "Status of regeneration:"),
 	MESSAGE_ANALYZE_LINE("Messages.StructureeStatus", "<Structure>: [NEWLINE] Total: <Total> [NEWLINE] Claimed: <Claimed> (<ClaimedPercent>%) [NEWLINE] Empty: <Empty> (<EmptyPercent>%) <PostponedApproved> [NEWLINE] [NEWLINE]"),

@@ -6,10 +6,14 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.extent.transform.BlockTransformExtent;
+import com.sk89q.worldedit.function.mask.ExistingBlockMask;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.function.operation.RunContext;
 import com.sk89q.worldedit.math.transform.AffineTransform;
+import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.registry.WorldData;
 import java.awt.image.BufferedImage;
@@ -20,9 +24,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.server.v1_8_R1.EntityVillager;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,6 +49,8 @@ import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.SignBlock;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import us.corenetwork.mantle.regeneration.RegenerationSettings;
+import us.corenetwork.mantle.regeneration.RegenerationUtil;
 
 public class CachedSchematic {
 	private LocalSession localSession;
@@ -609,15 +617,12 @@ public class CachedSchematic {
 
 	public void place(Location placement, boolean ignoreAir)
 	{
-		Util.debugTime("CS Start");
-		MantleListener.disablePhysics = true;
 		try {
 			Vector to = new Vector(placement.getBlockX(), placement.getBlockY(), placement.getBlockZ());
 			Vector origin = localSession.getClipboard().getClipboard().getOrigin();
 			Vector min = localSession.getClipboard().getClipboard().getMinimumPoint();
 			Vector max = localSession.getClipboard().getClipboard().getMaximumPoint();
 			to = origin.subtract(max).add(to).add(max.subtract(min));
-
 
 			if(rotation % 2 == 1)
 			{
@@ -630,38 +635,73 @@ public class CachedSchematic {
 					to = to.add(0.5, 0, 0);
 				}
 			}
-			Util.debugTime("CS Boring stuff");
-			//EditSession editSession = new EditSession(new BukkitWorld(placement.getWorld()), -1);
-			EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(placement.getWorld()), -1);
-			Util.debugTime("CS created editsession");
+
+			final EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(new BukkitWorld(placement.getWorld()), -1);
 			editSession.enableQueue();
-			Operation operation = localSession.getClipboard()
-					.createPaste(editSession, localSession.getClipboard().getWorldData())
-					.to(to)
-					.ignoreAirBlocks(ignoreAir)
-					.build();
-			Util.debugTime("CS whatever that is, operation, building");
-			Operations.completeLegacy(operation);
-			Util.debugTime("CS legacy operation, woot");
-			editSession.flushQueue();
-			Util.debugTime("CS flusshhh");
-			localSession.clearHistory();
-			Util.debugTime("CS clearhistory");
-		} catch (MaxChangedBlocksException e) {
-			e.printStackTrace();
-		} catch (EmptyClipboardException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (WorldEditException e)
+
+			final List<Operation> listOfOperation = new ArrayList<Operation>();
+
+			ClipboardHolder holder = localSession.getClipboard();
+			BlockTransformExtent extent = new BlockTransformExtent(holder.getClipboard(), holder.getTransform(), holder.getWorldData().getBlockRegistry() );
+
+			Region rr = holder.getClipboard().getRegion();
+			int height = rr.getHeight();
+			ExistingBlockMask ebm = new ExistingBlockMask(holder.getClipboard());
+
+			for(int i = 0; i<height;i++)
+			{
+				int j = -height + i + 1;
+				rr = holder.getClipboard().getRegion();
+				rr.contract(new Vector(0,i,0), new Vector(0,j,0));
+				ForwardExtentCopy copy = new ForwardExtentCopy(extent, rr, holder.getClipboard().getOrigin(), editSession, to);
+				if(ignoreAir)
+					copy.setSourceMask(ebm);
+				listOfOperation.add(copy);
+			}
+
+			int delayInTickBetweenEach = RegenerationSettings.REGENERATE_LAYER_EVERY_X_TICKS.integer();
+			int numOfOp = listOfOperation.size();
+
+			for(int i = 0;i<numOfOp;i++)
+			{
+				final int id = i;
+				Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+					@Override
+					public void run()
+					{
+						MantleListener.disablePhysics = true;
+
+						Operation op = listOfOperation.get(id);
+						try
+						{
+							Operations.complete(op);
+						} catch (WorldEditException e)
+						{
+							e.printStackTrace();
+						}
+						editSession.flushQueue();
+						MantleListener.disablePhysics = false;
+					}
+				}, delayInTickBetweenEach*i);
+
+			}
+
+			final Location toFinal = new Location(placement.getWorld(), placement.getX(), placement.getY(), placement.getZ());
+			final CachedSchematic handle = this;
+			Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+				@Override
+				public void run()
+				{
+					localSession.clearHistory();
+					RegenerationUtil.finishRegenerateStructure(handle, rotation, toFinal);
+				}
+			}, delayInTickBetweenEach*(numOfOp+1));
+
+			//finishRegenerateStructure(CachedSchematic schematic, int rotation, Location pastingLocation)
+
+		} catch (Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			MantleListener.disablePhysics = false;
-			Util.debugTime("CS End");
 		}
 	}
 	
