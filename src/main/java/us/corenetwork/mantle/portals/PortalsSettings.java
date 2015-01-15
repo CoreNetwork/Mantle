@@ -27,7 +27,7 @@ public enum PortalsSettings {
 	
 	MESSAGE_CAN_MAKE_PORTAL("Messages.CanMakePortal", "&aYou can make a Nether portal here if you’d like"),
 	MESSAGE_CANT_MAKE_PORTAL("Messages.CantMakePortal", "&cYou cannot make a Nether portal here because it would overlap a claim in <OtherDimension>. [NEWLINE] Owner of conflicting claim: <Owner>"),
-	
+	MESSAGE_CANT_CROSS_WOULD_CREATE_IN_CLAIM("Messages.CantCrossWouldCreateInForeignClaim", "&cYou cannot cross this portal, it would create a portal in foreign claim."),
 	SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH("Signs.PortalOutOfBoundaries.TooHigh", "&cWarning![NEWLINE]Your portal[NEWLINE]Is[NEWLINE]too high!"),
 	SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW("Signs.PortalOutOfBoundaries.TooLow", "&cWarning![NEWLINE]Your portal[NEWLINE]Is[NEWLINE]too low!"),
 	SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR("Signs.PortalOutOfBoundaries.TooFar", "&cWarning![NEWLINE]Your portal[NEWLINE]Is[NEWLINE]too far!"),

@@ -1,9 +1,12 @@
 package us.corenetwork.mantle.portals;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,16 +15,28 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class PortalUtil {
 
 	public static Location processTeleport(Entity entity, Block entryPortalBlock)
 	{
-		Block destinationBlock = prepareDestinationBlock(entryPortalBlock);
-		return finalizeTeleportDestination(entity, destinationBlock);
+		Block destinationBlock = prepareDestinationBlock(entryPortalBlock, entity);
+
+		if(destinationBlock != null)
+		{
+			return finalizeTeleportDestination(entity, destinationBlock);
+		}
+		//null when the passing entity cannot create portal on the other side
+		else
+		{
+			return null;
+		}
 	}
 
 	/**
@@ -29,7 +44,7 @@ public class PortalUtil {
 	 * @param entryPortalBlock - portal block that initiaded the teleport.
 	 * @return teleportDestination - block where entryPortalBlock leads
 	 */
-	private static Block prepareDestinationBlock(Block entryPortalBlock)
+	private static Block prepareDestinationBlock(Block entryPortalBlock, Entity entity)
 	{
 		PortalInfo portalInfo = PortalInfo.getPortalInfo(entryPortalBlock);
 		Block teleportDestination = getOtherSide(portalInfo);
@@ -39,6 +54,36 @@ public class PortalUtil {
 		//If != PORTAL, create a new portal.
 		if (teleportDestination.getType() != Material.PORTAL)
 		{
+			//Determine if we should in fact create a portal there
+			//Dealing with an edge case of already lit portal creating a new one in claimed land
+
+			boolean canBuildAtDestination = true;
+
+			Set<Claim> claims = getClaimsAround(teleportDestination);
+			if(entity instanceof Player)
+			{
+				Player player = (Player) entity;
+				for(Claim claim : claims)
+				{
+					if (claim.allowBuild(player, Material.STONE) != null)
+					{
+						canBuildAtDestination = false;
+						break;
+					}
+				}
+			}
+			else
+			{
+				canBuildAtDestination = false;
+			}
+
+			if(!canBuildAtDestination)
+			{
+				//A player has no rights to create a portal on the other side (coz it would end up in claim)
+				//Other entities also cannot do that
+				return null;
+			}
+
 			Block buildDestination = findBestBuildDestination(teleportDestination, portalInfo);
 
 			//Moving teleportDestination & buildDestination to config limits.
@@ -481,6 +526,26 @@ public class PortalUtil {
 		return list;
 	}
 
+	public static Set<Claim> getClaimsAround(Block block)
+	{
+		Set<Claim> claims = new HashSet<Claim>();
+
+		//Search for 5x3x5 area around block
+		for (int x = -2; x <= 2; x++)
+		{
+			for (int y = -1; y <= 2; y++)
+			{
+				for (int z = -2; z <= 2; z++)
+				{
+					Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getRelative(x,y,z).getLocation(), true, null);
+					if (claim != null)
+						claims.add(claim);
+				}
+			}
+		}
+		return claims;
+	}
+
     enum Quadrant{
         PLUS_PLUS,
         MINUS_MINUS,
@@ -507,4 +572,6 @@ public class PortalUtil {
             return Quadrant.MINUS_MINUS;
         }
     }
+
+
 }

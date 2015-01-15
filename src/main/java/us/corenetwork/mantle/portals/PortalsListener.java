@@ -69,7 +69,7 @@ public class PortalsListener implements Listener {
 				Block otherSide = PortalUtil.getOtherSideExact(clicked);
 
 				Set<Claim> claims = new HashSet<>();
-				claims.addAll(getClaimsAround(otherSide));
+				claims.addAll(PortalUtil.getClaimsAround(otherSide));
 
 
 				List<Block> otherSideBlocks = new LinkedList<Block>();
@@ -90,7 +90,7 @@ public class PortalsListener implements Listener {
 				{
 					Block otherOtherSide = PortalUtil.getOtherSideExact(otherSideBlock);//original
 					MLog.debug(otherOtherSide.getX() + " " + otherOtherSide.getZ() + " " + otherOtherSide.getWorld().getName());
-					claims.addAll(getClaimsAround(otherOtherSide));
+					claims.addAll(PortalUtil.getClaimsAround(otherOtherSide));
 				}
 
 				boolean foundConflict = false;
@@ -248,7 +248,7 @@ public class PortalsListener implements Listener {
 			{
 				Block otherSide = PortalUtil.getOtherSideExact(block);
 				setOfOnTheOtherSide.add(otherSide);
-				claims.addAll(getClaimsAround(otherSide));
+				claims.addAll(PortalUtil.getClaimsAround(otherSide));
 			}
 
 			//add one block on each side of the strip on the otherSide
@@ -298,7 +298,7 @@ public class PortalsListener implements Listener {
 			for(Block otherSideBlock : setOfOnTheOtherSide)
 			{
 				Block otherOtherSide = PortalUtil.getOtherSideExact(otherSideBlock);
-				claims.addAll(getClaimsAround(otherOtherSide));
+				claims.addAll(PortalUtil.getClaimsAround(otherOtherSide));
 			}
 
 			if (claims.size() > 0)
@@ -336,27 +336,6 @@ public class PortalsListener implements Listener {
 		}
 	}	
 
-
-	private List<Claim> getClaimsAround(Block block)
-	{
-		List<Claim> claims = new LinkedList<Claim>();
-
-		//Search for 5x3x5 area around block
-		for (int x = -2; x <= 2; x++)
-		{
-			for (int y = -1; y <= 2; y++)
-			{
-				for (int z = -2; z <= 2; z++)
-				{
-					Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getRelative(x,y,z).getLocation(), true, null);
-					if (claim != null)
-						claims.add(claim);
-				}
-			}
-		}
-		return claims;
-	}
-
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
 	public void onPlayerPortal(final PlayerPortalEvent event)
 	{
@@ -367,9 +346,18 @@ public class PortalsListener implements Listener {
             lastPortalBlocks.remove(event.getPlayer().getUniqueId());
 
 			Location destination = PortalUtil.processTeleport(event.getPlayer(), portalBlock);
-			event.setTo(destination);
-			event.useTravelAgent(false);
-			event.getPortalTravelAgent().setCanCreatePortal(false);
+			if(destination != null)
+			{
+				event.setTo(destination);
+				event.useTravelAgent(false);
+				event.getPortalTravelAgent().setCanCreatePortal(false);
+			}
+			//Cannot create a destination portal, keep the entity here
+			else
+			{
+				Util.Message(PortalsSettings.MESSAGE_CANT_CROSS_WOULD_CREATE_IN_CLAIM.string(), event.getPlayer());
+				event.setCancelled(true);
+			}
 		}
 	}
 
@@ -390,12 +378,19 @@ public class PortalsListener implements Listener {
         lastPortalBlocks.remove(event.getEntity().getUniqueId());
 
         Location destination = PortalUtil.processTeleport(event.getEntity(), portalBlock);
-		event.setTo(destination);
-		event.useTravelAgent(false);
-		event.getPortalTravelAgent().setCanCreatePortal(false);
-		
+		if(destination != null)
+		{
+			event.setTo(destination);
+			event.useTravelAgent(false);
+			event.getPortalTravelAgent().setCanCreatePortal(false);
+		}
+		//Cannot create a destination portal, keep the entity here
+		else
+		{
+			event.setCancelled(true);
+		}
 	}
-		
+
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
 	public void onPlayerPortalFinal(final PlayerPortalEvent event)
 	{
