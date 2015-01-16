@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
 import net.minecraft.server.v1_8_R1.RecipesFurnace;
 
+import org.bukkit.Bukkit;
 import org.bukkit.CoalType;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -37,7 +38,7 @@ import us.corenetwork.mantle.util.InventoryUtil;
 
 public class ForgingBook extends Spellbook {
 	private final HashMap<ItemStack, ItemStack> FORGEITEMS = new HashMap<ItemStack, ItemStack>();
-	private final List<ItemStack> FUEL = new LinkedList<ItemStack>();
+	private final List<Fuel> FUEL = new LinkedList<Fuel>();
 	
 	@SuppressWarnings("deprecation") //Screw you mojang, damage values are not going anywhere
 	public ForgingBook() {
@@ -50,12 +51,36 @@ public class ForgingBook extends Spellbook {
 			FORGEITEMS.put(CraftItemStack.asCraftMirror(recipe.getKey()), CraftItemStack.asCraftMirror(recipe.getValue()));
 		}
 		
-		FUEL.add(new ItemStack(Material.COAL, 8, CoalType.COAL.getData()));
-		FUEL.add(new ItemStack(Material.COAL, 8, CoalType.CHARCOAL.getData()));
-		FUEL.add(new ItemStack(Material.COAL_BLOCK, 72));
-		FUEL.add(new ItemStack(Material.BLAZE_ROD, 12));
+		FUEL.add(new Fuel(Material.COAL, 8, CoalType.COAL.getData()));
+		FUEL.add(new Fuel(Material.COAL, 8, CoalType.CHARCOAL.getData()));
+		FUEL.add(new Fuel(Material.COAL_BLOCK, 72));
+		FUEL.add(new Fuel(Material.BLAZE_ROD, 12));
+		FUEL.add(new Fuel(Material.WOOD, 1.5));
+		FUEL.add(new Fuel(Material.LOG, 1.5));
+		FUEL.add(new Fuel(Material.CHEST, 1.5));
+		FUEL.add(new Fuel(Material.TRAPPED_CHEST, 1.5));
+		FUEL.add(new Fuel(Material.WORKBENCH, 1.5));
+		FUEL.add(new Fuel(Material.NOTE_BLOCK, 1.5));
+		FUEL.add(new Fuel(Material.JUKEBOX, 1.5));
+		FUEL.add(new Fuel(Material.FENCE_GATE, 1.5));
+		FUEL.add(new Fuel(Material.FENCE, 1.5));
+		FUEL.add(new Fuel(Material.ACACIA_FENCE, 1.5));
+		FUEL.add(new Fuel(Material.ACACIA_FENCE_GATE, 1.5));
+		FUEL.add(new Fuel(Material.BIRCH_FENCE, 1.5));
+		FUEL.add(new Fuel(Material.BIRCH_FENCE_GATE, 1.5));
+		FUEL.add(new Fuel(Material.DARK_OAK_FENCE, 1.5));
+		FUEL.add(new Fuel(Material.DARK_OAK_FENCE_GATE, 1.5));
+		FUEL.add(new Fuel(Material.JUNGLE_FENCE, 1.5));
+		FUEL.add(new Fuel(Material.JUNGLE_FENCE_GATE, 1.5));
+		FUEL.add(new Fuel(Material.JUNGLE_FENCE_GATE, 1.5));
+		FUEL.add(new Fuel(Material.WOOD_STAIRS, 1.5));
+		FUEL.add(new Fuel(Material.ACACIA_STAIRS, 1.5));
+		FUEL.add(new Fuel(Material.BIRCH_WOOD_STAIRS, 1.5));
+		FUEL.add(new Fuel(Material.DARK_OAK_STAIRS, 1.5));
+		FUEL.add(new Fuel(Material.JUNGLE_WOOD_STAIRS, 1.5));
+		FUEL.add(new Fuel(Material.WOOD_DOUBLE_STEP, 1.5));
+		FUEL.add(new Fuel(Material.WOOD_STEP, 1.5));
 
-		
 		settings.setDefault(SETTING_TEMPLATE, "spell-forging");
 	}
 	
@@ -90,39 +115,43 @@ public class ForgingBook extends Spellbook {
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
 		
 		LinkedList<ItemStack> availableFuel = new LinkedList<ItemStack>();
-		int totalAvailableFuel = 0;
+		double totalAvailableFuel = 0;
 		
 		for (ItemStack item : player.getInventory().getContents())
 		{
 			if (item == null || item.getType() == Material.AIR)
 				continue;
 								
-			for (ItemStack fuelItem : FUEL)
+			for (Fuel fuelItem : FUEL)
 			{
-				if (item.getType() == fuelItem.getType() && (item.getDurability() == fuelItem.getDurability() || fuelItem.getDurability() == 32767))
+				if (item.getType() == fuelItem.getMaterial() && (item.getDurability() == fuelItem.getDurability() || fuelItem.getDurability() == Short.MAX_VALUE))
 				{
 					availableFuel.add(item.clone());
-					totalAvailableFuel += item.getAmount() * fuelItem.getAmount(); //fuelItem.getAmount() is basically amount of items smelted per fuel
+					totalAvailableFuel += item.getAmount() * fuelItem.getSmeltedAmount(); //fuelItem.getAmount() is basically amount of items smelted per fuel
 				}
 
 			}
 		}
+
+		totalAvailableFuel = Math.floor(totalAvailableFuel);
+		if (totalAvailableFuel == 0)
+			return BookFinishAction.NOTHING;
 		
 		Collections.sort(availableFuel, new Comparator<ItemStack>() {
 			@Override
 			public int compare(ItemStack arg0, ItemStack arg1) {
-				int efficiencyFirst = 0;
-				int efficiencySecond = 0;
+				double efficiencyFirst = 0;
+				double efficiencySecond = 0;
 				
-				for (ItemStack stack : FUEL)
+				for (Fuel fuelItem : FUEL)
 				{
-					if (stack.getType() == arg0.getType() && (arg0.getDurability() == stack.getDurability() || stack.getDurability() == 32767))
-						efficiencyFirst = stack.getAmount();
-					if (stack.getType() == arg1.getType() && (arg1.getDurability() == stack.getDurability() || stack.getDurability() == 32767))
-						efficiencySecond = stack.getAmount();
+					if (arg0.getType() == fuelItem.getMaterial() && (arg0.getDurability() == fuelItem.getDurability() || fuelItem.getDurability() == 32767))
+						efficiencyFirst = fuelItem.getSmeltedAmount();
+					if (fuelItem.getMaterial() == arg1.getType() && (arg1.getDurability() == fuelItem.getDurability() || fuelItem.getDurability() == 32767))
+						efficiencySecond = fuelItem.getSmeltedAmount();
 				}
 				
-				return efficiencyFirst - efficiencySecond;
+				return (int) (efficiencyFirst - efficiencySecond);
 			}
 		}); //Sort by efficiency		
 
@@ -146,7 +175,7 @@ public class ForgingBook extends Spellbook {
 															
 			int amountFree = freeInventorySlots * outputItemType.getMaxStackSize() + existingTargetItemsFree;
 			int amountToSmelt = 0;
-			int fuelToSpend = totalAvailableFuel - totalConsumedFuel;
+			int fuelToSpend = (int) (totalAvailableFuel - totalConsumedFuel);
 			if (fuelToSpend < 1)
 				break;
 			
@@ -208,15 +237,18 @@ public class ForgingBook extends Spellbook {
 		while (totalConsumedFuel > 0)
 		{
 			ItemStack fuelStack = availableFuel.getFirst();
-			int efficiency = 0;
-			for (ItemStack stack : FUEL)
+			double efficiency = 0;
+			for (Fuel fuelType : FUEL)
 			{
-				if (stack.getType() == fuelStack.getType() && stack.getDurability() == fuelStack.getDurability())
-					efficiency = stack.getAmount();
-			}
-			
+				if (fuelType.getMaterial() == fuelStack.getType() && (fuelType.getDurability() == fuelStack.getDurability() || fuelType.getDurability() == Short.MAX_VALUE))
+				{
+					efficiency = fuelType.getSmeltedAmount();
+					break;
+				}
 
-			int amountToRemove = Math.min(fuelStack.getAmount(), (int) Math.ceil(totalConsumedFuel / (double) efficiency));
+			}
+
+			int amountToRemove = Math.min(fuelStack.getAmount(), (int) Math.ceil(totalConsumedFuel / efficiency));
 
 			InventoryUtil.removeItems(player.getInventory(), fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
 			
@@ -247,6 +279,42 @@ public class ForgingBook extends Spellbook {
 	@Override
 	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return BookFinishAction.NOTHING;
+	}
+
+	public static class Fuel
+	{
+		private Material material;
+		private double smeltItems;
+		private short data;
+
+		public Fuel(Material material, double smeltItems)
+		{
+			this.material = material;
+			this.smeltItems = smeltItems;
+			this.data = Short.MAX_VALUE;
+		}
+
+		public Fuel(Material material, double smeltItems, short data)
+		{
+			this.material = material;
+			this.smeltItems = smeltItems;
+			this.data = data;
+		}
+
+		public Material getMaterial()
+		{
+			return material;
+		}
+
+		public double getSmeltedAmount()
+		{
+			return smeltItems;
+		}
+
+		public short getDurability()
+		{
+			return data;
+		}
 	}
 
 }
