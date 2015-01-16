@@ -50,10 +50,10 @@ public class UnslimingBook extends Spellbook {
 			return BookFinishAction.NOTHING;
 		}
 
-		boolean playerHasSlimeballs = InventoryUtil.getAmountOfItems(player.getInventory(), Material.SLIME_BALL, (short) 32767) >= 256;
+		boolean playerHasSlimeballs = InventoryUtil.getAmountOfItems(player.getInventory(), Material.SLIME_BALL, Short.MAX_VALUE) >= 256;
 		if (playerHasSlimeballs)
 		{
-			InventoryUtil.removeItems(player.getInventory(), Material.SLIME_BALL, (short) 32767, 256);
+			InventoryUtil.removeItems(player.getInventory(), Material.SLIME_BALL, Short.MAX_VALUE, 256);
 			player.updateInventory();
 		}
 		else

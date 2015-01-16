@@ -49,10 +49,10 @@ public class DecayBook extends Spellbook {
 		
 		Player player = event.getPlayer();
 
-		boolean playerHasRottenFlesh = InventoryUtil.getAmountOfItems(player.getInventory(), Material.ROTTEN_FLESH, (short) 32767) >= 128;
+		boolean playerHasRottenFlesh = InventoryUtil.getAmountOfItems(player.getInventory(), Material.ROTTEN_FLESH, Short.MAX_VALUE) >= 128;
 		if (playerHasRottenFlesh)
 		{
-			InventoryUtil.removeItems(player.getInventory(), Material.ROTTEN_FLESH, (short) 32767, 128);
+			InventoryUtil.removeItems(player.getInventory(), Material.ROTTEN_FLESH, Short.MAX_VALUE, 128);
 		}
 		else
 		{

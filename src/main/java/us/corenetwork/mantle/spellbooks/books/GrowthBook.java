@@ -43,9 +43,9 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		Player player = event.getPlayer();
 
 		//Check for missing items
-		if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.BONE, (short) 32767) >= 64)
+		if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.BONE, Short.MAX_VALUE) >= 64)
 		{
-			InventoryUtil.removeItems(player.getInventory(), Material.BONE, (short) 32767, 64);
+			InventoryUtil.removeItems(player.getInventory(), Material.BONE, Short.MAX_VALUE, 64);
 			player.updateInventory();
 		}
 		else if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.INK_SACK, (short) 15) >= 192)
