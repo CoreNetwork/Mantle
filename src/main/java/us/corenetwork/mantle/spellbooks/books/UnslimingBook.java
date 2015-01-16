@@ -20,6 +20,7 @@ import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
+import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class UnslimingBook extends Spellbook {	
@@ -35,12 +36,13 @@ public class UnslimingBook extends Spellbook {
 		settings.setDefault(SETTING_TEMPLATE, "spell-unsliming");
 		settings.setDefault(SETTING_MESSAGE_NOT_SLIME_CHUNK, "Your current chunk is not slimed!");
 		settings.setDefault(SETTING_MESSAGE_SLIME_CHUNK, "That slime chunk has been purged! Those little bastards won't bugger you anymore.");
+		settings.setDefault(SETTING_NO_ITEMS, "No slimeballs");
 	}
 		
 	@Override
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		
+
 		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 		if (claim != null && claim.allowBuild(player, Material.STONE) != null)
 		{
@@ -48,6 +50,17 @@ public class UnslimingBook extends Spellbook {
 			return BookFinishAction.NOTHING;
 		}
 
+		boolean playerHasSlimeballs = InventoryUtil.getAmountOfItems(player.getInventory(), Material.SLIME_BALL, (short) 32767) >= 256;
+		if (playerHasSlimeballs)
+		{
+			InventoryUtil.removeItems(player.getInventory(), Material.SLIME_BALL, (short) 32767, 256);
+			player.updateInventory();
+		}
+		else
+		{
+			Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
+			return BookFinishAction.NOTHING;
+		}
 		
 		Chunk chunk = player.getLocation().getBlock().getChunk();
 
