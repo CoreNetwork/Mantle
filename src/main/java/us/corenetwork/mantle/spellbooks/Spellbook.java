@@ -27,7 +27,7 @@ public abstract class Spellbook {
 	public static final String SETTING_USE_MESSAGE = "Messages.Use";
 	public static final String SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE = "Messages.HintToCasterWhenBroadcasted";
 	public static final String SETTING_BROADCAST_MESSAGES = "Messages.Broadcast";
-
+	public static final String SETTING_NO_ITEMS = "Messages.NoItems";
 	private String name;
 	private HashMap<String, Long> lastBroadcastTime = new HashMap<String, Long>();
 	public BookSettings settings;

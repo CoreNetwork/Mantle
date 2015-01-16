@@ -25,6 +25,7 @@ import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
+import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class DecayBook extends Spellbook {
@@ -35,6 +36,7 @@ public class DecayBook extends Spellbook {
 		super("Decay");
 		
 		settings.setDefault(SETTING_TEMPLATE, "spell-decay");
+		settings.setDefault(SETTING_NO_ITEMS, "No rotten flesh");
 	}
 
 	@Override
@@ -46,7 +48,18 @@ public class DecayBook extends Spellbook {
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		
 		Player player = event.getPlayer();
-		
+
+		boolean playerHasRottenFlesh = InventoryUtil.getAmountOfItems(player.getInventory(), Material.ROTTEN_FLESH, (short) 32767) >= 128;
+		if (playerHasRottenFlesh)
+		{
+			InventoryUtil.removeItems(player.getInventory(), Material.ROTTEN_FLESH, (short) 32767, 128);
+		}
+		else
+		{
+			Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
+			return BookFinishAction.NOTHING;
+		}
+
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest

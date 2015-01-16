@@ -15,7 +15,7 @@ public enum SpellbooksSettings {
     MESSAGE_RESLIME_SUCCESS("Messages.ReslimeSuccess", "No-slime spell was successfully lifted from this chunk!"),
     MESSAGE_RESLIME_FAIL("Messages.ReslimeFail", "This chunk is not under unsliming spell!"),
 
-    MESSAGE_BOOK_EXPIRED("Messages.BookExpired", "Sorry, your book has expired!"),
+	MESSAGE_BOOK_EXPIRED("Messages.BookExpired", "Sorry, your book has expired!"),
     MESSAGE_NO_PERMISSION("Messages.NoPermission", "Sorry, you can't use spellbook on territory owned by somebody else!");
 
 	protected String string;

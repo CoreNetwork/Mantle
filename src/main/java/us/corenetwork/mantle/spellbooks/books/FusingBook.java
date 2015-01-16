@@ -28,6 +28,7 @@ import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
+import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class FusingBook extends Spellbook {
@@ -84,7 +85,7 @@ public class FusingBook extends Spellbook {
 			inventory = player.getInventory();
 		}
 		
-		int freeInventorySlots = getFreeInventorySlots(inventory);
+		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
 		boolean fusedSomething = false;
 		
 		for (Entry<ItemStack, ItemStack> entry : FUSEITEMS.entrySet())
@@ -121,7 +122,7 @@ public class FusingBook extends Spellbook {
 					
 			fusedSomething = true;
 			
-			removeItem(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
+			InventoryUtil.removeItems(inventory, entry.getKey().getType(), entry.getKey().getDurability(), amountSource);
 						
 			while (amountTarget > 0)
 			{
@@ -154,46 +155,8 @@ public class FusingBook extends Spellbook {
 		else
 			return BookFinishAction.CONSUME;
 	}
-	
 
-	public static int getFreeInventorySlots(Inventory inventory)
-	{
-		int slots = 0;
-		
-		for (int i = 0; i < inventory.getSize(); i++)
-		{
-			ItemStack stack = inventory.getItem(i);
-			if (stack == null || stack.getType() == Material.AIR)
-				slots++;
-		}
-		
-		return slots;
-	}
-	
-	public static void removeItem(Inventory inventory, Material material, short durability, int amount)
-	{
-		for (int i = 0; i < inventory.getSize(); i++)
-		{
-			ItemStack stack = inventory.getItem(i);
-			if (stack != null && material == stack.getType() && (durability == stack.getDurability() || durability == 32767))
-			{
-				int stackAmount = stack.getAmount();
-				if (amount >= stackAmount)
-				{
-					inventory.setItem(i, null);
-					amount -= stackAmount;
-					if (amount == 0)
-						break;
-				}
-				else
-				{
-					stack.setAmount(stackAmount - amount);
-					break;
-				}
-			}
-		}
-	}
-	
+
 	@Override
 	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return BookFinishAction.NOTHING;

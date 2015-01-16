@@ -32,6 +32,7 @@ import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
+import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class ForgingBook extends Spellbook {
@@ -53,6 +54,7 @@ public class ForgingBook extends Spellbook {
 		FUEL.add(new ItemStack(Material.COAL, 8, CoalType.CHARCOAL.getData()));
 		FUEL.add(new ItemStack(Material.COAL_BLOCK, 72));
 		FUEL.add(new ItemStack(Material.BLAZE_ROD, 12));
+
 		
 		settings.setDefault(SETTING_TEMPLATE, "spell-forging");
 	}
@@ -85,7 +87,7 @@ public class ForgingBook extends Spellbook {
 			inventory = player.getInventory();
 		}	
 		
-		int freeInventorySlots = FusingBook.getFreeInventorySlots(inventory);
+		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
 		
 		LinkedList<ItemStack> availableFuel = new LinkedList<ItemStack>();
 		int totalAvailableFuel = 0;
@@ -216,7 +218,7 @@ public class ForgingBook extends Spellbook {
 
 			int amountToRemove = Math.min(fuelStack.getAmount(), (int) Math.ceil(totalConsumedFuel / (double) efficiency));
 
-			FusingBook.removeItem(player.getInventory(), fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
+			InventoryUtil.removeItems(player.getInventory(), fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
 			
 			if (amountToRemove >= fuelStack.getAmount())
 				availableFuel.removeFirst();
