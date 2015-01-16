@@ -206,6 +206,9 @@ public class NetherSpawner {
         if (block.getY() > NetherSpawningSettings.MAGMA_CUBE_MAX_Y.integer())
             return;
 
+        if (block.getLightLevel() < NetherSpawningSettings.MAGMA_CUBE_MIN_LIGHT.integer())
+            return;
+
         Chunk chunk = block.getChunk();
         if (IgnoredSlimeChunks.isIgnored(chunk.getWorld().getName(), chunk.getX(), chunk.getZ()) || !isMagmaCubeChunk(chunk))
             return;

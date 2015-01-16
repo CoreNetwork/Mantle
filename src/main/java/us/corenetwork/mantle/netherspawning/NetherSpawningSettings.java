@@ -15,6 +15,7 @@ public enum NetherSpawningSettings {
     MAGMA_CUBE_SPAWNING_INTERVAL_TICKS("MagmaCube.SpawningIntervalTicks", 10),
     MAGMA_CUBE_MAX_Y("MagmaCube.MaxY", 256),
     MAGMA_CUBE_MIN_Y("MagmaCube.MinY", 0),
+	MAGMA_CUBE_MIN_LIGHT("MagmaCube.MinLightLevel", 8),
 
     WITHER_SKELETON_SPAWNING_INTERVAL_TICKS("WitherSkeleton.SpawningIntervalTicks", 10),
 	WITHER_SKELETON_SPAWN_CHANCE("WitherSkeleton.SpawnChance", 1),
