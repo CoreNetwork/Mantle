@@ -56,7 +56,6 @@ public class ForgingBook extends Spellbook {
 		FUEL.add(new Fuel(Material.COAL_BLOCK, 72));
 		FUEL.add(new Fuel(Material.BLAZE_ROD, 12));
 		FUEL.add(new Fuel(Material.WOOD, 1.5));
-		FUEL.add(new Fuel(Material.LOG, 1.5));
 		FUEL.add(new Fuel(Material.CHEST, 1.5));
 		FUEL.add(new Fuel(Material.TRAPPED_CHEST, 1.5));
 		FUEL.add(new Fuel(Material.WORKBENCH, 1.5));
