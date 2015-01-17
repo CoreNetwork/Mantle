@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.util;
 
+import net.minecraft.server.v1_8_R1.IInventory;
+import net.minecraft.server.v1_8_R1.Item;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -75,5 +77,21 @@ public class InventoryUtil
                 }
             }
         }
+    }
+
+    /**
+     * Convenience method to check if specific slot in NMS inventory contains wanted item type. It includes null checking.
+     * @param inventory NMS inventory to check in
+     * @param slot Item slot
+     * @param item Item type
+     * @return true if specified slot contains said item
+     */
+    public static boolean isItemTypeOnSlot(IInventory inventory, int slot, Item item)
+    {
+        net.minecraft.server.v1_8_R1.ItemStack stack = inventory.getItem(slot);
+        if (stack == null)
+            return false;
+
+        return stack.getItem().equals(item);
     }
 }

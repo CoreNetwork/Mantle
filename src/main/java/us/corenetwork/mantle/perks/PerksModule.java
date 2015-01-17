@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.perks;
 
+import net.minecraft.server.v1_8_R1.CraftingManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -37,6 +38,9 @@ public class PerksModule extends MantleModule {
 		saveConfig();
 
 		Bukkit.getPluginManager().registerEvents(new PerksListener(), MantlePlugin.instance);
+
+		//Add our custom recipe
+		CraftingManager.getInstance().a(new CustomArmorStandRecipe());
 
 		return true;
 	}

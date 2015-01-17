@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.nanobot;
 
+import com.sk89q.jnbt.CompoundTag;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInput;
@@ -246,8 +247,11 @@ public class NanobotUtil {
 	/*
 		Get NMS item stack from CraftItemStack. This is much faster than CraftItemStack.asNMSCopy() as it just retrieves internal variable rather than rebuilding whole NMS stack from scratch.
 	 */
-	public static net.minecraft.server.v1_8_R1.ItemStack getInternalNMSStack(CraftItemStack bukkitStack)
+	public static net.minecraft.server.v1_8_R1.ItemStack getInternalNMSStack(ItemStack bukkitStack)
 	{
+		if (!(bukkitStack instanceof CraftItemStack))
+			return null;
+
 		try
 		{
 			Field handleField = CraftItemStack.class.getDeclaredField("handle");
@@ -276,4 +280,28 @@ public class NanobotUtil {
 
 		return nmsStack.getTag().hasKey(tag);
 	}
+
+	/**
+	 * Gets custom name from the NMS itemstack
+	 * @param nmsStack Stack to get name from.
+	 * @return Custom name or <b>null</b> if not set.
+	 */
+	public static String getStackName(net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+	{
+		if (nmsStack == null)
+			return null;
+
+		if (!nmsStack.hasTag())
+			return null;
+
+		NBTTagCompound displayTag = (NBTTagCompound) nmsStack.getTag().get("display");
+		if (displayTag == null)
+			return null;
+
+		if (!displayTag.hasKey("Name"))
+			return null;
+
+		return displayTag.getString("Name");
+	}
+
 }

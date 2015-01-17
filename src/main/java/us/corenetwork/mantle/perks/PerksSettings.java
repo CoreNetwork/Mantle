@@ -9,9 +9,13 @@ import us.corenetwork.mantle.beacons.BeaconsModule;
 
 public enum PerksSettings
 {
-	;
+	SPECIAL_ARMOR_STAND_NANOBOT_FILE("SpecialArmorStandNanobotFile", "special-armorstand"),
 
-    protected String string;
+	MESSAGE_ARMOR_STAND_WRONG_PERMISSION("Messages.ArmorStandWrongPermission", "You need to be a subscriber to use this type of armor stand. Type /subscribe to learn more."),
+	MESSAGE_ARMOR_STAND_WRONG_CLAIM("Messages.ArmorStandWrongClaim", "You can only place this type of armor stand in your own claim.");
+
+
+	protected String string;
 	protected Object def;
 	
 	private PerksSettings(String string, Object def)
