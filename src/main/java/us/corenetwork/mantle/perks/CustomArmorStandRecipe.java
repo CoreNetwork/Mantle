@@ -47,7 +47,7 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         if (InventoryUtil.isItemTypeOnSlot(inventoryCrafting, 6, Items.STICK))
             numberOfSticksOnLeft++;
 
-        if (numberOfSticksOnLeft != 1 && numberOfSticksOnLeft != 2) //Number of sticks must be exactly 1 on either side
+        if (numberOfSticksOnLeft != 1 && numberOfSticksOnLeft != 2) //Number of sticks must be exactly 1 or 2 on either side
             return false;
 
         int numberOfSticksOnRight = 0;
@@ -58,7 +58,7 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         if (InventoryUtil.isItemTypeOnSlot(inventoryCrafting, 8, Items.STICK))
             numberOfSticksOnRight++;
 
-        if (numberOfSticksOnRight != 1 && numberOfSticksOnRight != 2) //Number of sticks must be exactly 1 on either side
+        if (numberOfSticksOnRight != 1 && numberOfSticksOnRight != 2) //Number of sticks must be exactly 1 or 2 on either side
             return false;
 
         return true;
@@ -74,7 +74,7 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         NBTTagCompound tag = LoadCommand.load(PerksSettings.SPECIAL_ARMOR_STAND_NANOBOT_FILE.string());
 
         float leftHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 0, 3, 6);
-        float righHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 8, 5, 8);
+        float righHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 2, 5, 8);
 
         NBTTagCompound entityTag = new NBTTagCompound();
         NBTTagCompound poseTag = new NBTTagCompound();
