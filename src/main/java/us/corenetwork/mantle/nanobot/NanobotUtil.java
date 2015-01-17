@@ -14,6 +14,9 @@ import java.util.Calendar;
 import java.util.List;
 import net.minecraft.server.v1_8_R1.NBTReadLimiter;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagList;
+import net.minecraft.server.v1_8_R1.NBTTagString;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
@@ -144,8 +147,12 @@ public class NanobotUtil {
 		return source;
 	}
 
-	/*
-		Replaces
+	/**
+	 * Replace all occurences of the string with another string in item's title and lore.
+	 * @param item Item to replace strings in.
+	 * @param source String to search for.
+	 * @param replacement Replacement for said string.
+	 * @return ItemStack with replaced strings.
 	 */
     public static ItemStack replaceStringInItem(ItemStack item, String source, String replacement)
     {
@@ -173,6 +180,39 @@ public class NanobotUtil {
         item.setItemMeta(meta);
         return item;
     }
+
+	/**
+	 * Replace all occurences of the string with another string in NBT tag that contains item title and lore.
+	 * @param tag NBT tag to replace occurences in.
+	 * @param source String to search for.
+	 * @param replacement Replacement string.
+	 */
+	public static void replaceStringInNBT(NBTTagCompound tag, String source, String replacement)
+	{
+		if (tag == null)
+			return;
+
+		NBTTagCompound displayTag = (NBTTagCompound) tag.get("display");
+		if (displayTag == null)
+			return;
+
+
+		if (displayTag.hasKey("Name"))
+			displayTag.setString("Name", displayTag.getString("Name").replace(source, replacement));
+
+		if (displayTag.hasKey("Lore"))
+		{
+			NBTTagList lore = (NBTTagList) displayTag.get("Lore");
+			NBTTagList newLore = new NBTTagList();
+			for (int i = 0; i < lore.size(); i++)
+			{
+				newLore.add(new NBTTagString(lore.getString(i).replace(source, replacement)));
+			}
+
+			displayTag.set("Lore", newLore);
+		}
+	}
+
 
 	/*
 		Extracts NBT tags from the item as byte array
