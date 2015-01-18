@@ -140,7 +140,7 @@ public class PerksListener implements Listener
 
     private static void returnFromFrame(final ItemFrame frame, final Player player)
     {
-        //Drop item out after one tick
+        //Return item to the player after one tick
         Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
         {
             @Override
