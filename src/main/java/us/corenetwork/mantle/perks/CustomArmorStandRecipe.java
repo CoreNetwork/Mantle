@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.perks;
 
+import io.netty.util.internal.RightPaddedReference;
 import net.minecraft.server.v1_8_R1.IRecipe;
 import net.minecraft.server.v1_8_R1.InventoryCrafting;
 import net.minecraft.server.v1_8_R1.ItemStack;
@@ -71,18 +72,20 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         NBTTagCompound tag = LoadCommand.load(PerksSettings.SPECIAL_ARMOR_STAND_NANOBOT_FILE.string());
 
         ArmOrientation leftHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 0, 3, 6);
-        ArmOrientation righHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 2, 5, 8);
+        ArmOrientation rightHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 2, 5, 8);
 
         NBTTagCompound entityTag = new NBTTagCompound();
         NBTTagCompound poseTag = new NBTTagCompound();
 
+
+        //Enter hand orientation into entity reverse since player sees mirror image when placing armor stand
         NBTTagList leftHand = new NBTTagList();
-        leftHand.add(new NBTTagFloat(-leftHandOrientation.getVanillaOrientation())); //X rotation
+        leftHand.add(new NBTTagFloat(-rightHandOrientation.getVanillaOrientation())); //X rotation
         leftHand.add(new NBTTagFloat(0)); //Y rotation
         leftHand.add(new NBTTagFloat(0)); //Z rotation
 
         NBTTagList rightHand = new NBTTagList();
-        rightHand.add(new NBTTagFloat(-righHandOrientation.getVanillaOrientation())); //X rotation
+        rightHand.add(new NBTTagFloat(-leftHandOrientation.getVanillaOrientation())); //X rotation
         rightHand.add(new NBTTagFloat(0)); //Y rotation
         rightHand.add(new NBTTagFloat(0)); //Z rotation
 
@@ -94,7 +97,7 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         tag.set("EntityTag", entityTag);
 
         NanobotUtil.replaceStringInNBT(tag, "<LeftArmPose>", leftHandOrientation.getDescription());
-        NanobotUtil.replaceStringInNBT(tag, "<RightArmPose>", righHandOrientation.getDescription());
+        NanobotUtil.replaceStringInNBT(tag, "<RightArmPose>", rightHandOrientation.getDescription());
 
         armorStand.setTag(tag);
 
