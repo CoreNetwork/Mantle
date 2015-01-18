@@ -53,7 +53,7 @@
 		</repository>
 		<repository>
 			<id>spigot-repo</id>
-			<url>http://repo.md-5.net/content/groups/public/</url>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
 		</repository>
 		<repository>
 			<id>zml-repo</id>
@@ -73,10 +73,8 @@
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
 			<version>1.8-R0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/bukkit-1.8-R0.1-SNAPSHOT.jar</systemPath>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot</artifactId>

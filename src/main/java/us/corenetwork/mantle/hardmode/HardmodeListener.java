@@ -5,24 +5,21 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
+import net.minecraft.server.v1_8_R1.Blocks;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
-import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
 import net.minecraft.server.v1_8_R1.MathHelper;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.FireworkEffect.Builder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
@@ -32,7 +29,6 @@ import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Skeleton;
@@ -45,9 +41,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPistonExtendEvent;
-import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
@@ -63,9 +56,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import us.corenetwork.mantle.GriefPreventionHandler;
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
 
 public class HardmodeListener implements Listener {
@@ -312,6 +305,46 @@ public class HardmodeListener implements Listener {
 	public void onBlockBreak(BlockBreakEvent event)
 	{
 		final Block block = event.getBlock();
+
+		//Quartz drop increase
+		if (event.getBlock().getType() == Material.QUARTZ_ORE)
+		{
+			event.setCancelled(true); //Cancel drop vanilla
+			block.setType(Material.AIR);
+
+			ItemStack itemInHand = event.getPlayer().getItemInHand();
+
+			boolean canToolBreak = itemInHand != null && NanobotUtil.getInternalNMSStack(itemInHand).b(Blocks.QUARTZ_ORE);
+			if (!canToolBreak)
+				return;
+
+			int fortuneLevel = itemInHand.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
+
+			int min = 1;
+			int max = 3;
+			switch (fortuneLevel)
+			{
+				case 1:
+					min = 2;
+					max = 5;
+					break;
+				case 2:
+					min = 3;
+					max = 6;
+					break;
+				case 3:
+					min = 5;
+					max = 8;
+					break;
+			}
+
+			int amountDropped = min + MantlePlugin.random.nextInt(max - min + 1);
+			block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), new ItemStack(Material.QUARTZ, amountDropped));
+		}
+
+
+
+
 
 	}
 

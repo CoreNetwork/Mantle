@@ -29,7 +29,7 @@ import org.bukkit.material.Step;
 
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.animalspawning.AnimalSpawningSettings;
+import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
 import us.corenetwork.mantle.slimespawning.SlimeSpawner;
 
@@ -123,14 +123,14 @@ public class NetherSpawner {
 
                 for (Entity entity : neighbourChunk.getEntities())
                 {
-                    if (entity instanceof Blaze && entity.getLocation().distanceSquared(getLocation(block)) < range)
+                    if (entity instanceof Blaze && entity.getLocation().distanceSquared(Util.getLocationInBlockCenter(block)) < range)
                         return;
                 }
             }
         }
 
 		NetherSpawningHelper.spawningMob = true;
-		block.getWorld().spawnEntity(getLocation(block), EntityType.BLAZE);
+		block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.BLAZE);
 	}
 
 	public static Skeleton spawnWitherSkeleton(Block block, SpawnReason reason)
@@ -221,7 +221,7 @@ public class NetherSpawner {
 
         NetherSpawningHelper.spawningMob = true;
 
-        Location location = NetherSpawner.getLocation(block);
+        Location location = Util.getLocationInBlockCenter(block);
         location.setYaw(MantlePlugin.random.nextFloat() * 360);
 
         MagmaCube magmaCube = block.getWorld().spawn(location, MagmaCube.class);
@@ -261,15 +261,10 @@ public class NetherSpawner {
             }
         }
         NetherSpawningHelper.spawningMob = true;
-        block.getWorld().spawnEntity(getLocation(block), EntityType.GHAST);
+        block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.GHAST);
     }
 
-    public static Location getLocation(Block block)
-	{
-		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
-	}
-	
-	public static boolean canSpawnOnThisBlock(Block block)
+    public static boolean canSpawnOnThisBlock(Block block)
 	{
 		//Mobs can't spawn on top of bedrock
 		if (block.getType() == Material.BEDROCK)

@@ -272,4 +272,12 @@ public class Util
         MLog.debug(message + " " + (System.currentTimeMillis() - debugTimer));
         debugTimer = System.currentTimeMillis();
     }
+
+    /**
+     * @return Location in the center of the specified block.
+     */
+    public static Location getLocationInBlockCenter(Block block)
+	{
+		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
+	}
 }
