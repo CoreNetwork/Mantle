@@ -35,37 +35,30 @@ public enum PerksSettings
 
 	public double doubleNumber()
 	{
-		return ((Number) us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(string, def)).doubleValue();
+		return ((Number) PerksModule.instance.config.get(string, def)).doubleValue();
 	}
 
 	public Integer integer()
 	{
-		return (Integer) us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(string, def);
+		return (Integer) PerksModule.instance.config.get(string, def);
 	}
 
 	public String string()
 	{
-		return (String) us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(string, def);
+		return (String) PerksModule.instance.config.get(string, def);
 	}
 
 	public List<String> stringList()
 	{
-		return (List<String>) us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(string, def);
+		return (List<String>) PerksModule.instance.config.get(string, def);
 	}
 
-    public ItemStack itemStack()
-    {
-        if (!us.corenetwork.mantle.beacons.BeaconsModule.instance.config.contains(string))
-            return null;
-
-        return YamlUtils.readItemStack(us.corenetwork.mantle.beacons.BeaconsModule.instance.config.getConfigurationSection(string).getValues(false));
-    }
 
 	public static String getCommandDescription(String cmd, String def)
 	{
 		String path = "CommandDescriptions." + cmd;
 
-		Object descO = us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(path);
+		Object descO = PerksModule.instance.config.get(path);
 		if (descO == null)
 		{
 			us.corenetwork.mantle.beacons.BeaconsModule.instance.config.set(path, "&a/chp " + cmd + " &8-&f " + def);
