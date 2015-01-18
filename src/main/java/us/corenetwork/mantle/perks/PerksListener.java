@@ -76,6 +76,9 @@ public class PerksListener implements Listener
         if (stackInHand != null)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            if(nmsStack == null)
+                return;
+
             if (!PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag()) &&
                     !PerksUtil.isSupposedToBePerkArmorStandItem(nmsStack.getTag()) &&
                     !PerksUtil.iSupposedToBePerkSkullItem(nmsStack.getTag()))
