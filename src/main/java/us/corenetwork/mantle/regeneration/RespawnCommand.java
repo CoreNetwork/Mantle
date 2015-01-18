@@ -2,7 +2,6 @@ package us.corenetwork.mantle.regeneration;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 

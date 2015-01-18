@@ -1,11 +1,9 @@
 package us.corenetwork.mantle.restockablechests.commands;
 
 import java.util.HashMap;
-
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.restockablechests.RChestSettings;

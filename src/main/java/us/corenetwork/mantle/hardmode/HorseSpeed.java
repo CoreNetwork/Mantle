@@ -3,7 +3,6 @@ package us.corenetwork.mantle.hardmode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import us.corenetwork.mantle.IO;
 
 public class HorseSpeed {

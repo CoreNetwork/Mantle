@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;

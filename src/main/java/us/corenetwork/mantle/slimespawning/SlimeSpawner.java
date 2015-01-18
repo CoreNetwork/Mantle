@@ -1,14 +1,12 @@
 package us.corenetwork.mantle.slimespawning;
 
 import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
-
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;

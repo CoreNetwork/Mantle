@@ -8,7 +8,6 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.YamlUtils;
-import us.corenetwork.mantle.beacons.BeaconsModule;
 
 public enum RChestSettings {	
 	

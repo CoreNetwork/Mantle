@@ -9,7 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 

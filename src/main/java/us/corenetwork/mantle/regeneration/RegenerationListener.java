@@ -3,11 +3,9 @@ package us.corenetwork.mantle.regeneration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
 

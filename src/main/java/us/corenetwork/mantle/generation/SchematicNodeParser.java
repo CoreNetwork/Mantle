@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.generation;
 
 import java.util.List;
-
 import us.corenetwork.mantle.MantlePlugin;
 
 

@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import me.ryanhamshire.GriefPrevention.Claim;
-
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -18,7 +17,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;

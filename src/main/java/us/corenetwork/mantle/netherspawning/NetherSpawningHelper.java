@@ -3,7 +3,6 @@ package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-
 import org.bukkit.World.Environment;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

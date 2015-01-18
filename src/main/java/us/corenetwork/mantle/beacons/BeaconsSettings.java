@@ -3,9 +3,7 @@ package us.corenetwork.mantle.beacons;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.yaml.snakeyaml.Yaml;
 import us.corenetwork.mantle.YamlUtils;
-import us.corenetwork.mantle.portals.PortalsModule;
 
 
 public enum BeaconsSettings

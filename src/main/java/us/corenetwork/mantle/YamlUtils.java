@@ -1,22 +1,12 @@
 package us.corenetwork.mantle;
 
-import com.gadberry.utility.expression.ArgumentCastException;
-import com.gadberry.utility.expression.Expression;
-import com.gadberry.utility.expression.InvalidExpressionException;
 import java.util.Map;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import us.corenetwork.mantle.hardmode.HardmodeListener;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.util.MinecraftNames;
 

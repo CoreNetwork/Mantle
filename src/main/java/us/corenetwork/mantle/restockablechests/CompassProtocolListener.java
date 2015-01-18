@@ -5,11 +5,7 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import java.lang.reflect.Field;
-import java.util.List;
-
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.NBTTagList;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;

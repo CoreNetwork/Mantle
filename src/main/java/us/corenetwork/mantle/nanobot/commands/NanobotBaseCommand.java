@@ -2,7 +2,6 @@ package us.corenetwork.mantle.nanobot.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.Util;
 
 public abstract class NanobotBaseCommand {

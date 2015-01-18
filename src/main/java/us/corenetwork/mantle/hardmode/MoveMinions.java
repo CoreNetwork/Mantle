@@ -1,16 +1,13 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.server.v1_8_R1.EntityLiving;
-import net.minecraft.server.v1_8_R1.EntityWitherSkull;
 import net.minecraft.server.v1_8_R1.MathHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Ginaf on 2014-12-21.

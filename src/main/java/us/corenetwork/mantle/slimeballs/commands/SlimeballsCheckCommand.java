@@ -1,22 +1,9 @@
 package us.corenetwork.mantle.slimeballs.commands;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import us.corenetwork.mantle.IO;
-import us.corenetwork.mantle.MLog;
-import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;

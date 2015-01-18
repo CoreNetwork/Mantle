@@ -1,10 +1,6 @@
 package us.corenetwork.mantle.slimeballs;
 
 
-import java.util.HashMap;
-import org.bukkit.inventory.ItemStack;
-import us.corenetwork.mantle.hydration.HydrationModule;
-
 public enum SlimeballsSettings
 {
 	RELEASE_COMMAND("ReleaseCommand", "limbo release <Player>"),

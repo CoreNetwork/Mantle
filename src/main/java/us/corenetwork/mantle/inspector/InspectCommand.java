@@ -3,7 +3,6 @@ package us.corenetwork.mantle.inspector;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;

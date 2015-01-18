@@ -4,10 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.UUID;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;

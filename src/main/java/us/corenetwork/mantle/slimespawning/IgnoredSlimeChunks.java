@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.HashSet;
-
 import us.corenetwork.mantle.IO;
 
 public class IgnoredSlimeChunks {

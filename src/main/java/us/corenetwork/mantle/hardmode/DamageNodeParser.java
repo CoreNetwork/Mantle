@@ -1,8 +1,10 @@
 package us.corenetwork.mantle.hardmode;
 
+import com.gadberry.utility.expression.ArgumentCastException;
+import com.gadberry.utility.expression.Expression;
+import com.gadberry.utility.expression.InvalidExpressionException;
 import java.util.LinkedHashMap;
 import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,14 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.NodeParser;
-
-import com.gadberry.utility.expression.ArgumentCastException;
-import com.gadberry.utility.expression.Expression;
-import com.gadberry.utility.expression.InvalidExpressionException;
 import us.corenetwork.mantle.util.MinecraftNames;
 
 public class DamageNodeParser extends NodeParser {

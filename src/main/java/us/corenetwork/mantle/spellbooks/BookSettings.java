@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.spellbooks;
 
 import java.util.List;
-
 import us.corenetwork.mantle.MLog;
 
 

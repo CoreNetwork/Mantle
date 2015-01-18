@@ -1,12 +1,10 @@
 package us.corenetwork.mantle.hardmode;
 
 
-import net.minecraft.server.v1_8_R1.EntityWitherSkull;
-import net.minecraft.server.v1_8_R1.MathHelper;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.server.v1_8_R1.MathHelper;
 
 public class MoveWitherAuraTestGround extends AbstractWitherMove {
 

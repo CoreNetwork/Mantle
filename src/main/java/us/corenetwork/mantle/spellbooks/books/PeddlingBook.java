@@ -3,13 +3,11 @@ package us.corenetwork.mantle.spellbooks.books;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
 import me.ryanhamshire.GriefPrevention.Claim;
 import net.minecraft.server.v1_8_R1.EntityVillager;
 import net.minecraft.server.v1_8_R1.Items;
 import net.minecraft.server.v1_8_R1.MerchantRecipe;
 import net.minecraft.server.v1_8_R1.MerchantRecipeList;
-
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -23,7 +21,6 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;

@@ -1,7 +1,5 @@
 package us.corenetwork.mantle.hardmode;
 
-import org.bukkit.entity.Wither;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

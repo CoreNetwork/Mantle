@@ -3,7 +3,6 @@ package us.corenetwork.mantle.generation;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 

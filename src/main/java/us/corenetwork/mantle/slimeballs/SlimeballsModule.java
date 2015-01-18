@@ -6,7 +6,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.commands.BaseSlimeballsCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsCheckCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsGiveCommand;

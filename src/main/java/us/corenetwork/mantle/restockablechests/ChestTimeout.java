@@ -2,7 +2,6 @@ package us.corenetwork.mantle.restockablechests;
 
 import java.util.HashMap;
 import java.util.UUID;
-
 import org.bukkit.block.Block;
 
 public class ChestTimeout {

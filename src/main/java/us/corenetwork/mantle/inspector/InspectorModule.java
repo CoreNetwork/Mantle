@@ -2,7 +2,6 @@ package us.corenetwork.mantle.inspector;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.regeneration.RegenerationModule;

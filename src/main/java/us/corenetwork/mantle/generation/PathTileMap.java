@@ -2,7 +2,6 @@ package us.corenetwork.mantle.generation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.Random;
 
 public class PathTileMap {

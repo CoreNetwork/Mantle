@@ -1,6 +1,5 @@
 package us.corenetwork.mantle.perks;
 
-import io.netty.util.internal.RightPaddedReference;
 import net.minecraft.server.v1_8_R1.IRecipe;
 import net.minecraft.server.v1_8_R1.InventoryCrafting;
 import net.minecraft.server.v1_8_R1.ItemStack;

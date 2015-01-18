@@ -2,7 +2,6 @@ package us.corenetwork.mantle.holograms;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.Bukkit;
 
 /**
  * Created by Matej on 13.12.2014.

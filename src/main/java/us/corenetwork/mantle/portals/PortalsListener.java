@@ -1,7 +1,12 @@
 package us.corenetwork.mantle.portals;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.minecraft.server.v1_8_R1.EntityPlayer;
@@ -33,12 +38,6 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import us.corenetwork.mantle.util.SignUtil;
 
 

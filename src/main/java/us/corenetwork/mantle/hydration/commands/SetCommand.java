@@ -2,7 +2,6 @@ package us.corenetwork.mantle.hydration.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hydration.HydrationUtil;
 import us.corenetwork.mantle.hydration.PlayerData;

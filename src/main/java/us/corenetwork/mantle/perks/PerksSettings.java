@@ -2,8 +2,6 @@ package us.corenetwork.mantle.perks;
 
 import java.util.Arrays;
 import java.util.List;
-import org.bukkit.DyeColor;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.beacons.BeaconsModule;

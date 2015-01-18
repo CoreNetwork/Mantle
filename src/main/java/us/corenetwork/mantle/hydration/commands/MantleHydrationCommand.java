@@ -1,9 +1,7 @@
 package us.corenetwork.mantle.hydration.commands;
 
 import java.util.HashMap;
-
 import org.bukkit.command.CommandSender;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 

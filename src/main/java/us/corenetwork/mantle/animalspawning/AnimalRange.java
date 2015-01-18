@@ -2,7 +2,6 @@ package us.corenetwork.mantle.animalspawning;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import us.corenetwork.mantle.MLog;
 
 

@@ -3,12 +3,10 @@ package us.corenetwork.mantle.regeneration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;

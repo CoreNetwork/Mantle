@@ -1,5 +1,8 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.lang.reflect.Field;
+import java.util.HashSet;
+import java.util.Set;
 import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.MathHelper;
@@ -10,10 +13,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-
-import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Set;
 
 public class BabyZombieBurner implements Listener, Runnable{
     private Set<Zombie> babyZombies = new HashSet<>();

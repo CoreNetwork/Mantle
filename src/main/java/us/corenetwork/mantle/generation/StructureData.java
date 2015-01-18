@@ -3,11 +3,9 @@ package us.corenetwork.mantle.generation;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.CachedSchematic;
 import us.corenetwork.mantle.MLog;
 

@@ -2,12 +2,10 @@ package us.corenetwork.mantle.hydration;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hydration.commands.MantleHydrationCommand;

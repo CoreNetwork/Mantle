@@ -1,10 +1,9 @@
 package us.corenetwork.mantle.util;
 
-import org.bukkit.Material;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.bukkit.Material;
 
 public class BlockTraits {
     public static final Set<Material> NO_PISTON_PUSH_BLOCKS = new HashSet<>();

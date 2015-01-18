@@ -6,11 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
-
 import me.ryanhamshire.GriefPrevention.Claim;
 import net.minecraft.server.v1_8_R1.RecipesFurnace;
-
-import org.bukkit.Bukkit;
 import org.bukkit.CoalType;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -25,7 +22,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;

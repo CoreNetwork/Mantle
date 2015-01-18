@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.mantlecommands;
 
 import org.bukkit.command.CommandSender;
-
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.Setting;

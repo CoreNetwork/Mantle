@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
@@ -16,7 +15,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.material.TexturedMaterial;
-
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;

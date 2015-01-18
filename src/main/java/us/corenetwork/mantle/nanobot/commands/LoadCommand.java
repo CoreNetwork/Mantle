@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import net.minecraft.server.v1_8_R1.ItemStack;
 import net.minecraft.server.v1_8_R1.NBTBase;
 import net.minecraft.server.v1_8_R1.NBTTagByte;
@@ -21,8 +20,6 @@ import net.minecraft.server.v1_8_R1.NBTTagList;
 import net.minecraft.server.v1_8_R1.NBTTagLong;
 import net.minecraft.server.v1_8_R1.NBTTagShort;
 import net.minecraft.server.v1_8_R1.NBTTagString;
-
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -30,7 +27,6 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.nanobot.ArrayConvert;
 import us.corenetwork.mantle.nanobot.NanobotModule;

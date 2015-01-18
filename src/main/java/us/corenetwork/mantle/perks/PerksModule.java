@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.perks;
 
+import java.util.HashMap;
 import net.minecraft.server.v1_8_R1.CraftingManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -8,8 +9,6 @@ import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.perks.commands.BasePerksCommand;
 import us.corenetwork.mantle.perks.commands.SkullCommand;
-
-import java.util.HashMap;
 
 
 public class PerksModule extends MantleModule {

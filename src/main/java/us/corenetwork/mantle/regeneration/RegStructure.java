@@ -1,7 +1,6 @@
 package us.corenetwork.mantle.regeneration;
 
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.MLog;
 
 public class RegStructure

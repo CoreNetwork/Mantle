@@ -5,18 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-
 import us.corenetwork.mantle.animalspawning.AnimalSpawningModule;
-import us.corenetwork.mantle.holograms.HologramsModule;
-import us.corenetwork.mantle.farming.FarmingModule;
 import us.corenetwork.mantle.beacons.BeaconsModule;
+import us.corenetwork.mantle.farming.FarmingModule;
 import us.corenetwork.mantle.gametweaks.GameTweaksModule;
 import us.corenetwork.mantle.generation.GenerationModule;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
+import us.corenetwork.mantle.holograms.HologramsModule;
 import us.corenetwork.mantle.hydration.HydrationModule;
 import us.corenetwork.mantle.inspector.InspectorModule;
 import us.corenetwork.mantle.nanobot.NanobotModule;

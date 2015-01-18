@@ -7,14 +7,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
-
 import me.ryanhamshire.GriefPrevention.Claim;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;

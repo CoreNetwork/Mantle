@@ -1,10 +1,8 @@
 package us.corenetwork.mantle.slimeballs;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.yaml.snakeyaml.Yaml;
 import us.corenetwork.mantle.YamlUtils;
 
 /**

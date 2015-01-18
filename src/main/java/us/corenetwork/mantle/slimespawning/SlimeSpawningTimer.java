@@ -1,14 +1,11 @@
 package us.corenetwork.mantle.slimespawning;
 
 import net.minecraft.server.v1_8_R1.ChunkProviderServer;
-
-import net.minecraft.server.v1_8_R1.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 

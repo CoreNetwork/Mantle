@@ -5,7 +5,6 @@ import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
-import us.corenetwork.mantle.util.BlockTraits;
 
 public class PistonNoFarmListener implements Listener {
 

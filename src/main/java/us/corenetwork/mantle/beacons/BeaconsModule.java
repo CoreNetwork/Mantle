@@ -1,11 +1,9 @@
 package us.corenetwork.mantle.beacons;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MantleModule;
-import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
 
 

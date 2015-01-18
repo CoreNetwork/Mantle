@@ -3,13 +3,7 @@ package us.corenetwork.mantle.slimeballs;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-
-import org.bukkit.Bukkit;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
 import us.corenetwork.mantle.IO;
 
 public class SlimeballsStorage {

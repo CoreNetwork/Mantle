@@ -2,9 +2,7 @@ package us.corenetwork.mantle;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.EntityPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
-import org.bukkit.entity.Player;
 
 /**
  * Created by Matej on 15.12.2014.

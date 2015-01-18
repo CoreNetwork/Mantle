@@ -1,9 +1,12 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EnumParticle;
 import net.minecraft.server.v1_8_R1.MathHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -11,11 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import us.corenetwork.mantle.ParticleLibrary;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Ginaf on 2014-12-18.

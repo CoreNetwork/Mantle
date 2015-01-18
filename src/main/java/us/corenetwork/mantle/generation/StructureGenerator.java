@@ -8,17 +8,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.imageio.ImageIO;
-
 import me.ryanhamshire.GriefPrevention.Claim;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.CachedSchematic;
 import us.corenetwork.mantle.CachedSchematic.ChestInfo;
 import us.corenetwork.mantle.GriefPreventionHandler;

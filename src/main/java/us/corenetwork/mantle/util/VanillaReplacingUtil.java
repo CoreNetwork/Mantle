@@ -5,7 +5,6 @@ import java.util.Map;
 import net.minecraft.server.v1_8_R1.BiomeBase;
 import net.minecraft.server.v1_8_R1.BiomeMeta;
 import net.minecraft.server.v1_8_R1.EntityTypes;
-import net.minecraft.server.v1_8_R1.EntityVillager;
 
 /**
  * Util for replacing vanilla stuff with our stuff (like entities or blocks)

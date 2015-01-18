@@ -2,7 +2,6 @@ package us.corenetwork.mantle.hydration;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.inventory.ItemStack;
 

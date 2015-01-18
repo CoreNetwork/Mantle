@@ -5,12 +5,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import javax.imageio.ImageIO;
-
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.MLog;
 
 public class StructureImageMapParser implements MapIterator {

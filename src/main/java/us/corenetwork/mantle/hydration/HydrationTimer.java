@@ -1,13 +1,8 @@
 package us.corenetwork.mantle.hydration;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
-
-import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
 
 public class HydrationTimer implements Runnable {

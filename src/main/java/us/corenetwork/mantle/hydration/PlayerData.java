@@ -1,6 +1,5 @@
 package us.corenetwork.mantle.hydration;
 
-import com.sk89q.worldedit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,7 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-
 import us.corenetwork.mantle.IO;
 
 public class PlayerData {	

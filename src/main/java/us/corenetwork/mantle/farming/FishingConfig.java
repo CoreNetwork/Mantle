@@ -1,5 +1,12 @@
 package us.corenetwork.mantle.farming;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import net.minecraft.server.v1_8_R1.EnchantmentManager;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,8 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
-
-import java.util.*;
 
 public class FishingConfig implements Listener {
     private List<FishingGroup> groups = new ArrayList<>();

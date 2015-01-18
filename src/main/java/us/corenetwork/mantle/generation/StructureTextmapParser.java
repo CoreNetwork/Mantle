@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
-
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.MLog;
 
 public class StructureTextmapParser implements MapIterator {

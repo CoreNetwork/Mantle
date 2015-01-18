@@ -10,7 +10,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
-
 import us.corenetwork.mantle.ParticleLibrary;
 
 public class SlimeKillTimer implements Runnable {

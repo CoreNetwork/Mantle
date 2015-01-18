@@ -4,8 +4,6 @@ package us.corenetwork.mantle.generation;
 import net.minecraft.server.v1_8_R1.Block;
 import net.minecraft.server.v1_8_R1.MaterialMapColor;
 
-import org.bukkit.Material;
-
 public class MapColors {
 	
 	public static final int colorMap[] = new int[1000];

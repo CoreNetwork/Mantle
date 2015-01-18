@@ -2,9 +2,7 @@ package us.corenetwork.mantle.restockablechests.commands;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import org.bukkit.command.CommandSender;
-
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;

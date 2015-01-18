@@ -1,10 +1,7 @@
 package us.corenetwork.mantle.util;
 
 import net.minecraft.server.v1_8_R1.Item;
-import net.minecraft.server.v1_8_R1.MobEffect;
 import net.minecraft.server.v1_8_R1.MobEffectList;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 
 /**
  * Created by Matej on 2.12.2014.

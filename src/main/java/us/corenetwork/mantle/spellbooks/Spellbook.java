@@ -2,7 +2,6 @@ package us.corenetwork.mantle.spellbooks;
 
 import java.util.Arrays;
 import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -11,7 +10,6 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;

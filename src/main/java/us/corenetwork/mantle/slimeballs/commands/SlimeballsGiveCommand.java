@@ -1,13 +1,10 @@
 package us.corenetwork.mantle.slimeballs.commands;
 
-import java.util.UUID;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballItem;
-import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
 
 

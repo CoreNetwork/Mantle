@@ -1,10 +1,8 @@
 package us.corenetwork.mantle;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.lang.reflect.Field;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import me.ryanhamshire.GriefPrevention.Claim;
@@ -13,7 +11,6 @@ import me.ryanhamshire.GriefPrevention.CreateClaimResult;
 import me.ryanhamshire.GriefPrevention.DataStore;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 

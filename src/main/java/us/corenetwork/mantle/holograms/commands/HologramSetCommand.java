@@ -4,9 +4,9 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.holograms.HologramsSettings;
 import us.corenetwork.mantle.holograms.Hologram;
 import us.corenetwork.mantle.holograms.HologramStorage;
+import us.corenetwork.mantle.holograms.HologramsSettings;
 
 
 public class HologramSetCommand extends BaseHologramCommand

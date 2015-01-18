@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
-
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;

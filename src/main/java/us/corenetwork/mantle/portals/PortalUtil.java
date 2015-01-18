@@ -1,10 +1,11 @@
 package us.corenetwork.mantle.portals;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-
+import java.util.Set;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Bukkit;
@@ -16,11 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
-
-import java.util.ArrayList;
-import java.util.Set;
 
 public class PortalUtil {
 

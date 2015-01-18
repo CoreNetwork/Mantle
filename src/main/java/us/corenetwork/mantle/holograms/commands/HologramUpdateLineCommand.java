@@ -2,9 +2,9 @@ package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.holograms.HologramsSettings;
 import us.corenetwork.mantle.holograms.Hologram;
 import us.corenetwork.mantle.holograms.HologramStorage;
+import us.corenetwork.mantle.holograms.HologramsSettings;
 
 
 public class HologramUpdateLineCommand extends BaseHologramCommand

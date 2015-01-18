@@ -4,9 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * Created by Matej on 1.1.2015.
  */

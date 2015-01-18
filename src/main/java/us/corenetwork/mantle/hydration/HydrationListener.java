@@ -3,7 +3,6 @@ package us.corenetwork.mantle.hydration;
 
 import java.util.HashMap;
 import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -16,7 +15,6 @@ import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.world.WorldSaveEvent;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.MantlePlugin;
 
 

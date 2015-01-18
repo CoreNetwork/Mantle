@@ -1,18 +1,28 @@
 package us.corenetwork.mantle.hardmode;
 
 import com.google.common.base.Predicate;
-import net.minecraft.server.v1_8_R1.*;
-import net.minecraft.server.v1_8_R1.Material;
-import net.minecraft.server.v1_8_R1.World;
-import org.bukkit.*;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
-import us.corenetwork.mantle.MLog;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.server.v1_8_R1.Block;
+import net.minecraft.server.v1_8_R1.BlockPosition;
+import net.minecraft.server.v1_8_R1.Blocks;
+import net.minecraft.server.v1_8_R1.DamageSource;
+import net.minecraft.server.v1_8_R1.Entity;
+import net.minecraft.server.v1_8_R1.EntityHuman;
+import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R1.EntityWither;
+import net.minecraft.server.v1_8_R1.EnumParticle;
+import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R1.Material;
+import net.minecraft.server.v1_8_R1.MathHelper;
+import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R1.World;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
 
 public class CustomWither extends EntityWither {
 

@@ -3,7 +3,6 @@ package us.corenetwork.mantle.spellbooks.commands;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;

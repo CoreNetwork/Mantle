@@ -1,29 +1,20 @@
 package us.corenetwork.mantle.generation;
 
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.Buffer;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.Queue;
-
 import javax.imageio.ImageIO;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.MemorySection;
-
 import us.corenetwork.mantle.CachedSchematic;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;

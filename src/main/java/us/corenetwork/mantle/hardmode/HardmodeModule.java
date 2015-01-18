@@ -6,7 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
-import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 

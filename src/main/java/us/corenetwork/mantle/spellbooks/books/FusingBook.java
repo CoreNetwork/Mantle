@@ -3,9 +3,7 @@ package us.corenetwork.mantle.spellbooks.books;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-
 import me.ryanhamshire.GriefPrevention.Claim;
-
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -20,7 +18,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;

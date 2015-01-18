@@ -3,8 +3,6 @@ package us.corenetwork.mantle;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
-import javax.swing.text.html.parser.Entity;
-import net.minecraft.server.v1_8_R1.EntityPig;
 import net.minecraft.server.v1_8_R1.EntityPigZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

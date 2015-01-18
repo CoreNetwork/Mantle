@@ -1,10 +1,8 @@
 package us.corenetwork.mantle.spellbooks.commands;
 
 import java.util.HashMap;
-
 import net.minecraft.server.v1_8_R1.EntityItem;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
-
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
@@ -12,7 +10,6 @@ import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;

@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import net.minecraft.server.v1_8_R1.ItemStack;
 import net.minecraft.server.v1_8_R1.NBTBase;
 import net.minecraft.server.v1_8_R1.NBTTagByte;
@@ -20,7 +19,6 @@ import net.minecraft.server.v1_8_R1.NBTTagList;
 import net.minecraft.server.v1_8_R1.NBTTagLong;
 import net.minecraft.server.v1_8_R1.NBTTagShort;
 import net.minecraft.server.v1_8_R1.NBTTagString;
-
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,7 +28,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
-
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.nanobot.ArrayConvert;
 import us.corenetwork.mantle.nanobot.NanobotModule;

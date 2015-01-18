@@ -1,26 +1,17 @@
 package us.corenetwork.mantle.beacons;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.Random;
 import net.minecraft.server.v1_8_R1.Block;
-import net.minecraft.server.v1_8_R1.BlockBeacon;
 import net.minecraft.server.v1_8_R1.BlockContainer;
 import net.minecraft.server.v1_8_R1.BlockPosition;
-import net.minecraft.server.v1_8_R1.BlockWallBanner;
 import net.minecraft.server.v1_8_R1.Blocks;
 import net.minecraft.server.v1_8_R1.CreativeModeTab;
 import net.minecraft.server.v1_8_R1.EntityHuman;
-import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EnumDirection;
 import net.minecraft.server.v1_8_R1.IBlockData;
-import net.minecraft.server.v1_8_R1.ItemStack;
 import net.minecraft.server.v1_8_R1.Material;
 import net.minecraft.server.v1_8_R1.TileEntity;
 import net.minecraft.server.v1_8_R1.World;
-import org.bukkit.Bukkit;
 
 /**
  * Clone of original Minecraft's BlockBeacon.java with TileEntity changes and interact event changed.

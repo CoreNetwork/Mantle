@@ -1,4 +1,5 @@
 package us.corenetwork.mantle;
+
 import java.util.List;
 import net.minecraft.server.v1_8_R1.BlockPosition;
 import org.bukkit.Bukkit;
@@ -8,13 +9,9 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorldBorder;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftFirework;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;

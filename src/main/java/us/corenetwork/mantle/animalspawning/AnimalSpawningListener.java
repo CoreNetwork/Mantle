@@ -13,7 +13,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.world.WorldSaveEvent;
-import us.corenetwork.mantle.MLog;
 
 
 public class AnimalSpawningListener implements Listener {

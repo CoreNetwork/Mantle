@@ -1,20 +1,16 @@
 package us.corenetwork.mantle;
 
 import java.util.List;
-import javax.swing.border.TitledBorder;
 import net.minecraft.server.v1_8_R1.ChatComponentText;
 import net.minecraft.server.v1_8_R1.EntityHuman;
 import net.minecraft.server.v1_8_R1.IChatBaseComponent;
 import net.minecraft.server.v1_8_R1.IInventory;
 import net.minecraft.server.v1_8_R1.ItemStack;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.InventoryHolder;
 
 /**

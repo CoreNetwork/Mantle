@@ -1,10 +1,8 @@
 package us.corenetwork.mantle.spellbooks;
 
 import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
-
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.spellbooks.books.DeadweightBook;
 import us.corenetwork.mantle.spellbooks.books.DecayBook;

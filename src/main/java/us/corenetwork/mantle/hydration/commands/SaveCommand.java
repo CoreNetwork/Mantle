@@ -2,10 +2,8 @@ package us.corenetwork.mantle.hydration.commands;
 
 import java.util.HashMap;
 import java.util.UUID;
-
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import us.corenetwork.mantle.hydration.PlayerData;
 
 

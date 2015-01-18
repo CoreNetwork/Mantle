@@ -7,7 +7,6 @@ import net.minecraft.server.v1_8_R1.PathfinderGoalHurtByTarget;
 import net.minecraft.server.v1_8_R1.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_8_R1.World;
-import org.bukkit.Bukkit;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
 /**

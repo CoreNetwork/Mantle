@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.animalspawning;
 
+import java.util.ArrayDeque;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
@@ -10,8 +11,6 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
-
-import java.util.ArrayDeque;
 
 public class AnimalSpawningTimer implements Runnable {
 	public static AnimalSpawningTimer timerSingleton;

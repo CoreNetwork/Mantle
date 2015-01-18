@@ -1,10 +1,8 @@
 package us.corenetwork.mantle.portals;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-
 import us.corenetwork.mantle.MLog;
 
 public class SchematicBlock {

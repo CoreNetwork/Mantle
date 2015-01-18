@@ -1,15 +1,14 @@
 package us.corenetwork.mantle.generation;
 
-import com.sk89q.worldguard.protection.managers.storage.StorageException;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-
 import com.sk89q.worldedit.BlockVector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
 import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion.CircularInheritanceException;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 public class WorldGuardManager {
 	public static void createRegion(Location firstPoint, Location secondPoint, String name, String exampleRegion)

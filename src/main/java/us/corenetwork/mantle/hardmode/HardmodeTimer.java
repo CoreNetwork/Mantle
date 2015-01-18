@@ -1,12 +1,10 @@
 package us.corenetwork.mantle.hardmode;
 
-import net.minecraft.server.v1_8_R1.EntityWither;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWither;
 import org.bukkit.entity.Wither;
 import org.bukkit.metadata.MetadataValue;
-
 import us.corenetwork.mantle.MantlePlugin;
 
 

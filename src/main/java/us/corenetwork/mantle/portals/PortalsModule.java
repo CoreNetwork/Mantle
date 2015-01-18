@@ -3,7 +3,6 @@ package us.corenetwork.mantle.portals;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-
 import org.bukkit.event.player.PlayerPortalEvent;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
