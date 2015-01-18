@@ -66,7 +66,21 @@ public class PerksListener implements Listener
             if (!PerksUtil.isPerkItem(nmsStack))
                 return;
 
-            if (!canPlaceArmorStand(event.getPlayer(), event.getBlockPlaced(), nmsStack))
+            if (!canPlaceBanner(event.getPlayer(), event.getBlockPlaced(), nmsStack))
+            {
+                event.setCancelled(true);
+                event.getPlayer().updateInventory();
+            }
+        }
+
+
+        if (stackInHand != null && stackInHand.getType() == Material.SKULL_ITEM)
+        {
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            if (!PerksUtil.isPerkItem(nmsStack))
+                return;
+
+            if (!canPlaceSkull(event.getPlayer(), event.getBlockPlaced(), nmsStack))
             {
                 event.setCancelled(true);
                 event.getPlayer().updateInventory();
@@ -114,6 +128,24 @@ public class PerksListener implements Listener
             Util.Message(PerksSettings.MESSAGE_BANNER_WRONG_CLAIM.string(), player);
             return false;
 
+        }
+
+        return true;
+    }
+
+    private static boolean canPlaceSkull(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+    {
+        if (!Util.hasPermission(player, "mantle.perks.advskulls"))
+        {
+            Util.Message(PerksSettings.MESSAGE_SKULL_WRONG_PERMISSION.string(), player);
+            return false;
+        }
+
+        Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), true, null);
+        if (claim == null || !player.getUniqueId().equals(claim.ownerID))
+        {
+            Util.Message(PerksSettings.MESSAGE_SKULL_WRONG_CLAIM.string(), player);
+            return false;
         }
 
         return true;

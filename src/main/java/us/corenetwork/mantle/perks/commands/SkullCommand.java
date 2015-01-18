@@ -1,14 +1,13 @@
 package us.corenetwork.mantle.perks.commands;
 
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import org.bukkit.Material;
-import org.bukkit.block.Skull;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.perks.PerksSettings;
@@ -29,10 +28,9 @@ public class SkullCommand extends BasePerksCommand {
     @Override
     public void run(CommandSender sender, String[] args)
     {
-
         if(args.length < 1)
         {
-            //TODO message about needing a param
+            Util.Message("Usage: /skull <PlayerName>", sender);
             return;
         }
 
@@ -42,7 +40,7 @@ public class SkullCommand extends BasePerksCommand {
 
         if(itemInHand.getAmount() != 1 || itemInHand.getDurability() != 1)
         {
-            //TODO message about wrong skull/amount
+            Util.Message(PerksSettings.MESSAGE_SKULL_ONLY_ONE_IN_HAND.string(), sender);
             return;
         }
         CraftItemStack si = (CraftItemStack) itemInHand;

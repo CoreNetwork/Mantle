@@ -13,16 +13,18 @@ public enum PerksSettings
 {
 
 	SPECIAL_SKULL_NANOBOT_FILE("SpecialSkullNanobotFile", "special-skull"),
-
-
 	SPECIAL_ARMOR_STAND_NANOBOT_FILE("SpecialArmorStandNanobotFile", "special-armorstand"),
 	BANNER_LORE("BannerRole", Arrays.asList(new String[] {"&7Can be placed only by subscribers", "&7in land they claimed themselves.", "&8Will disappear when unclaimed."})),
 
 	MESSAGE_ARMOR_STAND_WRONG_PERMISSION("Messages.ArmorStandWrongPermission", "You need to be a subscriber to use this type of armor stand. Type /subscribe to learn more."),
 	MESSAGE_ARMOR_STAND_WRONG_CLAIM("Messages.ArmorStandWrongClaim", "You can only place this type of armor stand in your own claim."),
 	MESSAGE_BANNER_WRONG_PERMISSION("Messages.BannerWrongPermission", "You need to be a subscriber to use this type of banner. Type /subscribe to learn more."),
-	MESSAGE_BANNER_WRONG_CLAIM("Messages.BannerWrongClaim", "You can only place this type of banner in your own claim.");
+	MESSAGE_BANNER_WRONG_CLAIM("Messages.BannerWrongClaim", "You can only place this type of banner in your own claim."),
+	MESSAGE_SKULL_WRONG_PERMISSION("Messages.SkullWrongPermission", "You need to be a subscriber to use this type of skull. Type /subscribe to learn more."),
+	MESSAGE_SKULL_WRONG_CLAIM("Messages.SkullWrongClaim", "You can only place this type of skull in your own claim."),
 
+	MESSAGE_SKULL_ONLY_ONE_IN_HAND("Messages.SkullOnlyOneInHand", "Please hold exactly one wither skull in your hand."),
+	;
 
 	protected String string;
 	protected Object def;
