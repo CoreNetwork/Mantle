@@ -74,9 +74,10 @@ public class PerksUtil
      */
     public static boolean isSupposedToBePerkBannerItem(NBTTagCompound itemTag)
     {
-        NBTTagCompound blockEntityTag = (NBTTagCompound) itemTag.get("BlockEntityTag");
-        if (blockEntityTag == null)
+        if (itemTag == null)
             return false;
+
+        NBTTagCompound blockEntityTag = (NBTTagCompound) itemTag.get("BlockEntityTag");
 
         return isSupposedToBePerkBanner(blockEntityTag);
     }
@@ -87,6 +88,9 @@ public class PerksUtil
      */
     public static boolean isSupposedToBePerkBanner(NBTTagCompound blockEntityTag)
     {
+        if (blockEntityTag == null)
+            return false;
+
         NBTTagList patterns = (NBTTagList) blockEntityTag.get("Patterns");
         if (patterns == null)
             return false;
@@ -141,6 +145,9 @@ public class PerksUtil
      */
     public static boolean isSupposedToBePerkArmorStandItem(NBTTagCompound itemTag)
     {
+        if (itemTag == null)
+            return false;
+
         NBTTagCompound blockEntityTag = (NBTTagCompound) itemTag.get("EntityTag");
         if (blockEntityTag == null)
             return false;
