@@ -72,15 +72,17 @@ public class PerksListener implements Listener
         if (stackInHand != null)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
-            if (!PerksUtil.hasGoldenName(nmsStack))
+            if (!PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag()) &&
+                    !PerksUtil.isSupposedToBePerkArmorStandItem(nmsStack.getTag()) &&
+                    !PerksUtil.iSupposedToBePerkSkullItem(nmsStack.getTag()))
                 return;
 
             Block blockLocation = event.getRightClicked().getLocation().getBlock();
 
 
-            if (    !canPlaceArmorStand(player, event.getRightClicked().getLocation().getBlock(), nmsStack) ||
-                    !canPlaceSkull(player, event.getRightClicked().getLocation().getBlock(), nmsStack) ||
-                    !canPlaceBanner(player, event.getRightClicked().getLocation().getBlock(), nmsStack))
+            if (    !canPlaceArmorStand(player, blockLocation, nmsStack) ||
+                    !canPlaceSkull(player, blockLocation, nmsStack) ||
+                    !canPlaceBanner(player, blockLocation, nmsStack))
             {
                 event.setCancelled(true);
                 player.updateInventory();
@@ -108,7 +110,7 @@ public class PerksListener implements Listener
         if (stackInHand != null && stackInHand.getType() == Material.SKULL_ITEM)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
-            if (!PerksUtil.hasGoldenName(nmsStack))
+            if (!PerksUtil.iSupposedToBePerkSkullItem(nmsStack.getTag()))
                 return;
 
             if (!canPlaceSkull(event.getPlayer(), event.getBlockPlaced(), nmsStack))

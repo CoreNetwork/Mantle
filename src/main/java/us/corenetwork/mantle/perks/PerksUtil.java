@@ -177,4 +177,13 @@ public class PerksUtil
     {
         return armorStand.hasArms();
     }
+
+    /**
+     * Checks if skull is supposed to be used only by perk users
+     * @param itemTag NBT tag of the skull
+     */
+    public static boolean iSupposedToBePerkSkullItem(NBTTagCompound itemTag)
+    {
+        return itemTag.hasKey("SkullOwner");
+    }
 }
