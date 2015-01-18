@@ -290,53 +290,6 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onPistonExtend(BlockPistonExtendEvent event)
-	{
-		Block firstBlock = event.getBlock().getRelative(event.getDirection());
-		onCropDestroyed(firstBlock, false);
-		onCropDestroyed(firstBlock.getRelative(BlockFace.UP), false);
-
-		for (Block b : event.getBlocks())
-		{
-			onCropDestroyed(b, false);
-			onCropDestroyed(b.getRelative(BlockFace.UP), false);
-		}
-
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onPistonRetract(BlockPistonRetractEvent event)
-	{
-		if (event.isSticky())
-		{
-			onCropDestroyed(event.getRetractLocation().getBlock().getRelative(BlockFace.UP), false);
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onLiquidMove(BlockFromToEvent event)
-	{
-		onCropDestroyed(event.getToBlock(), false);
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onEntityInteract(EntityInteractEvent event)
-	{
-		if (onCropDestroyed(event.getBlock(), false))
-		{
-			event.setCancelled(true);
-			return;
-		}
-
-		Block aboveBlock = event.getBlock().getRelative(BlockFace.UP);
-		if (aboveBlock != null && onCropDestroyed(aboveBlock, false))
-		{
-			event.setCancelled(true);
-			return;
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
 	{
 		Entity entity = event.getRightClicked();
@@ -360,22 +313,6 @@ public class HardmodeListener implements Listener {
 	{
 		final Block block = event.getBlock();
 
-		if (onCropDestroyed(block, false))
-		{
-			event.setCancelled(true);
-			return;
-		}
-		onCropDestroyed(block.getRelative(BlockFace.UP), false);
-	}
-
-	// Virtal event that combines multiple events.
-	// Triggers when non-solid block (like crops) is about to be destroyed
-	public boolean onCropDestroyed(Block block, boolean dark)
-	{
-		if (block == null)
-			return false;
-
-		return false;
 	}
 
 	@EventHandler(ignoreCancelled = true)
