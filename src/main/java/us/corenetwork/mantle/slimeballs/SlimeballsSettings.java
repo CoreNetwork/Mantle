@@ -19,8 +19,8 @@ public enum SlimeballsSettings
 	MESSAGE_SLIMEBALLS_RELEASE("Messages.Release.Player", "You tripped over your Slimeball and passed out. Now you have woken up in different place...[NEWLINE]&3More: /slimeballs"),
 	MESSAGE_SLIMEBALLS_RELEASE_NOTIFICATION("Messages.Release.Notification", "<Player> just slimed out of the Limbo! <Amount> balls remaining."),
 	MESSAGE_SLIMEBALLS_RELEASE_EMPTY_ACCOUNT("Messages.Release.EmptyAccount", "&cYou don't have any slimeballs. &7/slimeballs"),
-	MESSAGE_SLIMEBALLS_AWARDED_PLAYER("Messages.Awarded.Player", "&aYou received <Slimeballs> slimeball<PluralS>!"),
-	MESSAGE_SLIMEBALLS_AWARDED_OTHER("Messages.Awarded.Other", "&a<Player> received <Slimeballs> slimeball<PluralS>! &2More: /slimeballs");
+	MESSAGE_SLIMEBALLS_AWARDED_PLAYER("Messages.Awarded.Player", "&aYou received <Amount> slimeball<PluralS>!"),
+	MESSAGE_SLIMEBALLS_AWARDED_OTHER("Messages.Awarded.Other", "&a<Player> received <Amount> slimeball<PluralS>! &2More: /slimeballs");
 
 	protected String string;
 	protected Object def;
