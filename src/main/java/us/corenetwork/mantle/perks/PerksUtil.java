@@ -184,6 +184,9 @@ public class PerksUtil
      */
     public static boolean iSupposedToBePerkSkullItem(NBTTagCompound itemTag)
     {
+        if (itemTag == null)
+            return false;
+
         return itemTag.hasKey("SkullOwner");
     }
 }
