@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.perks;
 
 import io.netty.util.internal.RightPaddedReference;
+import java.util.List;
 import net.minecraft.server.v1_8_R1.IRecipe;
 import net.minecraft.server.v1_8_R1.InventoryCrafting;
 import net.minecraft.server.v1_8_R1.ItemStack;
@@ -73,19 +74,19 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         ItemStack armorStand = new ItemStack(Items.ARMOR_STAND, 1);
         NBTTagCompound tag = LoadCommand.load(PerksSettings.SPECIAL_ARMOR_STAND_NANOBOT_FILE.string());
 
-        float leftHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 0, 3, 6);
-        float righHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 2, 5, 8);
+        ArmOrientation leftHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 0, 3, 6);
+        ArmOrientation righHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 2, 5, 8);
 
         NBTTagCompound entityTag = new NBTTagCompound();
         NBTTagCompound poseTag = new NBTTagCompound();
 
         NBTTagList leftHand = new NBTTagList();
-        leftHand.add(new NBTTagFloat(leftHandOrientation)); //X rotation
+        leftHand.add(new NBTTagFloat(-leftHandOrientation.getVanillaOrientation())); //X rotation
         leftHand.add(new NBTTagFloat(0)); //Y rotation
         leftHand.add(new NBTTagFloat(0)); //Z rotation
 
         NBTTagList rightHand = new NBTTagList();
-        rightHand.add(new NBTTagFloat(leftHandOrientation)); //X rotation
+        rightHand.add(new NBTTagFloat(-righHandOrientation.getVanillaOrientation())); //X rotation
         rightHand.add(new NBTTagFloat(0)); //Y rotation
         rightHand.add(new NBTTagFloat(0)); //Z rotation
 
@@ -95,6 +96,9 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         entityTag.set("Pose", poseTag);
         entityTag.setBoolean("ShowArms", true);
         tag.set("EntityTag", entityTag);
+
+        NanobotUtil.replaceStringInNBT(tag, "<LeftArmPose>", leftHandOrientation.getDescription());
+        NanobotUtil.replaceStringInNBT(tag, "<RightArmPose>", righHandOrientation.getDescription());
 
         armorStand.setTag(tag);
 
@@ -128,33 +132,62 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         return new ItemStack[inventoryCrafting.getSize()]; //Return array with nulls (consume all the things)
     }
 
-    private static float getOrientationFromStickPosition(InventoryCrafting craftingArea, int upStickSlot, int midStickSlot, int downStickSlot)
+    private static ArmOrientation getOrientationFromStickPosition(InventoryCrafting craftingArea, int upStickSlot, int midStickSlot, int downStickSlot)
     {
         if (InventoryUtil.isItemTypeOnSlot(craftingArea, upStickSlot, Items.STICK))
         {
             if (InventoryUtil.isItemTypeOnSlot(craftingArea, midStickSlot, Items.STICK))
             {
-                return 180f;
+                return ArmOrientation.UP;
             }
             else
             {
-                return 135f;
+                return ArmOrientation.RAISED;
             }
         }
         else if (InventoryUtil.isItemTypeOnSlot(craftingArea, downStickSlot, Items.STICK))
         {
             if (InventoryUtil.isItemTypeOnSlot(craftingArea, midStickSlot, Items.STICK))
             {
-                return 0f;
+                return ArmOrientation.DOWN;
             }
             else
             {
-                return 35f;
+                return ArmOrientation.LOWERED;
             }
         }
         else
         {
-            return 90f;
+            return ArmOrientation.SIDE;
+        }
+    }
+
+    private static enum ArmOrientation
+    {
+        UP(180, "up"),
+        RAISED(135, "raised"),
+        SIDE(90, "side"),
+        LOWERED(45, "lowered"),
+        DOWN(0, "down");
+
+
+        float vanillaOrientation;
+        String description;
+
+        ArmOrientation(float vanillaOrientation, String description)
+        {
+            this.vanillaOrientation = vanillaOrientation;
+            this.description = description;
+        }
+
+        public float getVanillaOrientation()
+        {
+            return vanillaOrientation;
+        }
+
+        public String getDescription()
+        {
+            return description;
         }
     }
 }

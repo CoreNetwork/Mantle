@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.perks;
 
+import java.util.Arrays;
+import java.util.List;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -14,9 +16,12 @@ public enum PerksSettings
 
 
 	SPECIAL_ARMOR_STAND_NANOBOT_FILE("SpecialArmorStandNanobotFile", "special-armorstand"),
+	BANNER_LORE("BannerRole", Arrays.asList(new String[] {"&7Can be placed only by subscribers", "&7in land they claimed themselves.", "&8Will disappear when unclaimed."})),
 
 	MESSAGE_ARMOR_STAND_WRONG_PERMISSION("Messages.ArmorStandWrongPermission", "You need to be a subscriber to use this type of armor stand. Type /subscribe to learn more."),
-	MESSAGE_ARMOR_STAND_WRONG_CLAIM("Messages.ArmorStandWrongClaim", "You can only place this type of armor stand in your own claim.");
+	MESSAGE_ARMOR_STAND_WRONG_CLAIM("Messages.ArmorStandWrongClaim", "You can only place this type of armor stand in your own claim."),
+	MESSAGE_BANNER_WRONG_PERMISSION("Messages.BannerWrongPermission", "You need to be a subscriber to use this type of banner. Type /subscribe to learn more."),
+	MESSAGE_BANNER_WRONG_CLAIM("Messages.BannerWrongClaim", "You can only place this type of banner in your own claim.");
 
 
 	protected String string;
@@ -41,6 +46,11 @@ public enum PerksSettings
 	public String string()
 	{
 		return (String) us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(string, def);
+	}
+
+	public List<String> stringList()
+	{
+		return (List<String>) us.corenetwork.mantle.beacons.BeaconsModule.instance.config.get(string, def);
 	}
 
     public ItemStack itemStack()

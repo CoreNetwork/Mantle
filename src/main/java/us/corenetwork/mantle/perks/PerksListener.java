@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -54,6 +56,31 @@ public class PerksListener implements Listener
         }
     }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event)
+    {
+        ItemStack stackInHand = event.getItemInHand();
+        if (stackInHand != null && stackInHand.getType() == Material.BANNER)
+        {
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            if (!PerksUtil.isPerkItem(nmsStack))
+                return;
+
+            if (!canPlaceArmorStand(event.getPlayer(), event.getBlockPlaced(), nmsStack))
+            {
+                event.setCancelled(true);
+                event.getPlayer().updateInventory();
+            }
+        }
+    }
+
+//    public void onBlockBreak(BlockBreakEvent event)
+//    {
+//        event.
+//        Block block = event.getBlock();
+//        if ()
+//    }
+
     private static boolean canPlaceArmorStand(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
     {
         if (!Util.hasPermission(player, "mantle.perks.advarmorstand"))
@@ -66,6 +93,25 @@ public class PerksListener implements Listener
         if (claim == null || !player.getUniqueId().equals(claim.ownerID))
         {
             Util.Message(PerksSettings.MESSAGE_ARMOR_STAND_WRONG_CLAIM.string(), player);
+            return false;
+
+        }
+
+        return true;
+    }
+
+    private static boolean canPlaceBanner(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+    {
+        if (!Util.hasPermission(player, "mantle.perks.advbanners"))
+        {
+            Util.Message(PerksSettings.MESSAGE_BANNER_WRONG_PERMISSION.string(), player);
+            return false;
+        }
+
+        Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), true, null);
+        if (claim == null || !player.getUniqueId().equals(claim.ownerID))
+        {
+            Util.Message(PerksSettings.MESSAGE_BANNER_WRONG_CLAIM.string(), player);
             return false;
 
         }
