@@ -51,7 +51,7 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 
 		String awardedAnnouncement = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER.string();
 		awardedAnnouncement = awardedAnnouncement.replace("<Player>", offlinePlayer.getName());
-		awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(slimeballs));
+		awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(amount));
 		if (slimeballs == 1)
 			awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "");
 		else
@@ -60,7 +60,7 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 		if (offlinePlayer.isOnline())
 		{
 			String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER.string();
-			message = message.replace("<Amount>", Integer.toString(slimeballs));
+			message = message.replace("<Amount>", Integer.toString(amount));
 			if (slimeballs == 1)
 				message = message.replace("<PluralS>", "");
 			else
