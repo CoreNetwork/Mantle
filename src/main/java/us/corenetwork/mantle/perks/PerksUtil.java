@@ -12,12 +12,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.block.CraftBlock;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
+import us.corenetwork.mantle.util.SignUtil;
 
 public class PerksUtil
 {
@@ -43,11 +45,16 @@ public class PerksUtil
         return false;
     }
 
+    /**
+     * Check if block is meant to only be placed by subscribers on subscriber's claims.
+     */
     public static boolean isPerkBlock(Block block)
     {
         if (block.getType() == Material.SIGN)
         {
-            //TODO check here if sign has colors
+            Sign sign = (Sign) block.getState();
+
+            return SignUtil.doesSignHaveColors(sign);
         }
         else if (block.getType() == Material.BANNER)
         {
@@ -98,7 +105,7 @@ public class PerksUtil
         {
             NBTTagCompound pattern = patterns.get(i);
             String patternType = pattern.getString("Pattern");
-            
+
             //cbo = Curly border, bri = Bricks
             if ("cbo".equals(patternType) || "bri".equals(patternType))
                 return true;

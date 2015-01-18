@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import us.corenetwork.mantle.util.SignUtil;
 
 
 public class PortalsListener implements Listener {
@@ -177,21 +178,21 @@ public class PortalsListener implements Listener {
 			{
 				if (b.getX() < minX || b.getX() > maxX || b.getZ() < minZ || b.getZ() > maxZ)
 				{
-					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
+					SignUtil.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_FAR.string());
 
 					event.setCancelled(true);
 					return;
 				}
 				if (b.getY() < minY)
 				{
-					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
+					SignUtil.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_LOW.string());
 
 					event.setCancelled(true);
 					return;
 				}
 				if  (b.getY() > maxY)
 				{
-					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
+					SignUtil.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_PORTAL_OUT_OF_BOUNDARIES_TOO_HIGH.string());
 
 					event.setCancelled(true);
 					return;
@@ -314,7 +315,7 @@ public class PortalsListener implements Listener {
 								
 				if (creator == null)
 				{
-					Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+					SignUtil.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 					event.setCancelled(true);
 					return;
@@ -326,7 +327,7 @@ public class PortalsListener implements Listener {
 				{
 					if (player == null || claim.allowBuild(player, Material.STONE) != null)
 					{
-						Util.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
+						SignUtil.placeSign(PortalUtil.findBestSignLocation(event.getBlocks()), PortalsSettings.SIGN_OVERLAP_CLAIM.string());
 
 						event.setCancelled(true);
 						return;

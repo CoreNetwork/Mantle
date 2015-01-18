@@ -25,49 +25,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 public class Util
 {
 
-    public static void placeSign(final Block block, final String message)
-    {
-        org.bukkit.material.Sign signData = new org.bukkit.material.Sign();
-        for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH})
-        {
-            Block nextBlock = block.getRelative(face);
-            if (nextBlock != null && nextBlock.getType().isSolid())
-            {
-                signData.setFacingDirection(face.getOppositeFace());
-
-                break;
-            }
-        }
-
-        Block belowBlock = block.getRelative(BlockFace.DOWN);
-        if (belowBlock != null && belowBlock.getType().isSolid())
-        {
-            block.setTypeIdAndData(Material.SIGN_POST.getId(), signData.getData(), true);
-        } else
-        {
-            block.setTypeIdAndData(Material.WALL_SIGN.getId(), signData.getData(), true);
-        }
-
-        Sign sign = (Sign) block.getState();
-        //Rotate sign so it will be facing away from the wall
-
-        populateSign(message, sign);
-
-        sign.update();
-    }
-
-    public static void populateSign(String message, Sign sign)
-    {
-        message = message.replaceAll("\\&([0-9abcdef])", ChatColor.COLOR_CHAR + "$1");
-        String[] lines = message.split("\\[NEWLINE\\]");
-
-        int max = Math.min(4, lines.length);
-        for (int i = 0; i < max; i++)
-        {
-            sign.setLine(i, lines[i]);
-        }
-    }
-
     public static void Message(String message, CommandSender sender)
     {
         message = applyColors(message);

@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
+import us.corenetwork.mantle.util.SignUtil;
 
 public class MantleListener implements Listener {
 
@@ -30,14 +31,10 @@ public class MantleListener implements Listener {
         {
             Sign sign = (Sign) event.getBlock().getState();
 
-            String colorSymbol = "\u00A7";
-            for (String line : sign.getLines())
+            if (SignUtil.doesSignHaveColors(sign))
             {
-                if (line.contains(colorSymbol))
-                {
-                    event.setCancelled(true);
-                    return;
-                }
+                event.setCancelled(true);
+                return;
             }
         }
     }
