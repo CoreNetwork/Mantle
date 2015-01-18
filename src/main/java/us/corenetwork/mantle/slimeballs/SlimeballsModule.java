@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.slimeballs.commands.BaseSlimeballsCommand;
+import us.corenetwork.mantle.slimeballs.commands.SlimeballsAwardCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsCheckCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsGiveCommand;
 import us.corenetwork.mantle.slimeballs.commands.SlimeballsHelpCommand;
@@ -45,6 +46,7 @@ public class SlimeballsModule extends MantleModule {
         commands.put("check", new SlimeballsCheckCommand());
         commands.put("pay", new SlimeballsPayCommand());
         commands.put("give", new SlimeballsGiveCommand());
+        commands.put("award", new SlimeballsAwardCommand());
 
 		return true;
 	}
