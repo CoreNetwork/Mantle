@@ -38,7 +38,7 @@ public class SkullCommand extends BasePerksCommand {
 
         ItemStack itemInHand = player.getItemInHand();
 
-        if(itemInHand.getAmount() != 1 || itemInHand.getDurability() != 1)
+        if(itemInHand.getAmount() != 1 || !(itemInHand.getDurability() == 1 || itemInHand.getDurability() == 3))
         {
             Util.Message(PerksSettings.MESSAGE_SKULL_ONLY_ONE_IN_HAND.string(), sender);
             return;

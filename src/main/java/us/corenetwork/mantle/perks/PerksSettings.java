@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.YamlUtils;
-import us.corenetwork.mantle.beacons.BeaconsModule;
 
 
 public enum PerksSettings
@@ -35,35 +34,42 @@ public enum PerksSettings
 
 	public double doubleNumber()
 	{
-		return ((Number) PerksModule.instance.config.get(string, def)).doubleValue();
+		return ((Number) us.corenetwork.mantle.perks.PerksModule.instance.config.get(string, def)).doubleValue();
 	}
 
 	public Integer integer()
 	{
-		return (Integer) PerksModule.instance.config.get(string, def);
+		return (Integer) us.corenetwork.mantle.perks.PerksModule.instance.config.get(string, def);
 	}
 
 	public String string()
 	{
-		return (String) PerksModule.instance.config.get(string, def);
+		return (String) us.corenetwork.mantle.perks.PerksModule.instance.config.get(string, def);
 	}
 
 	public List<String> stringList()
 	{
-		return (List<String>) PerksModule.instance.config.get(string, def);
+		return (List<String>) us.corenetwork.mantle.perks.PerksModule.instance.config.get(string, def);
 	}
 
+    public ItemStack itemStack()
+    {
+        if (!us.corenetwork.mantle.perks.PerksModule.instance.config.contains(string))
+            return null;
+
+        return YamlUtils.readItemStack(us.corenetwork.mantle.perks.PerksModule.instance.config.getConfigurationSection(string).getValues(false));
+    }
 
 	public static String getCommandDescription(String cmd, String def)
 	{
 		String path = "CommandDescriptions." + cmd;
 
-		Object descO = PerksModule.instance.config.get(path);
+		Object descO = us.corenetwork.mantle.perks.PerksModule.instance.config.get(path);
 		if (descO == null)
 		{
-			us.corenetwork.mantle.beacons.BeaconsModule.instance.config.set(path, "&a/chp " + cmd + " &8-&f " + def);
-			us.corenetwork.mantle.beacons.BeaconsModule.instance.saveConfig();
-			descO = BeaconsModule.instance.config.get(path);
+			us.corenetwork.mantle.perks.PerksModule.instance.config.set(path, "&a/chp " + cmd + " &8-&f " + def);
+			us.corenetwork.mantle.perks.PerksModule.instance.saveConfig();
+			descO = PerksModule.instance.config.get(path);
 		}
 		
 		return (String) descO;
