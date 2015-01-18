@@ -30,7 +30,7 @@ public abstract class BasePerksCommand {
             Util.Message("Sorry, but you need to execute this command as player.", sender);
             return true;
         }
-        if (sender instanceof Player && !Util.hasPermission(sender,"mantle.slimeballs.command." + permission))
+        if (sender instanceof Player && !Util.hasPermission(sender,"mantle.perks." + permission))
         {
             Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
             return true;
