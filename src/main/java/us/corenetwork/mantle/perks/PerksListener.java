@@ -2,6 +2,7 @@ package us.corenetwork.mantle.perks;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import net.milkbowl.vault.Vault;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -9,14 +10,20 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
+import us.corenetwork.core.scoreboard.CoreScoreboardManager;
+import us.corenetwork.core.util.ScoreboardUtils;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
@@ -142,6 +149,29 @@ public class PerksListener implements Listener
                 PerksUtil.addLoreToBanner(nmsStack);
             }
         }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event)
+    {
+        //Colored nameplates
+
+        Player player = event.getPlayer();
+        if (!Util.hasPermission(event.getPlayer(), "mantle.perks.nameplate"))
+            return;
+
+        String groupName = MantlePlugin.chat.getPrimaryGroup(player);
+        String prefix = Util.applyColors(MantlePlugin.chat.getGroupPrefix((String) null, groupName));
+
+        boolean moved = ScoreboardUtils.movePlayerToTeam(event.getPlayer(), groupName);
+        if (moved)
+        {
+            Team newTeam = CoreScoreboardManager.getTeamsScoreboard().getTeam(groupName);
+            if (!newTeam.getPrefix().equals(prefix)) //Update prefix (usually only done for the first time team has been accessed)
+                newTeam.setPrefix(prefix);
+        }
+
+
     }
 
     private static void returnFromFrame(final ItemFrame frame, final Player player)

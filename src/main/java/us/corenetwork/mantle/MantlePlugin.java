@@ -3,11 +3,14 @@ package us.corenetwork.mantle;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.logging.Logger;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.permission.Permission;
 import net.minecraft.server.v1_8_R1.EntityPigZombie;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
 import us.corenetwork.mantle.hardmode.CustomPigman;
@@ -26,7 +29,8 @@ public class MantlePlugin extends JavaPlugin {
 
 	public static MantlePlugin instance;
 
-	public static Plugin permissions = null;
+	public static Permission permission;
+	public static Chat chat;
 
 	public static HashMap<String, BaseMantleCommand> adminCommands = new HashMap<String, BaseMantleCommand>();
 
@@ -70,6 +74,15 @@ public class MantlePlugin extends JavaPlugin {
         CustomBeaconTileEntity.inject();
 		VanillaReplacingUtil.replaceMob("PigZombie", 57, EntityPigZombie.class, CustomPigman.class);
 
+		if (!setupPermissions())
+		{
+			getLogger().warning("could not load Vault permissions - did you forget to install Vault?");
+		}
+		if (!setupChat())
+		{
+			getLogger().warning("could not load Vault chat - did you forget to install Vault?");
+		}
+
 		log.info("[Mantle] " + getDescription().getFullName() + " initialized!");
 	}
 
@@ -81,7 +94,6 @@ public class MantlePlugin extends JavaPlugin {
         MantleModule.loadModules();
         log.info("[Mantle] " + getDescription().getFullName() + " fully loaded!");
     }
-
 
 
 	@Override
@@ -98,5 +110,24 @@ public class MantlePlugin extends JavaPlugin {
 		else
 			return adminCommands.get("help").execute(sender, args);
 	}
+
+	private boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(Permission.class);
+		if (permissionProvider != null) {
+			permission = permissionProvider.getProvider();
+		}
+		return (permission != null);
+	}
+
+	private boolean setupChat()
+	{
+		RegisteredServiceProvider<Chat> chatProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.chat.Chat.class);
+		if (chatProvider != null) {
+			chat = chatProvider.getProvider();
+		}
+
+		return (chat != null);
+	}
+
 
 }
