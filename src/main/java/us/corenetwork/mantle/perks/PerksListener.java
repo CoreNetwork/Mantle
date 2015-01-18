@@ -88,7 +88,10 @@ public class PerksListener implements Listener
                     !canPlaceSkull(player, blockLocation, nmsStack) ||
                     !canPlaceBanner(player, blockLocation, nmsStack))
             {
-                returnFromFrame((ItemFrame) event.getRightClicked(), player);
+                if (clickedType == EntityType.ARMOR_STAND)
+                    event.setCancelled(true);
+                else
+                    returnFromFrame((ItemFrame) event.getRightClicked(), player);
             }
         }
     }
