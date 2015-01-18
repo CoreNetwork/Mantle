@@ -2,9 +2,11 @@ package us.corenetwork.mantle.perks;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +17,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 
@@ -69,6 +72,7 @@ public class PerksListener implements Listener
         }
 
         ItemStack stackInHand = player.getItemInHand();
+
         if (stackInHand != null)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
@@ -84,8 +88,7 @@ public class PerksListener implements Listener
                     !canPlaceSkull(player, blockLocation, nmsStack) ||
                     !canPlaceBanner(player, blockLocation, nmsStack))
             {
-                event.setCancelled(true);
-                player.updateInventory();
+                returnFromFrame((ItemFrame) event.getRightClicked(), player);
             }
         }
     }
@@ -133,6 +136,22 @@ public class PerksListener implements Listener
                 PerksUtil.addLoreToBanner(nmsStack);
             }
         }
+    }
+
+    private static void returnFromFrame(final ItemFrame frame, final Player player)
+    {
+        //Drop item out after one tick
+        Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ItemStack stack = frame.getItem();
+                frame.setItem(null);
+
+                player.getInventory().addItem(stack);
+            }
+        });
     }
 
     private static boolean canPlaceArmorStand(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
