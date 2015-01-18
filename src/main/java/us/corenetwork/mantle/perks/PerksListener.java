@@ -9,11 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
@@ -47,7 +47,7 @@ public class PerksListener implements Listener
         if (stackInHand != null && stackInHand.getType() == Material.ARMOR_STAND)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
-            if (!PerksUtil.isPerkItem(nmsStack))
+            if (!PerksUtil.isSupposedToBePerkArmorStandItem(nmsStack.getTag())) //Do not perform any checks if item is not subscriber-only
                 return;
 
             if (!canPlaceArmorStand(event.getPlayer(), event.getClickedBlock(), nmsStack))
@@ -72,7 +72,7 @@ public class PerksListener implements Listener
         if (stackInHand != null)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
-            if (!PerksUtil.isPerkItem(nmsStack))
+            if (!PerksUtil.hasGoldenName(nmsStack))
                 return;
 
             Block blockLocation = event.getRightClicked().getLocation().getBlock();
@@ -95,7 +95,7 @@ public class PerksListener implements Listener
         if (stackInHand != null && stackInHand.getType() == Material.BANNER)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
-            if (!PerksUtil.isPerkItem(nmsStack))
+            if (!PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag())) //Do not perform any checks if item is not subscriber-only
                 return;
 
             if (!canPlaceBanner(event.getPlayer(), event.getBlockPlaced(), nmsStack))
@@ -108,7 +108,7 @@ public class PerksListener implements Listener
         if (stackInHand != null && stackInHand.getType() == Material.SKULL_ITEM)
         {
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
-            if (!PerksUtil.isPerkItem(nmsStack))
+            if (!PerksUtil.hasGoldenName(nmsStack))
                 return;
 
             if (!canPlaceSkull(event.getPlayer(), event.getBlockPlaced(), nmsStack))
@@ -119,12 +119,19 @@ public class PerksListener implements Listener
         }
     }
 
-//    public void onBlockBreak(BlockBreakEvent event)
-//    {
-//        event.
-//        Block block = event.getBlock();
-//        if ()
-//    }
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerPickupItem(PlayerPickupItemEvent event)
+    {
+        ItemStack item = event.getItem().getItemStack();
+        if (item.getType() == Material.BANNER)
+        {
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(item);
+            if (PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag()))
+            {
+                PerksUtil.addLoreToBanner(nmsStack);
+            }
+        }
+    }
 
     private static boolean canPlaceArmorStand(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
     {

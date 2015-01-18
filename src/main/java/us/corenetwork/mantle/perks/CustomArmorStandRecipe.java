@@ -1,7 +1,5 @@
 package us.corenetwork.mantle.perks;
 
-import io.netty.util.internal.RightPaddedReference;
-import java.util.List;
 import net.minecraft.server.v1_8_R1.IRecipe;
 import net.minecraft.server.v1_8_R1.InventoryCrafting;
 import net.minecraft.server.v1_8_R1.ItemStack;
@@ -11,8 +9,6 @@ import net.minecraft.server.v1_8_R1.NBTTagFloat;
 import net.minecraft.server.v1_8_R1.NBTTagList;
 import net.minecraft.server.v1_8_R1.ShapelessRecipes;
 import net.minecraft.server.v1_8_R1.World;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.util.InventoryUtil;
@@ -37,7 +33,7 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         if (armorStand == null || armorStand.getItem() != Items.ARMOR_STAND)
             return false;
 
-        if (PerksUtil.isPerkItem(armorStand))
+        if (PerksUtil.hasGoldenName(armorStand))
             return false; //Special armor stands cannot be re-crafted.
 
         int numberOfSticksOnLeft = 0;
