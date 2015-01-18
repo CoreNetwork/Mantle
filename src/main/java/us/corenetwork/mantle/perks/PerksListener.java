@@ -163,6 +163,9 @@ public class PerksListener implements Listener
         String groupName = MantlePlugin.chat.getPrimaryGroup(player);
         String prefix = Util.applyColors(MantlePlugin.chat.getGroupPrefix((String) null, groupName));
 
+        if (groupName.length() > 16) //According to some arbitrary limit, team names can't be longer than 16 characters.
+            groupName = groupName.substring(0, 16);
+
         boolean moved = ScoreboardUtils.movePlayerToTeam(event.getPlayer(), groupName);
         if (moved)
         {
