@@ -4,24 +4,38 @@ import net.minecraft.server.v1_8_R1.CraftingManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.YamlUtils;
+import us.corenetwork.mantle.perks.commands.BasePerksCommand;
+import us.corenetwork.mantle.perks.commands.SkullCommand;
+
+import java.util.HashMap;
 
 
 public class PerksModule extends MantleModule {
 	public static PerksModule instance;
 
+	public static HashMap<String, BasePerksCommand> commands = new HashMap<String, BasePerksCommand>();
+
+
 	public PerksModule() {
-		super("Perks", null, "perks");
+		super("Perks", new String[] {"perks"}, "perks");
 		
 		instance = this;
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		return false;
+		if (args.length < 1)
+		{
+			return true;
+		}
+
+		BasePerksCommand cmd = commands.get(args[0]);
+		if (cmd != null)
+			cmd.execute(sender, args);
+
+		return true;
 	}
 
 	@Override
@@ -36,7 +50,7 @@ public class PerksModule extends MantleModule {
             }
 		}
 		saveConfig();
-
+		commands.put("skull", new SkullCommand());
 		Bukkit.getPluginManager().registerEvents(new PerksListener(), MantlePlugin.instance);
 
 		//Add our custom recipe

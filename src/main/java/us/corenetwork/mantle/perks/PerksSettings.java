@@ -9,6 +9,10 @@ import us.corenetwork.mantle.beacons.BeaconsModule;
 
 public enum PerksSettings
 {
+
+	SPECIAL_SKULL_NANOBOT_FILE("SpecialSkullNanobotFile", "special-skull"),
+
+
 	SPECIAL_ARMOR_STAND_NANOBOT_FILE("SpecialArmorStandNanobotFile", "special-armorstand"),
 
 	MESSAGE_ARMOR_STAND_WRONG_PERMISSION("Messages.ArmorStandWrongPermission", "You need to be a subscriber to use this type of armor stand. Type /subscribe to learn more."),
