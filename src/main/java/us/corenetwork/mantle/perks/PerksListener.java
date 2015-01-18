@@ -4,6 +4,7 @@ import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,6 +12,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.Util;
@@ -57,6 +59,36 @@ public class PerksListener implements Listener
     }
 
     @EventHandler(ignoreCancelled = true)
+    public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event)
+    {
+        Player player = event.getPlayer();
+        EntityType clickedType = event.getRightClicked().getType();
+        if(clickedType != EntityType.ARMOR_STAND && clickedType != EntityType.ITEM_FRAME)
+        {
+            return;
+        }
+
+        ItemStack stackInHand = player.getItemInHand();
+        if (stackInHand != null)
+        {
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            if (!PerksUtil.isPerkItem(nmsStack))
+                return;
+
+            Block blockLocation = event.getRightClicked().getLocation().getBlock();
+
+
+            if (    !canPlaceArmorStand(player, event.getRightClicked().getLocation().getBlock(), nmsStack) ||
+                    !canPlaceSkull(player, event.getRightClicked().getLocation().getBlock(), nmsStack) ||
+                    !canPlaceBanner(player, event.getRightClicked().getLocation().getBlock(), nmsStack))
+            {
+                event.setCancelled(true);
+                player.updateInventory();
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event)
     {
         ItemStack stackInHand = event.getItemInHand();
@@ -72,7 +104,6 @@ public class PerksListener implements Listener
                 event.getPlayer().updateInventory();
             }
         }
-
 
         if (stackInHand != null && stackInHand.getType() == Material.SKULL_ITEM)
         {
@@ -150,10 +181,4 @@ public class PerksListener implements Listener
 
         return true;
     }
-
-    private static boolean canPlaceBanner()
-    {
-        return false;
-    }
-
 }
