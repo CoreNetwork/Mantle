@@ -6,6 +6,7 @@ import java.util.Random;
 import java.util.Set;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.Blocks;
+import net.minecraft.server.v1_8_R1.EnchantmentSilkTouch;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.EntityZombie;
@@ -323,10 +324,12 @@ public class HardmodeListener implements Listener {
 		//Quartz drop increase
 		if (event.getBlock().getType() == Material.QUARTZ_ORE)
 		{
+			ItemStack itemInHand = event.getPlayer().getItemInHand();
+			if (itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
+				return;
+
 			event.setCancelled(true); //Cancel drop vanilla
 			block.setType(Material.AIR);
-
-			ItemStack itemInHand = event.getPlayer().getItemInHand();
 
 			boolean canToolBreak = itemInHand != null && NanobotUtil.getInternalNMSStack(itemInHand).b(Blocks.QUARTZ_ORE);
 			if (!canToolBreak)
