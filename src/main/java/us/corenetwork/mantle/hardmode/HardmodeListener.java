@@ -1,16 +1,21 @@
 package us.corenetwork.mantle.hardmode;
 
+import com.comphenix.protocol.wrappers.BlockPosition;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import net.amoebaman.util.Reflection;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.Blocks;
 import net.minecraft.server.v1_8_R1.EnchantmentSilkTouch;
 import net.minecraft.server.v1_8_R1.EntityCreature;
+import net.minecraft.server.v1_8_R1.EntityExperienceOrb;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R1.IBlockData;
 import net.minecraft.server.v1_8_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -19,6 +24,7 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
@@ -30,6 +36,7 @@ import org.bukkit.entity.Animals;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Ghast;
 import org.bukkit.entity.Horse;
@@ -75,6 +82,7 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
+import us.corenetwork.mantle.util.ReflectionUtils;
 
 public class HardmodeListener implements Listener {
 
@@ -325,7 +333,7 @@ public class HardmodeListener implements Listener {
 		if (event.getBlock().getType() == Material.QUARTZ_ORE)
 		{
 			ItemStack itemInHand = event.getPlayer().getItemInHand();
-			if (itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
+			if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
 				return;
 
 			event.setCancelled(true); //Cancel drop vanilla
@@ -357,6 +365,17 @@ public class HardmodeListener implements Listener {
 
 			int amountDropped = min + MantlePlugin.random.nextInt(max - min + 1);
 			block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), new ItemStack(Material.QUARTZ, amountDropped));
+
+			//Drop experience
+			int expToDrop = 2 + MantlePlugin.random.nextInt(4); //Drop 2-5 EXP
+			while (expToDrop > 0)
+			{
+				int value = EntityExperienceOrb.getOrbValue(expToDrop); //Which experience orb size should I spawn
+				expToDrop -= value;
+
+				ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.EXPERIENCE_ORB);
+				orb.setExperience(value);
+			}
 		}
 
 
