@@ -226,6 +226,8 @@ public class PortalUtil {
 	{
 		Block portalBlock = getOtherSideExact(info.entryBlock);
 
+		portalBlock = moveToWorldBounds(portalBlock);
+
 		//Find possible existing portal
 		Block existing = getExistingPortal(info, portalBlock);
 		if (existing != null)
@@ -260,6 +262,33 @@ public class PortalUtil {
 
 		return destWorld.getBlockAt((int) Math.floor(entryBlock.getX() * modifier), entryBlock.getY(), (int) Math.floor(entryBlock.getZ() * modifier));
 
+	}
+
+	private static Block moveToWorldBounds(Block otherSideExact)
+	{
+		if(otherSideExact.getWorld().getEnvironment() == Environment.NORMAL)
+		{
+		  	int minX = PortalsSettings.OVERWORLD_MIN_X.integer();
+		  	int maxX = PortalsSettings.OVERWORLD_MAX_X.integer();
+		  	int minZ = PortalsSettings.OVERWORLD_MIN_Z.integer();
+		  	int maxZ = PortalsSettings.OVERWORLD_MAX_Z.integer();
+
+			int newZ = otherSideExact.getZ();
+			int newX = otherSideExact.getX();
+
+			if(newZ > maxZ)
+				newZ = maxZ;
+			if(newZ < minZ)
+				newZ = minZ;
+
+			if(newX > maxX)
+				newX = maxX;
+			if(newX < minX)
+				newX = minX;
+
+			return otherSideExact.getWorld().getBlockAt(newX,otherSideExact.getY(), newZ);
+		}
+		return otherSideExact;
 	}
 
 	private static Block getExistingPortal(PortalInfo sourcePortalInfo, Block targetBlock)
