@@ -573,20 +573,22 @@ public class HardmodeListener implements Listener {
 				{
 					EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
 					AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
-
-					Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
-					Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
-					Map mapE = (Map) ReflectionUtils.get(attribute, "e"); //Map that contains bonuses (?)
-
-					for (int i = 0; i < 3; i++)
+					if (attribute != null)
 					{
-						((HashSet) mapC.get(i)).clear();
+						Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
+						Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
+						Map mapE = (Map) ReflectionUtils.get(attribute, "e"); //Map that contains bonuses (?)
+
+						for (int i = 0; i < 3; i++)
+						{
+							((HashSet) mapC.get(i)).clear();
+						}
+
+						mapD.clear();
+						mapE.clear();
+
+						ReflectionUtils.set(attribute, "g", true); //Set dirty flag so attribute value will be recalculate
 					}
-
-					mapD.clear();
-					mapE.clear();
-
-					ReflectionUtils.set(attribute, "g", true); //Set dirty flag so attribute value will be recalculated
 				}
 			});
 
