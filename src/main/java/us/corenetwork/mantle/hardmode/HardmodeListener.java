@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import net.amoebaman.util.Reflection;
@@ -561,6 +562,35 @@ public class HardmodeListener implements Listener {
 
 			event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 0));
 		}
+
+		//Remove range bonuses from mobs
+		if (entity instanceof LivingEntity)
+		{
+			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() //Run it 1 tick later so Minecraft sets up all bonuses to be removed first.
+			{
+				@Override
+				public void run()
+				{
+					EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
+					AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
+
+					Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
+					Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
+					Map mapE = (Map) ReflectionUtils.get(attribute, "e"); //Map that contains bonuses (?)
+
+					for (int i = 0; i < 3; i++)
+					{
+						((HashSet) mapC.get(i)).clear();
+					}
+
+					mapD.clear();
+					mapE.clear();
+
+					ReflectionUtils.set(attribute, "g", true); //Set dirty flag so attribute value will be recalculated
+				}
+			});
+
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -805,22 +835,23 @@ public class HardmodeListener implements Listener {
 		Entity damager = event.getDamager();
 		Entity damaged = event.getEntity();
 
-		if (damager instanceof Player)
-		{
-			EntityLiving nmsEntity = ((CraftLivingEntity) damaged).getHandle();
-			AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
-
-			Bukkit.broadcastMessage("Base: " + attribute.b());
-			Bukkit.broadcastMessage("Final Value: " + attribute.getValue());
-			Bukkit.broadcastMessage("Modifiers:");
-			for (int operation = 0; operation <= 2; operation++)
-			{
-				for (AttributeModifier modifier : (Collection<AttributeModifier>) attribute.a(operation))
-				{
-					Bukkit.broadcastMessage("   " + modifier.b() + " " + modifier.c() + " " + modifier.d());
-				}
-			}
-		}
+		//Display mob range when hit - used for debugging - disabled
+//		if (damager instanceof Player)
+//		{
+//			EntityLiving nmsEntity = ((CraftLivingEntity) damaged).getHandle();
+//			AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
+//
+//			Bukkit.broadcastMessage("Base: " + attribute.b());
+//			Bukkit.broadcastMessage("Final Value: " + attribute.getValue());
+//			Bukkit.broadcastMessage("Modifiers:");
+//			for (int operation = 0; operation <= 2; operation++)
+//			{
+//				for (AttributeModifier modifier : (Collection<AttributeModifier>) attribute.a(operation))
+//				{
+//					Bukkit.broadcastMessage("   " + modifier.b() + " " + modifier.c() + " " + modifier.d());
+//				}
+//			}
+//		}
 
 		if(damaged instanceof Player)
 		{
