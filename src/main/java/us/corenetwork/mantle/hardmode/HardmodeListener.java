@@ -3,18 +3,23 @@ package us.corenetwork.mantle.hardmode;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import net.amoebaman.util.Reflection;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
+import net.minecraft.server.v1_8_R1.AttributeModifiable;
+import net.minecraft.server.v1_8_R1.AttributeModifier;
 import net.minecraft.server.v1_8_R1.Blocks;
 import net.minecraft.server.v1_8_R1.EnchantmentSilkTouch;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityExperienceOrb;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
+import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R1.IAttribute;
 import net.minecraft.server.v1_8_R1.IBlockData;
 import net.minecraft.server.v1_8_R1.MathHelper;
 import org.bukkit.Bukkit;
@@ -799,6 +804,23 @@ public class HardmodeListener implements Listener {
 	{
 		Entity damager = event.getDamager();
 		Entity damaged = event.getEntity();
+
+		if (damager instanceof Player)
+		{
+			EntityLiving nmsEntity = ((CraftLivingEntity) damaged).getHandle();
+			AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
+
+			Bukkit.broadcastMessage("Base: " + attribute.b());
+			Bukkit.broadcastMessage("Final Value: " + attribute.getValue());
+			Bukkit.broadcastMessage("Modifiers:");
+			for (int operation = 0; operation <= 2; operation++)
+			{
+				for (AttributeModifier modifier : (Collection<AttributeModifier>) attribute.a(operation))
+				{
+					Bukkit.broadcastMessage("   " + modifier.b() + " " + modifier.c() + " " + modifier.d());
+				}
+			}
+		}
 
 		if(damaged instanceof Player)
 		{
