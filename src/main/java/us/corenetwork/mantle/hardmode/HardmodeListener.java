@@ -3,34 +3,20 @@ package us.corenetwork.mantle.hardmode;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import net.amoebaman.util.Reflection;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
-import net.minecraft.server.v1_8_R1.AttributeModifiable;
-import net.minecraft.server.v1_8_R1.AttributeModifier;
 import net.minecraft.server.v1_8_R1.Blocks;
 import net.minecraft.server.v1_8_R1.EnchantmentSilkTouch;
-import net.minecraft.server.v1_8_R1.EntityAnimal;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityExperienceOrb;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
-import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
-import net.minecraft.server.v1_8_R1.IAttribute;
 import net.minecraft.server.v1_8_R1.IBlockData;
 import net.minecraft.server.v1_8_R1.MathHelper;
-import net.minecraft.server.v1_8_R1.PathfinderGoal;
-import net.minecraft.server.v1_8_R1.PathfinderGoalFollowParent;
-import net.minecraft.server.v1_8_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_8_R1.PathfinderGoalRandomLookaround;
-import net.minecraft.server.v1_8_R1.PathfinderGoalRandomStroll;
-import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,7 +25,6 @@ import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftAnimals;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
@@ -571,41 +556,6 @@ public class HardmodeListener implements Listener {
 
 			event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 0));
 		}
-
-		if (entity instanceof Animals)
-		{
-			//Remove AI from animals.
-			EntityAnimal nmsEntity = ((CraftAnimals) entity).getHandle();
-
-			PathfinderGoalSelector goalSelector = nmsEntity.goalSelector;
-			List goalsListB = (List) ReflectionUtils.get(PathfinderGoalSelector.class, goalSelector, "b"); //List of all pathfinder goals
-			List goalsListC = (List) ReflectionUtils.get(PathfinderGoalSelector.class, goalSelector, "c"); //Cache of pathfinder goals
-
-			Class pathfinderGoalSelectorItemClass = null;
-			try
-			{
-				pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R1.PathfinderGoalSelectorItem");
-			} catch (ClassNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-
-
-			Iterator iterator = goalsListB.iterator();
-			while (iterator.hasNext())
-			{
-				Object pathfinderGoalSelectorItem = iterator.next();
-				PathfinderGoal goal = (PathfinderGoal) ReflectionUtils.get(pathfinderGoalSelectorItemClass, pathfinderGoalSelectorItem, "a");
-				if (goal instanceof PathfinderGoalFollowParent || goal instanceof PathfinderGoalRandomStroll || goal instanceof PathfinderGoalLookAtPlayer || goal instanceof PathfinderGoalRandomLookaround)
-					iterator.remove();
-			}
-
-			goalsListC.clear(); //Clear cache
-
-
-		}
-
-
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -849,23 +799,6 @@ public class HardmodeListener implements Listener {
 	{
 		Entity damager = event.getDamager();
 		Entity damaged = event.getEntity();
-
-		if (damager instanceof Player)
-		{
-			EntityLiving nmsEntity = ((CraftLivingEntity) damaged).getHandle();
-			AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
-
-			Bukkit.broadcastMessage("Base: " + attribute.b());
-			Bukkit.broadcastMessage("Final Value: " + attribute.getValue());
-			Bukkit.broadcastMessage("Modifiers:");
-			for (int operation = 0; operation <= 2; operation++)
-			{
-				for (AttributeModifier modifier : (Collection<AttributeModifier>) attribute.a(operation))
-				{
-					Bukkit.broadcastMessage("   " + modifier.b() + " " + modifier.c() + " " + modifier.d());
-				}
-			}
-		}
 
 		if(damaged instanceof Player)
 		{
