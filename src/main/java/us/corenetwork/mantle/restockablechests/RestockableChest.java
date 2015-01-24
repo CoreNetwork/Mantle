@@ -44,6 +44,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import us.core_network.cornel.items.ItemStackUtils;
+import us.core_network.cornel.items.NbtUtils;
 import us.corenetwork.core.respawn.ProtectTimer;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
@@ -51,7 +53,6 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 
 public class RestockableChest {
@@ -959,7 +960,7 @@ public class RestockableChest {
 				byte[] nbt = set.getBytes("NBT");
 
 				CraftItemStack stack = CraftItemStack.asCraftCopy(new ItemStack(id, amount, (short) damage));
-				NanobotUtil.loadNBT(nbt, NanobotUtil.getInternalNMSStack((CraftItemStack) stack));
+				NbtUtils.loadNBT(nbt, ItemStackUtils.getInternalNMSStack((CraftItemStack) stack));
 
 				inventory.setItem(slot, stack);
 			}
@@ -1008,7 +1009,7 @@ public class RestockableChest {
 				statement.setInt(4, stack.getTypeId());
 				statement.setInt(5, stack.getDurability());
 				statement.setInt(6, stack.getAmount());
-				statement.setBytes(7, NanobotUtil.getNBT(NanobotUtil.getInternalNMSStack((CraftItemStack) stack)));
+				statement.setBytes(7, NbtUtils.getNBT(ItemStackUtils.getInternalNMSStack(stack)));
 				statement.addBatch();
 			}
 

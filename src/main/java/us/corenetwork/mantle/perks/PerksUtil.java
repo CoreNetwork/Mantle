@@ -16,8 +16,8 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.block.CraftBlock;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.util.SignUtil;
 
 public class PerksUtil
@@ -29,7 +29,7 @@ public class PerksUtil
      */
     public static boolean hasGoldenName(ItemStack bukkitStack)
     {
-        return hasGoldenName(NanobotUtil.getInternalNMSStack(bukkitStack));
+        return hasGoldenName(ItemStackUtils.getInternalNMSStack(bukkitStack));
     }
 
     /**
@@ -37,7 +37,7 @@ public class PerksUtil
      */
     public static boolean hasGoldenName(net.minecraft.server.v1_8_R1.ItemStack nmsStack)
     {
-        String name = NanobotUtil.getStackName(nmsStack);
+        String name = ItemStackUtils.getStackName(nmsStack);
         if (name != null && name.startsWith(GOLD_START))
             return true;
 

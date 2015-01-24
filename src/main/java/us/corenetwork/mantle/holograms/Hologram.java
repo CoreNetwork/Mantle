@@ -14,7 +14,7 @@ import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
+import us.core_network.cornel.common.Messages;
 
 /**
  * Created by Matej on 5.9.2014.
@@ -213,7 +213,7 @@ public class Hologram
             for (int i = 0; i < linkedEntities.size(); i++)
             {
                 if (entity.getUniqueId().equals(linkedEntities.get(i)))
-                    ((ArmorStand) entity).setCustomName(NanobotUtil.fixFormatting(text.get(i)));
+                    ((ArmorStand) entity).setCustomName(Messages.applyFormattingCodes(text.get(i)));
             }
         }
 
@@ -255,7 +255,7 @@ public class Hologram
             EntityArmorStand armorStand = new EntityArmorStand(nmsWorld);
             armorStand.setPosition(x, y, z);
             armorStand.setCustomNameVisible(true);
-            armorStand.setCustomName(NanobotUtil.fixFormatting(line));
+            armorStand.setCustomName(Messages.applyFormattingCodes(line));
             armorStand.setGravity(true); //This actually means setNoGravity... SPIGOT!
             armorStand.setInvisible(true);
 

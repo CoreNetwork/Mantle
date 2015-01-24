@@ -9,8 +9,8 @@ import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.slimeballs.SlimeballItem;
+import us.corenetwork.mantle.util.MinecraftNames;
 
 public class MakeCommand extends NanobotBaseCommand {
 
@@ -58,14 +58,17 @@ public class MakeCommand extends NanobotBaseCommand {
 
 		boolean silent = (i < args.length && args[i].equals("silent")) && !(i + 1 < args.length && args[i + 1].equals("silent"));
 
-		org.bukkit.inventory.ItemStack stack = NanobotUtil.getMaterialFromItem(itemName);
-		
-		if (stack == null)
+		Integer itemId = MinecraftNames.getMaterialId(itemName.toLowerCase());
+
+		if (itemId == null)
 		{
-			sender.sendMessage("Item name/id not recognized!");
+			sender.sendMessage("Item id not recognized!");
 			return;
-		}		
-		
+		}
+
+		org.bukkit.inventory.ItemStack stack = new org.bukkit.inventory.ItemStack(itemId, 1);
+
+
 		Player player = (Player) sender;
 		ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 

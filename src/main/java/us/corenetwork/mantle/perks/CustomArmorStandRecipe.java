@@ -11,10 +11,10 @@ import net.minecraft.server.v1_8_R1.NBTTagList;
 import net.minecraft.server.v1_8_R1.ShapelessRecipes;
 import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.configuration.InvalidConfigurationException;
+import us.core_network.cornel.items.NbtUtils;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.YamlUtils;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.util.InventoryUtil;
 
@@ -110,8 +110,8 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
         entityTag.setBoolean("ShowArms", true);
         tag.set("EntityTag", entityTag);
 
-        NanobotUtil.replaceStringInNBT(tag, "<LeftArmPose>", leftHandOrientation.getDescription());
-        NanobotUtil.replaceStringInNBT(tag, "<RightArmPose>", rightHandOrientation.getDescription());
+        NbtUtils.replaceStringInNBT(tag, "<LeftArmPose>", leftHandOrientation.getDescription());
+        NbtUtils.replaceStringInNBT(tag, "<RightArmPose>", rightHandOrientation.getDescription());
 
         armorStand.setTag(tag);
 

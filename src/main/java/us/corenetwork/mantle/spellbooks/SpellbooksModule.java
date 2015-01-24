@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.spellbooks.commands.MakeBookCommand;
 import us.corenetwork.mantle.spellbooks.commands.ReslimeCommand;
 
@@ -54,7 +54,7 @@ public class SpellbooksModule extends MantleModule {
         }
         saveConfig();
 
-        SpellbooksSettings.expireDateStorageFormat = new SimpleDateFormat("'" + NanobotUtil.fixFormatting(SpellbooksSettings.DATE_STORE_BEGINNING.string()) + "'" + SpellbooksSettings.LORE_DATE_STORE.string());
+        SpellbooksSettings.expireDateStorageFormat = new SimpleDateFormat("'" + Messages.applyFormattingCodes(SpellbooksSettings.DATE_STORE_BEGINNING.string()) + "'" + SpellbooksSettings.LORE_DATE_STORE.string());
     }
 
 	@Override

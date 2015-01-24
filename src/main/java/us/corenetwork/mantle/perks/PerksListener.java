@@ -22,11 +22,11 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.core.scoreboard.CoreScoreboardManager;
 import us.corenetwork.core.util.ScoreboardUtils;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 public class PerksListener implements Listener
 {
@@ -56,7 +56,7 @@ public class PerksListener implements Listener
         ItemStack stackInHand = event.getItem();
         if (stackInHand != null && stackInHand.getType() == Material.ARMOR_STAND)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(stackInHand);
             if (!PerksUtil.isSupposedToBePerkArmorStandItem(nmsStack.getTag())) //Do not perform any checks if item is not subscriber-only
                 return;
 
@@ -82,7 +82,7 @@ public class PerksListener implements Listener
 
         if (stackInHand != null)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(stackInHand);
             if(nmsStack == null)
                 return;
 
@@ -112,7 +112,7 @@ public class PerksListener implements Listener
         ItemStack stackInHand = event.getItemInHand();
         if (stackInHand != null && stackInHand.getType() == Material.BANNER)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(stackInHand);
             if (!PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag())) //Do not perform any checks if item is not subscriber-only
                 return;
 
@@ -125,7 +125,7 @@ public class PerksListener implements Listener
 
         if (stackInHand != null && stackInHand.getType() == Material.SKULL_ITEM)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(stackInHand);
             if (!PerksUtil.iSupposedToBePerkSkullItem(nmsStack.getTag()))
                 return;
 
@@ -143,7 +143,7 @@ public class PerksListener implements Listener
         ItemStack item = event.getItem().getItemStack();
         if (item.getType() == Material.BANNER)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(item);
+            net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(item);
             if (PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag()))
             {
                 PerksUtil.addLoreToBanner(nmsStack);

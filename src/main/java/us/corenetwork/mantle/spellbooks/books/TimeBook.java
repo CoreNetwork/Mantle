@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
@@ -45,7 +45,7 @@ public class TimeBook extends Spellbook {
 			ItemStack stack = curPlayer.getInventory().getItem(i);
 			if (stack != null)
 			{
-				if (NanobotUtil.hasTag(stack, "HideFlags")) //Do not process items with hidden flags
+				if (ItemStackUtils.hasTag(ItemStackUtils.getInternalNMSStack(stack), "HideFlags")) //Do not process items with hidden flags
 					continue;
 
 				int addedLevels = 0;

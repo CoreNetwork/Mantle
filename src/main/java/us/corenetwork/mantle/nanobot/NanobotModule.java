@@ -15,6 +15,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.material.TexturedMaterial;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -30,7 +31,6 @@ public class NanobotModule extends MantleModule {
 	public static NanobotModule instance;
 
 	private HashMap<String, NanobotBaseCommand> commands = new HashMap<String, NanobotBaseCommand>();
-	public static HashMap<String, String> materials = new HashMap<String, String>();
 
 	public static File folder;
 	
@@ -47,8 +47,6 @@ public class NanobotModule extends MantleModule {
 		commands.put("make", new MakeCommand());
 		commands.put("head", new HeadCommand());
 		commands.put("infinite", new InfiniteCommand());
-
-		loadMaterials();
 
 		folder = new File(MantlePlugin.instance.getDataFolder(), "nanobot");
 		if (!folder.exists())
@@ -99,40 +97,4 @@ public class NanobotModule extends MantleModule {
 		if (cmd != null) return cmd.execute(sender, args);
 		return false;
 	}
-
-	private static void loadMaterials()
-	{
-		for (Material m : Material.values())
-		{
-			materials.put(NanobotUtil.getItemName(m, (byte) 0).toLowerCase(), String.valueOf(m.getId()));
-
-			if (m.getNewData((byte) 0) instanceof TexturedMaterial)
-			{
-				TexturedMaterial tm = (TexturedMaterial) m.getNewData((byte) 0);
-
-				for (int data = 0; data < tm.getTextures().size(); data++)
-				{
-					materials.put(NanobotUtil.getItemName(m, (byte) data).toLowerCase(), String.valueOf(m.getId()) + ":" + String.valueOf(data));
-				}
-			}
-
-			for (DyeColor d : DyeColor.values())
-			{
-				materials.put(NanobotUtil.getItemName(Material.WOOL, (byte) d.getData()).toLowerCase(), String.valueOf(Material.WOOL.getId()) + ":" + String.valueOf(d.getData()));
-				materials.put(NanobotUtil.getItemName(Material.INK_SACK, (byte) d.getData()).toLowerCase(), String.valueOf(Material.INK_SACK.getId()) + ":" + String.valueOf(d.getData()));
-			}
-
-			for (TreeSpecies d : TreeSpecies.values())
-			{
-				materials.put(NanobotUtil.getItemName(Material.LOG, (byte) d.getData()).toLowerCase(), String.valueOf(Material.LOG.getId()) + ":" + String.valueOf(d.getData()));
-			}
-
-			for (GrassSpecies d : GrassSpecies.values())
-			{
-				materials.put(NanobotUtil.getItemName(Material.GRASS, (byte) d.getData()).toLowerCase(), String.valueOf(Material.GRASS.getId()) + ":" + String.valueOf(d.getData()));
-			}
-
-		}
-	}
-
 }

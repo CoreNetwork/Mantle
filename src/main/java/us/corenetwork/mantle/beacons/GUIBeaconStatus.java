@@ -3,9 +3,9 @@ package us.corenetwork.mantle.beacons;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.InventoryGUIGroup;
 import us.corenetwork.mantle.TimeFormat;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 /**
  * Created by Matej on 28.10.2014.
@@ -101,17 +101,17 @@ public class GUIBeaconStatus extends InventoryGUIGroup<GUIBeaconStatus.GUIBeacon
         public void updateFuelStatus()
         {
             ItemStack fuelLeftItem = beacon.getActiveEffect().getFuelIcon();
-            fuelLeftItem = NanobotUtil.replaceStringInItem(fuelLeftItem, "<TimeLeft>", TimeFormat.formatTimeSeconds(beacon.getFuelLeftTicks() / 20));
-            fuelLeftItem = NanobotUtil.replaceStringInItem(fuelLeftItem, "<FuelDuration>", TimeFormat.formatTimeMinutes(beacon.getFuelDurationMinutes()));
-            fuelLeftItem = NanobotUtil.replaceStringInItem(fuelLeftItem, "<ItemsConsumed>", Integer.toString(beacon.getAmountFuelItemsConsumed()));
+            fuelLeftItem = ItemStackUtils.replaceStringInItem(fuelLeftItem, "<TimeLeft>", TimeFormat.formatTimeSeconds(beacon.getFuelLeftTicks() / 20));
+            fuelLeftItem = ItemStackUtils.replaceStringInItem(fuelLeftItem, "<FuelDuration>", TimeFormat.formatTimeMinutes(beacon.getFuelDurationMinutes()));
+            fuelLeftItem = ItemStackUtils.replaceStringInItem(fuelLeftItem, "<ItemsConsumed>", Integer.toString(beacon.getAmountFuelItemsConsumed()));
             setItem(ITEM_POSITION_FUEL_LEFT, fuelLeftItem);
         }
 
         public void updateRange()
         {
             ItemStack effectIcon = beacon.getActiveEffect().getActiveEffectIcon();
-            effectIcon = NanobotUtil.replaceStringInItem(effectIcon, "<Range>", Integer.toString(beacon.getRange()));
-            effectIcon = NanobotUtil.replaceStringInItem(effectIcon, "<Name>", beacon.getEffectName());
+            effectIcon = ItemStackUtils.replaceStringInItem(effectIcon, "<Range>", Integer.toString(beacon.getRange()));
+            effectIcon = ItemStackUtils.replaceStringInItem(effectIcon, "<Name>", beacon.getEffectName());
             setItem(ITEM_POSITION_CURRENT_EFFECT, effectIcon);
 
         }

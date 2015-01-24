@@ -9,10 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import us.core_network.cornel.items.ItemStackUtils;
+import us.core_network.cornel.items.NbtUtils;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.perks.PerksSettings;
 
@@ -55,7 +56,7 @@ public class SkullCommand extends BasePerksCommand {
 
         si.setItemMeta(skullMeta);
 
-        net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(si);
+        net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(si);
         NBTTagCompound oldTag = nmsStack.getTag();
         NBTTagCompound skullOwnerCompound = oldTag.getCompound("SkullOwner");
 
