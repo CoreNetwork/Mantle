@@ -1,12 +1,16 @@
 package us.corenetwork.mantle.nanobot.commands;
 
+import java.io.IOException;
 import net.minecraft.server.v1_8_R1.ItemStack;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
+import us.corenetwork.mantle.slimeballs.SlimeballItem;
 
 public class MakeCommand extends NanobotBaseCommand {
 
@@ -51,7 +55,9 @@ public class MakeCommand extends NanobotBaseCommand {
 		
 		if (i < args.length && Util.isInteger(args[i]))
 			invSlot = Integer.parseInt(args[i]);
-		
+
+		boolean silent = (i < args.length && args[i].equals("silent")) && !(i + 1 < args.length && args[i + 1].equals("silent"));
+
 		org.bukkit.inventory.ItemStack stack = NanobotUtil.getMaterialFromItem(itemName);
 		
 		if (stack == null)
@@ -63,11 +69,21 @@ public class MakeCommand extends NanobotBaseCommand {
 		Player player = (Player) sender;
 		ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 
-		NBTTagCompound newTag = LoadCommand.load(tag);
-		
+		NBTTagCompound newTag = null;
+		try
+		{
+			newTag = NbtYaml.loadFromFile(tag);
+		}
+		catch (Exception e)
+		{
+			if (!silent)
+				sender.sendMessage("Error while giving you the item!");
+			e.printStackTrace();
+			return;
+		}
+
 		if (newTag == null)
 		{
-			sender.sendMessage("Tag with that name was not found!");
 			return;
 		}
 		
@@ -82,7 +98,7 @@ public class MakeCommand extends NanobotBaseCommand {
 			player.getInventory().setItem(invSlot, CraftItemStack.asCraftMirror(nmsStack));
 		}
 		
-		if (!(i < args.length && args[i].equals("silent")) && !(i + 1 < args.length && args[i + 1].equals("silent")) )
+		if (!silent)
 			sender.sendMessage("Item with tag was made sucessfully!");
 		
 	}

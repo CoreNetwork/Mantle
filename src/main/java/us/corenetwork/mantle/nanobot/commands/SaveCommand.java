@@ -28,6 +28,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
+import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.nanobot.ArrayConvert;
 import us.corenetwork.mantle.nanobot.NanobotModule;
@@ -75,132 +76,17 @@ public class SaveCommand extends NanobotBaseCommand {
 			}
 		}
 
-		NBTTagCompound tag = stack.getTag();
-		Set<String> tagKeys = tag.c();
-		for (String key : tagKeys) {
-			addTag(yaml, key, tag.get(key));
+		try
+		{
+			NbtYaml.saveToFile(args[0], stack.getTag());
 		}
-
-		try {
-			yaml.save(new File(NanobotModule.folder, args[0] + ".yml"));
-		} catch (IOException e) {
+		catch (Exception e)
+		{
+			sender.sendMessage("Error while saving tag!");
 			e.printStackTrace();
 		}
-		
+
 		sender.sendMessage("Tag was saved sucessfully!");
 	}
 
-	public static void addTag(ConfigurationSection yaml, String name, NBTBase tag) {
-		switch (tag.getTypeId()) {
-		case 1: // Byte
-			yaml.set(name + ".byte", ((NBTTagByte) tag).f());
-			break;
-		case 2: // Short
-			yaml.set(name + ".short", ((NBTTagShort) tag).e());
-			break;
-		case 3: // Integer
-			yaml.set(name + ".int", ((NBTTagInt) tag).d());
-			break;
-		case 4: // Long
-			yaml.set(name + ".long", ((NBTTagLong) tag).c());
-			break;
-		case 5: // Float
-			yaml.set(name + ".float", ((NBTTagFloat) tag).h());
-			break;
-		case 6: // Double
-			yaml.set(name + ".double", ((NBTTagDouble) tag).g());
-			break;
-		case 7: // Byte Array
-			yaml.set(name + ".byteArray", ArrayConvert.convert(((NBTTagByteArray) tag).c()));
-			break;
-		case 11: // Int array
-			yaml.set(name + ".intArray", ArrayConvert.convert(((NBTTagIntArray) tag).c()));
-			break;
-		case 8: // String
-			yaml.set(name, ((NBTTagString) tag).a_());
-			break;
-		case 9: // List
-			try
-			{
-				NBTTagList listTag = (NBTTagList) tag;
-				
-				Field listField = NBTTagList.class.getDeclaredField("list");
-				listField.setAccessible(true);
-				
-				List<NBTBase> tags = (List) listField.get(listTag);
-				
-				List list = new ArrayList();
-				if (tags.get(0).getTypeId() == 8)
-				{
-					for (int i = 0; i < tags.size(); i++) {
-						list.add(((NBTTagString)tags.get(i)).a_());
-					}
-				}
-				else
-				{
-					for (int i = 0; i < tags.size(); i++) {
-						ConfigurationSection listSection = new YamlConfiguration()
-								.createSection("foo");
-						addTagWithoutName(listSection, tags.get(i));
-						list.add(listSection);
-					}
-				}
-				
-
-				yaml.set(name, list.toArray());
-			}
-			catch (Exception e)
-			{
-				MLog.severe("Something went seriously wrong. Go bug matejdro.");
-				e.printStackTrace();
-			}
-			break;
-		case 10: // Compound
-			ConfigurationSection newSection = yaml.createSection(name).createSection("compound");
-
-			NBTTagCompound compoundTag = (NBTTagCompound) tag;
-			Set<String> tagKeys = compoundTag.c();
-			for (String key : tagKeys) {
-				addTag(newSection, key, compoundTag.get(key));
-			}
-		}
-	}
-
-	public static void addTagWithoutName(ConfigurationSection yaml, NBTBase tag) {
-		switch (tag.getTypeId()) {
-		case 1: // Byte
-			yaml.set("byte", ((NBTTagByte) tag).f());
-			break;
-		case 2: // Short
-			yaml.set("short", ((NBTTagShort) tag).e());
-			break;
-		case 3: // Integer
-			yaml.set("int", ((NBTTagInt) tag).d());
-			break;
-		case 4: // Long
-			yaml.set("long", ((NBTTagLong) tag).c());
-			break;
-		case 5: // Float
-			yaml.set("float", ((NBTTagFloat) tag).h());
-			break;
-		case 6: // Double
-			yaml.set("double", ((NBTTagDouble) tag).g());
-			break;
-		case 7: // Byte Array
-			yaml.set("byteArray",  ArrayConvert.convert(((NBTTagByteArray) tag).c()));
-			break;
-		case 11: // Int array
-			yaml.set("intArray", ArrayConvert.convert(((NBTTagIntArray) tag).c()));
-			break;
-		case 10: // Compound
-			ConfigurationSection newSection = yaml.createSection("compound");
-
-			NBTTagCompound compoundTag = (NBTTagCompound) tag;
-			Set<String> tagKeys = compoundTag.c();
-			for (String key : tagKeys) {
-				addTag(newSection, key, compoundTag.get(key));
-			}
-
-		}
-	}
 }

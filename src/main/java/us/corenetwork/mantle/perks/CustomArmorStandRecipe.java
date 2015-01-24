@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.perks;
 
+import java.io.IOException;
 import net.minecraft.server.v1_8_R1.IRecipe;
 import net.minecraft.server.v1_8_R1.InventoryCrafting;
 import net.minecraft.server.v1_8_R1.ItemStack;
@@ -9,6 +10,10 @@ import net.minecraft.server.v1_8_R1.NBTTagFloat;
 import net.minecraft.server.v1_8_R1.NBTTagList;
 import net.minecraft.server.v1_8_R1.ShapelessRecipes;
 import net.minecraft.server.v1_8_R1.World;
+import org.bukkit.configuration.InvalidConfigurationException;
+import us.core_network.cornel.items.NbtYaml;
+import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.util.InventoryUtil;
@@ -68,7 +73,17 @@ public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
     public ItemStack a(InventoryCrafting inventoryCrafting)
     {
         ItemStack armorStand = new ItemStack(Items.ARMOR_STAND, 1);
-        NBTTagCompound tag = LoadCommand.load(PerksSettings.SPECIAL_ARMOR_STAND_NANOBOT_FILE.string());
+        NBTTagCompound tag = null;
+        try
+        {
+            tag = NbtYaml.loadFromFile(PerksSettings.SPECIAL_ARMOR_STAND_NANOBOT_FILE.string());
+        }
+        catch (Exception e)
+        {
+            MLog.severe("Failed to load special armorstand nanobot file!");
+            e.printStackTrace();
+            return null;
+        }
 
         ArmOrientation leftHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 0, 3, 6);
         ArmOrientation rightHandOrientation = getOrientationFromStickPosition(inventoryCrafting, 2, 5, 8);

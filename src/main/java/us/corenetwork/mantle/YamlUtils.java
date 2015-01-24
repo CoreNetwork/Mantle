@@ -1,12 +1,15 @@
 package us.corenetwork.mantle;
 
+import java.io.IOException;
 import java.util.Map;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.util.MinecraftNames;
 
@@ -57,18 +60,22 @@ public class YamlUtils
         Object yamlNbtTag = node.get("NBT");
         if (yamlNbtTag != null)
         {
-            NBTTagCompound newTag;
+            NBTTagCompound newTag = null;
             if (yamlNbtTag instanceof String)
             {
-                newTag = LoadCommand.load((String) yamlNbtTag);
-                if (newTag == null)
+                try
                 {
-                    MLog.warning("Invalid config! Nanobot file " + ((String) yamlNbtTag) + ".yml is missing!");
+                    newTag = NbtYaml.loadFromFile((String) yamlNbtTag);
+                }
+                catch (Exception e)
+                {
+                    MLog.warning("Invalid config! Nanobot file " + ((String) yamlNbtTag) + ".yml could not be loaded!");
+                    e.printStackTrace();
                 }
             }
             else
             {
-                newTag = LoadCommand.load((Map<?,?>) yamlNbtTag);
+                newTag = NbtYaml.loadFromNodes((Map<?, ?>) yamlNbtTag);
             }
 
             if (newTag != null)

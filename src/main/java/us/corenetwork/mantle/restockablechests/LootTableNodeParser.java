@@ -1,14 +1,17 @@
 package us.corenetwork.mantle.restockablechests;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
@@ -108,16 +111,24 @@ public class LootTableNodeParser extends NodeParser {
 			NBTTagCompound newTag;
 			if (yamlNbtTag instanceof String)
 			{
-				newTag = LoadCommand.load((String) yamlNbtTag);
-				if (newTag == null)
+				try
 				{
-					MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml is missing!");
+					newTag = NbtYaml.loadFromFile((String) yamlNbtTag);
+				}
+				catch (IOException e)
+				{
+					MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml failed loading!");
+					return;
+				}
+				catch (InvalidConfigurationException e)
+				{
+					MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml is invalid YAML file!");
 					return;
 				}
 			}
 			else 
 			{
-				newTag = LoadCommand.load((Map<?,?>) yamlNbtTag);
+				newTag = NbtYaml.loadFromNodes((Map<?, ?>) yamlNbtTag);
 			}
 			
 			if (newTag != null)

@@ -139,6 +139,12 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>us.core_network</groupId>
+			<artifactId>Cornel</artifactId>
+			<version>0.1</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

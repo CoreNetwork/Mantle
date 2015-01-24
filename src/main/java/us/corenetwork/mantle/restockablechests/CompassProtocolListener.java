@@ -4,14 +4,18 @@ import com.comphenix.protocol.PacketType.Play;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import us.core_network.cornel.items.NbtYaml;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 
@@ -93,7 +97,15 @@ public class CompassProtocolListener extends PacketAdapter {
 
     public void loadConfig()
     {
-        nbtTag = LoadCommand.load(RChestSettings.COMPASS_NBT_TAG.string());
+        try
+        {
+            nbtTag = NbtYaml.loadFromFile(RChestSettings.COMPASS_NBT_TAG.string());
+        }
+        catch (Exception e)
+        {
+            MLog.severe("Could not log compass NBT tag!");
+            e.printStackTrace();
+        }
     }
 
 

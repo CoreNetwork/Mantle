@@ -1,15 +1,19 @@
 package us.corenetwork.mantle.spellbooks.commands;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import net.minecraft.server.v1_8_R1.EntityItem;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
@@ -50,13 +54,29 @@ public class MakeBookCommand extends BaseMantleCommand {
 		Player player = (Player) sender;
 
 		String tag = spell.settings.getString(Spellbook.SETTING_TEMPLATE);
-		NBTTagCompound newTag = LoadCommand.load(tag);
-		
-		if (newTag == null)
+		NBTTagCompound newTag = null;
+		try
 		{
-			sender.sendMessage("Tag with that name was not found! Message moderators about that issue!");
+			newTag = NbtYaml.loadFromFile(tag);
+		}
+		catch (FileNotFoundException e)
+		{
+			sender.sendMessage("Tag with that name could not be found! Message moderators about that issue!");
 			return;
 		}
+		catch (IOException e)
+		{
+			sender.sendMessage("Tag with that name could not be loaded! Message moderators about that issue!");
+			e.printStackTrace();
+			return;
+		}
+		catch (InvalidConfigurationException e)
+		{
+			sender.sendMessage("Tag with that name was not yaml file! Message moderators about that issue!");
+			return;
+
+		}
+
 		do
 		{
 			int stackAmount = Math.min(amount, 64);

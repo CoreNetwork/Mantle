@@ -1,12 +1,16 @@
 package us.corenetwork.mantle.perks.commands;
 
+import java.io.IOException;
 import net.minecraft.server.v1_8_R1.NBTTagCompound;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import us.core_network.cornel.items.NbtYaml;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
@@ -55,7 +59,18 @@ public class SkullCommand extends BasePerksCommand {
         NBTTagCompound oldTag = nmsStack.getTag();
         NBTTagCompound skullOwnerCompound = oldTag.getCompound("SkullOwner");
 
-        NBTTagCompound tag = LoadCommand.load(PerksSettings.SPECIAL_SKULL_NANOBOT_FILE.string());
+        NBTTagCompound tag = null;
+        try
+        {
+            tag = NbtYaml.loadFromFile(PerksSettings.SPECIAL_SKULL_NANOBOT_FILE.string());
+        }
+        catch (Exception e)
+        {
+            MLog.severe("Failed loading skull NBT file!");
+            e.printStackTrace();
+            return;
+        }
+
         tag.set("SkullOwner", skullOwnerCompound);
 
         nmsStack.setTag(tag);
