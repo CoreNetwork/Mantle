@@ -7,11 +7,11 @@ import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
 import us.corenetwork.mantle.treasurehunt.THuntSettings;
 
-public class RunHuntCommand extends BaseMantleCommand {
+public class RunHuntCommand extends BaseTChaseCommand {
 
 	public RunHuntCommand()
 	{
-		permission = "treasurechase.run";
+		permission = "run";
 		desc = "Adds a treasure chase to the queue";
 		needPlayer = true;
 	}
@@ -20,21 +20,15 @@ public class RunHuntCommand extends BaseMantleCommand {
 	public void run(CommandSender sender, String[] args)
 	{
 		Player player = (Player) sender;
-		
-		String path = "Amount."+player.getName().toLowerCase();
-		int amountLeft = THuntModule.instance.storageConfig.getInt(path);
-		
-		if(amountLeft > 0)
-		{
-			THuntModule.instance.storageConfig.set(path, amountLeft - 1);
 
-			THuntModule.instance.saveStorageYaml();
-			THuntModule.manager.addToQueue(player.getName());
-			THuntModule.manager.addPlayerToHunt(player);
+		if(THuntModule.passManager.getAmount(player) <= 0)
+		{
+			Util.Message(THuntSettings.MESSAGE_BRC_NO_HUNT.string(), player);
 		}
 		else
 		{
-			Util.Message(THuntSettings.MESSAGE_NO_HUNT.string(), player);
+			THuntModule.passManager.removePass(player);
+			THuntModule.passManager.runPass(player);
 		}
 	}
 	

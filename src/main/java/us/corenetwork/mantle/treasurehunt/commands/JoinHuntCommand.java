@@ -8,11 +8,11 @@ import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
 import us.corenetwork.mantle.treasurehunt.THuntSettings;
 
-public class JoinHuntCommand extends BaseMantleCommand  {
+public class JoinHuntCommand extends BaseTChaseCommand  {
 
 	public JoinHuntCommand()
 	{
-		permission = "treasurechase.join";
+		permission = "join";
 		desc = "Callers joins the treasure chase";
 		needPlayer = true;
 	}
@@ -21,6 +21,12 @@ public class JoinHuntCommand extends BaseMantleCommand  {
 	public void run(CommandSender sender, String[] args)
 	{
 		Player player = (Player) sender;
+
+		if(!THuntModule.manager.isQueued() && !THuntModule.manager.isRunning())
+			{
+				Util.Message(THuntSettings.MESSAGE_STATUS_NO_HUNT_SCHEDULED.string(), player);
+				return;
+		}
 
 		Environment env = player.getWorld().getEnvironment(); 
 		if(env == Environment.THE_END)
@@ -33,8 +39,23 @@ public class JoinHuntCommand extends BaseMantleCommand  {
 		}
 		else
 		{
-			Util.Message(THuntSettings.MESSAGE_JOIN.string(), player);
+			if(THuntModule.manager.isTakingPart(player))
+			{
+				Util.Message(THuntSettings.MESSAGE_JOIN_ALREADY_IN.string(), player);
+			}
+			else
+			{
+				if (THuntModule.manager.isQueued())
+				{
+					Util.Message(THuntSettings.MESSAGE_JOIN_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
+				}
+				else
+				{
+					Util.Message(THuntSettings.MESSAGE_JOIN_RUNNING.string(), player);
+					THuntModule.manager.messageAboutCurrentWave(player);
+				}
+				THuntModule.manager.addPlayerToHunt(player);
+			}
 		}
-		THuntModule.manager.addPlayerToHunt(player);
 	}
 }

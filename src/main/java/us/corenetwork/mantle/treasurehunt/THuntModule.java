@@ -8,8 +8,12 @@ import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
+import us.corenetwork.mantle.slimeballs.commands.SlimeballsHelpCommand;
+import us.corenetwork.mantle.treasurehunt.commands.BaseTChaseCommand;
 import us.corenetwork.mantle.treasurehunt.commands.BuyHuntCommand;
 import us.corenetwork.mantle.treasurehunt.commands.CheckHuntCommand;
+import us.corenetwork.mantle.treasurehunt.commands.HelpHuntCommand;
+import us.corenetwork.mantle.treasurehunt.commands.InfoHuntCommand;
 import us.corenetwork.mantle.treasurehunt.commands.JoinHuntCommand;
 import us.corenetwork.mantle.treasurehunt.commands.LeaveHuntCommand;
 import us.corenetwork.mantle.treasurehunt.commands.RunHuntCommand;
@@ -18,9 +22,10 @@ public class THuntModule extends MantleModule {
 
 	public static THuntModule instance;
 	public static THuntManager manager;
+	public static THuntPassManager passManager;
 	
 
-	public static HashMap<String, BaseMantleCommand> commands;
+	public static HashMap<String, BaseTChaseCommand> commands;
 	
 	public THuntModule()
 	{
@@ -32,13 +37,13 @@ public class THuntModule extends MantleModule {
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
 	{
 		if (args.length < 1 || Util.isInteger(args[0]))
-			return MantlePlugin.adminCommands.get("help").execute(sender, args);
+			return commands.get("help").execute(sender, args);
 
-		BaseMantleCommand cmd = commands.get(args[0]);
+		BaseTChaseCommand cmd = commands.get(args[0]);
 		if (cmd != null)
 			return cmd.execute(sender, args);
 		else
-			return MantlePlugin.adminCommands.get("help").execute(sender, args);
+			return commands.get("help").execute(sender, args);
 		
 	}
 
@@ -52,15 +57,18 @@ public class THuntModule extends MantleModule {
 				config.set(setting.string, setting.def);
 		}
 		saveConfig();
-		commands = new HashMap<String, BaseMantleCommand>();
-		
+		commands = new HashMap<String, BaseTChaseCommand>();
+
+		commands.put("help", new HelpHuntCommand());
 		commands.put("run", new RunHuntCommand());
 		commands.put("buy", new BuyHuntCommand());
 		commands.put("check", new CheckHuntCommand());
 		commands.put("join", new JoinHuntCommand());
 		commands.put("leave", new LeaveHuntCommand());
-		
+		commands.put("info", new InfoHuntCommand());
+
 		manager = new THuntManager();
+		passManager = new THuntPassManager();
 		
 		Bukkit.getServer().getPluginManager().registerEvents(new THuntListener(), MantlePlugin.instance);
 		

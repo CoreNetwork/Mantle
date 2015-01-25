@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
 
-public class LeaveHuntCommand extends BaseMantleCommand  {
+public class LeaveHuntCommand extends BaseTChaseCommand  {
 
 	public LeaveHuntCommand()
 	{
-		permission = "treasurechase.leave";
+		permission = "leave";
 		desc = "Callers leaves the treasure chase";
 		needPlayer = true;
 	}
@@ -23,7 +23,7 @@ public class LeaveHuntCommand extends BaseMantleCommand  {
 		{
 			silent = true;
 		}
-		
+
 		THuntModule.manager.removePlayerFromHunt(player, silent);
 	}
 }

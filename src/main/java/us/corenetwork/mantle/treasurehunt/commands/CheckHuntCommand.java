@@ -7,11 +7,11 @@ import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
 import us.corenetwork.mantle.treasurehunt.THuntSettings;
 
-public class CheckHuntCommand extends BaseMantleCommand  {
+public class CheckHuntCommand extends BaseTChaseCommand  {
 
 	public CheckHuntCommand()
 	{
-		permission = "treasurechase.check";
+		permission = "check";
 		desc = "Returns amount of treasure chases owned by caller.";
 		needPlayer = true;
 	}
@@ -20,10 +20,7 @@ public class CheckHuntCommand extends BaseMantleCommand  {
 	public void run(CommandSender sender, String[] args)
 	{
 		Player player = (Player) sender;
-		
-		String path = "Amount."+player.getName().toLowerCase();
-		int amountLeft = THuntModule.instance.storageConfig.getInt(path);
-
-		Util.Message(THuntSettings.MESSAGE_HUNTS_LEFT.string().replace("<Amount>", amountLeft +""), player);
+		int amountLeft = THuntModule.passManager.getAmount(player);
+		Util.Message(THuntSettings.MESSAGE_BRC_HUNTS_LEFT.string().replace("<Amount>", amountLeft +""), player);
 	}
 }

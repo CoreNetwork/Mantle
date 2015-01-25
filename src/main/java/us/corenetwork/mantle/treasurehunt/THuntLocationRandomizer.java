@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World.Environment;
@@ -18,13 +21,13 @@ public class THuntLocationRandomizer {
 
 	private static Random r = new Random();
 	
-	public static Map<Player, Location> getPlayerChests(List<Player> playerList, double distance)
+	public static Map<UUID, Location> getPlayerChests(List<UUID> playerList, double distance)
 	{
-		Map<Player, Location> playerChestLoc = new HashMap<Player, Location>();
+		Map<UUID, Location> playerChestLoc = new HashMap<UUID, Location>();
 		
-		
-		for(Player player : playerList)
+		for(UUID uuid : playerList)
 		{
+			Player player = Bukkit.getPlayer(uuid);
 			boolean isValidLocation = false;
 			Location origin = getInBoundsLocation(player);
 			Location loc = null;
@@ -43,7 +46,7 @@ public class THuntLocationRandomizer {
 				loc = null;
 			}
 			
-			playerChestLoc.put(player, loc);
+			playerChestLoc.put(uuid, loc);
 		}
 		
 		return playerChestLoc;

@@ -53,7 +53,7 @@ public class THuntListener implements Listener {
 	{
 		Player player = event.getPlayer();
 		
-		if(THuntModule.manager.isTakingPart(player) == false && THuntModule.manager.shouldMessagePlayer(player))
+		if(THuntModule.manager.shouldMessagePlayer(player))
 		{
 			if(THuntModule.manager.isRunning())
 			{
@@ -65,22 +65,20 @@ public class THuntListener implements Listener {
 				{
 					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
 				}
-				return;
 			}
-			if(THuntModule.manager.isQueued())
+			else if(THuntModule.manager.isQueued())
 			{
 				if(THuntModule.manager.isTakingPart(player))
 				{
-					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
 				}
 				else
 				{
-					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartTime() + ""), player);
+					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
 				}
-				return;
 			}
 		}
-	}
+		}
 	
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
 	public void onPlayerChangedWorldEvent(PlayerChangedWorldEvent event)
@@ -91,17 +89,7 @@ public class THuntListener implements Listener {
 		{
 			if(THuntModule.manager.isRunning())
 			{
-				int activeWave = THuntModule.manager.getActiveWave();
-				int waveCount = THuntModule.manager.getWaveCount();
-				if(activeWave != waveCount)
-				{
-					Util.Message(THuntSettings.MESSAGE_WAVE_ACTIVE.string().replace("<Wave>", THuntModule.manager.getActiveWave() +""), player);
-				}
-				else
-				{
-					Util.Message(THuntSettings.MESSAGE_WAVE_ACTIVE_LAST.string().replace("<Wave>", THuntModule.manager.getActiveWave() +""), player);
-				}
-				
+				THuntModule.manager.messageAboutCurrentWave(player);
 			}
 		}
 	}
