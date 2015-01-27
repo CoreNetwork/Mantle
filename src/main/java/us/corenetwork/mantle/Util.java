@@ -258,12 +258,12 @@ public class Util
 
     public static boolean isInWorldBorderBounds(Block block)
     {
-        WorldBorder worldBorder = block.getWorld().getWorldBorder();
-        double halfSize = worldBorder.getSize() / 2;
-        return      block.getX() >= worldBorder.getCenter().getX() - halfSize
-                &&  block.getX() <= worldBorder.getCenter().getX() + halfSize
-                &&  block.getZ() >= worldBorder.getCenter().getZ() - halfSize
-                &&  block.getZ() <= worldBorder.getCenter().getZ() + halfSize;
+        net.minecraft.server.v1_8_R1.WorldBorder nmsWorldBorder = ((CraftWorld) block.getWorld()).getHandle().af();
+        double halfSize = nmsWorldBorder.h() / 2;
+        return      block.getX() > nmsWorldBorder.f() - halfSize
+                &&  block.getX() < nmsWorldBorder.f() + halfSize
+                &&  block.getZ() > nmsWorldBorder.g() - halfSize
+                &&  block.getZ() < nmsWorldBorder.g() + halfSize;
     }
 
     private static long debugTimer = System.currentTimeMillis();
