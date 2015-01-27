@@ -1,7 +1,6 @@
 package us.corenetwork.mantle;
 
 import java.util.List;
-import net.minecraft.server.v1_8_R1.BlockPosition;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
@@ -9,6 +8,7 @@ import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
@@ -258,9 +258,12 @@ public class Util
 
     public static boolean isInWorldBorderBounds(Block block)
     {
-        net.minecraft.server.v1_8_R1.WorldBorder nmsWorldBorder = ((CraftWorld) block.getWorld()).getHandle().af();
-
-        return nmsWorldBorder.a(new BlockPosition(block.getX(), block.getY(), block.getZ()));
+        WorldBorder worldBorder = block.getWorld().getWorldBorder();
+        double halfSize = worldBorder.getSize() / 2;
+        return      block.getX() >= worldBorder.getCenter().getX() - halfSize
+                &&  block.getX() <= worldBorder.getCenter().getX() + halfSize
+                &&  block.getZ() >= worldBorder.getCenter().getZ() - halfSize
+                &&  block.getZ() <= worldBorder.getCenter().getZ() + halfSize;
     }
 
     private static long debugTimer = System.currentTimeMillis();
