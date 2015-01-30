@@ -22,7 +22,7 @@ import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
-import us.corenetwork.mantle.util.InventoryUtil;
+import us.core_network.cornel.items.InventoryUtil;
 
 
 public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiver {

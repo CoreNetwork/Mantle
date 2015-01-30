@@ -16,7 +16,7 @@ import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
-import us.corenetwork.mantle.util.InventoryUtil;
+import us.core_network.cornel.items.InventoryUtil;
 
 public class CustomArmorStandRecipe extends ShapelessRecipes implements IRecipe
 {
