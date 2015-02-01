@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
 import net.minecraft.server.v1_8_R1.EntityPigZombie;
+import net.minecraft.server.v1_8_R1.EntitySkeleton;
+import net.minecraft.server.v1_8_R1.EntityWitch;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,6 +16,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
 import us.corenetwork.mantle.hardmode.CustomPigman;
+import us.corenetwork.mantle.hardmode.CustomSkeleton;
+import us.corenetwork.mantle.hardmode.CustomWitch;
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
@@ -73,6 +77,8 @@ public class MantlePlugin extends JavaPlugin {
 
         CustomBeaconTileEntity.inject();
 		VanillaReplacingUtil.replaceMob("PigZombie", 57, EntityPigZombie.class, CustomPigman.class);
+        VanillaReplacingUtil.replaceMob("Skeleton", 51, EntitySkeleton.class, CustomSkeleton.class);
+        VanillaReplacingUtil.replaceMob("Witch", 66, EntityWitch.class, CustomWitch.class);
 
 		if (!setupPermissions())
 		{
