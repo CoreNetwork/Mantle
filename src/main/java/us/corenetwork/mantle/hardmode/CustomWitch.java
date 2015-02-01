@@ -2,13 +2,11 @@ package us.corenetwork.mantle.hardmode;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.EntitySkeleton;
 import net.minecraft.server.v1_8_R1.EntityWitch;
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
 import net.minecraft.server.v1_8_R1.PathfinderGoalArrowAttack;
 import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_8_R1.World;
-import org.bukkit.Bukkit;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
 /**
@@ -47,6 +45,6 @@ public class CustomWitch extends EntityWitch
         }
 
         //Add our own ranged attack pathfinder goal
-        this.goalSelector.a(2, new CustomPathfinderGoalArrowAttack(this, 1.0D, 60, 60, 10.0F, HardmodeSettings.WITCH_FIRST_ARROW_DELAY_MULTIPLIER));
+        this.goalSelector.a(2, new CustomPathfinderGoalArrowAttack(this, 1.0D, 60, 60, 10.0F, HardmodeSettings.WITCH_FIRST_POTION_DELAY_MULTIPLIER));
     }
 }

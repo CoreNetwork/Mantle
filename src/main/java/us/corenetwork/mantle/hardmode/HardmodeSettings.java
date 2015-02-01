@@ -141,7 +141,7 @@ public enum HardmodeSettings {
 
     SKELETON_FIRST_ARROW_DELAY_MULTIPLIER("Skeleton.FirstArrowDelayMultiplier", 0.3),
 
-    WITCH_FIRST_ARROW_DELAY_MULTIPLIER("Witch.FirstArrowDelayMultiplier", 0.3),
+    WITCH_FIRST_POTION_DELAY_MULTIPLIER("Witch.FirstPotionDelayMultiplier", 0.3),
 
     REINFORCEMENTS_DISTANCE("Reinforcements.Distance", 10),
     REINFORCEMENTS_ENABLED("Reinforcements.Enabled", false)
