@@ -501,12 +501,6 @@ public class HardmodeListener implements Listener {
 		// Pigmen spawning adjust
 		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
 		{
-			if (event.getLocation().getWorld().getEnvironment() == Environment.NORMAL)
-			{
-				event.setCancelled(true);
-				return;
-			}
-
 			if (event.getSpawnReason() == SpawnReason.JOCKEY)
 			{
 				event.setCancelled(true);
