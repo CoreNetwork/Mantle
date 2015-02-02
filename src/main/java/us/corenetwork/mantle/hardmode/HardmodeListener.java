@@ -343,7 +343,7 @@ public class HardmodeListener implements Listener {
 			if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
 				return;
 
-            net.minecraft.server.v1_8_R1.ItemStack nmsItemInHand = NanobotUtil.getInternalNMSStack(itemInHand);
+            net.minecraft.server.v1_8_R1.ItemStack nmsItemInHand = ItemStackUtils.getInternalNMSStack(itemInHand);
 
 			event.setCancelled(true); //Cancel drop vanilla
 			block.setType(Material.AIR);
