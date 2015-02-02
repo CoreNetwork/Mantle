@@ -33,6 +33,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWither;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWitherSkull;
@@ -342,10 +343,12 @@ public class HardmodeListener implements Listener {
 			if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
 				return;
 
+            net.minecraft.server.v1_8_R1.ItemStack nmsItemInHand = NanobotUtil.getInternalNMSStack(itemInHand);
+
 			event.setCancelled(true); //Cancel drop vanilla
 			block.setType(Material.AIR);
 
-			boolean canToolBreak = itemInHand != null && NanobotUtil.getInternalNMSStack(itemInHand).b(Blocks.QUARTZ_ORE);
+			boolean canToolBreak = itemInHand != null && nmsItemInHand.b(Blocks.QUARTZ_ORE);
 			if (!canToolBreak)
 				return;
 
@@ -382,6 +385,9 @@ public class HardmodeListener implements Listener {
 				ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.EXPERIENCE_ORB);
 				orb.setExperience(value);
 			}
+
+            //Damage pickaxe
+            nmsItemInHand.damage(1, ((CraftPlayer) event.getPlayer()).getHandle());
 		}
 
 
