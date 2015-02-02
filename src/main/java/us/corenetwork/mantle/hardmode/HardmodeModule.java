@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.hardmode.wither.NMSWitherManager;
 
 
 public class HardmodeModule extends MantleModule {
