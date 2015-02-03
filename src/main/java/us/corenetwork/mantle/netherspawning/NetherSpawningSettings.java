@@ -10,33 +10,29 @@ public enum NetherSpawningSettings {
 	NEAREST_PLAYER_MINIMUM_DISTANCE_SQUARED("MinimumDistanceToPlayerSquared", 625),
     FARTHEST_PLAYER_MAXIMUM_DISTANCE_SQUARED("MaximumDistanceToPlayerSquared", 9216),
 
-    BLAZE_SPAWNING_INTERVAL_TICKS("Blaze.SpawningIntervalTicks", 10),
+    BLAZE_SPAWN_CHANCE("Blaze.SpawnChance", 0.1),
 
-    MAGMA_CUBE_SPAWNING_INTERVAL_TICKS("MagmaCube.SpawningIntervalTicks", 10),
-    MAGMA_CUBE_MAX_Y("MagmaCube.MaxY", 256),
+    MAGMA_CUBE_SPAWN_CHANCE("MagmaCube.SpawnChance", 0.1),
     MAGMA_CUBE_MIN_Y("MagmaCube.MinY", 0),
+    MAGMA_CUBE_MAX_Y("MagmaCube.MaxY", 256),
 	MAGMA_CUBE_MIN_LIGHT("MagmaCube.MinLightLevel", 8),
 
-    WITHER_SKELETON_SPAWNING_INTERVAL_TICKS("WitherSkeleton.SpawningIntervalTicks", 10),
-	WITHER_SKELETON_SPAWN_CHANCE("WitherSkeleton.SpawnChance", 1),
+	WITHER_SKELETON_SPAWN_CHANCE("WitherSkeleton.SpawnChance", 0.1),
 	WITHER_SKELETON_MIN_Y("WitherSkeleton.MinY", 1),
 	WITHER_SKELETON_MAX_Y("WitherSkeleton.MaxY", 56),
 	WITHER_SKELETON_STRENGTH("WitherSkeleton.Strength", 4.0),
 	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.BowChance", 0.03),
 	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Speed", 0.25),
 
-    GHAST_SPAWNING_INTERVAL_TICKS("Ghast.SpawningIntervalTicks", 10),
-	GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
-    GHAST_LIGHT_CHECK_Y("Ghast.LightCheckY", 183),
-    GHAST_MIN_SPAWN_Y("Ghast.MinSpawnY", 163),
-	GHAST_MAX_SPAWN_Y("Ghast.MaxSpawnY", 179),
-	GHAST_MIN_MOVE_DOWN("Ghast.MinMoveDown", 4),
-	GHAST_MAX_MOVE_DOWN("Ghast.MaxMoveDown", 6),
+    //GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
+    GHAST_MIN_Y("Ghast.MinY", 110),
+    GHAST_MAX_Y("Ghast.MaxY", 256),
+	GHAST_MIN_MOVE_UP("Ghast.MinMoveUp", 4),
+	GHAST_MAX_MOVE_UP("Ghast.MaxMoveUp", 6),
 
 	MIN_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Min", 1),
 	MAX_ADDITIONAL_PACK_MOBS("AdditionalPackMobs.Max", 3);
 
-    
 	protected String string;
 	protected Object def;
 	

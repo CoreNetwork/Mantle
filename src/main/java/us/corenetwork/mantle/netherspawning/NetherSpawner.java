@@ -126,7 +126,7 @@ public class NetherSpawner {
             }
         }
 
-		NetherSpawningHelper.spawningMob = true;
+		NetherSpawningListener.spawningMob = true;
 		block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.BLAZE);
 	}
 
@@ -135,9 +135,6 @@ public class NetherSpawner {
         if (reason == SpawnReason.NATURAL)
         {
             if (block.getY() > NetherSpawningSettings.WITHER_SKELETON_MAX_Y.integer() || block.getY() < NetherSpawningSettings.WITHER_SKELETON_MIN_Y.integer())
-                return null;
-
-            if (MantlePlugin.random.nextDouble() > NetherSpawningSettings.WITHER_SKELETON_SPAWN_CHANCE.doubleNumber())
                 return null;
         }
 
@@ -181,7 +178,7 @@ public class NetherSpawner {
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		
 		if (reason == SpawnReason.NATURAL)
-			NetherSpawningHelper.spawningMob = true;
+			NetherSpawningListener.spawningMob = true;
 		if (!nmsWorld.addEntity(nmsSkeleton, reason))
 			return null;
 
@@ -216,7 +213,7 @@ public class NetherSpawner {
         if (!SlimeSpawner.isThereEnoughSpace(block, size))
             return;
 
-        NetherSpawningHelper.spawningMob = true;
+        NetherSpawningListener.spawningMob = true;
 
         Location location = Util.getLocationInBlockCenter(block);
         location.setYaw(MantlePlugin.random.nextFloat() * 360);
@@ -257,7 +254,7 @@ public class NetherSpawner {
                 }
             }
         }
-        NetherSpawningHelper.spawningMob = true;
+        NetherSpawningListener.spawningMob = true;
         block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.GHAST);
     }
 
