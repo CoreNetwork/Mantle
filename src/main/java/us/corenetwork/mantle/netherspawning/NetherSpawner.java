@@ -27,6 +27,7 @@ import org.bukkit.material.Step;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.hardmode.HardmodeSettings;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
 import us.corenetwork.mantle.slimespawning.SlimeSpawner;
 
@@ -238,8 +239,14 @@ public class NetherSpawner {
         return rnd.nextInt(10) == 0;
     }
 
-    public static void spawnGhast(Block block)
+    public static void spawnGhast(Block checkLightBlock, Block block)
     {
+        //check light on the ground block, Hardmode is checking only the block it spawns in.
+        if(checkLightBlock.getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
+        {
+            return;
+        }
+
         //Check if there is enough space for Ghast to spawn
         for (int x = -2; x <= 2; x++)
         {
