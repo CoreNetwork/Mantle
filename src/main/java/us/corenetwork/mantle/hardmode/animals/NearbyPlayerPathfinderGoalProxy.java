@@ -6,6 +6,7 @@ import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
 import net.minecraft.server.v1_8_R1.PathfinderGoalBreakDoor;
 import net.minecraft.server.v1_8_R1.PathfinderGoalBreed;
+import net.minecraft.server.v1_8_R1.PathfinderGoalEatTile;
 import net.minecraft.server.v1_8_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_8_R1.PathfinderGoalPanic;
 import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
@@ -110,7 +111,7 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
             PathfinderGoal originalGoal = (PathfinderGoal) ReflectionUtils.get(pathfinderGoalSelectorItemClass, pathfinderGoalSelectorItem, "a");
 
             //Excluded goals
-            if (originalGoal instanceof PathfinderGoalFloat || originalGoal instanceof PathfinderGoalPanic || originalGoal instanceof PathfinderGoalBreed || originalGoal instanceof PathfinderGoalTempt)
+            if (originalGoal instanceof PathfinderGoalFloat || originalGoal instanceof PathfinderGoalPanic || originalGoal instanceof PathfinderGoalBreed || originalGoal instanceof PathfinderGoalTempt || originalGoal instanceof PathfinderGoalEatTile)
                 continue;
 
             ReflectionUtils.set(pathfinderGoalSelectorItemClass, pathfinderGoalSelectorItem, "a", new NearbyPlayerPathfinderGoalProxy(originalGoal, entityLiving));
