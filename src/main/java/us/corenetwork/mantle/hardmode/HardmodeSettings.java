@@ -144,6 +144,7 @@ public enum HardmodeSettings {
     WITCH_FIRST_POTION_DELAY_MULTIPLIER("Witch.FirstPotionDelayMultiplier", 0.3),
 
     ANIMALS_AI_MAXIMUM_RANGE_TO_PLAYER("Animals.AIMaximumPlayerDistance", 32),
+    ANIMALS_ENABLE_AI_NERF("Animals.EnableAINerf", true),
 
     REINFORCEMENTS_DISTANCE("Reinforcements.Distance", 10),
     REINFORCEMENTS_ENABLED("Reinforcements.Enabled", false);

@@ -10,6 +10,7 @@ import net.minecraft.server.v1_8_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_8_R1.PathfinderGoalPanic;
 import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_8_R1.PathfinderGoalTempt;
+import us.corenetwork.mantle.hardmode.HardmodeSettings;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
 /**
@@ -32,6 +33,9 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
         boolean canOriginalStart = original.a();
         if (!canOriginalStart)
             return false;
+
+        if (!HardmodeSettings.ANIMALS_ENABLE_AI_NERF.bool())
+            return true;
 
         //If original can start, then we should check for nearby player and only start if there is one.
         return entity.world.findNearbyPlayer(entity, maximumRangeToPlayer) != null;
