@@ -523,6 +523,15 @@ public class HardmodeListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
+        else if (entity.getType() == EntityType.SQUID)
+        {
+            Material spawnBlockMaterial = event.getLocation().getBlock().getType();
+            if (spawnBlockMaterial == Material.LAVA || spawnBlockMaterial == Material.STATIONARY_LAVA)
+            {
+                event.setCancelled(true);
+                return;
+            }
+        }
 
 		// assign spiders a random potion effect
 		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER)
