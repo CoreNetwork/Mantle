@@ -23,6 +23,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
@@ -88,11 +89,11 @@ public class PeddlingBook extends Spellbook {
 			if (item == null || item.getType() == Material.AIR)
 				continue;
 					
-			net.minecraft.server.v1_8_R1.ItemStack nmsItem = SpellbookUtil.getNMSInnerItem(item);
+			net.minecraft.server.v1_8_R1.ItemStack nmsItem = NanobotUtil.getInternalNMSStack(item);
 			
 			for (RecipeData recipe : recipes)
 			{
-				if (SpellbookUtil.compareItemTypes(nmsItem, recipe.sellItem))
+				if (net.minecraft.server.v1_8_R1.ItemStack.c(nmsItem, recipe.sellItem))
 				{
 					recipe.amountPlayerHave += item.getAmount();
 				}
@@ -165,8 +166,8 @@ public class PeddlingBook extends Spellbook {
 			ItemStack stack = inventory.getItem(i);
 			if (stack != null && stack.getType() != Material.AIR)
 			{
-				net.minecraft.server.v1_8_R1.ItemStack nmsStack = SpellbookUtil.getNMSInnerItem(stack);
-				if (!SpellbookUtil.compareItemTypes(nmsStack, comparingItem))
+				net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stack);
+				if (!net.minecraft.server.v1_8_R1.ItemStack.c(nmsStack, comparingItem))
 					continue;
 				
 				int stackAmount = stack.getAmount();
