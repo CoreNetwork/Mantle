@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 
 import org.bukkit.Location;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -24,8 +25,6 @@ public class NetherSpawningListener implements Listener {
 	{
 		if (!spawningMob)
 		{
-
-
 			if (event.getLocation().getWorld().getEnvironment() == Environment.NETHER)
 			{
                 //cancelling of normal spawns, depending on reason and mob type
@@ -38,58 +37,95 @@ public class NetherSpawningListener implements Listener {
 						if (type.equalsIgnoreCase(rejectedType))
 						{
 							event.setCancelled(true);
-							break;
+                            return;
+							//break;
 						}
 					}
+
+
 				}
+
+
+                Block spawnBlock = event.getLocation().getBlock();
+                double random, chance;
 
                 //run spawn of another mob/chance/roll/etc
                 if(reason == SpawnReason.NATURAL && event.getEntityType() == EntityType.PIG_ZOMBIE)
                 {
-                    double random = MantlePlugin.random.nextDouble();
+                    boolean alreadySpawned = false;
 
-                    double chance = NetherSpawningSettings.BLAZE_SPAWN_CHANCE.doubleNumber();
+                    boolean canSpawnBlaze = NetherSpawner.canSpawnBlaze(spawnBlock);
+                    //run random for Magma size
+                    int size = MantlePlugin.random.nextInt(3);
+                    boolean canSpawnMagma = NetherSpawner.canSpawnMagmaCube(spawnBlock, size);
+                    boolean canSpawnWitherSkeleton = NetherSpawner.canSpawnWitherSkeleton(spawnBlock, SpawnReason.NATURAL);
 
-                    //Blaze
-                    if(random <= chance)
+
+
+                    //for each mob, run a roll if canSpawn = true
+                    //if roll passed, spawn
+                    //if not, try another mob
+
+                    if(canSpawnBlaze)
                     {
-                        NetherSpawner.spawn(event.getLocation().getBlock(), EntityType.BLAZE);
-                        event.setCancelled(true);
-                        return;
+                        random = MantlePlugin.random.nextDouble();
+                        chance = NetherSpawningSettings.BLAZE_SPAWN_CHANCE.doubleNumber();
+
+                        if(random <= chance)
+                        {
+                            NetherSpawner.spawnBlaze(spawnBlock);
+                            alreadySpawned = true;
+                        }
                     }
-                    random -= chance;
-                    chance = NetherSpawningSettings.WITHER_SKELETON_SPAWN_CHANCE.doubleNumber();
-                    if(random <= chance)
+                    if(canSpawnMagma && !alreadySpawned)
                     {
-                        NetherSpawner.spawn(event.getLocation().getBlock(), EntityType.SKELETON);
-                        event.setCancelled(true);
-                        return;
+                        random = MantlePlugin.random.nextDouble();
+                        chance = NetherSpawningSettings.MAGMA_CUBE_SPAWN_CHANCE.doubleNumber();
+
+                        if(random <= chance)
+                        {
+                            NetherSpawner.spawnMagmaCube(spawnBlock, size);
+                            alreadySpawned = true;
+                        }
+                    }
+                    if(canSpawnWitherSkeleton && !alreadySpawned)
+                    {
+                        random = MantlePlugin.random.nextDouble();
+                        chance = NetherSpawningSettings.WITHER_SKELETON_SPAWN_CHANCE.doubleNumber();
+
+                        if(random <= chance)
+                        {
+                            NetherSpawner.spawnWitherSkeleton(spawnBlock, SpawnReason.NATURAL);
+                            alreadySpawned = true;
+                        }
                     }
 
-                    random -= chance;
-                    chance = NetherSpawningSettings.MAGMA_CUBE_SPAWN_CHANCE.doubleNumber();
-                    if(random <= chance)
+                    if(alreadySpawned)
                     {
-                        NetherSpawner.spawn(event.getLocation().getBlock(), EntityType.MAGMA_CUBE);
                         event.setCancelled(true);
-                        return;
                     }
 
-                    //Do nothing, spawn normal pigman
                 }
+                //Handle vanilla ghast spawn - move up and run
                 else if(reason == SpawnReason.NATURAL && event.getEntityType() == EntityType.GHAST)
                 {
-                    Location ghastSpawnLocation = event.getLocation();
                     event.setCancelled(true);
 
-                    double random = MantlePlugin.random.nextDouble();
-                    double chance = NetherSpawningSettings.GHAST_SPAWN_CHANCE.doubleNumber();
+                    Block actualSpawnBlock = spawnBlock.getRelative(BlockFace.UP, MantlePlugin.random.nextInt(NetherSpawningSettings.GHAST_MAX_MOVE_UP.integer() - NetherSpawningSettings.GHAST_MIN_MOVE_UP.integer() +1) + NetherSpawningSettings.GHAST_MIN_MOVE_UP.integer());
 
-                    if (random <= chance && ghastSpawnLocation.getY() <= NetherSpawningSettings.GHAST_MAX_Y.integer() && ghastSpawnLocation.getY() >= NetherSpawningSettings.GHAST_MIN_Y.integer())
+                    boolean canSpawnGhast = NetherSpawner.canSpawnGhast(spawnBlock, actualSpawnBlock);
+
+                    if(canSpawnGhast)
                     {
-                        //roll & location are good, move up and spawn
-                        NetherSpawner.spawnGhast(ghastSpawnLocation.getBlock(), event.getLocation().getBlock().getRelative(BlockFace.UP, MantlePlugin.random.nextInt(NetherSpawningSettings.GHAST_MAX_MOVE_UP.integer() - NetherSpawningSettings.GHAST_MIN_MOVE_UP.integer() +1) + NetherSpawningSettings.GHAST_MIN_MOVE_UP.integer()));
+                        random = MantlePlugin.random.nextDouble();
+                        chance = NetherSpawningSettings.GHAST_SPAWN_CHANCE.doubleNumber();
+
+                        if (random <= chance)
+                        {
+                            NetherSpawner.spawnGhast(actualSpawnBlock);
+                        }
                     }
+
                 }
 			}
 
@@ -113,4 +149,6 @@ public class NetherSpawningListener implements Listener {
 		
 		spawningMob = false;
 	}
+
+
 }

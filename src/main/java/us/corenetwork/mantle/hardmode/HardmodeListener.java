@@ -731,7 +731,12 @@ public class HardmodeListener implements Listener {
 							if (aboveBlock.getType().isOccluding())
 								continue;
 
-							Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
+                            if(!NetherSpawner.canSpawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM))
+                            {
+                                continue;
+                            }
+
+                            Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
 							if (minion == null)
 								continue;
 
