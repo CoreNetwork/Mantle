@@ -82,6 +82,15 @@ public class NetherSpawningListener implements Listener {
                     Location ghastSpawnLocation = event.getLocation();
                     event.setCancelled(true);
 
+                    double random = MantlePlugin.random.nextDouble();
+                    double chance = NetherSpawningSettings.GHAST_SPAWN_CHANCE.doubleNumber();
+
+                    //Blaze
+                    if(random > chance)
+                    {
+                        return;
+                    }
+
                     if (ghastSpawnLocation.getY() <= NetherSpawningSettings.GHAST_MAX_Y.integer() && ghastSpawnLocation.getY() >= NetherSpawningSettings.GHAST_MIN_Y.integer())
                     {
                         NetherSpawner.spawnGhast(event.getLocation().getBlock().getRelative(BlockFace.UP, MantlePlugin.random.nextInt(NetherSpawningSettings.GHAST_MAX_MOVE_UP.integer() - NetherSpawningSettings.GHAST_MIN_MOVE_UP.integer() +1) + NetherSpawningSettings.GHAST_MIN_MOVE_UP.integer()));

@@ -24,7 +24,7 @@ public enum NetherSpawningSettings {
 	WITHER_SKELETON_RARE_BOW_CHANCE("WitherSkeleton.BowChance", 0.03),
 	WITHER_SKELETON_NORMAL_SPEED("WitherSkeleton.Speed", 0.25),
 
-    //GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
+    GHAST_SPAWN_CHANCE("Ghast.SpawnChance", 1),
     GHAST_MIN_Y("Ghast.MinY", 110),
     GHAST_MAX_Y("Ghast.MaxY", 256),
 	GHAST_MIN_MOVE_UP("Ghast.MinMoveUp", 4),
