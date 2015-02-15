@@ -53,31 +53,6 @@ public class Util
         firework.remove();
     }
 
-
-    public static Boolean isInteger(String text)
-    {
-        try
-        {
-            Integer.parseInt(text);
-            return true;
-        } catch (NumberFormatException e)
-        {
-            return false;
-        }
-    }
-
-    public static Boolean isDouble(String text)
-    {
-        try
-        {
-            Double.parseDouble(text);
-            return true;
-        } catch (NumberFormatException e)
-        {
-            return false;
-        }
-    }
-
     public static void safeTeleport(final Entity entity, final Location location)
     {
         Chunk c = location.getChunk();

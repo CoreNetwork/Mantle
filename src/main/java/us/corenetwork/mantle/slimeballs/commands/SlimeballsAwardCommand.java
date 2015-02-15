@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
@@ -29,7 +30,7 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 		}
 
 		int amount = 1;
-		if (args.length > 1 && Util.isInteger(args[1]))
+		if (args.length > 1 && NumberUtil.isInteger(args[1]))
 			amount = Integer.parseInt(args[1]);
 
 		OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);

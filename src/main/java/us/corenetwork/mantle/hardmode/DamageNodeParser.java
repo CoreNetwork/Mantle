@@ -5,6 +5,7 @@ import com.gadberry.utility.expression.Expression;
 import com.gadberry.utility.expression.InvalidExpressionException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,11 +15,12 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import us.core_network.cornel.common.MinecraftNames;
+import us.core_network.cornel.custom.NodeParser;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.NodeParser;
 
-public class DamageNodeParser extends NodeParser {
+public class DamageNodeParser extends NodeParser
+{
 	private EntityDamageEvent event;
 	private String eventName;
 	YamlConfiguration config;
@@ -41,8 +43,15 @@ public class DamageNodeParser extends NodeParser {
 			return;
 		}
 
-		parseNodeList(node);
-	}
+        try
+        {
+            parseNodeList(node);
+        }
+        catch (InvalidNodeConfigException e)
+        {
+            MLog.severe("Invalid damage node config! " + e.getMessage());
+        }
+    }
 
 	public static void parseDamageEvent(EntityDamageEvent event, String eventName, YamlConfiguration config)
 	{
@@ -54,16 +63,26 @@ public class DamageNodeParser extends NodeParser {
 		new DamageNodeParser(event, event.getCause().toString(), config, false).parse();
 	}
 
+
+
 	@Override
-	protected void parseNode(String type, LinkedHashMap<?, ?> node) {
+	protected void parseNode(String type, Object node) {
+        if (node instanceof LinkedHashMap)
+        {
+            MLog.warning("Invalid config! Node " + type + " is not collection!");
+            return;
+        }
+
+        LinkedHashMap<?,?> nodeCollection = (LinkedHashMap) node;
+
 		if (type.equalsIgnoreCase("setdamage"))
-			parseSetDamage(node);
+			parseSetDamage(nodeCollection);
 		else if (type.equalsIgnoreCase("adddamage"))
-			parseAddDamage(node);
+			parseAddDamage(nodeCollection);
 		else if (type.equalsIgnoreCase("multiplydamage"))
-			parseMultiplyDamage(node);
+			parseMultiplyDamage(nodeCollection);
 		else if (type.equalsIgnoreCase("addpotioneffect"))
-			parseAddPotionEffect(node);
+			parseAddPotionEffect(nodeCollection);
 	}
 
 

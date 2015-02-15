@@ -16,10 +16,10 @@ import org.bukkit.entity.Horse;
 import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
+import us.core_network.cornel.custom.NodeParser;
 import us.corenetwork.core.CorePlugin;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
-import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.Util;
 
 public class AnimalSpawner {
@@ -28,7 +28,7 @@ public class AnimalSpawner {
 
 	public static void spawnAnimal(Block block)
 	{
-		String animalSectionKey = NodeParser.pickNodeChance((MemorySection) AnimalSpawningModule.instance.config.get("Animals"));
+		String animalSectionKey = NodeParser.pickNodeChance((MemorySection) AnimalSpawningModule.instance.config.get("Animals"), MantlePlugin.random);
 		MemorySection animalSection = (MemorySection) AnimalSpawningModule.instance.config.get("Animals.".concat(animalSectionKey));
 		
 		EntityType animalType = EntityType.fromName(animalSectionKey);
@@ -105,7 +105,7 @@ public class AnimalSpawner {
 		
 	private static void handleSheep(MemorySection section, Entity entity)
 	{
-		String colorName = NodeParser.pickNodeChance((MemorySection) section.get("Colors"));
+		String colorName = NodeParser.pickNodeChance((MemorySection) section.get("Colors"), MantlePlugin.random);
 		
 		DyeColor color;
 		try
@@ -126,7 +126,7 @@ public class AnimalSpawner {
 	{
 		Horse horse = (Horse) entity;
 		
-		String colorName = NodeParser.pickNodeChance((MemorySection) section.get("Colors"));
+		String colorName = NodeParser.pickNodeChance((MemorySection) section.get("Colors"), MantlePlugin.random);
 		try
 		{
 			Horse.Color color = Horse.Color.valueOf(colorName.toUpperCase());
@@ -137,7 +137,7 @@ public class AnimalSpawner {
 			MLog.severe("Unknown horse color: " + colorName);
 		}
 		
-		String styleName = NodeParser.pickNodeChance((MemorySection) section.get("Styles"));
+		String styleName = NodeParser.pickNodeChance((MemorySection) section.get("Styles"), MantlePlugin.random);
 		try
 		{
 			Horse.Style style = Horse.Style.valueOf(styleName.toUpperCase());
@@ -148,7 +148,7 @@ public class AnimalSpawner {
 			MLog.severe("Unknown horse style: " + styleName);
 		}
 		
-		String variantName = NodeParser.pickNodeChance((MemorySection) section.get("Variants"));
+		String variantName = NodeParser.pickNodeChance((MemorySection) section.get("Variants"), MantlePlugin.random);
 		try
 		{
 			Horse.Variant variant = Horse.Variant.valueOf(variantName.toUpperCase());
@@ -178,7 +178,7 @@ public class AnimalSpawner {
 	{
 		Rabbit rabbit = (Rabbit) entity;
 
-		String rabbitTypeName = NodeParser.pickNodeChance((MemorySection) section.get("Types"));
+		String rabbitTypeName = NodeParser.pickNodeChance((MemorySection) section.get("Types"), MantlePlugin.random);
 		Rabbit.Type rabbitType = (Rabbit.Type) Util.findEnum(Rabbit.Type.values(), rabbitTypeName);
 		if (rabbitType != null)
 		{

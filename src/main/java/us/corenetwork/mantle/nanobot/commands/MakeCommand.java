@@ -9,6 +9,7 @@ import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import us.core_network.cornel.common.MinecraftNames;
 import us.core_network.cornel.items.NbtYaml;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballItem;
 
@@ -53,7 +54,7 @@ public class MakeCommand extends NanobotBaseCommand {
 		Integer invSlot = null;
 		i++;
 		
-		if (i < args.length && Util.isInteger(args[i]))
+		if (i < args.length && NumberUtil.isInteger(args[i]))
 			invSlot = Integer.parseInt(args[i]);
 
 		boolean silent = (i < args.length && args[i].equals("silent")) && !(i + 1 < args.length && args[i + 1].equals("silent"));

@@ -2,6 +2,7 @@ package us.corenetwork.mantle.hydration.commands;
 
 import java.util.HashMap;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
@@ -28,7 +29,7 @@ public class MantleHydrationCommand extends BaseMantleCommand {
 
 
 	public void run(final CommandSender sender, String[] args) {
-		if (args.length < 1 || Util.isInteger(args[0]))
+		if (args.length < 1 || NumberUtil.isInteger(args[0]))
 		{
 			commands.get("help").execute(sender, args);
 			return;

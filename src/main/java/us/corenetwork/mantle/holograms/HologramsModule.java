@@ -4,6 +4,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -66,7 +67,7 @@ public class HologramsModule extends MantleModule {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        if (args.length < 1 || Util.isInteger(args[0]))
+        if (args.length < 1 || NumberUtil.isInteger(args[0]))
         {
             commands.get("help").execute(sender, args);
             return true;

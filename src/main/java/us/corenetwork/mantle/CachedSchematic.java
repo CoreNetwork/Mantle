@@ -42,6 +42,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.generation.ImagePixel;
 import us.corenetwork.mantle.generation.MapColors;
 import us.corenetwork.mantle.generation.VillagerSpawner;
@@ -269,18 +270,18 @@ public class CachedSchematic {
 								if (prvaSplit.length > 1)
 								{
 									String idString = prvaSplit[1];
-									if (Util.isInteger(idString))
+									if (NumberUtil.isInteger(idString))
 									{
 										replaceID = Integer.parseInt(idString);
 									}
 									else if (idString.contains(":"))
 									{
 										String[] idSplit = idString.split(":");
-										if (Util.isInteger(idSplit[0]))
+										if (NumberUtil.isInteger(idSplit[0]))
 										{
 											replaceID = Integer.parseInt(idSplit[0]);
 										}
-										if (Util.isInteger(idSplit[1]))
+										if (NumberUtil.isInteger(idSplit[1]))
 										{
 											replaceData = Integer.parseInt(idSplit[1]);
 										}
@@ -481,7 +482,7 @@ public class CachedSchematic {
 		
 					villagerSign = true;
 		
-					if (lineS.length >= 2 && Util.isInteger(lineS[1]))
+					if (lineS.length >= 2 && NumberUtil.isInteger(lineS[1]))
 						amount = Integer.parseInt(lineS[1]);
 					
 					VillagerInfo villager = new VillagerInfo();

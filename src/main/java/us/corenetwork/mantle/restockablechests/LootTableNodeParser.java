@@ -12,13 +12,14 @@ import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.common.MinecraftNames;
+import us.core_network.cornel.custom.NodeParser;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
-import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 
 
-public class LootTableNodeParser extends NodeParser {
+public class LootTableNodeParser extends NodeParser
+{
 	private String tableName;
 
 	private static List<ItemStack> result;
@@ -43,17 +44,33 @@ public class LootTableNodeParser extends NodeParser {
 			return result;	
 		}
 
-		parseNodeList(node);
+        try
+        {
+            parseNodeList(node);
+        }
+        catch (InvalidNodeConfigException e)
+        {
+            MLog.severe("Invalid loot tables config! " + e.getMessage());
+        }
 
-		return result;
+        return result;
 	}
 
 	@Override
-	protected void parseNode(String type, LinkedHashMap<?, ?> node) {
-		if (type.equalsIgnoreCase("item"))
-			parseItem(node);
+	protected void parseNode(String type, Object node) {
+        if (node instanceof LinkedHashMap)
+        {
+            MLog.warning("Invalid config! Node " + type + " is not collection!");
+            return;
+        }
+
+        LinkedHashMap<?,?> nodeCollection = (LinkedHashMap) node;
+
+        if (type.equalsIgnoreCase("item"))
+			parseItem(nodeCollection);
 		else if (type.equalsIgnoreCase("enchant"))
-			parseEnchant(node);	}
+			parseEnchant(nodeCollection);
+    }
 
 
 	private void parseEnchant(LinkedHashMap<?,?> node)
@@ -75,74 +92,85 @@ public class LootTableNodeParser extends NodeParser {
 
 
 	private void parseItem(LinkedHashMap<?,?> node)
-	{
-		Integer id = (Integer) node.get("id");
-		if (id == null)
-		{
-			if (node.containsKey("name")) {
-				String name = (String) node.get("name");
-				Integer material = MinecraftNames.getMaterialId(name);
-				if (material != null) {
-					id = material;
-				} else {
-					MLog.warning("Can't find material for name " + name);
-					return;
-				}
-			}
-			else
-			{
-				MLog.warning("Invalid Loot tables config! Item ID is missing!");
-			}
-		}
+    {
+        Integer id = (Integer) node.get("id");
+        if (id == null)
+        {
+            if (node.containsKey("name"))
+            {
+                String name = (String) node.get("name");
+                Integer material = MinecraftNames.getMaterialId(name);
+                if (material != null)
+                {
+                    id = material;
+                } else
+                {
+                    MLog.warning("Can't find material for name " + name);
+                    return;
+                }
+            } else
+            {
+                MLog.warning("Invalid Loot tables config! Item ID is missing!");
+            }
+        }
 
-		Integer amount = (Integer) node.get("amount");
-		if (amount == null) amount = 1;
+        Integer amount = (Integer) node.get("amount");
+        if (amount == null) amount = 1;
 
-		Integer damage = (Integer) node.get("damage");
-		if (damage == null) damage = 0;
+        Integer damage = (Integer) node.get("damage");
+        if (damage == null) damage = 0;
 
-		ItemStack stack = new ItemStack(id, amount, damage.shortValue());
-		curItemStack = stack;
+        ItemStack stack = new ItemStack(id, amount, damage.shortValue());
+        curItemStack = stack;
 
 
-		Object yamlNbtTag = node.get("nbt");
-		if (yamlNbtTag != null)
-		{
-			NBTTagCompound newTag;
-			if (yamlNbtTag instanceof String)
-			{
-				try
-				{
-					newTag = NbtYaml.loadFromFile((String) yamlNbtTag);
-				}
-				catch (IOException e)
-				{
-					MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml failed loading!");
-					return;
-				}
-				catch (InvalidConfigurationException e)
-				{
-					MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml is invalid YAML file!");
-					return;
-				}
-			}
-			else 
-			{
-				newTag = NbtYaml.loadFromNodes((Map<?, ?>) yamlNbtTag);
-			}
-			
-			if (newTag != null)
-			{
-				net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
-				nmsStack.setTag(newTag);
-				curItemStack = CraftItemStack.asCraftMirror(nmsStack);
-			}
-			
-		}
+        Object yamlNbtTag = node.get("nbt");
+        if (yamlNbtTag != null)
+        {
+            NBTTagCompound newTag;
+            if (yamlNbtTag instanceof String)
+            {
+                try
+                {
+                    newTag = NbtYaml.loadFromFile((String) yamlNbtTag);
+                }
+                catch (IOException e)
+                {
+                    MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml failed loading!");
+                    return;
+                }
+                catch (InvalidConfigurationException e)
+                {
+                    MLog.warning("Invalid Loot tables config! Nanobot file " + ((String) yamlNbtTag) + ".yml is invalid YAML file!");
+                    return;
+                }
+            } else
+            {
+                newTag = NbtYaml.loadFromNodes((Map<?, ?>) yamlNbtTag);
+            }
 
-		List<?> enchants = (List<?>) node.get("enchants");
-		if (enchants != null)
-			parseNodeList(enchants);
+            if (newTag != null)
+            {
+                net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(curItemStack);
+                nmsStack.setTag(newTag);
+                curItemStack = CraftItemStack.asCraftMirror(nmsStack);
+            }
+
+        }
+
+        List<?> enchants = (List<?>) node.get("enchants");
+        if (enchants != null)
+        {
+            try
+            {
+                parseNodeList(enchants);
+            }
+            catch (InvalidNodeConfigException e)
+            {
+                MLog.severe("Invalid loot tables item enchants config! " + e.getMessage());
+            }
+
+        }
 
 
 

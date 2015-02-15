@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 
@@ -23,7 +24,7 @@ public class HydrationHelpCommand extends BaseHydrationCommand {
 
 	public void run(CommandSender sender, String[] args) {		
 		int page = 1;
-		if (args.length > 0 && Util.isInteger(args[0])) page = Integer.parseInt(args[0]);
+		if (args.length > 0 && NumberUtil.isInteger(args[0])) page = Integer.parseInt(args[0]);
 		List<String> komandes = new ArrayList<String>();
 
 		for (Entry<String, BaseHydrationCommand> e : MantleHydrationCommand.commands.entrySet())

@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.java.NumberUtil;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
@@ -31,7 +32,7 @@ public class BuyHuntCommand extends BaseTChaseCommand {
 		
 		if(args.length == 2)
 		{
-			if(Util.isInteger(args[1]))
+			if(NumberUtil.isInteger(args[1]))
 			{
 				amount = Integer.parseInt(args[1]);
 			}
