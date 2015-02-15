@@ -1,6 +1,5 @@
 package us.corenetwork.mantle.treasurehunt;
 
-import android.os.Message;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
