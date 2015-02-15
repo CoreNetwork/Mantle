@@ -16,8 +16,8 @@ import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.inventory.Recipe;
 import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.custom.PerksUtil;
+import us.core_network.cornel.java.ReflectionUtils;
 import us.corenetwork.mantle.MLog;
-import us.corenetwork.mantle.util.ReflectionUtils;
 
 public class BannerRecipeProxy implements IRecipe
 {

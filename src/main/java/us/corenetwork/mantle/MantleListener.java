@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
-import us.corenetwork.mantle.util.SignUtil;
+import us.core_network.cornel.blocks.SignUtil;
 
 public class MantleListener implements Listener {
 
@@ -31,7 +31,7 @@ public class MantleListener implements Listener {
         {
             Sign sign = (Sign) event.getBlock().getState();
 
-            if (SignUtil.doesSignHaveColors(sign))
+            if (SignUtil.isSignFormatted(sign))
             {
                 event.setCancelled(true);
                 return;

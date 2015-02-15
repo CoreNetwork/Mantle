@@ -11,8 +11,8 @@ import net.minecraft.server.v1_8_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_8_R1.PathfinderGoalPanic;
 import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_8_R1.PathfinderGoalTempt;
+import us.core_network.cornel.java.ReflectionUtils;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
-import us.corenetwork.mantle.util.ReflectionUtils;
 
 /**
  * Proxy for PathfinderGoal that will disable it if there is no player nearby

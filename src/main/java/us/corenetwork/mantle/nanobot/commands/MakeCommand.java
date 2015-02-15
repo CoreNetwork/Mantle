@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.MinecraftNames;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballItem;
-import us.corenetwork.mantle.util.MinecraftNames;
 
 public class MakeCommand extends NanobotBaseCommand {
 

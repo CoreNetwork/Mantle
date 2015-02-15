@@ -35,10 +35,10 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.blocks.SignUtil;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
-import us.corenetwork.mantle.util.SignUtil;
 
 
 public class PortalsListener implements Listener {

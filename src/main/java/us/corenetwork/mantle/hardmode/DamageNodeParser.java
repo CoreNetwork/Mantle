@@ -13,10 +13,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import us.core_network.cornel.common.MinecraftNames;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.NodeParser;
-import us.corenetwork.mantle.util.MinecraftNames;
 
 public class DamageNodeParser extends NodeParser {
 	private EntityDamageEvent event;

@@ -76,6 +76,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import us.core_network.cornel.items.ItemStackUtils;
+import us.core_network.cornel.java.ReflectionUtils;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -83,7 +84,6 @@ import us.corenetwork.mantle.hardmode.wither.CustomWither;
 import us.corenetwork.mantle.hardmode.wither.CustomWitherSkull;
 import us.corenetwork.mantle.hardmode.wither.NMSWitherManager;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
-import us.corenetwork.mantle.util.ReflectionUtils;
 
 public class HardmodeListener implements Listener {
 

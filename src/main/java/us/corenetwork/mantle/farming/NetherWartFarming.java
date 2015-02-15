@@ -14,7 +14,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.inventory.ItemStack;
-import us.corenetwork.mantle.util.BlockTraits;
+import us.core_network.cornel.blocks.BlockTraits;
 
 
 public class NetherWartFarming implements Listener {

@@ -9,9 +9,9 @@ import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import us.core_network.cornel.common.MinecraftNames;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
-import us.corenetwork.mantle.util.MinecraftNames;
 
 /**
  * Created by Matej on 28.10.2014.

@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import us.core_network.cornel.nms.VanillaReplacingUtil;
 import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
 import us.corenetwork.mantle.hardmode.CustomPigman;
 import us.corenetwork.mantle.hardmode.CustomSkeleton;
@@ -34,7 +35,6 @@ import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
 import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
-import us.corenetwork.mantle.util.VanillaReplacingUtil;
 
 
 public class MantlePlugin extends JavaPlugin {

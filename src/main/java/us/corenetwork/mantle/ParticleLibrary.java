@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
-import us.corenetwork.mantle.util.ReflectionUtils;
+import us.core_network.cornel.java.ReflectionUtils;
 
 public class ParticleLibrary {
     public static void broadcastParticle(EnumParticle particle, Location location, float offsetX, float offsetY, float offsetZ, float data, int count, int[] dataArray)

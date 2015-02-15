@@ -11,11 +11,11 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.MinecraftNames;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.NodeParser;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
-import us.corenetwork.mantle.util.MinecraftNames;
 
 
 public class LootTableNodeParser extends NodeParser {
