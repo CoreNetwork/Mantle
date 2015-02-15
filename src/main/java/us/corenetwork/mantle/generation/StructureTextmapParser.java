@@ -116,7 +116,7 @@ public class StructureTextmapParser implements MapIterator {
 		int colOneBased = column + 1;
 		int percentage = (rowOneBased * colOneBased) * 100 / (rows * columns);
 		
-		MLog.info("Placing structrue at textmap location " + colOneBased + "x" + rowOneBased + " [" + percentage + "%]...");
+		MLog.info("Text map generation, location " + colOneBased + "x" + rowOneBased + " [" + percentage + "%]...");
 		
 		return true;
 	}

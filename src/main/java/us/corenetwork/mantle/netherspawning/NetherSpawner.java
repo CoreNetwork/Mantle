@@ -27,67 +27,14 @@ import org.bukkit.material.Step;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.hardmode.HardmodeSettings;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
 import us.corenetwork.mantle.slimespawning.SlimeSpawner;
 
 public class NetherSpawner {
 
-	public static void startSpawning(Block block, EntityType type)
-	{
-		spawn(block, type);
-
-		int	maxAdditionalPackMobs = NetherSpawningSettings.MAX_ADDITIONAL_PACK_MOBS.integer();
-		int	minAdditionalPackMobs = NetherSpawningSettings.MIN_ADDITIONAL_PACK_MOBS.integer();
-		int diff = maxAdditionalPackMobs - minAdditionalPackMobs;
-
-		if (diff <= 0)
-			return;
-
-		int additionalMobs = MantlePlugin.random.nextInt(diff) + minAdditionalPackMobs;
-		for (int i = 0; i < additionalMobs; i++)
-		{
-			int xDiff = MantlePlugin.random.nextInt(10) - 5;
-			int zDiff = MantlePlugin.random.nextInt(10) - 5;
-
-			Block newBlock = block.getRelative(xDiff, 0, zDiff);
-			if (!newBlock.isEmpty())
-				continue;
-
-			Block aboveBlock = newBlock.getRelative(BlockFace.UP);
-			if (aboveBlock == null || aboveBlock.getY() < newBlock.getY())
-				continue;
-			if (!(aboveBlock.getType().isTransparent() && aboveBlock.getType() != Material.CARPET))
-				continue;
-
-			Block belowBlock = newBlock.getRelative(BlockFace.DOWN);
-			if (belowBlock == null || belowBlock.getY() > newBlock.getY())
-				continue;
-			if (!canSpawnOnThisBlock(belowBlock))
-				continue;
-
-			spawn(block, type);
-		}		
-	}
-
-    public static void spawn(Block block, EntityType type)
+    public static boolean canSpawnBlaze(Block block)
     {
-        switch (type)
-        {
-            case BLAZE:
-                spawnBlaze(block);
-                break;
-            case SKELETON:
-                spawnWitherSkeleton(block, SpawnReason.NATURAL);
-                break;
-            case MAGMA_CUBE:
-                spawnMagmaCube(block);
-                break;
-
-        }
-    }
-
-	private static void spawnBlaze(Block block)
-	{
         boolean foundFire = false;
 
         // Scan for nearby fire in + pattern
@@ -108,9 +55,10 @@ public class NetherSpawner {
         }
 
         if (!foundFire)
-            return;
+            return false;
 
         //Search for nearby Blazes
+        /*
         int range = 25; //5*5
         for (int x = -1; x <= 1; x++)
         {
@@ -121,30 +69,38 @@ public class NetherSpawner {
                 for (Entity entity : neighbourChunk.getEntities())
                 {
                     if (entity instanceof Blaze && entity.getLocation().distanceSquared(Util.getLocationInBlockCenter(block)) < range)
-                        return;
+                        return false;
                 }
             }
         }
+        */
+        return true;
+    }
 
-		NetherSpawningHelper.spawningMob = true;
+	public static void spawnBlaze(Block block)
+	{
+		NetherSpawningListener.spawningMob = true;
 		block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.BLAZE);
 	}
 
-	public static Skeleton spawnWitherSkeleton(Block block, SpawnReason reason)
-	{
+    public static boolean canSpawnWitherSkeleton(Block block, SpawnReason reason)
+    {
         if (reason == SpawnReason.NATURAL)
         {
             if (block.getY() > NetherSpawningSettings.WITHER_SKELETON_MAX_Y.integer() || block.getY() < NetherSpawningSettings.WITHER_SKELETON_MIN_Y.integer())
-                return null;
-
-            if (MantlePlugin.random.nextDouble() > NetherSpawningSettings.WITHER_SKELETON_SPAWN_CHANCE.doubleNumber())
-                return null;
+                return false;
         }
 
         Block thirdBlock = block.getRelative(BlockFace.UP, 2);
-		if (thirdBlock == null || thirdBlock.getY() < block.getY() || !(thirdBlock.getType().isTransparent() && thirdBlock.getType() != Material.CARPET))
-			return null;
+        if (thirdBlock == null || thirdBlock.getY() < block.getY() || !(thirdBlock.getType().isTransparent() && thirdBlock.getType() != Material.CARPET))
+            return false;
+        return true;
+    }
 
+
+
+	public static Skeleton spawnWitherSkeleton(Block block, SpawnReason reason)
+	{
 		boolean bowSkeleton = MantlePlugin.random.nextDouble() < NetherSpawningSettings.WITHER_SKELETON_RARE_BOW_CHANCE.doubleNumber();
 		
 		World nmsWorld = ((CraftWorld) block.getWorld()).getHandle();
@@ -181,7 +137,7 @@ public class NetherSpawner {
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		
 		if (reason == SpawnReason.NATURAL)
-			NetherSpawningHelper.spawningMob = true;
+			NetherSpawningListener.spawningMob = true;
 		if (!nmsWorld.addEntity(nmsSkeleton, reason))
 			return null;
 
@@ -195,28 +151,32 @@ public class NetherSpawner {
         return skeleton;
 	}
 
-    public static void spawnMagmaCube(Block block)
+    public static boolean canSpawnMagmaCube(Block block, int size)
     {
         if (block.getY() < NetherSpawningSettings.MAGMA_CUBE_MIN_Y.integer())
-            return;
+            return false;
 
         if (block.getY() > NetherSpawningSettings.MAGMA_CUBE_MAX_Y.integer())
-            return;
+            return false;
 
         if (block.getLightLevel() < NetherSpawningSettings.MAGMA_CUBE_MIN_LIGHT.integer())
-            return;
+            return false;
 
         Chunk chunk = block.getChunk();
         if (IgnoredSlimeChunks.isIgnored(chunk.getWorld().getName(), chunk.getX(), chunk.getZ()) || !isMagmaCubeChunk(chunk))
-            return;
+            return false;
 
-        int size = MantlePlugin.random.nextInt(3);
         size = 1 << size;
 
         if (!SlimeSpawner.isThereEnoughSpace(block, size))
-            return;
+            return false;
 
-        NetherSpawningHelper.spawningMob = true;
+        return true;
+    }
+
+    public static void spawnMagmaCube(Block block, int size)
+    {
+        NetherSpawningListener.spawningMob = true;
 
         Location location = Util.getLocationInBlockCenter(block);
         location.setYaw(MantlePlugin.random.nextFloat() * 360);
@@ -224,6 +184,7 @@ public class NetherSpawner {
         MagmaCube magmaCube = block.getWorld().spawn(location, MagmaCube.class);
         if (magmaCube.isValid())
         {
+            size = 1 << size;
             magmaCube.setSize(size);
         }
     }
@@ -241,8 +202,19 @@ public class NetherSpawner {
         return rnd.nextInt(10) == 0;
     }
 
-    public static void spawnGhast(Block block)
+    public static boolean canSpawnGhast(Block checkLightBlock, Block spawnBlock)
     {
+        if(spawnBlock.getY() > NetherSpawningSettings.GHAST_MAX_Y.integer() || spawnBlock.getY() < NetherSpawningSettings.GHAST_MIN_Y.integer())
+        {
+            return false;
+        }
+
+        //check light on the ground block, Hardmode is checking only the block it spawns in.
+        if(checkLightBlock.getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
+        {
+            return false;
+        }
+
         //Check if there is enough space for Ghast to spawn
         for (int x = -2; x <= 2; x++)
         {
@@ -250,14 +222,20 @@ public class NetherSpawner {
             {
                 for (int z = -2; z <= 2; z++)
                 {
-                    Block neighbour = block.getRelative(x, y, z);
+                    Block neighbour = spawnBlock.getRelative(x, y, z);
                     if (!neighbour.isEmpty())
-                        return;
+                        return false;
 
                 }
             }
         }
-        NetherSpawningHelper.spawningMob = true;
+
+        return true;
+    }
+
+    public static void spawnGhast(Block block)
+    {
+        NetherSpawningListener.spawningMob = true;
         block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.GHAST);
     }
 
@@ -290,7 +268,4 @@ public class NetherSpawner {
 		
 		return false;
 	}
-
-
-
 }

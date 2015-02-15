@@ -1,27 +1,19 @@
 package us.corenetwork.mantle.hardmode;
 
-import com.comphenix.protocol.wrappers.BlockPosition;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import net.amoebaman.util.Reflection;
 import net.minecraft.server.v1_8_R1.AttributeInstance;
 import net.minecraft.server.v1_8_R1.AttributeModifiable;
-import net.minecraft.server.v1_8_R1.AttributeModifier;
 import net.minecraft.server.v1_8_R1.Blocks;
-import net.minecraft.server.v1_8_R1.EnchantmentSilkTouch;
 import net.minecraft.server.v1_8_R1.EntityCreature;
 import net.minecraft.server.v1_8_R1.EntityExperienceOrb;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.EntityLiving;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.GenericAttributes;
-import net.minecraft.server.v1_8_R1.IAttribute;
-import net.minecraft.server.v1_8_R1.IBlockData;
 import net.minecraft.server.v1_8_R1.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -30,7 +22,6 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
@@ -88,6 +79,10 @@ import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.hardmode.wither.CustomWither;
+import us.corenetwork.mantle.hardmode.wither.CustomWitherSkull;
+import us.corenetwork.mantle.hardmode.wither.NMSWitherManager;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
@@ -529,6 +524,15 @@ public class HardmodeListener implements Listener {
 			event.setCancelled(true);
 			return;
 		}
+        else if (entity.getType() == EntityType.SQUID)
+        {
+            Material spawnBlockMaterial = event.getLocation().getBlock().getType();
+            if (spawnBlockMaterial == Material.LAVA || spawnBlockMaterial == Material.STATIONARY_LAVA)
+            {
+                event.setCancelled(true);
+                return;
+            }
+        }
 
 		// assign spiders a random potion effect
 		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER)
@@ -727,6 +731,11 @@ public class HardmodeListener implements Listener {
 							Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
 							if (aboveBlock.getType().isOccluding())
 								continue;
+
+                            if(!NetherSpawner.canSpawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM))
+                            {
+                                continue;
+                            }
 
 							Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
 							if (minion == null)

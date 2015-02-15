@@ -5,7 +5,12 @@ import java.util.Random;
 import java.util.logging.Logger;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
+import net.minecraft.server.v1_8_R1.EntityChicken;
+import net.minecraft.server.v1_8_R1.EntityCow;
+import net.minecraft.server.v1_8_R1.EntityPig;
 import net.minecraft.server.v1_8_R1.EntityPigZombie;
+import net.minecraft.server.v1_8_R1.EntityRabbit;
+import net.minecraft.server.v1_8_R1.EntitySheep;
 import net.minecraft.server.v1_8_R1.EntitySkeleton;
 import net.minecraft.server.v1_8_R1.EntityWitch;
 import org.bukkit.Bukkit;
@@ -18,11 +23,17 @@ import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
 import us.corenetwork.mantle.hardmode.CustomPigman;
 import us.corenetwork.mantle.hardmode.CustomSkeleton;
 import us.corenetwork.mantle.hardmode.CustomWitch;
+import us.corenetwork.mantle.hardmode.animals.CustomChicken;
+import us.corenetwork.mantle.hardmode.animals.CustomCow;
+import us.corenetwork.mantle.hardmode.animals.CustomPig;
+import us.corenetwork.mantle.hardmode.animals.CustomRabbit;
+import us.corenetwork.mantle.hardmode.animals.CustomSheep;
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
 import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
+import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.util.VanillaReplacingUtil;
 
 
@@ -80,7 +91,13 @@ public class MantlePlugin extends JavaPlugin {
         VanillaReplacingUtil.replaceMob("Skeleton", 51, EntitySkeleton.class, CustomSkeleton.class);
         VanillaReplacingUtil.replaceMob("Witch", 66, EntityWitch.class, CustomWitch.class);
 
-		if (!setupPermissions())
+        VanillaReplacingUtil.replaceMob("Chicken", 93, EntityChicken.class, CustomChicken.class);
+        VanillaReplacingUtil.replaceMob("Cow", 92, EntityCow.class, CustomCow.class);
+        VanillaReplacingUtil.replaceMob("Pig", 90, EntityPig.class, CustomPig.class);
+        VanillaReplacingUtil.replaceMob("Sheep", 91, EntitySheep.class, CustomSheep.class);
+        VanillaReplacingUtil.replaceMob("Rabbit", 101, EntityRabbit.class, CustomRabbit.class);
+
+        if (!setupPermissions())
 		{
 			getLogger().warning("could not load Vault permissions - did you forget to install Vault?");
 		}

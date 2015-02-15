@@ -8,6 +8,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.hardmode.animals.NearbyPlayerPathfinderGoalProxy;
+import us.corenetwork.mantle.hardmode.wither.NMSWitherManager;
 
 
 public class HardmodeModule extends MantleModule {
@@ -62,7 +64,14 @@ public class HardmodeModule extends MantleModule {
 
 	}
 
-	@Override
+    @Override
+    public void loadConfig()
+    {
+        super.loadConfig();
+        NearbyPlayerPathfinderGoalProxy.maximumRangeToPlayer = HardmodeSettings.ANIMALS_AI_MAXIMUM_RANGE_TO_PLAYER.doubleNumber();
+    }
+
+    @Override
 	protected void unloadModule() {
 	}
 }

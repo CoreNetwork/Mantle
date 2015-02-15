@@ -3,7 +3,6 @@ package us.corenetwork.mantle.netherspawning;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 
@@ -33,17 +32,7 @@ public class NetherSpawningModule extends MantleModule {
 				
 		saveConfig();
 				
-		Bukkit.getServer().getPluginManager().registerEvents(new NetherSpawningHelper(), MantlePlugin.instance);
-
-        if (NetherSpawningSettings.WITHER_SKELETON_SPAWNING_INTERVAL_TICKS.integer() > 0)
-		    Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new NetherSpawningTimer(EntityType.SKELETON), 20, NetherSpawningSettings.WITHER_SKELETON_SPAWNING_INTERVAL_TICKS.integer());
-        if (NetherSpawningSettings.BLAZE_SPAWNING_INTERVAL_TICKS.integer() > 0)
-            Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new NetherSpawningTimer(EntityType.BLAZE), 20, NetherSpawningSettings.BLAZE_SPAWNING_INTERVAL_TICKS.integer());
-		if (NetherSpawningSettings.MAGMA_CUBE_SPAWNING_INTERVAL_TICKS.integer() > 0)
-			Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new NetherSpawningTimer(EntityType.MAGMA_CUBE), 20, NetherSpawningSettings.MAGMA_CUBE_SPAWNING_INTERVAL_TICKS.integer());
-		if (NetherSpawningSettings.GHAST_SPAWNING_INTERVAL_TICKS.integer() > 0)
-			Bukkit.getScheduler().runTaskTimer(MantlePlugin.instance, new GhastSpawningTimer(), 20, NetherSpawningSettings.GHAST_SPAWNING_INTERVAL_TICKS.integer());
-
+		Bukkit.getServer().getPluginManager().registerEvents(new NetherSpawningListener(), MantlePlugin.instance);
 		return true;
 	}
 	@Override
