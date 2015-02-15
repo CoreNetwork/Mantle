@@ -17,6 +17,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.blocks.SchematicBlock;
 import us.corenetwork.mantle.MLog;
 
 public class PortalUtil {
@@ -425,7 +426,7 @@ public class PortalUtil {
 
 	public static void buildPortal(Block startingBlock, int rotation)
 	{
-		SchematicBlock[] rotatedPortal = SchematicBlock.getRotatedSchematic(SchematicBlock.portal, rotation);
+		SchematicBlock[] rotatedPortal = SchematicBlock.getRotatedSchematic(PortalSchematic.portal, rotation);
 		SchematicBlock.placeSchematic(rotatedPortal, startingBlock);
 
 		//Clear out nearby lava
