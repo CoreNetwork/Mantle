@@ -472,7 +472,7 @@ public class PortalsListener implements Listener {
 
 	private static Block getLastBlock(Player player)
 	{
-		List<Block> blocks = player.getLastTwoTargetBlocks(null, 10);
+		List<Block> blocks = player.getLastTwoTargetBlocks((Set<Material>) null, 10);
 		if (blocks.size() == 0)
 			return null;
 		return blocks.get(0);

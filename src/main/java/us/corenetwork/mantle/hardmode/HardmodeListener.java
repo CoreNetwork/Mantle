@@ -82,7 +82,6 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hardmode.wither.CustomWither;
 import us.corenetwork.mantle.hardmode.wither.CustomWitherSkull;
 import us.corenetwork.mantle.hardmode.wither.NMSWitherManager;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
