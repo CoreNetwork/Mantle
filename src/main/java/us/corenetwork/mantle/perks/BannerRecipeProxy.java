@@ -8,8 +8,14 @@ import net.minecraft.server.v1_8_R1.EnumBannerPatternType;
 import net.minecraft.server.v1_8_R1.IRecipe;
 import net.minecraft.server.v1_8_R1.InventoryCrafting;
 import net.minecraft.server.v1_8_R1.ItemStack;
+import net.minecraft.server.v1_8_R1.Items;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R1.NBTTagList;
+import net.minecraft.server.v1_8_R1.NBTTagString;
 import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.inventory.Recipe;
+import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.custom.PerksUtil;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
@@ -40,7 +46,7 @@ public class BannerRecipeProxy implements IRecipe
         //Only perform actions if banner is not already marked as perk item and if banner is special type
         if (!PerksUtil.hasGoldenName(resultBanner) && PerksUtil.isSupposedToBePerkBannerItem(resultBanner.getTag()))
         {
-            PerksUtil.addLoreToBanner(resultBanner);
+            addLoreToBanner(resultBanner);
         }
 
         return resultBanner;
@@ -105,5 +111,27 @@ public class BannerRecipeProxy implements IRecipe
         //Change recipes that contain bricks and vines
         ReflectionUtils.set(EnumBannerPatternType.CURLY_BORDER, "Q", new ItemStack(Blocks.TALLGRASS, 1, 1));
         ReflectionUtils.set(EnumBannerPatternType.BRICKS, "Q", new ItemStack(Blocks.STONEBRICK));
+    }
+
+    /**
+     * Add gold name and lore to banner
+     */
+    public static void addLoreToBanner(net.minecraft.server.v1_8_R1.ItemStack banner)
+    {
+        String customName = PerksUtil.GOLD_START.concat(Items.BANNER.a(banner));
+
+        NBTTagCompound itemTag = banner.getTag();
+
+        NBTTagCompound displayTag = itemTag.getCompound("display");
+        displayTag.setString("Name", customName);
+
+        NBTTagList lore = new NBTTagList();
+        for (String loreLine : PerksSettings.BANNER_LORE.stringList())
+        {
+            lore.add(new NBTTagString(Messages.applyFormattingCodes(loreLine)));
+        }
+
+        displayTag.set("Lore", lore);
+        itemTag.set("display", displayTag);
     }
 }

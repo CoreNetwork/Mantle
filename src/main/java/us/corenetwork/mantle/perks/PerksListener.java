@@ -5,6 +5,7 @@ import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.milkbowl.vault.Vault;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Banner;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
@@ -22,6 +23,7 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import us.core_network.cornel.custom.PerksUtil;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.core.scoreboard.CoreScoreboardManager;
 import us.corenetwork.core.util.ScoreboardUtils;
@@ -146,7 +148,7 @@ public class PerksListener implements Listener
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(item);
             if (PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag()))
             {
-                PerksUtil.addLoreToBanner(nmsStack);
+                BannerRecipeProxy.addLoreToBanner(nmsStack);
             }
         }
     }

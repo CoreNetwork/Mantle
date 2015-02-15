@@ -11,6 +11,7 @@ import net.minecraft.server.v1_8_R1.NBTTagList;
 import net.minecraft.server.v1_8_R1.ShapelessRecipes;
 import net.minecraft.server.v1_8_R1.World;
 import org.bukkit.configuration.InvalidConfigurationException;
+import us.core_network.cornel.custom.PerksUtil;
 import us.core_network.cornel.items.NbtUtils;
 import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MLog;
