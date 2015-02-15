@@ -44,6 +44,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.core_network.cornel.items.NbtUtils;
 import us.corenetwork.core.respawn.ProtectTimer;
@@ -316,7 +317,7 @@ public class RestockableChest {
 			if (!((minTime < maxTime && curTime > minTime && curTime < maxTime) || (minTime > maxTime && (curTime > minTime || curTime < maxTime))))
 			{
 				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.TimeRestrict.Message");
-				Util.Message(message, player);
+                Messages.send(message, player);
 				return true;
 			}
 		}
@@ -326,21 +327,21 @@ public class RestockableChest {
 		{
 			String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.MultiChestTimeout.Message", "Admin of this server is too lazy to enter message!");
 			message = message.replace("<TimeLeft>", Util.printTimeHours(timerLeft));
-			Util.Message(message, player);
+            Messages.send(message, player);
 			
 			return true;
 		}
 		
 		if (player.hasPotionEffect(PotionEffectType.INVISIBILITY))
 		{
-			Util.Message(RChestSettings.MESSAGE_CHEST_INVISIBLE.string(), player);
+            Messages.send(RChestSettings.MESSAGE_CHEST_INVISIBLE.string(), player);
 			return true;
 		}
 		
 		//Is player invincible (Core, respawn module)
 		if (ProtectTimer.protectedPlayers.containsKey(player.getName()))
 		{
-			Util.Message(RChestSettings.MESSAGE_CHEST_INVINCIBLE.string(), player);
+            Messages.send(RChestSettings.MESSAGE_CHEST_INVINCIBLE.string(), player);
 			return true;
 		}
 
@@ -858,7 +859,7 @@ public class RestockableChest {
 			if (anyItemHadAnyChance == false)
 			{
 				String message = RChestsModule.instance.config.getString("LootTables." + lootTable + ".PlayerControl.ChanceDiminishing.ZeroChanceMessage", "Admin of this server is too lazy to enter message!");
-				Util.Message(message, player);
+				Messages.send(message, player);
 			}
 		}
 		inventory.clear();

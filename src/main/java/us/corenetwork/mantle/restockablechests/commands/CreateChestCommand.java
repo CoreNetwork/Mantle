@@ -4,6 +4,7 @@ import java.util.HashMap;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.restockablechests.RChestSettings;
@@ -26,13 +27,13 @@ public class CreateChestCommand extends BaseMantleCommand {
 		
 		if (args.length < 3 || !Util.isInteger(args[1]) || !Util.isInteger(args[2]))
 		{
-			Util.Message("/flatcore createchest [Looting Table] [Restock interval in hours] [Per-player chests - 1/0]", sender);
+            Messages.send("/flatcore createchest [Looting Table] [Restock interval in hours] [Per-player chests - 1/0]", sender);
 			return;
 		}
 		
 		if (RChestsModule.instance.config.get("LootTables." + args[0]) == null)
 		{
-			Util.Message(RChestSettings.MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST.string(), sender);
+            Messages.send(RChestSettings.MESSAGE_LOOTING_TABLE_DOES_NOT_EXIST.string(), sender);
 			return;
 		}
 		
@@ -42,9 +43,8 @@ public class CreateChestCommand extends BaseMantleCommand {
 		playerData.perPlayer = Integer.parseInt(args[2]) != 0;
 		
 		selectionPlayers.put((Player) sender, playerData);
-		
-		Util.Message(RChestSettings.MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM.string(), sender);
 
+        Messages.send(RChestSettings.MESSAGE_RIGHT_CLICK_CHEST_WITH_ARM.string(), sender);
 	}
 	
 	public static boolean playerHitChestArm(Player player, Block chest)
@@ -58,14 +58,14 @@ public class CreateChestCommand extends BaseMantleCommand {
 		RestockableChest rChest = RestockableChest.getChest(chest);
 		if (rChest != null)
 		{
-			Util.Message(RChestSettings.MESSAGE_CHEST_EXISTS.string(), player);
+            Messages.send(RChestSettings.MESSAGE_CHEST_EXISTS.string(), player);
 			return true;
 		}
 		
 		RestockableChest.createChest(chest, data.lootingTable,  data.interval, data.perPlayer, null);
-		
-		
-		Util.Message(RChestSettings.MESSAGE_CHEST_CREATED.string(), player);
+
+
+        Messages.send(RChestSettings.MESSAGE_CHEST_CREATED.string(), player);
 		return true;
 	}
 

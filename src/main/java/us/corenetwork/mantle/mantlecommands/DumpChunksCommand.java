@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
@@ -30,22 +31,22 @@ public class DumpChunksCommand extends BaseMantleCommand {
 	public void run(final CommandSender sender, String[] args) {
         if (args.length < 1)
         {
-            Util.Message("Usage: /mantle dumpchunks [world]", sender);
+            Messages.send("Usage: /mantle dumpchunks [world]", sender);
             return;
         }
 
         CraftWorld world = (CraftWorld) Bukkit.getWorld(args[0]);
         if (world == null)
         {
-            Util.Message("Invalid world!", sender);
+            Messages.send("Invalid world!", sender);
             return;
         }
 
-		Util.Message("Dumping chunk debug data...", sender);
+        Messages.send("Dumping chunk debug data...", sender);
 
         dumpChunks(world);
 
-		Util.Message("Chunks dumped.", sender);
+        Messages.send("Chunks dumped.", sender);
 	}
 
     public static void dumpChunks(CraftWorld world)

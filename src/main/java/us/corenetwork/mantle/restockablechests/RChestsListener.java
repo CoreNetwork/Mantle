@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
@@ -71,7 +72,7 @@ public class RChestsListener implements Listener {
 				{
 					if (isVillageClaimed(chest.getStructureID()))
 					{
-						Util.Message(RChestSettings.MESSAGE_OPENING_CHEST_IN_CLAIMED_VILLAGE.string(), player);
+                        Messages.send(RChestSettings.MESSAGE_OPENING_CHEST_IN_CLAIMED_VILLAGE.string(), player);
 						return;
 					}
 					else
@@ -114,7 +115,7 @@ public class RChestsListener implements Listener {
 				if(isReal)
 				{
 					event.setCancelled(true);
-					Util.Message(RChestSettings.MESSAGE_CHEST_DESTROYED.string(), event.getPlayer());
+                    Messages.send(RChestSettings.MESSAGE_CHEST_DESTROYED.string(), event.getPlayer());
 					return;
 				}
 			}
@@ -260,7 +261,7 @@ public class RChestsListener implements Listener {
 		}
 		else
 		{
-			Util.Message(RChestSettings.MESSAGE_COMPASS_VILLAGE_REGENRATED_WHILE_GONE.string(), player);
+            Messages.send(RChestSettings.MESSAGE_COMPASS_VILLAGE_REGENRATED_WHILE_GONE.string(), player);
 			try
 			{
 				PreparedStatement statement = IO.getConnection().prepareStatement("UPDATE playerTotal SET CompassCategory = ?, CompassChestID = 0 WHERE PlayerUUID = ?");

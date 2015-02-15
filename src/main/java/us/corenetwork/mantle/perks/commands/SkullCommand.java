@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.core_network.cornel.items.NbtUtils;
 import us.core_network.cornel.items.NbtYaml;
@@ -35,7 +36,7 @@ public class SkullCommand extends BasePerksCommand {
     {
         if(args.length < 1)
         {
-            Util.Message("Usage: /skull <PlayerName>", sender);
+            Messages.send("Usage: /skull <PlayerName>", sender);
             return;
         }
 
@@ -45,7 +46,7 @@ public class SkullCommand extends BasePerksCommand {
 
         if(itemInHand.getAmount() != 1 || !(itemInHand.getDurability() == 1 || itemInHand.getDurability() == 3))
         {
-            Util.Message(PerksSettings.MESSAGE_SKULL_ONLY_ONE_IN_HAND.string(), sender);
+            Messages.send(PerksSettings.MESSAGE_SKULL_ONLY_ONE_IN_HAND.string(), sender);
             return;
         }
         CraftItemStack si = (CraftItemStack) itemInHand;

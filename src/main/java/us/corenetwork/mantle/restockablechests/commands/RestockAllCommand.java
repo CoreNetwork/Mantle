@@ -3,6 +3,7 @@ package us.corenetwork.mantle.restockablechests.commands;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
@@ -31,7 +32,7 @@ public class RestockAllCommand extends BaseMantleCommand {
 		{
 			e.printStackTrace();
 		}
-		
-		Util.Message(RChestSettings.MESSAGE_CHESTS_RESTOCKED.string(), sender);
+
+        Messages.send(RChestSettings.MESSAGE_CHESTS_RESTOCKED.string(), sender);
 	}	
 }

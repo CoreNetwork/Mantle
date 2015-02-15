@@ -30,6 +30,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
@@ -303,7 +304,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         for (int i = 0; i < inventory.getSize(); i++)
         {
             ItemStack item = inventory.getItem(i);
-            if (item != null && Util.isItemTypeSame(fuel, item))
+            if (item != null && ItemStackUtils.areItemsEqual(ItemStackUtils.getInternalNMSStack(fuel), ItemStackUtils.getInternalNMSStack(item)))
             {
                 if (amountToRemove >= item.getAmount())
                 {
@@ -363,7 +364,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
 
         for (ItemStack item : inventory.getContents())
         {
-            if (item != null && Util.isItemTypeSame(fuel, item))
+            if (item != null && ItemStackUtils.areItemsEqual(ItemStackUtils.getInternalNMSStack(fuel), ItemStackUtils.getInternalNMSStack(item)))
             {
                 foundAmount += item.getAmount();
                 if (foundAmount >= neededAmount)

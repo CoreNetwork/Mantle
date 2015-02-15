@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
@@ -41,7 +42,7 @@ public class TestRespawnCommand extends BaseMantleCommand {
 
 			ResultSet set = statement.executeQuery();
 			if (!set.next())
-				Util.Message(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
+                Messages.send(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
 			else
 			{
 				final int villageX = set.getInt("CornerX");
@@ -65,7 +66,7 @@ public class TestRespawnCommand extends BaseMantleCommand {
 				
 				message = message.replace("<ID>", Integer.toString(id));
 				message = message.replace("<Distance>", Integer.toString(distance));
-				Util.Message(message, sender);
+                Messages.send(message, sender);
 
 
 			}

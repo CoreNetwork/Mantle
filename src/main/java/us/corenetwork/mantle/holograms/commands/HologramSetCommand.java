@@ -3,6 +3,7 @@ package us.corenetwork.mantle.holograms.commands;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.holograms.Hologram;
 import us.corenetwork.mantle.holograms.HologramStorage;
@@ -58,7 +59,7 @@ public class HologramSetCommand extends BaseHologramCommand
         {
             if (!(sender instanceof Player))
             {
-                Util.Message("Sorry, but you need to execute this command as player.", sender);
+                Messages.send("Sorry, but you need to execute this command as player.", sender);
                 return;
             }
 
@@ -69,13 +70,13 @@ public class HologramSetCommand extends BaseHologramCommand
             HologramStorage.add(hologram);
             hologram.updateEntities();
 
-            Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_ADDED.string(), sender);
+            Messages.send(HologramsSettings.MESSAGE_HOLOGRAM_ADDED.string(), sender);
         }
         else
         {
             hologram.update(text);
             hologram.updateEntities();
-            Util.Message(HologramsSettings.MESSAGE_HOLOGRAM_UPDATED.string(), sender);
+            Messages.send(HologramsSettings.MESSAGE_HOLOGRAM_UPDATED.string(), sender);
         }
 
         HologramStorage.save();

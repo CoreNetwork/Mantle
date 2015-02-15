@@ -23,8 +23,10 @@ import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.custom.PerksUtil;
 import us.core_network.cornel.items.ItemStackUtils;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.core.scoreboard.CoreScoreboardManager;
 import us.corenetwork.core.util.ScoreboardUtils;
 import us.corenetwork.mantle.MantlePlugin;
@@ -36,7 +38,7 @@ public class PerksListener implements Listener
     public void onSignChange(SignChangeEvent event)
     {
         //Color signs - Only people with signs perk can place color signs.
-        if (Util.hasPermission(event.getPlayer(), "mantle.perks.advsigns"))
+        if (PlayerUtil.hasPermission(event.getPlayer(), "mantle.perks.advsigns"))
         {
             Claim claim = GriefPrevention.instance.dataStore.getClaimAt(event.getBlock().getLocation(), true, null);
             if (claim == null || !event.getPlayer().getUniqueId().equals(claim.ownerID))
@@ -44,7 +46,7 @@ public class PerksListener implements Listener
 
             for (int i = 0; i < event.getLines().length; i++)
             {
-                event.setLine(i, Util.applyColors(event.getLine(i)));
+                event.setLine(i, Messages.applyFormattingCodes(event.getLine(i)));
             }
         }
     }
@@ -159,11 +161,11 @@ public class PerksListener implements Listener
         //Colored nameplates
 
         Player player = event.getPlayer();
-        if (!Util.hasPermission(event.getPlayer(), "mantle.perks.nameplate"))
+        if (!PlayerUtil.hasPermission(event.getPlayer(), "mantle.perks.nameplate"))
             return;
 
         String groupName = MantlePlugin.chat.getPrimaryGroup(player);
-        String prefix = Util.applyColors(MantlePlugin.chat.getGroupPrefix((String) null, groupName));
+        String prefix = Messages.applyFormattingCodes(MantlePlugin.chat.getGroupPrefix((String) null, groupName));
 
         if (groupName.length() > 16) //According to some arbitrary limit, team names can't be longer than 16 characters.
             groupName = groupName.substring(0, 16);
@@ -197,16 +199,16 @@ public class PerksListener implements Listener
 
     private static boolean canPlaceArmorStand(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
     {
-        if (!Util.hasPermission(player, "mantle.perks.advarmorstand"))
+        if (!PlayerUtil.hasPermission(player, "mantle.perks.advarmorstand"))
         {
-            Util.Message(PerksSettings.MESSAGE_ARMOR_STAND_WRONG_PERMISSION.string(), player);
+            Messages.send(PerksSettings.MESSAGE_ARMOR_STAND_WRONG_PERMISSION.string(), player);
             return false;
         }
 
         Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), true, null);
         if (claim == null || !player.getUniqueId().equals(claim.ownerID))
         {
-            Util.Message(PerksSettings.MESSAGE_ARMOR_STAND_WRONG_CLAIM.string(), player);
+            Messages.send(PerksSettings.MESSAGE_ARMOR_STAND_WRONG_CLAIM.string(), player);
             return false;
 
         }
@@ -216,16 +218,16 @@ public class PerksListener implements Listener
 
     private static boolean canPlaceBanner(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
     {
-        if (!Util.hasPermission(player, "mantle.perks.advbanners"))
+        if (!PlayerUtil.hasPermission(player, "mantle.perks.advbanners"))
         {
-            Util.Message(PerksSettings.MESSAGE_BANNER_WRONG_PERMISSION.string(), player);
+            Messages.send(PerksSettings.MESSAGE_BANNER_WRONG_PERMISSION.string(), player);
             return false;
         }
 
         Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), true, null);
         if (claim == null || !player.getUniqueId().equals(claim.ownerID))
         {
-            Util.Message(PerksSettings.MESSAGE_BANNER_WRONG_CLAIM.string(), player);
+            Messages.send(PerksSettings.MESSAGE_BANNER_WRONG_CLAIM.string(), player);
             return false;
 
         }
@@ -235,16 +237,16 @@ public class PerksListener implements Listener
 
     private static boolean canPlaceSkull(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
     {
-        if (!Util.hasPermission(player, "mantle.perks.advskulls"))
+        if (!PlayerUtil.hasPermission(player, "mantle.perks.advskulls"))
         {
-            Util.Message(PerksSettings.MESSAGE_SKULL_WRONG_PERMISSION.string(), player);
+            Messages.send(PerksSettings.MESSAGE_SKULL_WRONG_PERMISSION.string(), player);
             return false;
         }
 
         Claim claim = GriefPrevention.instance.dataStore.getClaimAt(block.getLocation(), true, null);
         if (claim == null || !player.getUniqueId().equals(claim.ownerID))
         {
-            Util.Message(PerksSettings.MESSAGE_SKULL_WRONG_CLAIM.string(), player);
+            Messages.send(PerksSettings.MESSAGE_SKULL_WRONG_CLAIM.string(), player);
             return false;
         }
 

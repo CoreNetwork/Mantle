@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Slime;
+import us.core_network.cornel.blocks.BlockUtil;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
@@ -33,7 +34,7 @@ public class SlimeSpawner {
 		
 		SlimeSpawningHelper.spawningMob = true;
 		
-		Location location = Util.getLocationInBlockCenter(block);
+		Location location = BlockUtil.getLocationInBlockCenter(block);
 		location.setYaw(MantlePlugin.random.nextFloat() * 360);
 		
 		Slime slime = block.getWorld().spawn(location, Slime.class);

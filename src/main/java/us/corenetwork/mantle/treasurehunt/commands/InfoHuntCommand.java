@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.treasurehunt.commands;
 
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
@@ -23,15 +24,15 @@ public class InfoHuntCommand  extends BaseTChaseCommand {
     {
         if(THuntModule.manager.isRunning())
         {
-            Util.Message(THuntSettings.MESSAGE_STATUS_HUNT_RUNNING.string().replace("<Wave>", THuntModule.manager.getActiveWave()+""), sender);
+            Messages.send(THuntSettings.MESSAGE_STATUS_HUNT_RUNNING.string().replace("<Wave>", THuntModule.manager.getActiveWave() + ""), sender);
         }
         else if(THuntModule.manager.isQueued())
         {
-            Util.Message(THuntSettings.MESSAGE_STATUS_TIME_LEFT_TO_START.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt()+""), sender);
+            Messages.send(THuntSettings.MESSAGE_STATUS_TIME_LEFT_TO_START.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), sender);
         }
         else
         {
-            Util.Message(THuntSettings.MESSAGE_STATUS_NO_HUNT_SCHEDULED.string(), sender);
+            Messages.send(THuntSettings.MESSAGE_STATUS_NO_HUNT_SCHEDULED.string(), sender);
         }
     }
 }

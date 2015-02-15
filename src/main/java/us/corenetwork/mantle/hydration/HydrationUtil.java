@@ -4,6 +4,7 @@ import java.util.Map.Entry;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.core.scoreboard.CoreScoreboardManager;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
@@ -100,7 +101,7 @@ public class HydrationUtil {
 			if (data.hydrationLevel <= e.getKey() && !data.deliveredMessages.contains(e.getKey()))
 			{
 				data.deliveredMessages.add(e.getKey());
-				Util.Message(e.getValue(), player);
+                Messages.send(e.getValue(), player);
 			}
 		}
 	}

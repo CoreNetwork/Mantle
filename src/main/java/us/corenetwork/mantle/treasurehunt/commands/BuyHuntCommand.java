@@ -3,6 +3,7 @@ package us.corenetwork.mantle.treasurehunt.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
@@ -22,7 +23,7 @@ public class BuyHuntCommand extends BaseTChaseCommand {
 	{
 		if(args.length != 1 && args.length != 2)
 		{
-			Util.Message("Usage: /chase buy <playerName> [<amount>]", sender);
+            Messages.send("Usage: /chase buy <playerName> [<amount>]", sender);
 			return;
 		}
 		
@@ -36,7 +37,7 @@ public class BuyHuntCommand extends BaseTChaseCommand {
 			}
 			else
 			{
-				Util.Message("[<amount>] must be an integer.", sender);
+                Messages.send("[<amount>] must be an integer.", sender);
 				return;
 			}
 		}
@@ -47,7 +48,7 @@ public class BuyHuntCommand extends BaseTChaseCommand {
 		THuntModule.passManager.addPass(offlinePlayer, amount);
 		if(offlinePlayer.isOnline())
 		{
-			Util.Message(THuntSettings.MESSAGE_BRC_HUNT_BOUGHT.string(), offlinePlayer.getPlayer());
+            Messages.send(THuntSettings.MESSAGE_BRC_HUNT_BOUGHT.string(), offlinePlayer.getPlayer());
 		}
 	}
 

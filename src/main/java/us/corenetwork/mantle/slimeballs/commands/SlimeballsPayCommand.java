@@ -3,6 +3,8 @@ package us.corenetwork.mantle.slimeballs.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
@@ -25,7 +27,7 @@ public class SlimeballsPayCommand extends BaseSlimeballsCommand
 
 		if (slimeballs < 1)
 		{
-			Util.Message(SlimeballsSettings.MESSAGE_SLIMEBALLS_RELEASE_EMPTY_ACCOUNT.string(), player);
+            Messages.send(SlimeballsSettings.MESSAGE_SLIMEBALLS_RELEASE_EMPTY_ACCOUNT.string(), player);
 			return;
 		}
 
@@ -36,8 +38,8 @@ public class SlimeballsPayCommand extends BaseSlimeballsCommand
 		modMessage = modMessage.replace("<Amount>", Integer.toString(slimeballs));
 		for (Player mod : Bukkit.getOnlinePlayers())
 		{
-			if (Util.hasPermission(mod, "mantle.slimeballs.command.pay.notification"))
-				Util.Message(modMessage, mod);
+			if (PlayerUtil.hasPermission(mod, "mantle.slimeballs.command.pay.notification"))
+                Messages.send(modMessage, mod);
 		}
 
 		SlimeballsStorage.setSlimeballs(player.getUniqueId(), slimeballs);

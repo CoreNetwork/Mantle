@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.treasurehunt;
 
+import android.os.Message;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -20,6 +21,7 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.restockablechests.LootTableNodeParser;
@@ -143,7 +145,7 @@ public class THuntManager {
 		{
 			if(!silent)
 			{
-				Util.Message(THuntSettings.MESSAGE_JOIN_LEAVE.string(), player);
+                Messages.send(THuntSettings.MESSAGE_JOIN_LEAVE.string(), player);
 			}
 			huntParticipants.remove(player.getUniqueId());
 		}
@@ -176,7 +178,7 @@ public class THuntManager {
 		Player player = MantlePlugin.instance.getServer().getPlayer(playerName);
 		if(player != null)
 		{
-			Util.Message(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
+            Messages.send(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
 		}
 		
 		ArrayList<String> broadcastMessages = (ArrayList<String>) THuntModule.instance.config.getStringList(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE_BROADCAST.string);
@@ -189,7 +191,7 @@ public class THuntManager {
 			List<Player> sendToPlayers = onlinePlayersToMessage();
 			if(player != null)
 				sendToPlayers.remove(player);
-			Util.Multicast(broadcastMessage, sendToPlayers);
+			Messages.multicast(broadcastMessage, sendToPlayers);
 		}
 	}
 		
@@ -251,12 +253,12 @@ public class THuntManager {
 		save();
 		runTheHunt();
 		
-		Util.Multicast(THuntSettings.MESSAGE_PROGRESS_START_HUNT.string(), onlinePlayersToMessage());
+		Messages.multicast(THuntSettings.MESSAGE_PROGRESS_START_HUNT.string(), onlinePlayersToMessage());
 	}
 	
 	public void endHunt()
 	{
-		Util.Multicast(THuntSettings.MESSAGE_PROGRESS_END_HUNT.string().replace("<Player>", activeHunt), onlinePlayersToMessage());
+		Messages.multicast(THuntSettings.MESSAGE_PROGRESS_END_HUNT.string().replace("<Player>", activeHunt), onlinePlayersToMessage());
 		clearChests();
 		huntParticipants.clear();
 		huntRunning = false;
@@ -270,7 +272,7 @@ public class THuntManager {
 				@Override
 				public void run()
 				{
-					Util.Broadcast(THuntSettings.MESSAGE_PROGRESS_NEXT_HUNT_SCHEDULED.string().replace("<Time>", getTimeToStartNextHunt()+""));
+					Messages.broadcast(THuntSettings.MESSAGE_PROGRESS_NEXT_HUNT_SCHEDULED.string().replace("<Time>", getTimeToStartNextHunt() + ""));
 				}
 			}, 200);
 		}
@@ -380,7 +382,7 @@ public class THuntManager {
 						int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
 						message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "")
 								.replace("<TimeLeft>", (totalTime - notificationTime) + "");
-						Util.Message(message, player);
+                        Messages.send(message, player);
 					}
 				}
 			}, time * 20);
@@ -433,7 +435,7 @@ public class THuntManager {
 				int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
 				message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "")
 						.replace("<Direction>", direction);
-				Util.Message(message, player);
+                Messages.send(message, player);
 			}
 		}
 	}
@@ -478,7 +480,7 @@ public class THuntManager {
 		
 		if(alreadyClicked.contains(player.getUniqueId()))
 		{
-			Util.Message(THuntSettings.MESSAGE_ONE_PER_WAVE.string(), player);
+            Messages.send(THuntSettings.MESSAGE_ONE_PER_WAVE.string(), player);
 			return;
 		}
 		
@@ -489,7 +491,7 @@ public class THuntManager {
 		}
 		else
 		{
-			Util.Message(THuntSettings.MESSAGE_RIGHT_CLICK.string(), player);
+            Messages.send(THuntSettings.MESSAGE_RIGHT_CLICK.string(), player);
 		}
 	}
 	
@@ -515,11 +517,11 @@ public class THuntManager {
 		int waveCount = THuntModule.manager.getWaveCount();
 		if(activeWave != waveCount)
 		{
-			Util.Message(THuntSettings.MESSAGE_WAVE_ACTIVE.string().replace("<Wave>", THuntModule.manager.getActiveWave() +""), player);
+            Messages.send(THuntSettings.MESSAGE_WAVE_ACTIVE.string().replace("<Wave>", THuntModule.manager.getActiveWave() + ""), player);
 		}
 		else
 		{
-			Util.Message(THuntSettings.MESSAGE_WAVE_ACTIVE_LAST.string().replace("<Wave>", THuntModule.manager.getActiveWave() +""), player);
+            Messages.send(THuntSettings.MESSAGE_WAVE_ACTIVE_LAST.string().replace("<Wave>", THuntModule.manager.getActiveWave() + ""), player);
 		}
 	}
 }

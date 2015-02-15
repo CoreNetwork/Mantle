@@ -75,6 +75,8 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import us.core_network.cornel.blocks.BlockUtil;
+import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.core_network.cornel.java.ReflectionUtils;
 import us.corenetwork.mantle.GriefPreventionHandler;
@@ -320,7 +322,7 @@ public class HardmodeListener implements Listener {
 		{
 			event.setCancelled(true);
 			event.getPlayer().updateInventory();
-			Util.Message(HardmodeSettings.MESSAGE_NO_MILKING_NETHER.string(), event.getPlayer());
+            Messages.send(HardmodeSettings.MESSAGE_NO_MILKING_NETHER.string(), event.getPlayer());
 			return;
 		}
 	}
@@ -367,7 +369,7 @@ public class HardmodeListener implements Listener {
 			}
 
 			int amountDropped = min + MantlePlugin.random.nextInt(max - min + 1);
-			block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), new ItemStack(Material.QUARTZ, amountDropped));
+			block.getWorld().dropItemNaturally(BlockUtil.getLocationInBlockCenter(block), new ItemStack(Material.QUARTZ, amountDropped));
 
 			//Drop experience
 			int expToDrop = 2 + MantlePlugin.random.nextInt(4); //Drop 2-5 EXP
@@ -376,7 +378,7 @@ public class HardmodeListener implements Listener {
 				int value = EntityExperienceOrb.getOrbValue(expToDrop); //Which experience orb size should I spawn
 				expToDrop -= value;
 
-				ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.EXPERIENCE_ORB);
+				ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawnEntity(BlockUtil.getLocationInBlockCenter(block), EntityType.EXPERIENCE_ORB);
 				orb.setExperience(value);
 			}
 
@@ -429,7 +431,7 @@ public class HardmodeListener implements Listener {
 						&& belowCenter.getRelative(oneSkullDirection.getOppositeFace()).getType() == Material.SOUL_SAND
 						&& belowCenter.getRelative(BlockFace.DOWN).getType() == Material.SOUL_SAND)
 				{
-					Util.Message(HardmodeSettings.MESSAGE_NO_WITHER_SURFACE.string(), event.getPlayer());
+                    Messages.send(HardmodeSettings.MESSAGE_NO_WITHER_SURFACE.string(), event.getPlayer());
 					event.setCancelled(true);
 					return;
 				}

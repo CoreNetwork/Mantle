@@ -6,6 +6,7 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import us.core_network.cornel.blocks.BlockUtil;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 
@@ -32,7 +33,7 @@ public class SlimeSpawningTimer implements Runnable {
 
             Block block = c.getBlock(randomX, randomY, randomZ);
 
-            if (!Util.isInWorldBorderBounds(block))
+            if (!BlockUtil.isInWorldBorderBounds(block))
                 continue;
 
             SlimeSpawner.spawn(block);

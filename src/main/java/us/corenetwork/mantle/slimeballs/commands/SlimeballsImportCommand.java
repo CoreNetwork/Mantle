@@ -12,6 +12,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -33,11 +34,11 @@ public class SlimeballsImportCommand extends BaseSlimeballsCommand
 		File db = new File(MantlePlugin.instance.getDataFolder(), "persistance.db");
 		if (!db.exists())
 		{
-			Util.Message("&cpersistance.db does not exists!", sender);
+            Messages.send("&cpersistance.db does not exists!", sender);
 			return;
 		}
 
-		Util.Message("&6Importing... Please wait! (Server might freeze for several seconds)", sender);
+        Messages.send("&6Importing... Please wait! (Server might freeze for several seconds)", sender);
 
 		HashMap<UUID, Integer> allPlayers = new HashMap<UUID, Integer>();
 		try {
@@ -97,7 +98,7 @@ public class SlimeballsImportCommand extends BaseSlimeballsCommand
 
 
 
-		Util.Message("&aData imported successfully! Check console for any failures.", sender);
+        Messages.send("&aData imported successfully! Check console for any failures.", sender);
 	}
 	
 

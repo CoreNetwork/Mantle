@@ -2,6 +2,7 @@ package us.corenetwork.mantle.treasurehunt.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
@@ -46,13 +47,13 @@ public class HelpHuntCommand extends BaseTChaseCommand {
         if (page > maxpage)
             page = maxpage;
 
-        Util.Message("List of all commands:", sender);
-        Util.Message("&8Page " + String.valueOf(page) + " of " + String.valueOf(maxpage), sender);
+        Messages.send("List of all commands:", sender);
+        Messages.send("&8Page " + String.valueOf(page) + " of " + String.valueOf(maxpage), sender);
 
         for (int i = (page - 1) * 15; i < page * 15; i++)
         {
             if (komande.length < i + 1 || i < 0) break;
-            Util.Message(komande[i], sender);
+            Messages.send(komande[i], sender);
         }
     }
 }

@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 
 public class THuntListener implements Listener {
@@ -59,22 +60,22 @@ public class THuntListener implements Listener {
 			{
 				if(THuntModule.manager.isTakingPart(player))
 				{
-					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING_ALREADY_IN.string(), player);	
+                    Messages.send(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING_ALREADY_IN.string(), player);
 				}
 				else
 				{
-					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
+                    Messages.send(THuntSettings.MESSAGE_ENTER_WHILE_RUNNING.string(), player);
 				}
 			}
 			else if(THuntModule.manager.isQueued())
 			{
 				if(THuntModule.manager.isTakingPart(player))
 				{
-					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
+                    Messages.send(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED_ALREADY_IN.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
 				}
 				else
 				{
-					Util.Message(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
+                    Messages.send(THuntSettings.MESSAGE_ENTER_WHILE_QUEUED.string().replace("<Time>", THuntModule.manager.getTimeToStartNextHunt() + ""), player);
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.holograms.Hologram;
 import us.corenetwork.mantle.holograms.HologramStorage;
@@ -28,7 +29,7 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
         Hologram hologram = HologramStorage.namedHolograms.get(args[0]);
         if (hologram == null)
         {
-            Util.Message(HologramsSettings.MESSAGE_NO_HOLOGRAM_WITH_THAT_NAME.string(), sender);
+            Messages.send(HologramsSettings.MESSAGE_NO_HOLOGRAM_WITH_THAT_NAME.string(), sender);
             return;
         }
 

@@ -2,6 +2,8 @@ package us.corenetwork.mantle.mantlecommands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
@@ -33,12 +35,12 @@ public abstract class BaseMantleCommand {
 
 		if (!(sender instanceof Player) && needPlayer) 
 		{
-			Util.Message("Sorry, but you need to execute this command as player.", sender);
+            Messages.send("Sorry, but you need to execute this command as player.", sender);
 			return true;
 		}
-		if (sender instanceof Player && !Util.hasPermission(sender,"mantle.command." + permission)) 
+		if (sender instanceof Player && !PlayerUtil.hasPermission(sender, "mantle.command." + permission))
 		{
-			Util.Message(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
+            Messages.send(Settings.getString(Setting.MESSAGE_NO_PERMISSION), sender);
 			return true;
 		}
 

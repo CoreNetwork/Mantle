@@ -4,6 +4,8 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
@@ -24,7 +26,7 @@ public class SlimeballsCheckCommand extends BaseSlimeballsCommand
 		UUID uuid;
 		boolean you = true;
 
-		if (args.length > 0 && Util.hasPermission(sender, "slimeballs.commands.check.others"))
+		if (args.length > 0 && PlayerUtil.hasPermission(sender, "slimeballs.commands.check.others"))
 		{
 			you = false;
 
@@ -33,7 +35,7 @@ public class SlimeballsCheckCommand extends BaseSlimeballsCommand
 			{
 				String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_PLAYER_NOT_EXISTS.string();
 				message = message.replace("<Player>", args[0]);
-				Util.Message(message, sender);
+                Messages.send(message, sender);
 
 				return;
 			}
@@ -41,7 +43,7 @@ public class SlimeballsCheckCommand extends BaseSlimeballsCommand
 		else if (!(sender instanceof  Player))
 		{
 			//Just display dummy message in case of console trying to request player and not supplying arguments
-			Util.Message(SlimeballsSettings.MESSAGE_SLIMEBALLS_PLAYER_NOT_EXISTS.string(), sender);
+            Messages.send(SlimeballsSettings.MESSAGE_SLIMEBALLS_PLAYER_NOT_EXISTS.string(), sender);
 			return;
 		}
 		else
@@ -75,7 +77,7 @@ public class SlimeballsCheckCommand extends BaseSlimeballsCommand
 			message = message.replace("<Amount>", Integer.toString(slimeballs));
 		}
 
-		Util.Message(message, sender);
+        Messages.send(message, sender);
 	}
 	
 

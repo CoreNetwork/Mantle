@@ -2,6 +2,7 @@ package us.corenetwork.mantle.regeneration;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
@@ -20,7 +21,7 @@ public class RespawnCommand extends BaseMantleCommand {
 		StructureData nearbyVillage = RegenerationUtil.pickNearestStructure(((Player) sender).getLocation());
 		if (nearbyVillage == null)
 		{
-			Util.Message(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
+            Messages.send(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
 			return;
 		}
 
@@ -28,6 +29,6 @@ public class RespawnCommand extends BaseMantleCommand {
 
 		String message = RegenerationSettings.MESSAGE_RESPAWNED.string();
 		message = message.replace("<Distance>", Integer.toString(nearbyVillage.distance));
-		Util.Message(message, sender);
+        Messages.send(message, sender);
 	}
 }

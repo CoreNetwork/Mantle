@@ -21,74 +21,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 
 public class Util
 {
-
-    public static void Message(String message, CommandSender sender)
-    {
-        message = applyColors(message);
-
-        final String newLine = "\\[NEWLINE\\]";
-        String[] lines = message.split(newLine);
-
-        for (int i = 0; i < lines.length; i++)
-        {
-            lines[i] = lines[i].trim();
-
-            if (i == 0)
-                continue;
-
-            int lastColorChar = lines[i - 1].lastIndexOf(ChatColor.COLOR_CHAR);
-            if (lastColorChar == -1 || lastColorChar >= lines[i - 1].length() - 1)
-                continue;
-
-            char lastColor = lines[i - 1].charAt(lastColorChar + 1);
-            lines[i] = Character.toString(ChatColor.COLOR_CHAR).concat(Character.toString(lastColor)).concat(lines[i]);
-        }
-
-        for (int i = 0; i < lines.length; i++)
-            sender.sendMessage(lines[i]);
-    }
-
-    public static String applyColors(String message)
-    {
-        return message.replaceAll("\\&([0-9abcdefklmnor])", ChatColor.COLOR_CHAR + "$1");
-    }
-
-    public static void Broadcast(String message)
-    {
-        for (Player p : Bukkit.getOnlinePlayers())
-        {
-            Util.Message(message, p);
-        }
-
-    }
-
-    public static void Broadcast(String message, String exclusion)
-    {
-        for (Player p : Bukkit.getOnlinePlayers())
-        {
-            if (!p.getName().equals(exclusion))
-                Util.Message(message, p);
-        }
-
-    }
-
-    public static void Multicast(String message, List<Player> players)
-    {
-        for (Player p : players)
-        {
-            Util.Message(message, p);
-        }
-    }
-
-    public static void MessagePermissions(String message, String permission)
-    {
-        for (Player p : Bukkit.getOnlinePlayers())
-        {
-            if (Util.hasPermission(p, permission))
-                Util.Message(message, p);
-        }
-    }
-
     public static String printTimeHours(int minutes)
     {
         if (minutes > 60)
@@ -192,35 +124,9 @@ public class Util
         return locString;
     }
 
-    public static boolean hasPermission(CommandSender player, String permission)
-    {
-        while (true)
-        {
-            if (player.hasPermission(permission))
-                return true;
-
-            if (permission.length() < 2)
-                return false;
-
-            if (permission.endsWith("*"))
-                permission = permission.substring(0, permission.length() - 2);
-
-            int lastIndex = permission.lastIndexOf(".");
-            if (lastIndex < 0)
-                return false;
-
-            permission = permission.substring(0, lastIndex).concat(".*");
-        }
-    }
-
     public static boolean isInventoryContainer(int id)
     {
         return id == Material.CHEST.getId() || id == Material.TRAPPED_CHEST.getId() || id == Material.DISPENSER.getId() || id == Material.FURNACE.getId() || id == Material.DROPPER.getId() || id == Material.BREWING_STAND.getId() || id == Material.HOPPER.getId();
-    }
-
-    public static boolean isItemTypeSame(ItemStack a, ItemStack b)
-    {
-        return a.getType() == b.getType() && (a.getDurability() == b.getDurability() || a.getDurability()  == 32767 || b.getDurability() == 32767);
     }
 
 	// Material name snippet by TechGuard
@@ -256,28 +162,10 @@ public class Util
         return null;
     }
 
-    public static boolean isInWorldBorderBounds(Block block)
-    {
-        net.minecraft.server.v1_8_R1.WorldBorder nmsWorldBorder = ((CraftWorld) block.getWorld()).getHandle().af();
-        double halfSize = nmsWorldBorder.h() / 2;
-        return      block.getX() > nmsWorldBorder.f() - halfSize
-                &&  block.getX() < nmsWorldBorder.f() + halfSize
-                &&  block.getZ() > nmsWorldBorder.g() - halfSize
-                &&  block.getZ() < nmsWorldBorder.g() + halfSize;
-    }
-
     private static long debugTimer = System.currentTimeMillis();
     public static void debugTime(String message)
     {
         MLog.debug(message + " " + (System.currentTimeMillis() - debugTimer));
         debugTimer = System.currentTimeMillis();
     }
-
-    /**
-     * @return Location in the center of the specified block.
-     */
-    public static Location getLocationInBlockCenter(Block block)
-	{
-		return new Location(block.getWorld(), block.getX() + 0.5, block.getY(), block.getZ() + 0.5);
-	}
 }

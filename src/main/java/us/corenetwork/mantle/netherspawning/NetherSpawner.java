@@ -24,6 +24,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Stairs;
 import org.bukkit.material.Step;
+import us.core_network.cornel.blocks.BlockUtil;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -80,7 +81,7 @@ public class NetherSpawner {
 	public static void spawnBlaze(Block block)
 	{
 		NetherSpawningListener.spawningMob = true;
-		block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.BLAZE);
+		block.getWorld().spawnEntity(BlockUtil.getLocationInBlockCenter(block), EntityType.BLAZE);
 	}
 
     public static boolean canSpawnWitherSkeleton(Block block, SpawnReason reason)
@@ -178,7 +179,7 @@ public class NetherSpawner {
     {
         NetherSpawningListener.spawningMob = true;
 
-        Location location = Util.getLocationInBlockCenter(block);
+        Location location = BlockUtil.getLocationInBlockCenter(block);
         location.setYaw(MantlePlugin.random.nextFloat() * 360);
 
         MagmaCube magmaCube = block.getWorld().spawn(location, MagmaCube.class);
@@ -236,7 +237,7 @@ public class NetherSpawner {
     public static void spawnGhast(Block block)
     {
         NetherSpawningListener.spawningMob = true;
-        block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.GHAST);
+        block.getWorld().spawnEntity(BlockUtil.getLocationInBlockCenter(block), EntityType.GHAST);
     }
 
     public static boolean canSpawnOnThisBlock(Block block)

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 
 
@@ -19,14 +20,14 @@ public class ChunkInfoCommand extends BaseMantleCommand {
 	public void run(final CommandSender sender, String[] args) {
         if (args.length < 1)
         {
-            Util.Message("Usage: /mantle chunkinfo [world]", sender);
+            Messages.send("Usage: /mantle chunkinfo [world]", sender);
             return;
         }
 
         CraftWorld world = (CraftWorld) Bukkit.getWorld(args[0]);
         if (world == null)
         {
-            Util.Message("Invalid world!", sender);
+            Messages.send("Invalid world!", sender);
             return;
         }
 
@@ -40,12 +41,12 @@ public class ChunkInfoCommand extends BaseMantleCommand {
 			tickCountField.setAccessible(true);
 			chunkGCTickCount = tickCountField.getInt(world);
 
-			Util.Message("Loaded chunks: " + loadedChunks, sender);
-			Util.Message("Elapsed Chunk GC tick count: " + chunkGCTickCount, sender);
+            Messages.send("Loaded chunks: " + loadedChunks, sender);
+            Messages.send("Elapsed Chunk GC tick count: " + chunkGCTickCount, sender);
 		}
 		catch (Exception e)
 		{
-			Util.Message("Something went wrong!", sender);
+            Messages.send("Something went wrong!", sender);
 			e.printStackTrace();
 			return;
 		}

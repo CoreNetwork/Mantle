@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Util;
@@ -69,7 +70,7 @@ public class FusingBook extends Spellbook {
 			Claim claim = GriefPreventionHandler.getClaimAt(event.getClickedBlock().getLocation());
 			if (claim != null && claim.allowContainers(player) != null)
 			{
-				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+                Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
 			}
 

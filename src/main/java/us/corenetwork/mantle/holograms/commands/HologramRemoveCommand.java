@@ -3,6 +3,7 @@ package us.corenetwork.mantle.holograms.commands;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.holograms.Hologram;
 import us.corenetwork.mantle.holograms.HologramStorage;
@@ -38,7 +39,8 @@ public class HologramRemoveCommand extends BaseHologramCommand
 
         if (nearest == null)
         {
-            Util.Message(HologramsSettings.MESSAGE_NO_HOLOGRAM_WITH_THAT_NAME.string(), sender);
+            Messages.send
+                    (HologramsSettings.MESSAGE_NO_HOLOGRAM_WITH_THAT_NAME.string(), sender);
         }
         else
         {

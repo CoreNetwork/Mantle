@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.mantlecommands;
 
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.Setting;
@@ -20,6 +21,6 @@ public class ReloadCommand extends BaseMantleCommand {
 	public void run(final CommandSender sender, String[] args) {
 		IO.LoadSettings();
 		MantleModule.reloadConfigs();
-		Util.Message(Settings.getString(Setting.MESSAGE_CONFIGURATION_RELOADED), sender);
+        Messages.send(Settings.getString(Setting.MESSAGE_CONFIGURATION_RELOADED), sender);
 	}	
 }

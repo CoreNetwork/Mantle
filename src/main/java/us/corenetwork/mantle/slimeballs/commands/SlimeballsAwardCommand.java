@@ -4,6 +4,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
@@ -37,7 +38,7 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 		{
 			String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_PLAYER_NOT_EXISTS.string();
 			message = message.replace("<Player>", args[0]);
-			Util.Message(message, sender);
+            Messages.send(message, sender);
 
 			return;
 		}
@@ -66,12 +67,12 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 			else
 				message = message.replace("<PluralS>", "s");
 
-			Util.Message(message, offlinePlayer.getPlayer());
-			Util.Broadcast(awardedAnnouncement, offlinePlayer.getName());
+            Messages.send(message, offlinePlayer.getPlayer());
+            Messages.broadcastWithExclusion(awardedAnnouncement, offlinePlayer.getName());
 		}
 		else
 		{
-			Util.Broadcast(awardedAnnouncement);
+			Messages.broadcast(awardedAnnouncement);
 		}
 	}
 	

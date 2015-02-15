@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
@@ -23,13 +24,13 @@ public class AnalyzeCommand extends BaseMantleCommand {
 
 
 	public void run(final CommandSender sender, String[] args) {
-		Util.Message(RegenerationSettings.MESSAGE_ANALYZING.string(), sender);
+        Messages.send(RegenerationSettings.MESSAGE_ANALYZING.string(), sender);
 
 		Bukkit.getServer().getScheduler().runTaskAsynchronously(MantlePlugin.instance, new Runnable() {
 
 			@Override
 			public void run() {
-				Util.Message(RegenerationSettings.MESSAGE_ANALYZE_HEADER.string(), sender);
+                Messages.send(RegenerationSettings.MESSAGE_ANALYZE_HEADER.string(), sender);
 
 				for (RegStructure structure : RegenerationModule.instance.structures.values())
 				{
@@ -102,7 +103,7 @@ public class AnalyzeCommand extends BaseMantleCommand {
 					message = message.replace("<Empty>", Integer.toString(empty));
 					message = message.replace("<EmptyPercent>", Integer.toString(emptyPercent));
 					message = message.replace("<PostponedApproved>", postponedApproved);
-					Util.Message(message, sender);
+                    Messages.send(message, sender);
 				}
 			}
 

@@ -13,6 +13,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.InventoryGUI;
@@ -203,7 +204,7 @@ public class GUICategoryPicker extends InventoryGUI {
 		
 		if(found == false)
 		{
-			Util.Message(RChestSettings.MESSAGE_COMPASS_CANT_FIND_VILLAGE.string(), (Player)player);
+            Messages.send(RChestSettings.MESSAGE_COMPASS_CANT_FIND_VILLAGE.string(), (Player) player);
 			MLog.warning("Compass - No viable village + chest found!");
 			return;
 		}

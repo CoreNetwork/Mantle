@@ -3,6 +3,7 @@ package us.corenetwork.mantle.generation;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 
@@ -17,8 +18,8 @@ public class GenerateCommand extends BaseMantleCommand {
 
 
 	public void run(CommandSender sender, String[] args) {
-		
-		Util.Message(GenerationSettings.MESSAGE_SERVER_FROZEN.string(), sender);
+
+        Messages.send(GenerationSettings.MESSAGE_SERVER_FROZEN.string(), sender);
 
 		if (args.length > 0)
 		{

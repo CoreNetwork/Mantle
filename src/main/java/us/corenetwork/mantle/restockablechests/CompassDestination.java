@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.regeneration.RegenerationSettings;
@@ -72,7 +73,7 @@ public class CompassDestination {
 			int padding = RegenerationSettings.RESORATION_VILLAGE_CHECK_PADDING.integer();
 			if (GriefPreventionHandler.containsClaim(vih.world, vih.villageX, vih.villageZ, vih.xSize, vih.zSize, padding, false, null))
 			{
-				Util.Message(RChestSettings.MESSAGE_COMPASS_VILLAGE_CLAIMED.string(), event.getPlayer());
+                Messages.send(RChestSettings.MESSAGE_COMPASS_VILLAGE_CLAIMED.string(), event.getPlayer());
 				destinations.remove(event.getPlayer().getUniqueId());
 				GUICategoryPicker.selectChestForPlayerCategory(event.getPlayer(), category);
 				

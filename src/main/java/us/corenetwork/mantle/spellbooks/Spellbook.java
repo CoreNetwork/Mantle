@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks;
 
+import android.os.Message;
 import java.util.Arrays;
 import java.util.HashMap;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
@@ -66,7 +68,7 @@ public abstract class Spellbook {
         {
             String message = SpellbooksSettings.MESSAGE_BOOK_EXPIRED.string();
             message = message.replace("<Spellbook>", getName());
-            Util.Message(message, player);
+            Messages.send(message, player);
 
             return;
         }
@@ -101,7 +103,7 @@ public abstract class Spellbook {
 			{
 				String message = settings.getString(SETTING_USE_MESSAGE);
 				message = message.replace("<Spellbook>", getName());
-				Util.Message(message, player);
+                Messages.send(message, player);
 			}
 							
 			Location playerLoc = player.getLocation();
@@ -128,7 +130,7 @@ public abstract class Spellbook {
 			{
 				message = message.replace("<Player>", player.getName());
 				message = message.replace("<Spellbook>", getName());
-				Util.Broadcast(message, player.getName());
+				Messages.broadcastWithExclusion(message, player.getName());
 			}
 
 			lastBroadcastTime.put(player.getName(), System.currentTimeMillis());
@@ -143,8 +145,8 @@ public abstract class Spellbook {
 
 				}
 			}
-			
-			Util.Message(settings.getString(SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE), player);
+
+            Messages.send(settings.getString(SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE), player);
 		}
 		
 

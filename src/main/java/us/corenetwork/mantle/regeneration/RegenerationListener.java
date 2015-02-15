@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
 
@@ -14,7 +16,7 @@ public class RegenerationListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{				
-		if (Util.hasPermission(event.getPlayer(), "mantle.mod"))
+		if (PlayerUtil.hasPermission(event.getPlayer(), "mantle.mod"))
 		{
 			for (RegStructure structure : RegenerationModule.instance.structures.values())
 			{
@@ -44,7 +46,7 @@ public class RegenerationListener implements Listener {
 						message = message.replace("<Total>", Integer.toString(total));
 						message = message.replace("<Percentage>", Integer.toString(percentage));
 
-						Util.Message(message, event.getPlayer());
+                        Messages.send(message, event.getPlayer());
 					}
 				}
 				catch (SQLException e)

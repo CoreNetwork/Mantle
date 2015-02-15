@@ -36,6 +36,7 @@ import org.bukkit.event.world.PortalCreateEvent;
 import org.bukkit.event.world.PortalCreateEvent.CreateReason;
 import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.blocks.SignUtil;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -107,7 +108,7 @@ public class PortalsListener implements Listener {
 						message = message.replace("<OtherDimension>", claim.getLesserBoundaryCorner().getWorld().getEnvironment() == Environment.NETHER ? "Nether" : "Overworld");
 						message = message.replace("<Owner>", owner);
 
-						Util.Message(message, player);
+                        Messages.send(message, player);
 						foundConflict = true;
 						break;
 					}
@@ -115,7 +116,7 @@ public class PortalsListener implements Listener {
 
 				if(!foundConflict)
 				{
-					Util.Message(PortalsSettings.MESSAGE_CAN_MAKE_PORTAL.string(), player);
+                    Messages.send(PortalsSettings.MESSAGE_CAN_MAKE_PORTAL.string(), player);
 				}
 			}
 		}
@@ -355,7 +356,7 @@ public class PortalsListener implements Listener {
 			//Cannot create a destination portal, keep the entity here
 			else
 			{
-				Util.Message(PortalsSettings.MESSAGE_CANT_CROSS_WOULD_CREATE_IN_CLAIM.string(), event.getPlayer());
+                Messages.send(PortalsSettings.MESSAGE_CANT_CROSS_WOULD_CREATE_IN_CLAIM.string(), event.getPlayer());
 				event.setCancelled(true);
 			}
 		}

@@ -2,6 +2,7 @@ package us.corenetwork.mantle.nanobot.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.mantle.Util;
 
 public abstract class NanobotBaseCommand {
@@ -27,7 +28,7 @@ public abstract class NanobotBaseCommand {
 			return true;
 		}
 				
-		if (adminCommand && sender instanceof Player && !Util.hasPermission(sender, "mantle.nanobot.command." + permission))
+		if (adminCommand && sender instanceof Player && !PlayerUtil.hasPermission(sender, "mantle.nanobot.command." + permission))
 		{
 			((Player)sender).sendMessage("You do not have permission to do that!");
 			return true;

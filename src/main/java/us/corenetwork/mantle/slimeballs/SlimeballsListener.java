@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 
 
@@ -29,14 +30,14 @@ public class SlimeballsListener implements Listener
 
         if (SlimeballsStorage.getSlimeballs(event.getPlayer().getUniqueId()) < 1)
         {
-            Util.Message(SlimeballsSettings.MESSAGE_SLIMEBALLS_RELEASE_EMPTY_ACCOUNT.string(), event.getPlayer());
+            Messages.send(SlimeballsSettings.MESSAGE_SLIMEBALLS_RELEASE_EMPTY_ACCOUNT.string(), event.getPlayer());
             return;
         }
 
-         new FancyMessage(Util.applyColors(SlimeballsSettings.MESSAGE_SLIMEBALL_CLICK_TEXT_PREFIX.string()))
-                .then(Util.applyColors(SlimeballsSettings.MESSAGE_SLIMEBALL_CLICK_TEXT_BUTTON.string()))
+         new FancyMessage(Messages.applyFormattingCodes(SlimeballsSettings.MESSAGE_SLIMEBALL_CLICK_TEXT_PREFIX.string()))
+                .then(Messages.applyFormattingCodes(SlimeballsSettings.MESSAGE_SLIMEBALL_CLICK_TEXT_BUTTON.string()))
                     .command("/slimeballs pay")
-                 .then(Util.applyColors(SlimeballsSettings.MESSAGE_SLIMEBALL_CLICK_TEXT_SUFFIX.string()))
+                 .then(Messages.applyFormattingCodes(SlimeballsSettings.MESSAGE_SLIMEBALL_CLICK_TEXT_SUFFIX.string()))
              .send(event.getPlayer());
 
 

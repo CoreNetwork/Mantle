@@ -16,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
@@ -54,7 +55,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		}
 		else
 		{
-			Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
+            Messages.send(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
 			return BookFinishAction.NOTHING;
 		}
 

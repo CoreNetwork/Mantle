@@ -12,6 +12,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
@@ -31,7 +32,7 @@ public class InspectorSession {
 		if (nextStructure == null)
 		{
 			current = -1;
-			Util.Message(InspectorSettings.MESSAGE_NO_STRUCTURE_FOUND.string(), player);
+            Messages.send(InspectorSettings.MESSAGE_NO_STRUCTURE_FOUND.string(), player);
 			return;
 		}
 		
@@ -59,7 +60,7 @@ public class InspectorSession {
 		message = message.replace("<ID>", Integer.toString(current));
 		message = message.replace("<Owners>", owners);
 
-		Util.Message(message, player);
+        Messages.send(message, player);
 	}
 	
 	/**

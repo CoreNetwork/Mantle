@@ -21,6 +21,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
@@ -56,7 +57,7 @@ public class PeddlingBook extends Spellbook {
 		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 		if (claim != null && claim.allowContainers(player) != null)
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+            Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 			return BookFinishAction.NOTHING;
 		}
 		
@@ -112,7 +113,7 @@ public class PeddlingBook extends Spellbook {
 		
 		if (winningRecipe == null || winningRecipe.amountPlayerHave == 0)
 		{
-			Util.Message(settings.getString(SETTING_MESSAGE_NOTHING_TO_SELL), event.getPlayer());
+            Messages.send(settings.getString(SETTING_MESSAGE_NOTHING_TO_SELL), event.getPlayer());
 			return BookFinishAction.NOTHING;
 		}
 		
@@ -123,7 +124,7 @@ public class PeddlingBook extends Spellbook {
 				
 		if (targetAmount == 0)
 		{
-			Util.Message(settings.getString(SETTING_MESSAGE_NOT_ENOUGH_TO_SELL), event.getPlayer());
+            Messages.send(settings.getString(SETTING_MESSAGE_NOT_ENOUGH_TO_SELL), event.getPlayer());
 			return BookFinishAction.NOTHING;
 		}
 		

@@ -2,6 +2,7 @@ package us.corenetwork.mantle.treasurehunt.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.treasurehunt.THuntModule;
@@ -23,7 +24,7 @@ public class RunHuntCommand extends BaseTChaseCommand {
 
 		if(THuntModule.passManager.getAmount(player) <= 0)
 		{
-			Util.Message(THuntSettings.MESSAGE_BRC_NO_HUNT.string(), player);
+            Messages.send(THuntSettings.MESSAGE_BRC_NO_HUNT.string(), player);
 		}
 		else
 		{

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
@@ -39,8 +40,8 @@ public class DeleteRespawnCommand extends BaseMantleCommand {
 
 					statement.executeUpdate();
 					IO.getConnection().commit();
-					
-					Util.Message(RegenerationSettings.MESSAGE_STRUCTURE_DELETED.string(), sender);
+
+                    Messages.send(RegenerationSettings.MESSAGE_STRUCTURE_DELETED.string(), sender);
 				}
 				catch (SQLException e)
 				{
@@ -54,7 +55,7 @@ public class DeleteRespawnCommand extends BaseMantleCommand {
 			StructureData nearbyVillage = RegenerationUtil.pickNearestStructure(((Player) sender).getLocation());
 			if (nearbyVillage == null)
 			{
-				Util.Message(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
+                Messages.send(RegenerationSettings.MESSAGE_NO_STRUCTURES.string(), sender);
 				return;
 			}
 			
@@ -63,7 +64,7 @@ public class DeleteRespawnCommand extends BaseMantleCommand {
 			String message = RegenerationSettings.MESSAGE_DELETE_NEARBY_STRUCTURE.string();
 			message = message.replace("<ID>", Integer.toString(nearbyVillage.id));
 			message = message.replace("<Distance>", Integer.toString(nearbyVillage.distance));
-			Util.Message(message, sender);
+            Messages.send(message, sender);
 		}
 	}
 }
