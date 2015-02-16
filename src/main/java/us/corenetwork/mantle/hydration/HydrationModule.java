@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.hydration;
 
+import com.sk89q.worldedit.entity.Player;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import org.bukkit.Bukkit;
@@ -31,6 +32,8 @@ public class HydrationModule extends MantleModule {
 		super.loadConfig();
 		cacheConfigs();
 	}
+
+
 
 	private void cacheConfigs()
 	{
@@ -82,5 +85,6 @@ public class HydrationModule extends MantleModule {
 	@Override
 	protected void unloadModule() {
 		saveConfig();
+        PlayerData.saveAll();
 	}	
 }

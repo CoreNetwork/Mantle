@@ -44,7 +44,7 @@ public class HydrationTimer implements Runnable {
 								playerData.hydrationLevel = 0;
 						}
 					}
-				}
+                }
 
 
 				int newHydration = (int) Math.round(playerData.hydrationLevel);
@@ -53,11 +53,11 @@ public class HydrationTimer implements Runnable {
 				{
 					HydrationUtil.updateScoreboard(player.getName(), newHydration);
 					HydrationUtil.notify(playerData, player);
+                    playerData.save();
 				}
 			}
 
 			HydrationUtil.updateNegativeEffects(player, playerData, layer);
-
 		}
 
 

@@ -53,9 +53,9 @@ public class MantlePlugin extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-		IO.freeConnection();
 		MantleModule.unloadAll();
-	}
+        IO.freeConnection();
+    }
 
     /*
         onEnable now loads BEFORE world loads. Most modules rely on world already lodaded on startup, so we should init them later.
