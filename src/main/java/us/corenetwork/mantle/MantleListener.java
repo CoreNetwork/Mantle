@@ -59,22 +59,4 @@ public class MantleListener implements Listener {
             MLog.info("Something cancelled chunk unload!");
         }
     }
-
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    public void onInventoryClick(InventoryClickEvent event)
-    {
-        CraftInventory inventory = (CraftInventory) event.getInventory();
-        IInventory nmsInventory = inventory.getInventory();
-        if (nmsInventory instanceof InventoryGUI.GUIVanillaInventory)
-        {
-            try
-            {
-                ((InventoryGUI.GUIVanillaInventory) nmsInventory).click(event);
-            }
-            finally
-            {
-                event.setCancelled(true);
-            }
-        }
-    }
 }

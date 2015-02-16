@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import us.core_network.cornel.custom.inventorygui.InventoryGUIManager;
 import us.core_network.cornel.java.NumberUtil;
 import us.core_network.cornel.nms.VanillaReplacingUtil;
 import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
@@ -97,6 +98,8 @@ public class MantlePlugin extends JavaPlugin {
         VanillaReplacingUtil.replaceMob("Pig", 90, EntityPig.class, CustomPig.class);
         VanillaReplacingUtil.replaceMob("Sheep", 91, EntitySheep.class, CustomSheep.class);
         VanillaReplacingUtil.replaceMob("Rabbit", 101, EntityRabbit.class, CustomRabbit.class);
+
+        InventoryGUIManager.boostrap(this);
 
         if (!setupPermissions())
 		{

@@ -14,16 +14,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.custom.inventorygui.InventoryGUI;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
-import us.corenetwork.mantle.InventoryGUI;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.regeneration.RegenerationSettings;
 
 
-public class GUICategoryPicker extends InventoryGUI {
+public class GUICategoryPicker extends InventoryGUI
+{
 
 	private Map<Integer, Category> categoryPositions = new HashMap<Integer, Category>();
 	

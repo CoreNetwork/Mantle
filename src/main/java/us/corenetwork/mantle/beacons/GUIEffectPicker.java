@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
-import us.corenetwork.mantle.InventoryGUIGroup;
+import us.core_network.cornel.custom.inventorygui.InventoryGUIGroup;
 
 /**
  * Created by Matej on 28.10.2014.

@@ -3,8 +3,8 @@ package us.corenetwork.mantle.beacons;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.custom.inventorygui.InventoryGUIGroup;
 import us.core_network.cornel.items.ItemStackUtils;
-import us.corenetwork.mantle.InventoryGUIGroup;
 import us.corenetwork.mantle.TimeFormat;
 
 /**
