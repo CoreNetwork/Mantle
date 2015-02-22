@@ -74,6 +74,7 @@ public class CompassDestination {
 			{
 				Util.Message(RChestSettings.MESSAGE_COMPASS_VILLAGE_CLAIMED.string(), event.getPlayer());
 				destinations.remove(event.getPlayer().getUniqueId());
+				CompassDestination.resetCompassTarget(event.getPlayer());
 				GUICategoryPicker.selectChestForPlayerCategory(event.getPlayer(), category);
 				
 			}
@@ -134,5 +135,16 @@ public class CompassDestination {
 				it.remove();
 			}
 		}
+	}
+
+	public static void resetCompassTarget(Player player)
+	{
+		Location loc = player.getBedSpawnLocation();
+		if(loc == null)
+		{
+			loc = new Location(Bukkit.getWorld("world"), 0, 0, 0);
+		}
+
+		player.setCompassTarget(loc);
 	}
 }

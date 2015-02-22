@@ -591,6 +591,7 @@ public class RestockableChest {
 						basicCat = compassCat;
 					}
 					CompassDestination.destinations.remove(player.getUniqueId());
+					CompassDestination.resetCompassTarget(player);
 					
 					try
 					{
