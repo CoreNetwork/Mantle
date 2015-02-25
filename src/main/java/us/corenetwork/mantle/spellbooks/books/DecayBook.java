@@ -28,7 +28,8 @@ import us.corenetwork.mantle.util.InventoryUtil;
 
 public class DecayBook extends Spellbook {
 
-	private static final int EFFECT_RADIUS = 32 / 2;
+    private static final int EFFECT_AREA_HEIGHT_ABOVE_PLAYER = 31;
+    private static final int EFFECT_AREA_HORIZONTAL_RADIUS = 32 / 2;
 	
 	public DecayBook() {
 		super("Decay");
@@ -76,7 +77,7 @@ public class DecayBook extends Spellbook {
 		{
 			Location playerLoc = player.getLocation();
 			//Check for claims in effect area
-			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_RADIUS, playerLoc.getBlockZ() - EFFECT_RADIUS, 0, 0, EFFECT_RADIUS * 2, false, event.getPlayer()))
+			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_AREA_HORIZONTAL_RADIUS, playerLoc.getBlockZ() - EFFECT_AREA_HORIZONTAL_RADIUS, 0, 0, EFFECT_AREA_HORIZONTAL_RADIUS * 2, false, event.getPlayer()))
 			{
 				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
@@ -86,12 +87,12 @@ public class DecayBook extends Spellbook {
 			
 			//Decay world around
 			Block baseBlock = player.getLocation().getBlock();
-			
-			for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
-			{
-				for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
-				{
-					for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+
+            for (int x = -EFFECT_AREA_HORIZONTAL_RADIUS; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
+            {
+                for (int y = -1; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER; y++) //Blocks from one block below player to 31 blocks above are affected.
+                {
+                    for (int z = -EFFECT_AREA_HORIZONTAL_RADIUS; z <= EFFECT_AREA_HORIZONTAL_RADIUS; z++)
 					{
 						Block block = baseBlock.getRelative(x, y, z);
 						

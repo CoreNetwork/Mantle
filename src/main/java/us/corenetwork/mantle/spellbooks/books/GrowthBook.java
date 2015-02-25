@@ -27,9 +27,10 @@ import us.corenetwork.mantle.util.InventoryUtil;
 
 public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiver {
 
-	private static final int EFFECT_RADIUS = 32 / 2;
-	
-	public GrowthBook() {
+	private static final int EFFECT_AREA_HEIGHT_ABOVE_PLAYER = 31;
+    private static final int EFFECT_AREA_HORIZONTAL_RADIUS = 32 / 2;
+
+    public GrowthBook() {
 		super("Growth");
 		
 		settings.setDefault(SETTING_TEMPLATE, "spell-growth");
@@ -65,19 +66,21 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		Block baseBlock = event.getPlayer().getLocation().getBlock();
-		for (int x = -EFFECT_RADIUS; x <= EFFECT_RADIUS; x++)
+		for (int x = -EFFECT_AREA_HORIZONTAL_RADIUS; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
 		{
-			for (int y = -EFFECT_RADIUS; y <= EFFECT_RADIUS; y++)
+			for (int y = -1; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER; y++) //Blocks from one block below player to 31 blocks above are affected.
 			{
-				for (int z = -EFFECT_RADIUS; z <= EFFECT_RADIUS; z++)
+				for (int z = -EFFECT_AREA_HORIZONTAL_RADIUS; z <= EFFECT_AREA_HORIZONTAL_RADIUS; z++)
 				{
 					Block block = baseBlock.getRelative(x, y, z);
 					processBlock(block);
 				}
 			}
 		}
-		
-		EntityIterator.iterateEntitiesInCube(this, event.getPlayer().getLocation(), EFFECT_RADIUS);
+
+        Location raisedLocation = event.getPlayer().getLocation();
+        raisedLocation.setY(raisedLocation.getY() + EFFECT_AREA_HEIGHT_ABOVE_PLAYER);
+		EntityIterator.iterateEntitiesInCube(this, raisedLocation, EFFECT_AREA_HORIZONTAL_RADIUS);
 		
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
