@@ -28,6 +28,8 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 
+import java.util.UUID;
+
 public class PerksListener implements Listener
 {
     @EventHandler(ignoreCancelled = true)
@@ -37,7 +39,14 @@ public class PerksListener implements Listener
         if (Util.hasPermission(event.getPlayer(), "mantle.perks.advsigns"))
         {
             Claim claim = GriefPrevention.instance.dataStore.getClaimAt(event.getBlock().getLocation(), true, null);
-            if (claim == null || !event.getPlayer().getUniqueId().equals(claim.ownerID))
+            if (claim == null)
+                return; //No claim, so nope
+
+            UUID ownerID = claim.ownerID;
+            if (claim.parent != null) //is a subdivision
+                ownerID = claim.parent.ownerID;
+
+            if (!event.getPlayer().getUniqueId().equals(ownerID))
                 return; //Only owner of the claim can place color signs.
 
             for (int i = 0; i < event.getLines().length; i++)
