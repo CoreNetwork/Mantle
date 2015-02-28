@@ -66,7 +66,7 @@ public class BabyZombieBurner implements Listener, Runnable{
                 if ((f > 0.5F) && (nmsZombie.world.i(new BlockPosition(MathHelper.floor(nmsZombie.locX), MathHelper.floor(nmsZombie.locY), MathHelper.floor(nmsZombie.locZ))))) {
                     long time = zombie.getWorld().getTime();
                     if (zombie.getLocation().getBlock().getLightFromSky() >= 15 && time <= 12000) {
-                        zombie.setFireTicks(30); // TODO config
+                        zombie.setFireTicks(HardmodeSettings.BABY_ZOMBIE_BURN_TICKS.integer());
                     }
                 }
                 //end

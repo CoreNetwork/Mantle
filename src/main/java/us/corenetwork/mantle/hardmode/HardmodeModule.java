@@ -44,7 +44,8 @@ public class HardmodeModule extends MantleModule {
             BabyZombieBurner burner = new BabyZombieBurner();
 
             Bukkit.getPluginManager().registerEvents(burner, MantlePlugin.instance);
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, burner, 20, 20); //TODO config
+            Integer interval = HardmodeSettings.BABY_ZOMBIE_CHECK_INTERVAL.integer();
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(MantlePlugin.instance, burner, interval, interval);
         }
 
 

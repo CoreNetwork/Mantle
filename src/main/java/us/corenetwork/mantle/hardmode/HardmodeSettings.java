@@ -18,6 +18,8 @@ public enum HardmodeSettings {
 	GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER("Ghast.Fireball.BlastRadiusMultiplier", 2.0),
 
     BABY_ZOMBIE_BURN("BabyZombies.Burn", true),
+    BABY_ZOMBIE_CHECK_INTERVAL("BabyZombies.CheckInterval", 20),
+    BABY_ZOMBIE_BURN_TICKS("BabyZombies.BurnTicks", 30),
 
 	WITHER_MIN_SPAWNING_Y("Wither.MinSpawningY", 20),
 	WITHER_DESPAWNING_Y("Wither.DespawningY", 60),
