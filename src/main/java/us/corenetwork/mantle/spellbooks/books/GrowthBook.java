@@ -79,7 +79,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		}
 
         Location raisedLocation = event.getPlayer().getLocation();
-        raisedLocation.setY(raisedLocation.getY() + EFFECT_AREA_HEIGHT_ABOVE_PLAYER);
+        raisedLocation.setY(raisedLocation.getY() + EFFECT_AREA_HEIGHT_ABOVE_PLAYER / 2);
 		EntityIterator.iterateEntitiesInCube(this, raisedLocation, EFFECT_AREA_HORIZONTAL_RADIUS);
 		
 		return BookFinishAction.BROADCAST_AND_CONSUME;
