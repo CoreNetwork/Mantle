@@ -84,6 +84,10 @@
       <id>zml-repo</id>
       <url>http://files.zachsthings.com/repo</url>
     </repository>
+    <repository>
+      <id>fanciful-mvn-repo</id>
+      <url>http://repo.franga2000.com/artifactory/public</url>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -115,6 +119,12 @@
       <groupId>com.comphenix.protocol</groupId>
       <artifactId>ProtocolLib</artifactId>
       <version>3.6.3-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>mkremins</groupId>
+      <artifactId>fanciful</artifactId>
+      <version>0.3.1</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

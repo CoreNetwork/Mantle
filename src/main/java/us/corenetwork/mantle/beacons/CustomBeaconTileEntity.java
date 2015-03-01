@@ -127,7 +127,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             }
 
             // Update GUIs every 2 seconds if any is open
-            if (beaconStatusGUI.isAnyWindowOpened() && timeActive % 40L == 0L)
+            if (beaconStatusGUI.isAnyPlayerViewing() && timeActive % 40L == 0L)
             {
                 beaconStatusGUI.updateFuelStatus();
             }
@@ -158,9 +158,9 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
     public void clicked(EntityHuman human)
     {
         if (activeEffect == null)
-            effectPickerGUI.openNewWindow(human.getBukkitEntity());
+            human.getBukkitEntity().openInventory(effectPickerGUI);
         else
-            beaconStatusGUI.openNewWindow(human.getBukkitEntity());
+            human.getBukkitEntity().openInventory(beaconStatusGUI);
     }
 
     public void physics()
