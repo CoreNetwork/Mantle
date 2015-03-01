@@ -13,6 +13,7 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
 import us.corenetwork.mantle.restockablechests.commands.RestockAllCommand;
+import us.corenetwork.mantle.restockablechests.commands.UntrackCompassCommand;
 
 
 public class RChestsModule extends MantleModule {
@@ -42,6 +43,7 @@ public class RChestsModule extends MantleModule {
 		
 		MantlePlugin.adminCommands.put("createchest", new CreateChestCommand());
 		MantlePlugin.adminCommands.put("restockall", new RestockAllCommand());
+		MantlePlugin.adminCommands.put("untrack", new UntrackCompassCommand());
 
 		for (RChestSettings setting : RChestSettings.values())
 		{

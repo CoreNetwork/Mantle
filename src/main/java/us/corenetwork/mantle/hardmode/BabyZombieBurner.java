@@ -1,12 +1,17 @@
 package us.corenetwork.mantle.hardmode;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
 import net.minecraft.server.v1_8_R1.BlockPosition;
 import net.minecraft.server.v1_8_R1.EntityZombie;
 import net.minecraft.server.v1_8_R1.MathHelper;
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,7 +20,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
 public class BabyZombieBurner implements Listener, Runnable{
-    private Set<Zombie> babyZombies = new HashSet<>();
+    private Set<WeakReference<Zombie>> babyZombies = new HashSet<>();
     private Field nmsEntityField;
 
     public BabyZombieBurner() {
@@ -25,25 +30,34 @@ public class BabyZombieBurner implements Listener, Runnable{
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
         }
+        for (World world : Bukkit.getWorlds()) {
+            for (Entity zombie : world.getEntitiesByClasses(Zombie.class)) {
+                Zombie z = (Zombie) zombie;
+                if (z.isBaby()) {
+                    babyZombies.add(new WeakReference<>(z));
+                }
+            }
+        }
     }
 
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getEntity() instanceof Zombie && ((Zombie) event.getEntity()).isBaby()) {
-            babyZombies.add((Zombie) event.getEntity());
+            babyZombies.add(new WeakReference<>((Zombie) event.getEntity()));
         }
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onCreatureDeath(EntityDeathEvent event) {
-        babyZombies.remove(event.getEntity());
     }
 
     @Override
     public void run() {
-        for (Zombie zombie : babyZombies) {
+        LinkedList<WeakReference<Zombie>> toRemove = new LinkedList<>();
+        for (WeakReference<Zombie> ref : babyZombies) {
             try {
+                Zombie zombie = ref.get();
+                if (zombie == null) {
+                    toRemove.add(ref);
+                    continue;
+                }
                 EntityZombie nmsZombie = (EntityZombie) nmsEntityField.get(zombie);
 
                 //begin copied code from EntityZombie.e
@@ -52,7 +66,7 @@ public class BabyZombieBurner implements Listener, Runnable{
                 if ((f > 0.5F) && (nmsZombie.world.i(new BlockPosition(MathHelper.floor(nmsZombie.locX), MathHelper.floor(nmsZombie.locY), MathHelper.floor(nmsZombie.locZ))))) {
                     long time = zombie.getWorld().getTime();
                     if (zombie.getLocation().getBlock().getLightFromSky() >= 15 && time <= 12000) {
-                        zombie.setFireTicks(30); // TODO config
+                        zombie.setFireTicks(HardmodeSettings.BABY_ZOMBIE_BURN_TICKS.integer());
                     }
                 }
                 //end
@@ -61,5 +75,6 @@ public class BabyZombieBurner implements Listener, Runnable{
             }
 
         }
+        babyZombies.removeAll(toRemove);
     }
 }

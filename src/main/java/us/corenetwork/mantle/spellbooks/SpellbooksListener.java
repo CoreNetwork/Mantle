@@ -36,10 +36,12 @@ public class SpellbooksListener implements Listener {
 	{
 		if (event.isCancelled() && event.getAction() != Action.RIGHT_CLICK_AIR)
 			return;
-		
-		if (event.getItem() != null )
+
+        ItemStack item = event.getPlayer().getItemInHand();
+
+		if (item != null)
 		{
-			SpellbookItem spellbookItem = SpellbookItem.parseSpellbook(event.getItem());
+			SpellbookItem spellbookItem = SpellbookItem.parseSpellbook(item);
 			if (spellbookItem != null)
 			{
 				if  (event.getAction() == Action.RIGHT_CLICK_AIR || //Prevent accidentally activating something when right clicking, unless that is container block

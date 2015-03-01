@@ -15,6 +15,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -294,6 +295,21 @@ public class RChestsListener implements Listener {
 			CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
 			if(destination != null)
 				destination.refreshCompassTarget(event.getPlayer());
+			else
+				CompassDestination.resetCompassTarget(event.getPlayer());
+		}
+	}
+
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerBedLeaveEvent(final PlayerBedLeaveEvent event)
+	{
+		//Refresh compass destination (if none set by the actual compass tracking) to the bed location
+		if (event.getPlayer().getWorld().getEnvironment() == World.Environment.NORMAL)
+		{
+			CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
+			if(destination == null)
+				CompassDestination.resetCompassTarget(event.getPlayer());
 		}
 	}
 }

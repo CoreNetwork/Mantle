@@ -147,7 +147,7 @@ public class GUICategoryPicker extends InventoryGUI
 			statement.setInt(6, maxkw);
 
 			ResultSet set = statement.executeQuery();
-			if(!set.next())
+			if(set.isAfterLast())
 			{
 				MLog.warning("No village found for category " + selectedCategory.getLootTableName() + ". Please change min/max distance for compass.");
 				
