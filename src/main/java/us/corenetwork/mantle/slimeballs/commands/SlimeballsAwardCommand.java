@@ -12,68 +12,98 @@ import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
 public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 {
 
-	public SlimeballsAwardCommand()
-	{
-		permission = "award";
-		desc = "Award slimeballs to someone";
-		needPlayer = false;
-	}
+    public SlimeballsAwardCommand()
+    {
+        permission = "award";
+        desc = "Award slimeballs to someone";
+        needPlayer = false;
+    }
 
 
-	public void run(CommandSender sender, String[] args) {
-		if (args.length < 1)
-		{
-			sender.sendMessage("Usage: /slimeballs award <Player> [<Amount>]");
-			return;
-		}
+    public void run(CommandSender sender, String[] args) {
+        int argumentCount = args.length;
+        boolean silent = false;
+        if (argumentCount >= 1 && args[argumentCount - 1].equalsIgnoreCase("silent"))
+        {
+            argumentCount--;
 
-		int amount = 1;
-		if (args.length > 1 && Util.isInteger(args[1]))
-			amount = Integer.parseInt(args[1]);
+            silent = true;
+        }
 
-		OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
-		UUID uuid = offlinePlayer.getUniqueId();
-		if (!offlinePlayer.hasPlayedBefore() || uuid == null)
-		{
-			String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_PLAYER_NOT_EXISTS.string();
-			message = message.replace("<Player>", args[0]);
-			Util.Message(message, sender);
 
-			return;
-		}
+        if (argumentCount < 1)
+        {
+            sender.sendMessage("Usage: /slimeballs award <Player> [<Amount>]");
+            return;
+        }
 
-		int slimeballs = SlimeballsStorage.getSlimeballs(uuid);
-		slimeballs += amount;
-		SlimeballsStorage.setSlimeballs(uuid, slimeballs);
 
-		if (amount <= 0)
-			return; //Do not display any messages for negative
+        int amount = 1;
+        int reasonPosition = 1;
+        if (argumentCount > 1 && Util.isInteger(args[1]))
+        {
+            amount = Integer.parseInt(args[1]);
+            reasonPosition++;
+        }
 
-		String awardedAnnouncement = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER.string();
-		awardedAnnouncement = awardedAnnouncement.replace("<Player>", offlinePlayer.getName());
-		awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(amount));
-		if (slimeballs == 1)
-			awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "");
-		else
-			awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "s");
+        String reason = "";
+        if (argumentCount > reasonPosition)
+        {
+            for (int i = reasonPosition; i < argumentCount; i++)
+                reason = reason.concat(args[i]).concat(" ");
 
-		if (offlinePlayer.isOnline())
-		{
-			String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER.string();
-			message = message.replace("<Amount>", Integer.toString(amount));
-			if (slimeballs == 1)
-				message = message.replace("<PluralS>", "");
-			else
-				message = message.replace("<PluralS>", "s");
+            if (!reason.isEmpty())
+                reason = reason.substring(0, reason.length() - 1);
+        }
 
-			Util.Message(message, offlinePlayer.getPlayer());
-			Util.Broadcast(awardedAnnouncement, offlinePlayer.getName());
-		}
-		else
-		{
-			Util.Broadcast(awardedAnnouncement);
-		}
-	}
-	
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
+        UUID uuid = offlinePlayer.getUniqueId();
+        if (!offlinePlayer.hasPlayedBefore() || uuid == null)
+        {
+            String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_PLAYER_NOT_EXISTS.string();
+            message = message.replace("<Player>", args[0]);
+            Util.Message(message, sender);
+
+            return;
+        }
+
+        int slimeballs = SlimeballsStorage.getSlimeballs(uuid);
+        slimeballs += amount;
+        SlimeballsStorage.setSlimeballs(uuid, slimeballs);
+
+        if (amount <= 0)
+            return; //Do not display any messages for negative
+
+        String awardedAnnouncement = reason.isEmpty() ? SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER.string() : SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER_REASON.string();
+        awardedAnnouncement = awardedAnnouncement.replace("<Player>", offlinePlayer.getName());
+        awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(amount));
+        awardedAnnouncement = awardedAnnouncement.replace("<Reason>", reason);
+
+        if (slimeballs == 1)
+            awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "");
+        else
+            awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "s");
+
+        if (offlinePlayer.isOnline())
+        {
+            String message = reason.isEmpty() ? SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER.string() : SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER_REASON.string();
+            message = message.replace("<Amount>", Integer.toString(amount));
+            message = message.replace("<Reason>", reason);
+            if (slimeballs == 1)
+                message = message.replace("<PluralS>", "");
+            else
+                message = message.replace("<PluralS>", "s");
+
+            Util.Message(message, offlinePlayer.getPlayer());
+
+            if (!silent)
+                Util.Broadcast(awardedAnnouncement, offlinePlayer.getName());
+        }
+        else if (!silent)
+        {
+            Util.Broadcast(awardedAnnouncement);
+        }
+    }
+
 
 }
