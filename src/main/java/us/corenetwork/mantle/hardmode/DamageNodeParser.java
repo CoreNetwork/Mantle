@@ -120,8 +120,8 @@ public class DamageNodeParser extends NodeParser {
 		Integer id = (Integer) node.get("id");
 		if (id == null)
 		{
-			if (node.containsKey("Name")) {
-				String name = (String) node.get("Name");
+			if (node.containsKey("name")) {
+				String name = (String) node.get("name");
 				Integer effect = MinecraftNames.getPotionEffectId(name);
 				if (effect != null) {
 					id = effect;
