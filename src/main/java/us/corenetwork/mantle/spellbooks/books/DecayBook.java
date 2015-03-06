@@ -48,17 +48,6 @@ public class DecayBook extends Spellbook {
 		
 		Player player = event.getPlayer();
 
-		boolean playerHasRottenFlesh = InventoryUtil.getAmountOfItems(player.getInventory(), Material.ROTTEN_FLESH, Short.MAX_VALUE) >= 128;
-		if (playerHasRottenFlesh)
-		{
-			InventoryUtil.removeItems(player.getInventory(), Material.ROTTEN_FLESH, Short.MAX_VALUE, 128);
-		}
-		else
-		{
-			Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
-			return BookFinishAction.NOTHING;
-		}
-
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest

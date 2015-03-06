@@ -2,20 +2,26 @@ package us.corenetwork.mantle.spellbooks;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.configuration.MemorySection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.yaml.snakeyaml.Yaml;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.spellbooks.books.BookFinishAction;
+import us.corenetwork.mantle.util.InventoryUtil;
 
 public abstract class Spellbook {	
 	
@@ -26,6 +32,8 @@ public abstract class Spellbook {
 	public static final String SETTING_HINT_TO_CASTER_WHEN_BROADCASTED_MESSAGE = "Messages.HintToCasterWhenBroadcasted";
 	public static final String SETTING_BROADCAST_MESSAGES = "Messages.Broadcast";
 	public static final String SETTING_NO_ITEMS = "Messages.NoItems";
+    public static final String SETTING_REQUIRED_ITEM = "RequiredItem";
+
 	private String name;
 	private HashMap<String, Long> lastBroadcastTime = new HashMap<String, Long>();
 	public BookSettings settings;
@@ -71,6 +79,22 @@ public abstract class Spellbook {
             return;
         }
 
+        Object requiredItemNode = settings.getProperty(SETTING_REQUIRED_ITEM, false);
+        ItemStack itemToConsume = null;
+        if (requiredItemNode != null)
+        {
+            itemToConsume = YamlUtils.readItemStack(((MemorySection) requiredItemNode).getValues(false));
+            if (itemToConsume != null)
+            {
+                int amountInInventory = InventoryUtil.getAmountOfItems(player.getInventory(), itemToConsume.getType(), itemToConsume.getDurability());
+                if (amountInInventory < itemToConsume.getAmount())
+                {
+                    Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
+                    return;
+                }
+            }
+        }
+
 		BookFinishAction action = BookFinishAction.NOTHING;
 		if (event instanceof PlayerInteractEntityEvent)
 			action = onActivateEntity(item, (PlayerInteractEntityEvent) event);
@@ -96,7 +120,13 @@ public abstract class Spellbook {
 				if (action == BookFinishAction.BROADCAST_AND_CONSUME)
 					messageEverybody(player);
 			}
-						
+
+            if (itemToConsume != null)
+            {
+                InventoryUtil.removeItems(player.getInventory(), itemToConsume.getType(), itemToConsume.getDurability(), itemToConsume.getAmount());
+                player.updateInventory();
+            }
+
 			if (!providesOwnMessage())
 			{
 				String message = settings.getString(SETTING_USE_MESSAGE);

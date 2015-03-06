@@ -50,18 +50,6 @@ public class UnslimingBook extends Spellbook {
 			return BookFinishAction.NOTHING;
 		}
 
-		boolean playerHasSlimeballs = InventoryUtil.getAmountOfItems(player.getInventory(), Material.SLIME_BALL, Short.MAX_VALUE) >= 256;
-		if (playerHasSlimeballs)
-		{
-			InventoryUtil.removeItems(player.getInventory(), Material.SLIME_BALL, Short.MAX_VALUE, 256);
-			player.updateInventory();
-		}
-		else
-		{
-			Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
-			return BookFinishAction.NOTHING;
-		}
-		
 		Chunk chunk = player.getLocation().getBlock().getChunk();
 
 		boolean slimeChunk = !IgnoredSlimeChunks.isIgnored(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());

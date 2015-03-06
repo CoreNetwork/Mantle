@@ -41,24 +41,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 
 		Player player = event.getPlayer();
-
-		//Check for missing items
-		if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.BONE, Short.MAX_VALUE) >= 64)
-		{
-			InventoryUtil.removeItems(player.getInventory(), Material.BONE, Short.MAX_VALUE, 64);
-			player.updateInventory();
-		}
-		else if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.INK_SACK, (short) 15) >= 192)
-		{
-			InventoryUtil.removeItems(player.getInventory(), Material.INK_SACK, (short) 15, 192);
-			player.updateInventory();
-		}
-		else
-		{
-			Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
-			return BookFinishAction.NOTHING;
-		}
-
+        
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
 		Vector direction = event.getPlayer().getLocation().getDirection();
 
