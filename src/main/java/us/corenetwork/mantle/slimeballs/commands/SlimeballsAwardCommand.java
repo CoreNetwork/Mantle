@@ -23,15 +23,38 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 
 
 	public void run(CommandSender sender, String[] args) {
-		if (args.length < 1)
+        int argumentCount = args.length;
+        boolean silent = false;
+        if (argumentCount >= 1 && args[argumentCount - 1].equalsIgnoreCase("silent"))
 		{
+            argumentCount--;
+
+            silent = true;
+        }
+
+
+        if (argumentCount < 1)
+        {
 			sender.sendMessage("Usage: /slimeballs award <Player> [<Amount>]");
 			return;
 		}
 
+
 		int amount = 1;
-		if (args.length > 1 && NumberUtil.isInteger(args[1]))
-			amount = Integer.parseInt(args[1]);
+        int reasonPosition = 1;
+		if (args.length > 1 && NumberUtil.isInteger(args[1]))			amount = Integer.parseInt(args[1]);
+            reasonPosition++;
+        }
+
+        String reason = "";
+        if (argumentCount > reasonPosition)
+        {
+            for (int i = reasonPosition; i < argumentCount; i++)
+                reason = reason.concat(args[i]).concat(" ");
+
+            if (!reason.isEmpty())
+                reason = reason.substring(0, reason.length() - 1);
+        }
 
 		OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(args[0]);
 		UUID uuid = offlinePlayer.getUniqueId();
@@ -51,9 +74,11 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 		if (amount <= 0)
 			return; //Do not display any messages for negative
 
-		String awardedAnnouncement = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER.string();
+        String awardedAnnouncement = reason.isEmpty() ? SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER.string() : SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_OTHER_REASON.string();
 		awardedAnnouncement = awardedAnnouncement.replace("<Player>", offlinePlayer.getName());
 		awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(amount));
+        awardedAnnouncement = awardedAnnouncement.replace("<Reason>", reason);
+
 		if (slimeballs == 1)
 			awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "");
 		else
@@ -61,17 +86,20 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 
 		if (offlinePlayer.isOnline())
 		{
-			String message = SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER.string();
+            String message = reason.isEmpty() ? SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER.string() : SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER_REASON.string();
 			message = message.replace("<Amount>", Integer.toString(amount));
+            message = message.replace("<Reason>", reason);
 			if (slimeballs == 1)
 				message = message.replace("<PluralS>", "");
 			else
 				message = message.replace("<PluralS>", "s");
 
             Messages.send(message, offlinePlayer.getPlayer());
-            Messages.broadcastWithExclusion(awardedAnnouncement, offlinePlayer.getName());
+
+            if (!silent)
+                Messages.broadcastWithExclusion(awardedAnnouncement, offlinePlayer.getName());
 		}
-		else
+        else if (!silent)
 		{
 			Messages.broadcast(awardedAnnouncement);
 		}

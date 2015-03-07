@@ -25,6 +25,7 @@ import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.IO;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.regeneration.RegenerationSettings;
 import us.corenetwork.mantle.restockablechests.commands.CreateChestCommand;
@@ -309,7 +310,17 @@ public class RChestsListener implements Listener {
 		{
 			CompassDestination destination = CompassDestination.destinations.get(event.getPlayer().getUniqueId());
 			if(destination == null)
-				CompassDestination.resetCompassTarget(event.getPlayer());
+			{
+				//We need new bed location, which is assigned to a player after the event
+
+				Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+					@Override
+					public void run()
+					{
+						CompassDestination.resetCompassTarget(event.getPlayer());
+					}
+				}, 1);
+			}
 		}
 	}
 }

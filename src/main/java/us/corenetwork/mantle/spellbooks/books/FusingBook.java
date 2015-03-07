@@ -137,7 +137,7 @@ public class FusingBook extends Spellbook {
 
 			}
 
-			freeInventorySlots -= stacksAdded;
+			freeInventorySlots = freeInventorySlots - stacksAdded + stacksRemoved;
 		}
 		
 		if (inventory.getType() == InventoryType.PLAYER)

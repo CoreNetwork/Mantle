@@ -353,11 +353,12 @@ public class THuntManager {
 				{
 					for(Entry<UUID, Location> entry : playerChestsLocations.entrySet())
 					{
+						String message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION.string();
 						if(alreadyClicked.contains(entry.getKey()))
 						{
-							continue;
+							message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING.string();
 						}
-
+						
 						if(!huntParticipants.contains(entry.getKey()))
 						{
 							continue;
@@ -377,7 +378,7 @@ public class THuntManager {
 						Location playerLoc = player.getLocation();
 						Location chestLoc = entry.getValue();
 
-						String message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION.string();
+
 						int distance = (int) Math.floor(Math.sqrt(Util.flatDistanceSquared(chestLoc, playerLoc)));
 						message = message.replace("<Distance>", distance+"").replace("<X>", chestLoc.getBlockX() + "").replace("<Z>", chestLoc.getBlockZ() + "")
 								.replace("<TimeLeft>", (totalTime - notificationTime) + "");

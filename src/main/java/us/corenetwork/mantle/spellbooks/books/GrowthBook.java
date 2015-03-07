@@ -16,14 +16,13 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
-import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
-import us.core_network.cornel.items.InventoryUtil;
+import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiver {
@@ -42,24 +41,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 
 		Player player = event.getPlayer();
-
-		//Check for missing items
-		if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.BONE, Short.MAX_VALUE) >= 64)
-		{
-			InventoryUtil.removeItems(player.getInventory(), Material.BONE, Short.MAX_VALUE, 64);
-			player.updateInventory();
-		}
-		else if (InventoryUtil.getAmountOfItems(player.getInventory(), Material.INK_SACK, (short) 15) >= 192)
-		{
-			InventoryUtil.removeItems(player.getInventory(), Material.INK_SACK, (short) 15, 192);
-			player.updateInventory();
-		}
-		else
-		{
-            Messages.send(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
-			return BookFinishAction.NOTHING;
-		}
-
+        
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
 		Vector direction = event.getPlayer().getLocation().getDirection();
 

@@ -74,6 +74,7 @@ public enum THuntSettings {
 
 	MESSAGE_PROGRESS_START_HUNT("Messages.Progress.StartHunt", "&aTreasure Chase has started!"),
 	MESSAGE_PROGRESS_WAVE_NOTIFICATION("Messages.Progress.WaveNotificaton", "&6Crate: &7<X>, <Z> &6| &7<Distance> &6blocks away | &7<TimeLeft>s &6left"),
+	MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING("Messages.Progress.WaveNotificatonAfterLooting", "&7<TimeLeft>s &6left"),
 	MESSAGE_PROGRESS_END_HUNT("Messages.Progress.EndHunt", "&aTreasure Chase sponsored by <Player> has ended. Thanks for supporting our server, hope it was fun! &6Learn more: /help TreasureChase"),
 	MESSAGE_PROGRESS_NEXT_HUNT_SCHEDULED("Messages.Progress.NextHuntScheduled", "&aNext Chase will start in <Time> min.  &6/chase join &ato participate!"),
 
