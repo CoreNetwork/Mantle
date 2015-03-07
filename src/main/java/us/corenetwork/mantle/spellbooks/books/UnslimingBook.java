@@ -11,6 +11,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
@@ -20,7 +21,6 @@ import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class UnslimingBook extends Spellbook {	
@@ -46,7 +46,7 @@ public class UnslimingBook extends Spellbook {
 		Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 		if (claim != null && claim.allowBuild(player, Material.STONE) != null)
 		{
-			Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+            Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 			return BookFinishAction.NOTHING;
 		}
 
@@ -63,12 +63,12 @@ public class UnslimingBook extends Spellbook {
 
 		if (slimeChunk)
 		{
-			Util.Message(settings.getString(SETTING_MESSAGE_SLIME_CHUNK), player);
+            Messages.send(settings.getString(SETTING_MESSAGE_SLIME_CHUNK), player);
 			IgnoredSlimeChunks.addChunk(chunk.getWorld().getName(), chunk.getX(), chunk.getZ());
 		}
 		else
 		{
-			Util.Message(settings.getString(SETTING_MESSAGE_NOT_SLIME_CHUNK), player);
+            Messages.send(settings.getString(SETTING_MESSAGE_NOT_SLIME_CHUNK), player);
 		}
 		
 		Color slimeColor = Color.fromRGB(0x8bbb79);

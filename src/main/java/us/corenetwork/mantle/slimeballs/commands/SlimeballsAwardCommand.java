@@ -22,11 +22,12 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 	}
 
 
-	public void run(CommandSender sender, String[] args) {
+	public void run(CommandSender sender, String[] args)
+    {
         int argumentCount = args.length;
         boolean silent = false;
         if (argumentCount >= 1 && args[argumentCount - 1].equalsIgnoreCase("silent"))
-		{
+        {
             argumentCount--;
 
             silent = true;
@@ -35,14 +36,16 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
 
         if (argumentCount < 1)
         {
-			sender.sendMessage("Usage: /slimeballs award <Player> [<Amount>]");
-			return;
-		}
+            sender.sendMessage("Usage: /slimeballs award <Player> [<Amount>]");
+            return;
+        }
 
 
-		int amount = 1;
+        int amount = 1;
         int reasonPosition = 1;
-		if (args.length > 1 && NumberUtil.isInteger(args[1]))			amount = Integer.parseInt(args[1]);
+        if (args.length > 1 && NumberUtil.isInteger(args[1]))
+        {
+            amount = Integer.parseInt(args[1]);
             reasonPosition++;
         }
 

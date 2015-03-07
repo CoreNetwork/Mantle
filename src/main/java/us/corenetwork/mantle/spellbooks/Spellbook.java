@@ -14,6 +14,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.items.InventoryUtil;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
@@ -21,7 +22,6 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.YamlUtils;
 import us.corenetwork.mantle.hardmode.HardmodeModule;
 import us.corenetwork.mantle.spellbooks.books.BookFinishAction;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 public abstract class Spellbook {	
 	
@@ -89,7 +89,7 @@ public abstract class Spellbook {
                 int amountInInventory = InventoryUtil.getAmountOfItems(player.getInventory(), itemToConsume.getType(), itemToConsume.getDurability());
                 if (amountInInventory < itemToConsume.getAmount())
                 {
-                    Util.Message(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
+                    Messages.send(settings.getString(SETTING_NO_ITEMS), event.getPlayer());
                     return;
                 }
             }

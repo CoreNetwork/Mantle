@@ -17,13 +17,13 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class DecayBook extends Spellbook {
@@ -54,7 +54,7 @@ public class DecayBook extends Spellbook {
 			Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 			if (claim != null && claim.allowContainers(player) != null)
 			{
-				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+                Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
 			}
 
@@ -68,7 +68,7 @@ public class DecayBook extends Spellbook {
 			//Check for claims in effect area
 			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_AREA_HORIZONTAL_RADIUS, playerLoc.getBlockZ() - EFFECT_AREA_HORIZONTAL_RADIUS, 0, 0, EFFECT_AREA_HORIZONTAL_RADIUS * 2, false, event.getPlayer()))
 			{
-				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+                Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
 			}
 			
