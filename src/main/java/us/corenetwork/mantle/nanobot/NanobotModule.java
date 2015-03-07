@@ -16,7 +16,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.material.TexturedMaterial;
 import us.core_network.cornel.items.ItemStackUtils;
-import us.core_network.cornel.java.NumberUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
@@ -64,7 +64,7 @@ public class NanobotModule extends MantleModule {
 		if (args.length < 1 || !commands.containsKey(args[0])) 
 		{
 			int page = 1;
-			if (args.length > 0 && NumberUtil.isInteger(args[0])) page = Integer.parseInt(args[0]);
+			if (args.length > 0 && NumberParsing.isInteger(args[0])) page = Integer.parseInt(args[0]);
 			List<String> komandes = new ArrayList<String>();
 			for (Entry<String, NanobotBaseCommand> e : commands.entrySet())
 			{

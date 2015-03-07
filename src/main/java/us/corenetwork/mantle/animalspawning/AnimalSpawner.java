@@ -17,6 +17,7 @@ import org.bukkit.entity.Horse.Variant;
 import org.bukkit.entity.Rabbit;
 import org.bukkit.entity.Sheep;
 import us.core_network.cornel.custom.NodeParser;
+import us.core_network.cornel.java.EnumUtil;
 import us.corenetwork.core.CorePlugin;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
@@ -179,7 +180,7 @@ public class AnimalSpawner {
 		Rabbit rabbit = (Rabbit) entity;
 
 		String rabbitTypeName = NodeParser.pickNodeChance((MemorySection) section.get("Types"), MantlePlugin.random);
-		Rabbit.Type rabbitType = (Rabbit.Type) Util.findEnum(Rabbit.Type.values(), rabbitTypeName);
+		Rabbit.Type rabbitType = (Rabbit.Type) EnumUtil.findEnum(Rabbit.Type.values(), rabbitTypeName);
 		if (rabbitType != null)
 		{
 			rabbit.setRabbitType(rabbitType);

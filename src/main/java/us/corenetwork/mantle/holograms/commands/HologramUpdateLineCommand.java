@@ -2,7 +2,7 @@ package us.corenetwork.mantle.holograms.commands;
 
 import org.bukkit.command.CommandSender;
 import us.core_network.cornel.common.Messages;
-import us.core_network.cornel.java.NumberUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.holograms.Hologram;
 import us.corenetwork.mantle.holograms.HologramStorage;
@@ -21,7 +21,7 @@ public class HologramUpdateLineCommand extends BaseHologramCommand
 
 
 	public void run(CommandSender sender, String[] args) {
-        if (args.length < 3 || !NumberUtil.isInteger(args[1]))
+        if (args.length < 3 || !NumberParsing.isInteger(args[1]))
         {
             sender.sendMessage("/holo update <id> <line> <text>");
             return;

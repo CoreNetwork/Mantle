@@ -20,7 +20,7 @@ import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.items.NbtUtils;
 import us.core_network.cornel.items.NbtYaml;
 import us.core_network.cornel.common.Messages;
-import us.core_network.cornel.java.NumberUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
@@ -54,7 +54,7 @@ public class MakeBookCommand extends BaseMantleCommand {
 		}
 		
 		int amount = 1;
-		if (args.length > 1 && NumberUtil.isInteger(args[1]))
+		if (args.length > 1 && NumberParsing.isInteger(args[1]))
 		{
 			amount = Integer.parseInt(args[1]);
 		}

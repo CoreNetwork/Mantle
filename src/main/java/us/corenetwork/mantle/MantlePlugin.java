@@ -20,8 +20,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import us.core_network.cornel.custom.inventorygui.InventoryGUIManager;
-import us.core_network.cornel.java.NumberUtil;
 import us.core_network.cornel.nms.VanillaReplacingUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.beacons.CustomBeaconTileEntity;
 import us.corenetwork.mantle.hardmode.CustomPigman;
 import us.corenetwork.mantle.hardmode.CustomSkeleton;
@@ -128,7 +128,7 @@ public class MantlePlugin extends JavaPlugin {
         if (command.getName().equals("title"))
             return adminCommands.get("title").execute(sender, args, false);
 
-        if (args.length < 1 || NumberUtil.isInteger(args[0]))
+        if (args.length < 1 || NumberParsing.isInteger(args[0]))
 			return adminCommands.get("help").execute(sender, args);
 
 		BaseMantleCommand cmd = adminCommands.get(args[0]);

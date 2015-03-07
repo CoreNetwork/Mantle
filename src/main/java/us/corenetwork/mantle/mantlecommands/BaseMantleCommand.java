@@ -3,8 +3,8 @@ package us.corenetwork.mantle.mantlecommands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.core_network.cornel.common.Messages;
-import us.core_network.cornel.java.NumberUtil;
 import us.core_network.cornel.player.PlayerUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.Setting;
 import us.corenetwork.mantle.Settings;
 import us.corenetwork.mantle.Util;
@@ -24,7 +24,7 @@ public abstract class BaseMantleCommand {
 
 	public Boolean execute(CommandSender sender, String[] args, boolean stripArgs)
 	{
-		if (stripArgs && args.length > 0 && !NumberUtil.isInteger(args[0]))
+		if (stripArgs && args.length > 0 && !NumberParsing.isInteger(args[0]))
 		{
 			String[] newargs = new String[args.length - 1];
 			for (int i = 1; i < args.length; i++)

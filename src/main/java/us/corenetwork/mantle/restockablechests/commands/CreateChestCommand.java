@@ -5,7 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import us.core_network.cornel.common.Messages;
-import us.core_network.cornel.java.NumberUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.restockablechests.RChestSettings;
@@ -26,7 +26,7 @@ public class CreateChestCommand extends BaseMantleCommand {
 
 	public void run(CommandSender sender, String[] args) {
 		
-		if (args.length < 3 || !NumberUtil.isInteger(args[1]) || !NumberUtil.isInteger(args[2]))
+		if (args.length < 3 || !NumberParsing.isInteger(args[1]) || !NumberParsing.isInteger(args[2]))
 		{
             Messages.send("/flatcore createchest [Looting Table] [Restock interval in hours] [Per-player chests - 1/0]", sender);
 			return;

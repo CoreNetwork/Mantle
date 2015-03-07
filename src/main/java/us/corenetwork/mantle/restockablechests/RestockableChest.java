@@ -47,6 +47,7 @@ import org.bukkit.potion.PotionEffectType;
 import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.core_network.cornel.items.NbtUtils;
+import us.core_network.cornel.java.EnumUtil;
 import us.corenetwork.core.respawn.ProtectTimer;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MLog;
@@ -1099,7 +1100,7 @@ public class RestockableChest {
 			return container.hasCustomName() ? container.getName() : "Brewing Stand";
 		}
 
-		return Util.getMaterialName(chestBlock.getType());
+		return EnumUtil.getPrettyEnumName(chestBlock.getType());
 	}
 
 	@SuppressWarnings("incomplete-switch")

@@ -104,39 +104,6 @@ public class Util
         return id == Material.CHEST.getId() || id == Material.TRAPPED_CHEST.getId() || id == Material.DISPENSER.getId() || id == Material.FURNACE.getId() || id == Material.DROPPER.getId() || id == Material.BREWING_STAND.getId() || id == Material.HOPPER.getId();
     }
 
-	// Material name snippet by TechGuard
-	public static String getMaterialName(Material material) {
-		String name = material.toString();
-		name = name.replaceAll("_", " ");
-		if (name.contains(" ")) {
-			String[] split = name.split(" ");
-			for (int i = 0; i < split.length; i++) {
-				split[i] = split[i].substring(0, 1).toUpperCase() + split[i].substring(1).toLowerCase();
-			}
-			name = "";
-			for (String s : split) {
-				name += " " + s;
-			}
-			name = name.substring(1);
-		} else {
-			name = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
-		}
-		return name;
-	}
-
-    public static Object findEnum(Object[] enumList, String name)
-    {
-        for (Object enumEntry : enumList)
-        {
-            String entryName = ((Enum) enumEntry).name();
-            entryName = entryName.replace("_", " ");
-            if (entryName.equalsIgnoreCase(name))
-                return enumEntry;
-        }
-
-        return null;
-    }
-
     private static long debugTimer = System.currentTimeMillis();
     public static void debugTime(String message)
     {

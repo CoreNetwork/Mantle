@@ -2,7 +2,7 @@ package us.corenetwork.mantle.hydration.commands;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import us.core_network.cornel.java.NumberUtil;
+import us.core_network.cornel.strings.NumberParsing;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hydration.HydrationUtil;
 import us.corenetwork.mantle.hydration.PlayerData;
@@ -19,7 +19,7 @@ public class SetCommand extends BaseHydrationCommand {
 
 	public void run(final CommandSender sender, String[] args) {
 		
-		if (args.length < 1 || !NumberUtil.isDouble(args[0]))
+		if (args.length < 1 || !NumberParsing.isDouble(args[0]))
 			return;
 		
 		Player player = (Player) sender;
@@ -27,7 +27,7 @@ public class SetCommand extends BaseHydrationCommand {
 		double hydration = Double.parseDouble(args[0]);
 		
 		double saturation = 50;
-		if (args.length > 1 && NumberUtil.isDouble(args[1]))
+		if (args.length > 1 && NumberParsing.isDouble(args[1]))
 			saturation = Double.parseDouble(args[1]);
 		
 		
