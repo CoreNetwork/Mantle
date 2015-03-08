@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import net.minecraft.server.v1_8_R1.EntityInsentient;
 import net.minecraft.server.v1_8_R1.PathfinderGoal;
-import net.minecraft.server.v1_8_R1.PathfinderGoalBreakDoor;
 import net.minecraft.server.v1_8_R1.PathfinderGoalBreed;
 import net.minecraft.server.v1_8_R1.PathfinderGoalEatTile;
 import net.minecraft.server.v1_8_R1.PathfinderGoalFloat;
@@ -24,6 +23,8 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
     private PathfinderGoal original;
     private EntityInsentient entity;
 
+    private HardmodeSettings enableNerfSetting;
+
     /**
      * Method that determines whether PathfinderGoal should start executing or not
      * @return <code>true</code> if goal should start executing
@@ -35,18 +36,19 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
         if (!canOriginalStart)
             return false;
 
-        if (!HardmodeSettings.ANIMALS_ENABLE_AI_NERF.bool())
+        if (!enableNerfSetting.bool())
             return true;
 
         //If original can start, then we should check for nearby player and only start if there is one.
         return entity.world.findNearbyPlayer(entity, maximumRangeToPlayer) != null;
     }
 
-    public NearbyPlayerPathfinderGoalProxy(PathfinderGoal original, EntityInsentient entity)
+    public NearbyPlayerPathfinderGoalProxy(PathfinderGoal original, EntityInsentient entity, HardmodeSettings enableNerfSetting)
     {
         super();
         this.original = original;
         this.entity = entity;
+        this.enableNerfSetting = enableNerfSetting;
     }
 
     @Override
@@ -91,7 +93,7 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
         return original.j();
     }
 
-    public static void apply(EntityInsentient entityLiving)
+    public static void apply(EntityInsentient entityLiving, HardmodeSettings enableNerfSetting)
     {
         PathfinderGoalSelector goalSelector = entityLiving.goalSelector;
         List goalsListB = (List) ReflectionUtils.get(PathfinderGoalSelector.class, goalSelector, "b"); //List of all pathfinder goals
@@ -114,7 +116,7 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
             if (originalGoal instanceof PathfinderGoalFloat || originalGoal instanceof PathfinderGoalPanic || originalGoal instanceof PathfinderGoalBreed || originalGoal instanceof PathfinderGoalTempt || originalGoal instanceof PathfinderGoalEatTile)
                 continue;
 
-            ReflectionUtils.set(pathfinderGoalSelectorItemClass, pathfinderGoalSelectorItem, "a", new NearbyPlayerPathfinderGoalProxy(originalGoal, entityLiving));
+            ReflectionUtils.set(pathfinderGoalSelectorItemClass, pathfinderGoalSelectorItem, "a", new NearbyPlayerPathfinderGoalProxy(originalGoal, entityLiving, enableNerfSetting));
         }
         goalsListC.clear(); //Clear cache
     }
