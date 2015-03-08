@@ -46,12 +46,13 @@ public class HydrationTimer implements Runnable {
 					}
                 }
 
+                int newHydration = (int) Math.round(playerData.hydrationLevel);
 
-				int newHydration = (int) Math.round(playerData.hydrationLevel);
+                //Temporaryily moving scoreboard out of old/new check to display saturation
+                HydrationUtil.updateScoreboard(player.getName(), playerData);
 
-				if (oldHydration != newHydration)
+                if (oldHydration != newHydration)
 				{
-					HydrationUtil.updateScoreboard(player.getName(), newHydration);
 					HydrationUtil.notify(playerData, player);
                     playerData.save();
 				}

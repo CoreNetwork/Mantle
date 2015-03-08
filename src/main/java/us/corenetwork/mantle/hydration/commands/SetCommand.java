@@ -36,6 +36,6 @@ public class SetCommand extends BaseHydrationCommand {
 		playerData.save();
 				
 		HydrationUtil.updateNegativeEffects(player, playerData, null);
-		HydrationUtil.updateScoreboard(player.getName(), (int) Math.round(hydration));
+		HydrationUtil.updateScoreboard(player.getName(), playerData);
 	}	
 }

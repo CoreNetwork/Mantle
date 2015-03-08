@@ -27,6 +27,6 @@ public class RestoreCommand extends BaseHydrationCommand {
 		playerData.save();
 				
 		HydrationUtil.updateNegativeEffects(player, playerData, null);
-		HydrationUtil.updateScoreboard(player.getName(), 100);
+		HydrationUtil.updateScoreboard(player.getName(), playerData);
 	}	
 }

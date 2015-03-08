@@ -29,7 +29,7 @@ public class HydrationListener implements Listener {
 
 		final PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
 
-		HydrationUtil.updateScoreboard(player.getName(), (int) Math.round(playerData.hydrationLevel));
+		HydrationUtil.updateScoreboard(player.getName(), playerData);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
@@ -47,7 +47,7 @@ public class HydrationListener implements Listener {
 			if (data.hydrationLevel > 100)
 				data.hydrationLevel = 100;
 
-			HydrationUtil.updateScoreboard(event.getPlayer().getName(), (int) Math.round(data.hydrationLevel));
+			HydrationUtil.updateScoreboard(event.getPlayer().getName(), data);
 
 			data.saturationLevel += potion.saturation;
 			if (data.saturationLevel > 100)
