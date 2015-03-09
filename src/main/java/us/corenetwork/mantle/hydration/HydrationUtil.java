@@ -15,7 +15,8 @@ public class HydrationUtil {
 		if (playerData.hydrationLevel >= 100)
 		{
 			CoreScoreboardManager.setPlayerStat(player, HydrationSettings.SCOREBOARD_LINE.string(), null);
-		}
+            CoreScoreboardManager.setPlayerStat(player, ChatColor.COLOR_CHAR + "7Sat.", null);
+        }
 		else
 		{
 			CoreScoreboardManager.setPlayerStat(player, HydrationSettings.SCOREBOARD_LINE.string(), (int) playerData.hydrationLevel);
