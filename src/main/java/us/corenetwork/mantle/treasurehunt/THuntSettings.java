@@ -71,6 +71,9 @@ public enum THuntSettings {
 							add("&a<Player> sponsored a Treasure Chase! &6It'll begin in <Time>m");
 							add("&aTo participate, &6/chase join. &aTo learn more, /help TreasureChase");
 							}}),
+	MESSAGE_BRC_ADDED_TO_QUEUE_BROADCAST_Q_O_R("Messages.BuyRunCheck..AddedToQueueBroadcastWhileQueuedOrRunning", new ArrayList<String>(){{
+							add("&a<Player> sponsored a Treasure Chase! &6It'll begin in <Time>m");
+							}}),
 
 	MESSAGE_PROGRESS_START_HUNT("Messages.Progress.StartHunt", "&aTreasure Chase has started!"),
 	MESSAGE_PROGRESS_WAVE_NOTIFICATION("Messages.Progress.WaveNotificaton", "&6Crate: &7<X>, <Z> &6| &7<Distance> &6blocks away | &7<TimeLeft>s &6left"),

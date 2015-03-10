@@ -43,7 +43,7 @@ public class THuntPassManager {
 
     public void runPass(Player player)
     {
-        THuntModule.manager.addToQueue(player.getName());
+        THuntModule.manager.addToQueue(player.getUniqueId());
         THuntModule.manager.addPlayerToHunt(player);
     }
 }
