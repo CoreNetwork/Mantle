@@ -79,7 +79,7 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
         awardedAnnouncement = awardedAnnouncement.replace("<Amount>", Integer.toString(amount));
         awardedAnnouncement = awardedAnnouncement.replace("<Reason>", reason);
 
-        if (slimeballs == 1)
+        if (amount == 1)
             awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "");
         else
             awardedAnnouncement = awardedAnnouncement.replace("<PluralS>", "s");
@@ -89,7 +89,7 @@ public class SlimeballsAwardCommand extends BaseSlimeballsCommand
             String message = reason.isEmpty() ? SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER.string() : SlimeballsSettings.MESSAGE_SLIMEBALLS_AWARDED_PLAYER_REASON.string();
             message = message.replace("<Amount>", Integer.toString(amount));
             message = message.replace("<Reason>", reason);
-            if (slimeballs == 1)
+            if (amount == 1)
                 message = message.replace("<PluralS>", "");
             else
                 message = message.replace("<PluralS>", "s");
