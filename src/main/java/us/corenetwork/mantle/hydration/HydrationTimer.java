@@ -12,6 +12,7 @@ public class HydrationTimer implements Runnable {
 		for (Player player : Bukkit.getServer().getOnlinePlayers())
 		{
 			PlayerData playerData = PlayerData.getPlayer(player.getUniqueId());
+            playerData.recentlyDrained = false;
 
 			int oldHydration = (int) Math.round(playerData.hydrationLevel);
 
@@ -30,6 +31,7 @@ public class HydrationTimer implements Runnable {
 						{
 							playerData.hydrationLevel = 100;
 						}
+
 					}
 					else
 					{
@@ -43,6 +45,8 @@ public class HydrationTimer implements Runnable {
 							if (playerData.hydrationLevel < 0)
 								playerData.hydrationLevel = 0;
 						}
+
+                        playerData.recentlyDrained = true;
 					}
                 }
 

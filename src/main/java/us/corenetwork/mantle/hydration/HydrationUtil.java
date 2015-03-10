@@ -12,7 +12,7 @@ import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
 public class HydrationUtil {
 	public static void updateScoreboard(String player, PlayerData playerData)
 	{
-		if (playerData.hydrationLevel >= 100)
+		if (playerData.hydrationLevel >= 100 && !playerData.recentlyDrained)
 		{
 			CoreScoreboardManager.setPlayerStat(player, HydrationSettings.SCOREBOARD_LINE.string(), null);
             CoreScoreboardManager.setPlayerStat(player, ChatColor.COLOR_CHAR + "7Sat.", null);
@@ -23,6 +23,7 @@ public class HydrationUtil {
             CoreScoreboardManager.setPlayerStat(player, ChatColor.COLOR_CHAR + "7Sat.", (int) playerData.saturationLevel);
 
         }
+
 	}
 	
 	public static void updateNegativeEffects(Player player, PlayerData playerData, WorldLayer layer)
