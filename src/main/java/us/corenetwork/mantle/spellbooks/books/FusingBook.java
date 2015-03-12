@@ -49,7 +49,7 @@ public class FusingBook extends Spellbook {
 		FUSEITEMS.put(new ItemStack(Material.MELON, 9), new ItemStack(Material.MELON_BLOCK, 1));
 		FUSEITEMS.put(new ItemStack(Material.NETHER_BRICK_ITEM, 4), new ItemStack(Material.NETHER_BRICK, 1));
 		FUSEITEMS.put(new ItemStack(Material.SLIME_BALL, 9), new ItemStack(Material.SLIME_BLOCK, 1));
-        FUSEITEMS.put(new ItemStack(Material.STRING, 9), new ItemStack(Material.WOOL, 1, DyeColor.WHITE.getWoolData()));
+        FUSEITEMS.put(new ItemStack(Material.STRING, 4), new ItemStack(Material.WOOL, 1, DyeColor.WHITE.getWoolData()));
 
         settings.setDefault(SETTING_TEMPLATE, "spell-fusing");
 	}
