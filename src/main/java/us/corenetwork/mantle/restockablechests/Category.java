@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
+import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 public class Category {
 
@@ -225,8 +226,18 @@ public class Category {
 		return false;
 	}
 	
-	public ItemStack getIcon()
+	public ItemStack getIconSimple()
 	{
-		return iconItem;
+		return NanobotUtil.replaceStringInItem(iconItem, "<UsedMax>","");
+	}
+
+	public ItemStack getIcon(Player player)
+	{
+		if(getDistanceRange(player) > 0)
+		{
+			return NanobotUtil.replaceStringInItem(iconItem, "<UsedMax>", getTimesFound(player) + "/" + perPlayerTotalLimit);
+		}
+
+		return getIconSimple();
 	}
 }
