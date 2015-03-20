@@ -187,7 +187,7 @@ public class THuntManager {
 		}
 
 		ArrayList<String> broadcastMessages;
-		if(isRunning() || isQueued())
+		if(isRunning() || huntQueue.size() > 1)
 		{
 			broadcastMessages = (ArrayList<String>) THuntModule.instance.config.getStringList(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE_BROADCAST_Q_O_R.string);
 		}
