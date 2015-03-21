@@ -164,27 +164,40 @@ public class PerksListener implements Listener
     public void onPlayerJoin(PlayerJoinEvent event)
     {
         //Colored nameplates
-
         Player player = event.getPlayer();
-        if (!Util.hasPermission(event.getPlayer(), "mantle.perks.nameplate"))
+        applyColoredNameplate(player);
+    }
+
+    public static void applyColoredNameplate(Player player)
+    {
+        if (!Util.hasPermission(player, "mantle.perks.nameplate"))
             return;
 
         String groupName = MantlePlugin.chat.getPrimaryGroup(player);
+
+        String teamName = getTeamName(groupName);
+
         String prefix = Util.applyColors(MantlePlugin.chat.getGroupPrefix((String) null, groupName));
 
-        if (groupName.length() > 16) //According to some arbitrary limit, team names can't be longer than 16 characters.
-            groupName = groupName.substring(0, 16);
+        if (teamName.length() > 16) //According to some arbitrary limit, team names can't be longer than 16 characters.
+            teamName = teamName.substring(0, 16);
 
-        boolean moved = ScoreboardUtils.movePlayerToTeam(event.getPlayer(), groupName);
+        boolean moved = ScoreboardUtils.movePlayerToTeam(player, teamName);
         if (moved)
         {
-            Team newTeam = CoreScoreboardManager.getTeamsScoreboard().getTeam(groupName);
+            Team newTeam = CoreScoreboardManager.getTeamsScoreboard().getTeam(teamName);
             if (!newTeam.getPrefix().equals(prefix)) //Update prefix (usually only done for the first time team has been accessed)
                 newTeam.setPrefix(prefix);
         }
-
-
     }
+
+    private static String getTeamName(String groupName)
+    {
+        String prefix = "rankTeam";
+        String groupTeamName = PerksModule.instance.config.getString(PerksSettings.GROUP_TEAM_NAMES.getString() + "." + groupName);
+        return prefix + groupTeamName;
+    }
+
 
     private static void returnFromFrame(final ItemFrame frame, final Player player)
     {
