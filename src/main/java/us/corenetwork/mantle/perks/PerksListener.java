@@ -195,6 +195,10 @@ public class PerksListener implements Listener
     {
         String prefix = "rankTeam";
         String groupTeamName = PerksModule.instance.config.getString(PerksSettings.GROUP_TEAM_NAMES.getString() + "." + groupName);
+        if(groupTeamName == null)
+        {
+            groupTeamName = PerksModule.instance.config.getString(PerksSettings.GROUP_TEAM_NAMES.getString() + ".Other");
+        }
         return prefix + groupTeamName;
     }
 
