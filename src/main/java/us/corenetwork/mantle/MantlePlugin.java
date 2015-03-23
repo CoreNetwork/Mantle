@@ -30,6 +30,7 @@ import us.corenetwork.mantle.hardmode.animals.CustomSheep;
 import us.corenetwork.mantle.mantlecommands.AdminHelpCommand;
 import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
+import us.corenetwork.mantle.mantlecommands.DebugCommand;
 import us.corenetwork.mantle.mantlecommands.TabReloadCommand;
 import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
@@ -76,6 +77,7 @@ public class MantlePlugin extends JavaPlugin {
 		adminCommands.put("dumpchunks", new DumpChunksCommand());
 		adminCommands.put("chunkinfo", new ChunkInfoCommand());
 		adminCommands.put("tabreload", new TabReloadCommand());
+		adminCommands.put("debug", new DebugCommand());
 
         Bukkit.getScheduler().runTask(this, new Runnable()
         {
