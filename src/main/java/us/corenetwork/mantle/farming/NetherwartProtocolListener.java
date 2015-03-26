@@ -13,12 +13,15 @@ import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Ginaf on 2015-03-20.
  */
 public class NetherwartProtocolListener extends PacketAdapter {
-    private NBTTagCompound nbtTag;
+
+    private Map<Material, NBTTagCompound> tags = new HashMap<Material, NBTTagCompound>();
 
     public NetherwartProtocolListener() {
         super(MantlePlugin.instance, ListenerPriority.NORMAL, PacketType.Play.Server.SET_SLOT, PacketType.Play.Server.WINDOW_ITEMS);
@@ -56,15 +59,15 @@ public class NetherwartProtocolListener extends PacketAdapter {
         if (stack == null)
             return;
 
-        if (stack.getType() != Material.NETHER_STALK)
-            return;
-
         try
         {
+            NBTTagCompound nbtTag = tags.get(stack.getType());
+
+            if(nbtTag == null)
+                return;
+
             Field handleField = CraftItemStack.class.getDeclaredField("handle");
             handleField.setAccessible(true);
-
-
             //Add blank enchantment tag
             net.minecraft.server.v1_8_R1.ItemStack nmsStack = (net.minecraft.server.v1_8_R1.ItemStack) handleField.get(stack);
             nmsStack.setTag(nbtTag);
@@ -78,7 +81,8 @@ public class NetherwartProtocolListener extends PacketAdapter {
 
     public void loadConfig()
     {
-        nbtTag = LoadCommand.load("netherwart");
+        tags.put(Material.NETHER_STALK, LoadCommand.load("netherwart"));
+        tags.put(Material.DIAMOND_HOE, LoadCommand.load("diamondhoe"));
     }
 }
 
