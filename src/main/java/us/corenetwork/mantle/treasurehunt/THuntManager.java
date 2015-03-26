@@ -373,7 +373,14 @@ public class THuntManager {
 						String message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION.string();
 						if(alreadyClicked.contains(entry.getKey()))
 						{
-							message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING.string();
+							if(getWaveCount() == getActiveWave())
+							{
+								message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING_LAST_WAVE.string();
+							}
+							else
+							{
+								message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING.string();
+							}
 						}
 						
 						if(!huntParticipants.contains(entry.getKey()))
