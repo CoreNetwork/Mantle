@@ -74,6 +74,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
@@ -242,6 +243,15 @@ public class HardmodeListener implements Listener {
 			if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
 			{
 				Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
+
+				if(lastDamager instanceof Projectile)
+				{
+					ProjectileSource shooter = ((Projectile) lastDamager).getShooter();
+					if(shooter instanceof Player)
+					{
+						lastDamager = (Player) shooter;
+					}
+				}
 
 				try
 				{
