@@ -23,6 +23,10 @@ public class PortalUtil {
 
 	public static Location processTeleport(Entity entity, Block entryPortalBlock)
 	{
+		//To fix weird NPE caused by an entity in portal after a restart
+		if(entryPortalBlock == null)
+			return null;
+
 		Block destinationBlock = prepareDestinationBlock(entryPortalBlock, entity);
 
 		if(destinationBlock != null)
