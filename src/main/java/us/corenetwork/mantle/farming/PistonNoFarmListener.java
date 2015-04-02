@@ -10,6 +10,8 @@ public class PistonNoFarmListener implements Listener {
 
     @EventHandler
     public void onPistonPushEvent(BlockPistonExtendEvent event) {
+        boolean melonDisable = FarmingModule.instance.config.getBoolean("Piston.Melon", false);
+        boolean pumpkinDisable = FarmingModule.instance.config.getBoolean("Piston.Pumpkin", false);
         if (!FarmingModule.instance.active) {
             return;
         }
@@ -17,7 +19,7 @@ public class PistonNoFarmListener implements Listener {
 
         for (Block trace : event.getBlocks()) {
             Material mat = trace.getType();
-            if (mat == Material.MELON_BLOCK || mat == Material.PUMPKIN) {
+            if ((melonDisable && mat == Material.MELON_BLOCK) || (pumpkinDisable && mat == Material.PUMPKIN)) {
                 pushesAPumpkin = true;
                 break;
             }
