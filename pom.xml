@@ -90,7 +90,7 @@
 			<artifactId>spigot</artifactId>
 			<version>1.8-R0.1-SNAPSHOT</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/lib/spigot-1.8.jar</systemPath>
+			<systemPath>${basedir}/lib/spigot-1.8.3.jar</systemPath>
 		</dependency>
 		
 		<dependency>

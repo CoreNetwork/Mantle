@@ -2,55 +2,25 @@ package us.corenetwork.mantle.hardmode.wither;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_8_R1.BiomeBase;
-import net.minecraft.server.v1_8_R1.BiomeMeta;
-import net.minecraft.server.v1_8_R1.EntityTypes;
-import net.minecraft.server.v1_8_R1.EntityWither;
-import net.minecraft.server.v1_8_R1.NBTReadLimiter;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.BiomeBase;
+import net.minecraft.server.v1_8_R2.EntityTypes;
+import net.minecraft.server.v1_8_R2.EntityWither;
+import net.minecraft.server.v1_8_R2.NBTReadLimiter;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWither;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWither;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import us.corenetwork.mantle.util.ReflectionUtils;
+import us.corenetwork.mantle.util.VanillaReplacingUtil;
 
 public class NMSWitherManager {
     public static void register()
     {
-        //Replace "Wither" entity type
-        ((Map) ReflectionUtils.getStatic(EntityTypes.class, "c")).put("WitherBoss", CustomWither.class);
-        ((Map) ReflectionUtils.getStatic(EntityTypes.class, "d")).put(CustomWither.class, "WitherBoss");
-        ((Map) ReflectionUtils.getStatic(EntityTypes.class, "e")).put(64, CustomWither.class);
-        ((Map) ReflectionUtils.getStatic(EntityTypes.class, "f")).put(CustomWither.class, 64);
-        ((Map) ReflectionUtils.getStatic(EntityTypes.class, "g")).put("WitherBoss", 64);
-
-        //Replace all villagers in biomes
-        BiomeBase[] biomes = (BiomeBase[]) ReflectionUtils.getStatic(BiomeBase.class, "biomes");
-        for (BiomeBase biome : biomes)
-        {
-            if (biome == null)
-                continue;
-
-            fixBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "aw"));
-            fixBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "at"));
-            fixBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "au"));
-            fixBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "av"));
-
-        }
-    }
-
-    private static void fixBiomeMeta(List<BiomeMeta> meta)
-    {
-        for (BiomeMeta m : meta)
-        {
-            if (m.b.equals(EntityWither.class))
-            {
-                m.b = CustomWither.class;
-            }
-        }
+        VanillaReplacingUtil.replaceMob("WitherBoss", 64, EntityWither.class, CustomWither.class);
     }
 
     /***

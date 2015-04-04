@@ -1,16 +1,16 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashSet;
-import net.minecraft.server.v1_8_R1.AttributeInstance;
-import net.minecraft.server.v1_8_R1.EntityPlayer;
-import net.minecraft.server.v1_8_R1.GenericAttributes;
+import net.minecraft.server.v1_8_R2.AttributeInstance;
+import net.minecraft.server.v1_8_R2.EntityPlayer;
+import net.minecraft.server.v1_8_R2.GenericAttributes;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

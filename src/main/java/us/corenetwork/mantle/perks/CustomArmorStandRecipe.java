@@ -1,14 +1,14 @@
 package us.corenetwork.mantle.perks;
 
-import net.minecraft.server.v1_8_R1.IRecipe;
-import net.minecraft.server.v1_8_R1.InventoryCrafting;
-import net.minecraft.server.v1_8_R1.ItemStack;
-import net.minecraft.server.v1_8_R1.Items;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.NBTTagFloat;
-import net.minecraft.server.v1_8_R1.NBTTagList;
-import net.minecraft.server.v1_8_R1.ShapelessRecipes;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.IRecipe;
+import net.minecraft.server.v1_8_R2.InventoryCrafting;
+import net.minecraft.server.v1_8_R2.ItemStack;
+import net.minecraft.server.v1_8_R2.Items;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.NBTTagFloat;
+import net.minecraft.server.v1_8_R2.NBTTagList;
+import net.minecraft.server.v1_8_R2.ShapelessRecipes;
+import net.minecraft.server.v1_8_R2.World;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 import us.corenetwork.mantle.util.InventoryUtil;

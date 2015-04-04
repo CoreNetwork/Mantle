@@ -1,19 +1,19 @@
 package us.corenetwork.mantle.perks;
 
-import net.minecraft.server.v1_8_R1.BlockPosition;
-import net.minecraft.server.v1_8_R1.Items;
-import net.minecraft.server.v1_8_R1.NBTTagByte;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.NBTTagList;
-import net.minecraft.server.v1_8_R1.NBTTagString;
-import net.minecraft.server.v1_8_R1.TileEntityBanner;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.BlockPosition;
+import net.minecraft.server.v1_8_R2.Items;
+import net.minecraft.server.v1_8_R2.NBTTagByte;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.NBTTagList;
+import net.minecraft.server.v1_8_R2.NBTTagString;
+import net.minecraft.server.v1_8_R2.TileEntityBanner;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.block.CraftBlock;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.Util;
@@ -35,7 +35,7 @@ public class PerksUtil
     /**
      * Check if specified NMS ItemStack has golden name
      */
-    public static boolean hasGoldenName(net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+    public static boolean hasGoldenName(net.minecraft.server.v1_8_R2.ItemStack nmsStack)
     {
         String name = NanobotUtil.getStackName(nmsStack);
         if (name != null && name.startsWith(GOLD_START))
@@ -120,7 +120,7 @@ public class PerksUtil
     /**
      * Add gold name and lore to banner
      */
-    public static void addLoreToBanner(net.minecraft.server.v1_8_R1.ItemStack banner)
+    public static void addLoreToBanner(net.minecraft.server.v1_8_R2.ItemStack banner)
     {
         String customName = GOLD_START.concat(Items.BANNER.a(banner));
 

@@ -5,14 +5,14 @@ import java.util.Random;
 import java.util.logging.Logger;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.permission.Permission;
-import net.minecraft.server.v1_8_R1.EntityChicken;
-import net.minecraft.server.v1_8_R1.EntityCow;
-import net.minecraft.server.v1_8_R1.EntityPig;
-import net.minecraft.server.v1_8_R1.EntityPigZombie;
-import net.minecraft.server.v1_8_R1.EntityRabbit;
-import net.minecraft.server.v1_8_R1.EntitySheep;
-import net.minecraft.server.v1_8_R1.EntitySkeleton;
-import net.minecraft.server.v1_8_R1.EntityWitch;
+import net.minecraft.server.v1_8_R2.EntityChicken;
+import net.minecraft.server.v1_8_R2.EntityCow;
+import net.minecraft.server.v1_8_R2.EntityPig;
+import net.minecraft.server.v1_8_R2.EntityPigZombie;
+import net.minecraft.server.v1_8_R2.EntityRabbit;
+import net.minecraft.server.v1_8_R2.EntitySheep;
+import net.minecraft.server.v1_8_R2.EntitySkeleton;
+import net.minecraft.server.v1_8_R2.EntityWitch;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -32,7 +32,6 @@ import us.corenetwork.mantle.mantlecommands.BaseMantleCommand;
 import us.corenetwork.mantle.mantlecommands.ChunkInfoCommand;
 import us.corenetwork.mantle.mantlecommands.DebugCommand;
 import us.corenetwork.mantle.mantlecommands.TabReloadCommand;
-import us.corenetwork.mantle.mantlecommands.DumpChunksCommand;
 import us.corenetwork.mantle.mantlecommands.ReloadCommand;
 import us.corenetwork.mantle.util.VanillaReplacingUtil;
 
@@ -74,7 +73,6 @@ public class MantlePlugin extends JavaPlugin {
 		//Admin commands
 		adminCommands.put("help", new AdminHelpCommand());		
 		adminCommands.put("reload", new ReloadCommand());
-		adminCommands.put("dumpchunks", new DumpChunksCommand());
 		adminCommands.put("chunkinfo", new ChunkInfoCommand());
 		adminCommands.put("tabreload", new TabReloadCommand());
 		adminCommands.put("debug", new DebugCommand());

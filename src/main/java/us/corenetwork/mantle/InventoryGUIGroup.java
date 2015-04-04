@@ -2,7 +2,7 @@ package us.corenetwork.mantle;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftHumanEntity;
 
 /**
  * Created by Matej on 15.12.2014.

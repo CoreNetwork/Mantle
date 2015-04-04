@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.hardmode.animals;
 
-import net.minecraft.server.v1_8_R1.EntityCow;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.EntityCow;
+import net.minecraft.server.v1_8_R2.World;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class CustomCow extends EntityCow

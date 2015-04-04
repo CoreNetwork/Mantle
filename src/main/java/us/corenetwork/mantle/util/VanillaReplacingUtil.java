@@ -2,9 +2,8 @@ package us.corenetwork.mantle.util;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_8_R1.BiomeBase;
-import net.minecraft.server.v1_8_R1.BiomeMeta;
-import net.minecraft.server.v1_8_R1.EntityTypes;
+import net.minecraft.server.v1_8_R2.BiomeBase;
+import net.minecraft.server.v1_8_R2.EntityTypes;
 
 /**
  * Util for replacing vanilla stuff with our stuff (like entities or blocks)
@@ -34,17 +33,17 @@ public class VanillaReplacingUtil
             if (biome == null)
                 continue;
 
-            replaceMobsInBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "aw"), oldClass, newClass);
-            replaceMobsInBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "at"), oldClass, newClass);
-            replaceMobsInBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "au"), oldClass, newClass);
-            replaceMobsInBiomeMeta((List<BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "av"), oldClass, newClass);
+            replaceMobsInBiomeMeta((List<BiomeBase.BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "aw"), oldClass, newClass);
+            replaceMobsInBiomeMeta((List<BiomeBase.BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "at"), oldClass, newClass);
+            replaceMobsInBiomeMeta((List<BiomeBase.BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "au"), oldClass, newClass);
+            replaceMobsInBiomeMeta((List<BiomeBase.BiomeMeta>) ReflectionUtils.get(BiomeBase.class, biome, "av"), oldClass, newClass);
         }
 
     }
 
-    private static void replaceMobsInBiomeMeta(List<BiomeMeta> meta, Class oldClass, Class newClass)
+    private static void replaceMobsInBiomeMeta(List<BiomeBase.BiomeMeta> meta, Class oldClass, Class newClass)
     {
-        for (BiomeMeta m : meta)
+        for (BiomeBase.BiomeMeta m : meta)
         {
             if (m.b.equals(oldClass))
             {

@@ -9,17 +9,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.server.v1_8_R1.BlockPosition;
-import net.minecraft.server.v1_8_R1.EnumParticle;
-import net.minecraft.server.v1_8_R1.PacketPlayOutBlockAction;
-import net.minecraft.server.v1_8_R1.TileEntity;
-import net.minecraft.server.v1_8_R1.TileEntityBeacon;
-import net.minecraft.server.v1_8_R1.TileEntityBrewingStand;
-import net.minecraft.server.v1_8_R1.TileEntityChest;
-import net.minecraft.server.v1_8_R1.TileEntityDispenser;
-import net.minecraft.server.v1_8_R1.TileEntityDropper;
-import net.minecraft.server.v1_8_R1.TileEntityFurnace;
-import net.minecraft.server.v1_8_R1.TileEntityHopper;
+import net.minecraft.server.v1_8_R2.BlockPosition;
+import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R2.PacketPlayOutBlockAction;
+import net.minecraft.server.v1_8_R2.TileEntity;
+import net.minecraft.server.v1_8_R2.TileEntityBeacon;
+import net.minecraft.server.v1_8_R2.TileEntityBrewingStand;
+import net.minecraft.server.v1_8_R2.TileEntityChest;
+import net.minecraft.server.v1_8_R2.TileEntityDispenser;
+import net.minecraft.server.v1_8_R2.TileEntityDropper;
+import net.minecraft.server.v1_8_R2.TileEntityFurnace;
+import net.minecraft.server.v1_8_R2.TileEntityHopper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -28,11 +28,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -379,7 +379,7 @@ public class RestockableChest {
 		//Chest animation
 		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
 		{
-			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(new BlockPosition(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ()), net.minecraft.server.v1_8_R1.Block.getById(chestBlock.getTypeId()), 1, 1);
+			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(new BlockPosition(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ()), net.minecraft.server.v1_8_R2.Block.getById(chestBlock.getTypeId()), 1, 1);
 
 			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 			nearbyEntities.add(player);
@@ -424,7 +424,7 @@ public class RestockableChest {
 				//Chest animation
 				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
 				{
-					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(new BlockPosition(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ()), net.minecraft.server.v1_8_R1.Block.getById(chest.chestBlock.getTypeId()), 1, 0);
+					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(new BlockPosition(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ()), net.minecraft.server.v1_8_R2.Block.getById(chest.chestBlock.getTypeId()), 1, 0);
 					
 					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 					nearbyEntities.add(player);
@@ -1159,7 +1159,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_8_R1.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventoryCustom$MinecraftInventory");
 
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);

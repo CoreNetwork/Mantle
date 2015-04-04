@@ -11,8 +11,8 @@ import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftFirework;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftFirework;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
@@ -113,8 +113,8 @@ public class Util
         meta.setPower(0);
         firework.setFireworkMeta(meta);
 
-        net.minecraft.server.v1_8_R1.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
-        net.minecraft.server.v1_8_R1.World world = ((CraftWorld) location.getWorld()).getHandle();
+        net.minecraft.server.v1_8_R2.EntityFireworks nmsFirework = ((CraftFirework) firework).getHandle();
+        net.minecraft.server.v1_8_R2.World world = ((CraftWorld) location.getWorld()).getHandle();
 
         world.broadcastEntityEffect(nmsFirework, (byte) 17);
 
@@ -258,12 +258,12 @@ public class Util
 
     public static boolean isInWorldBorderBounds(Block block)
     {
-        net.minecraft.server.v1_8_R1.WorldBorder nmsWorldBorder = ((CraftWorld) block.getWorld()).getHandle().af();
-        double halfSize = nmsWorldBorder.h() / 2;
-        return      block.getX() > nmsWorldBorder.f() - halfSize
-                &&  block.getX() < nmsWorldBorder.f() + halfSize
-                &&  block.getZ() > nmsWorldBorder.g() - halfSize
-                &&  block.getZ() < nmsWorldBorder.g() + halfSize;
+        net.minecraft.server.v1_8_R2.WorldBorder nmsWorldBorder = ((CraftWorld) block.getWorld()).getHandle().getWorldBorder();
+        double halfSize = nmsWorldBorder.getSize() / 2;
+        return      block.getX() > nmsWorldBorder.getCenterX() - halfSize
+                &&  block.getX() < nmsWorldBorder.getCenterX() + halfSize
+                &&  block.getZ() > nmsWorldBorder.getCenterZ() - halfSize
+                &&  block.getZ() < nmsWorldBorder.getCenterZ() + halfSize;
     }
 
     private static long debugTimer = System.currentTimeMillis();

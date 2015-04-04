@@ -1,13 +1,13 @@
 package us.corenetwork.mantle.hardmode.wither;
 
-import net.minecraft.server.v1_8_R1.DamageSource;
-import net.minecraft.server.v1_8_R1.EntityLiving;
-import net.minecraft.server.v1_8_R1.EntityWitherSkull;
-import net.minecraft.server.v1_8_R1.EnumDifficulty;
-import net.minecraft.server.v1_8_R1.MobEffect;
-import net.minecraft.server.v1_8_R1.MobEffectList;
-import net.minecraft.server.v1_8_R1.MovingObjectPosition;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.DamageSource;
+import net.minecraft.server.v1_8_R2.EntityLiving;
+import net.minecraft.server.v1_8_R2.EntityWitherSkull;
+import net.minecraft.server.v1_8_R2.EnumDifficulty;
+import net.minecraft.server.v1_8_R2.MobEffect;
+import net.minecraft.server.v1_8_R2.MobEffectList;
+import net.minecraft.server.v1_8_R2.MovingObjectPosition;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.event.entity.ExplosionPrimeEvent;
 
 public class CustomWitherSkull extends EntityWitherSkull {

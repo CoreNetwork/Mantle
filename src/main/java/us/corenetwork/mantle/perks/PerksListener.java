@@ -63,7 +63,7 @@ public class PerksListener implements Listener
         ItemStack stackInHand = event.getItem();
         if (stackInHand != null && stackInHand.getType() == Material.ARMOR_STAND)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
             if (!PerksUtil.isSupposedToBePerkArmorStandItem(nmsStack.getTag())) //Do not perform any checks if item is not subscriber-only
                 return;
 
@@ -89,7 +89,7 @@ public class PerksListener implements Listener
 
         if (stackInHand != null)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
             if(nmsStack == null)
                 return;
 
@@ -119,7 +119,7 @@ public class PerksListener implements Listener
         ItemStack stackInHand = event.getItemInHand();
         if (stackInHand != null && stackInHand.getType() == Material.BANNER)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
             if (!PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag())) //Do not perform any checks if item is not subscriber-only
                 return;
 
@@ -132,7 +132,7 @@ public class PerksListener implements Listener
 
         if (stackInHand != null && stackInHand.getType() == Material.SKULL_ITEM)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stackInHand);
             if (!PerksUtil.iSupposedToBePerkSkullItem(nmsStack.getTag()))
                 return;
 
@@ -150,7 +150,7 @@ public class PerksListener implements Listener
         ItemStack item = event.getItem().getItemStack();
         if (item.getType() == Material.BANNER)
         {
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(item);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(item);
             if (PerksUtil.isSupposedToBePerkBannerItem(nmsStack.getTag()))
             {
                 PerksUtil.addLoreToBanner(nmsStack);
@@ -217,7 +217,7 @@ public class PerksListener implements Listener
         });
     }
 
-    private static boolean canPlaceArmorStand(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+    private static boolean canPlaceArmorStand(Player player, Block block, net.minecraft.server.v1_8_R2.ItemStack nmsStack)
     {
         if (!Util.hasPermission(player, "mantle.perks.advarmorstand"))
         {
@@ -236,7 +236,7 @@ public class PerksListener implements Listener
         return true;
     }
 
-    private static boolean canPlaceBanner(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+    private static boolean canPlaceBanner(Player player, Block block, net.minecraft.server.v1_8_R2.ItemStack nmsStack)
     {
         if (!Util.hasPermission(player, "mantle.perks.advbanners"))
         {
@@ -255,7 +255,7 @@ public class PerksListener implements Listener
         return true;
     }
 
-    private static boolean canPlaceSkull(Player player, Block block, net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+    private static boolean canPlaceSkull(Player player, Block block, net.minecraft.server.v1_8_R2.ItemStack nmsStack)
     {
         if (!Util.hasPermission(player, "mantle.perks.advskulls"))
         {

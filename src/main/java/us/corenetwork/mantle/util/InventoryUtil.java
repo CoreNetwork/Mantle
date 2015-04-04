@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.util;
 
-import net.minecraft.server.v1_8_R1.IInventory;
-import net.minecraft.server.v1_8_R1.Item;
+import net.minecraft.server.v1_8_R2.IInventory;
+import net.minecraft.server.v1_8_R2.Item;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -88,7 +88,7 @@ public class InventoryUtil
      */
     public static boolean isItemTypeOnSlot(IInventory inventory, int slot, Item item)
     {
-        net.minecraft.server.v1_8_R1.ItemStack stack = inventory.getItem(slot);
+        net.minecraft.server.v1_8_R2.ItemStack stack = inventory.getItem(slot);
         if (stack == null)
             return false;
 

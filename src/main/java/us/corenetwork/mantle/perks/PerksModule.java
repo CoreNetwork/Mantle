@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.perks;
 
 import java.util.HashMap;
-import net.minecraft.server.v1_8_R1.CraftingManager;
+import net.minecraft.server.v1_8_R2.CraftingManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

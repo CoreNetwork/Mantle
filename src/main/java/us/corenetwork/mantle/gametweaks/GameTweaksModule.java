@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.gametweaks;
 
-import net.minecraft.server.v1_8_R1.Block;
+import net.minecraft.server.v1_8_R2.Block;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

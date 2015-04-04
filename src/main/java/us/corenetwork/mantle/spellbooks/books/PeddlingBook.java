@@ -4,16 +4,16 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import me.ryanhamshire.GriefPrevention.Claim;
-import net.minecraft.server.v1_8_R1.EntityVillager;
-import net.minecraft.server.v1_8_R1.Items;
-import net.minecraft.server.v1_8_R1.MerchantRecipe;
-import net.minecraft.server.v1_8_R1.MerchantRecipeList;
+import net.minecraft.server.v1_8_R2.EntityVillager;
+import net.minecraft.server.v1_8_R2.Items;
+import net.minecraft.server.v1_8_R2.MerchantRecipe;
+import net.minecraft.server.v1_8_R2.MerchantRecipeList;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -89,11 +89,11 @@ public class PeddlingBook extends Spellbook {
 			if (item == null || item.getType() == Material.AIR)
 				continue;
 					
-			net.minecraft.server.v1_8_R1.ItemStack nmsItem = NanobotUtil.getInternalNMSStack(item);
+			net.minecraft.server.v1_8_R2.ItemStack nmsItem = NanobotUtil.getInternalNMSStack(item);
 			
 			for (RecipeData recipe : recipes)
 			{
-				if (net.minecraft.server.v1_8_R1.ItemStack.c(nmsItem, recipe.sellItem))
+				if (net.minecraft.server.v1_8_R2.ItemStack.c(nmsItem, recipe.sellItem))
 				{
 					recipe.amountPlayerHave += item.getAmount();
 				}
@@ -159,15 +159,15 @@ public class PeddlingBook extends Spellbook {
 
 	}
 	
-	private static void removeItem(Inventory inventory, net.minecraft.server.v1_8_R1.ItemStack comparingItem, int amount)
+	private static void removeItem(Inventory inventory, net.minecraft.server.v1_8_R2.ItemStack comparingItem, int amount)
 	{
 		for (int i = 0; i < inventory.getSize(); i++)
 		{
 			ItemStack stack = inventory.getItem(i);
 			if (stack != null && stack.getType() != Material.AIR)
 			{
-				net.minecraft.server.v1_8_R1.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stack);
-				if (!net.minecraft.server.v1_8_R1.ItemStack.c(nmsStack, comparingItem))
+				net.minecraft.server.v1_8_R2.ItemStack nmsStack = NanobotUtil.getInternalNMSStack(stack);
+				if (!net.minecraft.server.v1_8_R2.ItemStack.c(nmsStack, comparingItem))
 					continue;
 				
 				int stackAmount = stack.getAmount();
@@ -195,7 +195,7 @@ public class PeddlingBook extends Spellbook {
 	
 	private static class RecipeData
 	{
-		public net.minecraft.server.v1_8_R1.ItemStack sellItem;
+		public net.minecraft.server.v1_8_R2.ItemStack sellItem;
 		public int amountPlayerHave;
 		public double itemsPerEmerald;
 		
