@@ -32,7 +32,7 @@ public class CustomBlockBeacon extends BlockContainer
         {
             Object blockData = Blocks.BEACON.getBlockData();
 
-            Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R2.BlockData");
+            Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R2.BlockStateList$BlockData");
             Field blockField = blockDataClass.getDeclaredField("a");
             blockField.setAccessible(true);
             blockField.set(blockData, this);

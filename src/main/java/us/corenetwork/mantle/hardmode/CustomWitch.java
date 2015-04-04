@@ -20,7 +20,7 @@ public class CustomWitch extends EntityWitch
     {
         try
         {
-            pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R2.PathfinderGoalSelectorItem");
+            pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R2.PathfinderGoalSelector$PathfinderGoalSelectorItem");
         }
         catch (ClassNotFoundException e1)
         {
