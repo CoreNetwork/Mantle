@@ -23,6 +23,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class CustomWither extends EntityWither {
@@ -406,7 +407,7 @@ public class CustomWither extends EntityWither {
         //If on flashing-blue phase during spawning.
         if (inSpawningPhase)
         {
-            i = this.cj() - 1;
+            i = this.cl() - 1;
             if (i <= 0)
             {
                 this.world.createExplosion(this, this.locX, this.locY + (double) this.getHeadHeight(), this.locZ, 7.0F, false, this.world.getGameRules().getBoolean("mobGriefing"));
@@ -436,7 +437,7 @@ public class CustomWither extends EntityWither {
             //Shoot them!
             if (ticksLived > nextShootTime && isNormalAttackEnabled())
             {
-                nextShootTime = ticksLived + BS_SHOOT_BASIC_TIME + this.bb().nextInt(2 * BS_SHOOT_TIME_VARIANCE) - BS_SHOOT_TIME_VARIANCE;
+                nextShootTime = ticksLived + BS_SHOOT_BASIC_TIME + MantlePlugin.random.nextInt(2 * BS_SHOOT_TIME_VARIANCE) - BS_SHOOT_TIME_VARIANCE;
 
                 Collections.shuffle(targetList);
                 i = 1;
@@ -641,13 +642,6 @@ public class CustomWither extends EntityWither {
     public boolean ck()
     {
         return false;
-    }
-
-    //Higher jump - if we ever need to make him actually jump on one block
-    @Override
-    protected float bD()
-    {
-        return 0.8F;
     }
 
     public boolean damageEntity(DamageSource damagesource, float damage)
