@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 /**
@@ -80,8 +81,8 @@ public class MoveMinions extends AbstractWitherMove {
 
             while(!found && tries < 10)
             {
-                angleLong = wither.bb().nextFloat() * 6.28318530718F;
-                offR = wither.bb().nextFloat() * (SPAWN_RADIUS_MAX - SPAWN_RADIUS_MIN) + SPAWN_RADIUS_MIN;
+                angleLong = MantlePlugin.random.nextFloat() * 6.28318530718F;
+                offR = MantlePlugin.random.nextFloat() * (SPAWN_RADIUS_MAX - SPAWN_RADIUS_MIN) + SPAWN_RADIUS_MIN;
                 newX = loc.getBlockX() + offR * MathHelper.cos(angleLong);
                 newZ = loc.getBlockZ() + offR * MathHelper.sin(angleLong);
 

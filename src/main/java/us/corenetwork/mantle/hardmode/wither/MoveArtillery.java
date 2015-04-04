@@ -5,6 +5,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class MoveArtillery extends AbstractWitherMove {
@@ -79,7 +80,7 @@ public class MoveArtillery extends AbstractWitherMove {
         startLocX = wither.locX;
         startLocZ = wither.locZ;
 
-        nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + wither.bb().nextInt(2 * MOVE_VARIANCE) - MOVE_VARIANCE;
+        nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + MantlePlugin.random.nextInt(2 * MOVE_VARIANCE) - MOVE_VARIANCE;
 
     }
 
@@ -98,13 +99,13 @@ public class MoveArtillery extends AbstractWitherMove {
     {
         if (wither.world.getTime() > nextMoveTime)
         {
-            nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + wither.bb().nextInt(2 * MOVE_VARIANCE) - MOVE_VARIANCE;
+            nextMoveTime = wither.world.getTime() + MOVE_BASIC_TIME + MantlePlugin.random.nextInt(2 * MOVE_VARIANCE) - MOVE_VARIANCE;
 
             determineGroundLevel(wither.locX, wither.locZ);
 
-            finalHeight = groundY + wither.bb().nextDouble() * (MAX_VERTICAL - MIN_VERTICAL) + MIN_VERTICAL;
-            double diffX = wither.bb().nextDouble() * (MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
-            double diffZ = wither.bb().nextDouble() * (MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
+            finalHeight = groundY + MantlePlugin.random.nextDouble() * (MAX_VERTICAL - MIN_VERTICAL) + MIN_VERTICAL;
+            double diffX = MantlePlugin.random.nextDouble() * (MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
+            double diffZ = MantlePlugin.random.nextDouble() * (MAX_HORIZONTAL - MIN_HORIZONTAL) + MIN_HORIZONTAL;
 
             targetEntity.setPosition(startLocX + diffX, finalHeight, startLocZ + diffZ);
         }

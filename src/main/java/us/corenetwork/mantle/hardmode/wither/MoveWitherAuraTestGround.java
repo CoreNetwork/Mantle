@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import net.minecraft.server.v1_8_R2.MathHelper;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class MoveWitherAuraTestGround extends AbstractWitherMove {
@@ -104,7 +105,7 @@ public class MoveWitherAuraTestGround extends AbstractWitherMove {
 
                 for (int j = 0; j < SKULLS_PER_SEGMENT; j++)
                 {
-                    float randomDist = wither.bb().nextFloat() * (forwardDist + backwardsDist) - backwardsDist;
+                    float randomDist = MantlePlugin.random.nextFloat() * (forwardDist + backwardsDist) - backwardsDist;
 
                     if (randomDist > 0)
                     {

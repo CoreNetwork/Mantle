@@ -28,7 +28,6 @@ public class CustomWitherSkull extends EntityWitherSkull {
 
 
     protected void a(MovingObjectPosition movingobjectposition) {
-        if (!this.world.isStatic) {
             if (movingobjectposition.entity != null) {
                 // Spigot start
                 boolean didDamage = false;
@@ -71,8 +70,6 @@ public class CustomWitherSkull extends EntityWitherSkull {
             }
             // CraftBukkit end
             this.die();
-        }
-
     }
 
 }
