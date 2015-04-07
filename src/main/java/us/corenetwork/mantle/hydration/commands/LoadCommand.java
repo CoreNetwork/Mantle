@@ -29,6 +29,6 @@ public class LoadCommand extends BaseHydrationCommand {
 		playerData.save();
 				
 		HydrationUtil.updateNegativeEffects(player, playerData, null);
-		HydrationUtil.updateScoreboard(player.getName(), (int) Math.round(state.hydration));
+		HydrationUtil.updateScoreboard(player.getName(), playerData);
 	}	
 }

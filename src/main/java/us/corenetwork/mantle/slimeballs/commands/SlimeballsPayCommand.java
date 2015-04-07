@@ -9,9 +9,15 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.slimeballs.SlimeballsSettings;
 import us.corenetwork.mantle.slimeballs.SlimeballsStorage;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 
 public class SlimeballsPayCommand extends BaseSlimeballsCommand
 {
+
+	private Map<UUID, Long> lastExec = new HashMap<UUID, Long>();
 
 	public SlimeballsPayCommand()
 	{
@@ -23,7 +29,20 @@ public class SlimeballsPayCommand extends BaseSlimeballsCommand
 
 	public void run(CommandSender sender, String[] args) {
 		Player player = (Player) sender;
-		int slimeballs = SlimeballsStorage.getSlimeballs(player.getUniqueId());
+
+		UUID uuid = player.getUniqueId();
+
+		if(lastExec.containsKey(uuid))
+		{
+			if(System.currentTimeMillis() - lastExec.get(uuid) < SlimeballsSettings.MINIMUM_TIME_BETWEEN_PAY_SECONDS.integer()*1000)
+			{
+				return;
+			}
+		}
+
+		lastExec.put(uuid, System.currentTimeMillis());
+
+		int slimeballs = SlimeballsStorage.getSlimeballs(uuid);
 
 		if (slimeballs < 1)
 		{

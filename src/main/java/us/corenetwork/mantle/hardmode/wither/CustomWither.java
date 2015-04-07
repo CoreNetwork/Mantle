@@ -5,24 +5,25 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.Block;
-import net.minecraft.server.v1_8_R1.BlockPosition;
-import net.minecraft.server.v1_8_R1.Blocks;
-import net.minecraft.server.v1_8_R1.DamageSource;
-import net.minecraft.server.v1_8_R1.Entity;
-import net.minecraft.server.v1_8_R1.EntityHuman;
-import net.minecraft.server.v1_8_R1.EntityLiving;
-import net.minecraft.server.v1_8_R1.EntityWither;
-import net.minecraft.server.v1_8_R1.EnumParticle;
-import net.minecraft.server.v1_8_R1.GenericAttributes;
-import net.minecraft.server.v1_8_R1.Material;
-import net.minecraft.server.v1_8_R1.MathHelper;
-import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.Block;
+import net.minecraft.server.v1_8_R2.BlockPosition;
+import net.minecraft.server.v1_8_R2.Blocks;
+import net.minecraft.server.v1_8_R2.DamageSource;
+import net.minecraft.server.v1_8_R2.Entity;
+import net.minecraft.server.v1_8_R2.EntityHuman;
+import net.minecraft.server.v1_8_R2.EntityLiving;
+import net.minecraft.server.v1_8_R2.EntityWither;
+import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R2.GenericAttributes;
+import net.minecraft.server.v1_8_R2.Material;
+import net.minecraft.server.v1_8_R2.MathHelper;
+import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.util.UnsafeList;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class CustomWither extends EntityWither {
@@ -121,7 +122,7 @@ public class CustomWither extends EntityWither {
             gsa.set(this.goalSelector, new UnsafeList());
             gsa.set(this.targetSelector, new UnsafeList());
 
-            Field suffCounter = EntityWither.class.getDeclaredField("bo");
+            Field suffCounter = EntityWither.class.getDeclaredField("bp");
             suffCounter.setAccessible(true);
             suffCounter.getInt(this);
 
@@ -406,7 +407,7 @@ public class CustomWither extends EntityWither {
         //If on flashing-blue phase during spawning.
         if (inSpawningPhase)
         {
-            i = this.cj() - 1;
+            i = this.cl() - 1;
             if (i <= 0)
             {
                 this.world.createExplosion(this, this.locX, this.locY + (double) this.getHeadHeight(), this.locZ, 7.0F, false, this.world.getGameRules().getBoolean("mobGriefing"));
@@ -436,7 +437,7 @@ public class CustomWither extends EntityWither {
             //Shoot them!
             if (ticksLived > nextShootTime && isNormalAttackEnabled())
             {
-                nextShootTime = ticksLived + BS_SHOOT_BASIC_TIME + this.bb().nextInt(2 * BS_SHOOT_TIME_VARIANCE) - BS_SHOOT_TIME_VARIANCE;
+                nextShootTime = ticksLived + BS_SHOOT_BASIC_TIME + MantlePlugin.random.nextInt(2 * BS_SHOOT_TIME_VARIANCE) - BS_SHOOT_TIME_VARIANCE;
 
                 Collections.shuffle(targetList);
                 i = 1;
@@ -468,7 +469,7 @@ public class CustomWither extends EntityWither {
             {
 
                 //reflection to get/set value of suffocation counter
-                Field suffCounter = EntityWither.class.getDeclaredField("bo");
+                Field suffCounter = EntityWither.class.getDeclaredField("bp");
                 suffCounter.setAccessible(true);
                 int suffCount = suffCounter.getInt(this);
 
@@ -548,7 +549,7 @@ public class CustomWither extends EntityWither {
         {
 
             //reflection to get/set value of suffocation counter
-            Field suffCounter = EntityWither.class.getDeclaredField("bo");
+            Field suffCounter = EntityWither.class.getDeclaredField("bp");
             suffCounter.setAccessible(true);
             suffCounter.setInt(this, value);
         } catch (Exception e1)
@@ -641,13 +642,6 @@ public class CustomWither extends EntityWither {
     public boolean ck()
     {
         return false;
-    }
-
-    //Higher jump - if we ever need to make him actually jump on one block
-    @Override
-    protected float bD()
-    {
-        return 0.8F;
     }
 
     public boolean damageEntity(DamageSource damagesource, float damage)

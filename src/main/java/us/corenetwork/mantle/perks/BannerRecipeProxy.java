@@ -2,17 +2,13 @@ package us.corenetwork.mantle.perks;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.Blocks;
-import net.minecraft.server.v1_8_R1.CraftingManager;
-import net.minecraft.server.v1_8_R1.EnumBannerPatternType;
-import net.minecraft.server.v1_8_R1.IRecipe;
-import net.minecraft.server.v1_8_R1.InventoryCrafting;
-import net.minecraft.server.v1_8_R1.ItemStack;
-import net.minecraft.server.v1_8_R1.Items;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.NBTTagList;
-import net.minecraft.server.v1_8_R1.NBTTagString;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.Blocks;
+import net.minecraft.server.v1_8_R2.CraftingManager;
+import net.minecraft.server.v1_8_R2.IRecipe;
+import net.minecraft.server.v1_8_R2.InventoryCrafting;
+import net.minecraft.server.v1_8_R2.ItemStack;
+import net.minecraft.server.v1_8_R2.TileEntityBanner;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.inventory.Recipe;
 import us.core_network.cornel.common.Messages;
 import us.core_network.cornel.custom.PerksUtil;
@@ -92,7 +88,7 @@ public class BannerRecipeProxy implements IRecipe
         {
             IRecipe recipe = iterator.next();
 
-            if (recipe.getClass().getName().equals("net.minecraft.server.v1_8_R1.RecipesBannerInnerClass2"))
+            if (recipe.getClass().getName().equals("net.minecraft.server.v1_8_R2.RecipesBanner$DuplicateRecipe"))
             {
                 original = recipe;
                 iterator.remove();
@@ -109,8 +105,8 @@ public class BannerRecipeProxy implements IRecipe
         recipes.add(new BannerRecipeProxy(original));
 
         //Change recipes that contain bricks and vines
-        ReflectionUtils.set(EnumBannerPatternType.CURLY_BORDER, "Q", new ItemStack(Blocks.TALLGRASS, 1, 1));
-        ReflectionUtils.set(EnumBannerPatternType.BRICKS, "Q", new ItemStack(Blocks.STONEBRICK));
+        ReflectionUtils.set(TileEntityBanner.EnumBannerPatternType.CURLY_BORDER, "Q", new ItemStack(Blocks.TALLGRASS, 1, 1));
+        ReflectionUtils.set(TileEntityBanner.EnumBannerPatternType.BRICKS, "Q", new ItemStack(Blocks.STONEBRICK));
     }
 
     /**

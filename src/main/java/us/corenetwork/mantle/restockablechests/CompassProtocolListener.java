@@ -6,11 +6,11 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -71,7 +71,7 @@ public class CompassProtocolListener extends PacketAdapter {
 
 
             //Add blank enchantment tag
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = (net.minecraft.server.v1_8_R1.ItemStack) handleField.get(stack);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = (net.minecraft.server.v1_8_R2.ItemStack) handleField.get(stack);
             nmsStack.setTag(nbtTag);
 
             String replacement = ChatColor.translateAlternateColorCodes('&',RChestSettings.MESSAGE_COMPASS_NAME_BLANK.string());

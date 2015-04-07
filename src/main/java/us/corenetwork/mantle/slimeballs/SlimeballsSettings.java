@@ -5,6 +5,8 @@ public enum SlimeballsSettings
 {
 	RELEASE_COMMAND("ReleaseCommand", "limbo release <Player>"),
 
+	MINIMUM_TIME_BETWEEN_PAY_SECONDS("MinTimeBetweenPayInSeconds", 1),
+
 	MESSAGE_SLIMEBALLS_ACCOUNT_HEADER_EMPTY("Messages.Account.HeaderEmpty", "You don't have slimeballs!"),
 	MESSAGE_SLIMEBALLS_ACCOUNT_HEADER_NOT_EMPTY("Messages.Account.HeaderNotEmpty", "You have <Amount> slimeball<PluralS>!"),
 	MESSAGE_SLIMEBALLS_ACCOUNT_MOD("Messages.Account.Mod", "<Player>'s slimeballs: <Amount>"),

@@ -7,10 +7,10 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
 import java.lang.reflect.Field;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.NBTTagList;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.NBTTagList;
 import org.bukkit.GameMode;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -95,7 +95,7 @@ public class ItemProtocolListener extends PacketAdapter {
             }
 
             //Add blank enchantment tag
-            net.minecraft.server.v1_8_R1.ItemStack nmsStack = (net.minecraft.server.v1_8_R1.ItemStack) handleField.get(stack);
+            net.minecraft.server.v1_8_R2.ItemStack nmsStack = (net.minecraft.server.v1_8_R2.ItemStack) handleField.get(stack);
             if (!nmsStack.hasTag())
             {
                 nmsStack.setTag(new NBTTagCompound());

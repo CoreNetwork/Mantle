@@ -2,19 +2,19 @@ package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
 import java.util.Random;
-import net.minecraft.server.v1_8_R1.EntityInsentient;
-import net.minecraft.server.v1_8_R1.EntitySkeleton;
-import net.minecraft.server.v1_8_R1.GenericAttributes;
-import net.minecraft.server.v1_8_R1.PathfinderGoal;
-import net.minecraft.server.v1_8_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.EntityInsentient;
+import net.minecraft.server.v1_8_R2.EntitySkeleton;
+import net.minecraft.server.v1_8_R2.GenericAttributes;
+import net.minecraft.server.v1_8_R2.PathfinderGoal;
+import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftSkeleton;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -116,14 +116,14 @@ public class NetherSpawner {
 
 			if (bowSkeleton)
 			{
-				Field bowPathFinder = EntitySkeleton.class.getDeclaredField("b");
+				Field bowPathFinder = EntitySkeleton.class.getDeclaredField("a");
 				bowPathFinder.setAccessible(true);
 				goalSelector.a(4, (PathfinderGoal) bowPathFinder.get(nmsSkeleton));
 
 			}
 			else
 			{
-				Field meleePathfinder = EntitySkeleton.class.getDeclaredField("c");
+				Field meleePathfinder = EntitySkeleton.class.getDeclaredField("b");
 				meleePathfinder.setAccessible(true);
 				goalSelector.a(4, (PathfinderGoal) meleePathfinder.get(nmsSkeleton));
 			}

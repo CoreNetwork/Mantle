@@ -7,11 +7,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import net.minecraft.server.v1_8_R1.EnchantmentManager;
+import net.minecraft.server.v1_8_R2.EnchantmentManager;
 import org.bukkit.Statistic;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -103,7 +103,7 @@ public class FishingConfig implements Listener {
                 event.setExpToDrop(selectedItem.getXp());
             }
             if (selectedItem.getEnchantLevel() != FishingItem.DONT_ENCHANT) {
-                net.minecraft.server.v1_8_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(replace);
+                net.minecraft.server.v1_8_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(replace);
                 nmsStack = EnchantmentManager.a(random, nmsStack, selectedItem.getEnchantLevel());
                 replace = CraftItemStack.asBukkitCopy(nmsStack);
             }

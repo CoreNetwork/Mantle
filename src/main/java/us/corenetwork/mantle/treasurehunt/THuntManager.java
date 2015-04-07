@@ -10,13 +10,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R1.EntityItem;
+import net.minecraft.server.v1_8_R2.EntityItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftItem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,10 +31,10 @@ import us.corenetwork.mantle.restockablechests.RChestsModule;
 
 public class THuntManager {
 	
-	private List<String> huntQueue; 
+	private List<UUID> huntQueue;
 	private boolean huntRunning;
 	private boolean skipDay;
-	private String activeHunt;
+	private UUID activeHunt;
 	
 	private List<Location> chestList;
 	private List<UUID> alreadyClicked;
@@ -49,7 +50,7 @@ public class THuntManager {
 	{
 		huntRunning = false;
 		skipDay = false;
-		huntQueue = Collections.synchronizedList(new ArrayList<String>());
+		huntQueue = Collections.synchronizedList(new ArrayList<UUID>());
 		chestList = new ArrayList<Location>();
 		alreadyClicked = new ArrayList<UUID>();
 		huntParticipants = new HashSet<UUID>();
@@ -65,13 +66,13 @@ public class THuntManager {
 		
 		for(String elem : savedQueue)
 		{
-			addToQueue(elem);
+			addToQueue(UUID.fromString(elem));
 		}
 		boolean running = THuntModule.instance.storageConfig.getBoolean("running");
 		
 		if(running)
 		{
-			String savedActiveHunt = THuntModule.instance.storageConfig.getString("activeHunt");
+			UUID savedActiveHunt = UUID.fromString(THuntModule.instance.storageConfig.getString("activeHunt"));
 			activeHunt = savedActiveHunt;
 			
 			for(String serializedLoc : THuntModule.instance.storageConfig.getStringList("chestList"))
@@ -85,9 +86,14 @@ public class THuntManager {
 	}
 	public void save()
 	{
-		THuntModule.instance.storageConfig.set("savedQueue", huntQueue);
+		List<String> stringHuntQueue = new ArrayList<>();
+		for(UUID uuid : huntQueue)
+		{
+			stringHuntQueue.add(uuid.toString());
+		}
+		THuntModule.instance.storageConfig.set("savedQueue", stringHuntQueue);
 		THuntModule.instance.storageConfig.set("running", huntRunning);
-		THuntModule.instance.storageConfig.set("activeHunt", activeHunt);
+		THuntModule.instance.storageConfig.set("activeHunt", activeHunt == null ? null : activeHunt.toString());
 		
 		List<String> serializedLocations = new ArrayList<String>();
 		for(Location loc : chestList)
@@ -154,9 +160,10 @@ public class THuntManager {
 		return huntParticipants.contains(player.getUniqueId());
 	}
 	
-	public void addToQueue(String playerName)
+	public void addToQueue(UUID uuid)
 	{
-		huntQueue.add(playerName);
+		String playerName = Bukkit.getOfflinePlayer(uuid).getName();
+		huntQueue.add(uuid);
 		
 		save();
 		
@@ -180,7 +187,15 @@ public class THuntManager {
             Messages.send(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE.string().replace("<Time>", timeInMinutes + ""), player);
 		}
 		
-		ArrayList<String> broadcastMessages = (ArrayList<String>) THuntModule.instance.config.getStringList(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE_BROADCAST.string);
+		ArrayList<String> broadcastMessages;
+		if(isRunning() || huntQueue.size() > 1)
+		{
+			broadcastMessages = (ArrayList<String>) THuntModule.instance.config.getStringList(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE_BROADCAST_Q_O_R.string);
+		}
+		else
+		{
+			broadcastMessages = (ArrayList<String>) THuntModule.instance.config.getStringList(THuntSettings.MESSAGE_BRC_ADDED_TO_QUEUE_BROADCAST.string);
+		}
 		
 		for(String broadcastMessage : broadcastMessages)
 		{
@@ -245,7 +260,7 @@ public class THuntManager {
 			return;
 		}
 		
-		String elem = huntQueue.get(0);
+		UUID elem = huntQueue.get(0);
 		huntQueue.remove(0);
 		activeHunt = elem;
 		huntRunning = true;
@@ -257,14 +272,14 @@ public class THuntManager {
 	
 	public void endHunt()
 	{
-		Messages.multicast(THuntSettings.MESSAGE_PROGRESS_END_HUNT.string().replace("<Player>", activeHunt), onlinePlayersToMessage());
+		Messages.Multicast(THuntSettings.MESSAGE_PROGRESS_END_HUNT.string().replace("<Player>", Bukkit.getOfflinePlayer(activeHunt).getName()), onlinePlayersToMessage());
 		clearChests();
 		huntParticipants.clear();
 		huntRunning = false;
 		activeHunt = null;
 		save();
 
-		if(huntQueue.isEmpty() == false)
+		if(!huntQueue.isEmpty())
 		{
 			MantlePlugin.instance.getServer().getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 				
@@ -272,6 +287,9 @@ public class THuntManager {
 				public void run()
 				{
 					Messages.broadcast(THuntSettings.MESSAGE_PROGRESS_NEXT_HUNT_SCHEDULED.string().replace("<Time>", getTimeToStartNextHunt() + ""));
+
+					//Add the sponsor to next chase
+					huntParticipants.add(huntQueue.get(0));
 				}
 			}, 200);
 		}
@@ -356,7 +374,14 @@ public class THuntManager {
 						String message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION.string();
 						if(alreadyClicked.contains(entry.getKey()))
 						{
+							if(getWaveCount() == getActiveWave())
+							{
+								message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING_LAST_WAVE.string();
+							}
+							else
+							{
 							message = THuntSettings.MESSAGE_PROGRESS_WAVE_NOTIFICATION_AFTER_LOOTING.string();
+						}
 						}
 						
 						if(!huntParticipants.contains(entry.getKey()))

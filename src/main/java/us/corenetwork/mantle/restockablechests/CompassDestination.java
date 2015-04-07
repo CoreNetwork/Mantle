@@ -147,5 +147,6 @@ public class CompassDestination {
 		}
 
 		player.setCompassTarget(loc);
+		player.updateInventory();
 	}
 }

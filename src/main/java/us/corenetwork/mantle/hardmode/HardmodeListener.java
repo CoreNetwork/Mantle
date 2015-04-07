@@ -5,16 +5,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import net.minecraft.server.v1_8_R1.AttributeInstance;
-import net.minecraft.server.v1_8_R1.AttributeModifiable;
-import net.minecraft.server.v1_8_R1.Blocks;
-import net.minecraft.server.v1_8_R1.EntityCreature;
-import net.minecraft.server.v1_8_R1.EntityExperienceOrb;
-import net.minecraft.server.v1_8_R1.EntityInsentient;
-import net.minecraft.server.v1_8_R1.EntityLiving;
-import net.minecraft.server.v1_8_R1.EntityZombie;
-import net.minecraft.server.v1_8_R1.GenericAttributes;
-import net.minecraft.server.v1_8_R1.MathHelper;
+import net.minecraft.server.v1_8_R2.AttributeInstance;
+import net.minecraft.server.v1_8_R2.AttributeModifiable;
+import net.minecraft.server.v1_8_R2.Blocks;
+import net.minecraft.server.v1_8_R2.EntityCreature;
+import net.minecraft.server.v1_8_R2.EntityExperienceOrb;
+import net.minecraft.server.v1_8_R2.EntityInsentient;
+import net.minecraft.server.v1_8_R2.EntityLiving;
+import net.minecraft.server.v1_8_R2.EntityZombie;
+import net.minecraft.server.v1_8_R2.GenericAttributes;
+import net.minecraft.server.v1_8_R2.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,13 +22,13 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftVillager;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWither;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftWitherSkull;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWither;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWitherSkull;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftZombie;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Enderman;
@@ -74,6 +74,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 import us.core_network.cornel.blocks.BlockUtil;
 import us.core_network.cornel.common.Messages;
@@ -245,6 +246,15 @@ public class HardmodeListener implements Listener {
 			{
 				Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
 
+				if(lastDamager instanceof Projectile)
+				{
+					ProjectileSource shooter = ((Projectile) lastDamager).getShooter();
+					if(shooter instanceof Player)
+					{
+						lastDamager = (Player) shooter;
+					}
+				}
+
 				try
 				{
 					Field nmsEntityField = CraftEntity.class.getDeclaredField("entity");
@@ -259,9 +269,9 @@ public class HardmodeListener implements Listener {
 						try
 						{
 							EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
-							if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R1.EntityLiving)
+							if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R2.EntityLiving)
 							{
-								net.minecraft.server.v1_8_R1.EntityLiving el = (net.minecraft.server.v1_8_R1.EntityLiving) nmsEntityField
+								net.minecraft.server.v1_8_R2.EntityLiving el = (net.minecraft.server.v1_8_R2.EntityLiving) nmsEntityField
 										.get(lastDamager);
 								creature.b(el);
 							}
@@ -339,7 +349,7 @@ public class HardmodeListener implements Listener {
 			if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
 				return;
 
-            net.minecraft.server.v1_8_R1.ItemStack nmsItemInHand = ItemStackUtils.getInternalNMSStack(itemInHand);
+            net.minecraft.server.v1_8_R2.ItemStack nmsItemInHand = ItemStackUtils.getInternalNMSStack(itemInHand);
 
 			event.setCancelled(true); //Cancel drop vanilla
 			block.setType(Material.AIR);
@@ -569,7 +579,7 @@ public class HardmodeListener implements Listener {
 		}
 
 		//Remove range bonuses from mobs
-		if (entity instanceof LivingEntity)
+		if (entity instanceof LivingEntity && entity.getType() != EntityType.WITHER)
 		{
 			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() //Run it 1 tick later so Minecraft sets up all bonuses to be removed first.
 			{

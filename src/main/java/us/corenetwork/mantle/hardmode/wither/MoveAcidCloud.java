@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import net.minecraft.server.v1_8_R1.EntityLiving;
-import net.minecraft.server.v1_8_R1.EnumParticle;
-import net.minecraft.server.v1_8_R1.MathHelper;
+import net.minecraft.server.v1_8_R2.EntityLiving;
+import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R2.MathHelper;
 import org.bukkit.Location;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
@@ -113,9 +114,9 @@ public class MoveAcidCloud extends AbstractWitherMove {
         {
             for(int i = 0; i < PARTICLE_AMOUNT; i++)
             {
-                angleLong = wither.bb().nextFloat()*6.28318530718F;
-                angleLat = wither.bb().nextFloat()*3.14159265359F - 1.5707963268F;
-                offR = wither.bb().nextFloat()*RANGE;
+                angleLong = MantlePlugin.random.nextFloat()*6.28318530718F;
+                angleLat = MantlePlugin.random.nextFloat()*3.14159265359F - 1.5707963268F;
+                offR = MantlePlugin.random.nextFloat()*RANGE;
                 offX = offR * MathHelper.cos(angleLat) * MathHelper.cos(angleLong);
                 offY = offR * MathHelper.sin(angleLat);
                 offZ = offR * MathHelper.sin(angleLong) * MathHelper.cos(angleLat);

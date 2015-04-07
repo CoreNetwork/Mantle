@@ -70,7 +70,7 @@ public class GUICategoryPicker extends InventoryGUI
     	for(Category c: basicCategories)
     	{
     		setItem(i-9, okItem);
-    		setItem(i, c.getIcon());
+    		setItem(i, c.getIcon(player));
     		categoryPositions.put(i, c);
     		setItem(i+9, okItem);
     		i++;
@@ -78,7 +78,7 @@ public class GUICategoryPicker extends InventoryGUI
     	for(Category c: applicableRareCategories)
     	{
     		setItem(i-9, okItem);
-    		setItem(i, c.getIcon());
+    		setItem(i, c.getIcon(player));
     		categoryPositions.put(i, c);
     		setItem(i+9, okItem);
     		i++;
@@ -90,7 +90,7 @@ public class GUICategoryPicker extends InventoryGUI
     		if(j >= i)
     		{
     			setItem(j-9, nopeItem);
-    			setItem(j, c.getIcon());
+    			setItem(j, c.getIcon(player));
     			categoryPositions.put(i, c);
     			setItem(j+9, nopeItem);
     			j--;

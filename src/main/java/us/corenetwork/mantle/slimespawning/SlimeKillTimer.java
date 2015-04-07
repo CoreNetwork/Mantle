@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.slimespawning;
 
-import net.minecraft.server.v1_8_R1.EnumParticle;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Effect;

@@ -5,21 +5,23 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_8_R1.BlockPosition;
-import net.minecraft.server.v1_8_R1.EntityHuman;
-import net.minecraft.server.v1_8_R1.EnumParticle;
-import net.minecraft.server.v1_8_R1.Item;
-import net.minecraft.server.v1_8_R1.MinecraftKey;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.TileEntity;
-import net.minecraft.server.v1_8_R1.TileEntityBeacon;
-import net.minecraft.server.v1_8_R1.TileEntityBrewingStand;
-import net.minecraft.server.v1_8_R1.TileEntityFurnace;
-import net.minecraft.server.v1_8_R1.WorldServer;
+import net.minecraft.server.v1_8_R2.BlockPosition;
+import net.minecraft.server.v1_8_R2.EntityHuman;
+import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R2.Item;
+import net.minecraft.server.v1_8_R2.MinecraftKey;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.StatisticList;
+import net.minecraft.server.v1_8_R2.TileEntity;
+import net.minecraft.server.v1_8_R2.TileEntityBeacon;
+import net.minecraft.server.v1_8_R2.TileEntityBrewingStand;
+import net.minecraft.server.v1_8_R2.TileEntityFurnace;
+import net.minecraft.server.v1_8_R2.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -161,6 +163,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             human.getBukkitEntity().openInventory(effectPickerGUI);
         else
             human.getBukkitEntity().openInventory(beaconStatusGUI);
+
+        ((Player) human.getBukkitEntity()).incrementStatistic(Statistic.BEACON_INTERACTION);
     }
 
     public void physics()
@@ -460,7 +464,7 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
                 if (!worldServer.chunkProviderServer.isChunkLoaded(nX, nZ))
                     continue;
 
-                net.minecraft.server.v1_8_R1.Chunk nmsChunk = worldServer.chunkProviderServer.getChunkAt(nX, nZ);
+                net.minecraft.server.v1_8_R2.Chunk nmsChunk = worldServer.chunkProviderServer.getChunkAt(nX, nZ);
 
                 for (Object tileEntityObject : nmsChunk.tileEntities.values())
                 {
@@ -692,11 +696,11 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             Map tileEntityNameMap = (Map) tileEntityNameMapField.get(null);
             tileEntityNameMap.put("Beacon", CustomBeaconTileEntity.class);
 
-            net.minecraft.server.v1_8_R1.Block beaconBlock = new CustomBlockBeacon();
+            net.minecraft.server.v1_8_R2.Block beaconBlock = new CustomBlockBeacon();
 
-            net.minecraft.server.v1_8_R1.Block.REGISTRY.a(138, new MinecraftKey("beacon"), beaconBlock);
+            net.minecraft.server.v1_8_R2.Block.REGISTRY.a(138, new MinecraftKey("beacon"), beaconBlock);
 
-            Method registerItemMethod = Item.class.getDeclaredMethod("c", net.minecraft.server.v1_8_R1.Block.class);
+            Method registerItemMethod = Item.class.getDeclaredMethod("c", net.minecraft.server.v1_8_R2.Block.class);
             registerItemMethod.setAccessible(true);
             registerItemMethod.invoke(null, beaconBlock);
         }

@@ -2,8 +2,8 @@ package us.corenetwork.mantle.hardmode.wither;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.DamageSource;
-import net.minecraft.server.v1_8_R1.EntityLiving;
+import net.minecraft.server.v1_8_R2.DamageSource;
+import net.minecraft.server.v1_8_R2.EntityLiving;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

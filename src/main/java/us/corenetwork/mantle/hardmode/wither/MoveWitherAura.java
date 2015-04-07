@@ -3,7 +3,8 @@ package us.corenetwork.mantle.hardmode.wither;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.server.v1_8_R1.MathHelper;
+import net.minecraft.server.v1_8_R2.MathHelper;
+import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class MoveWitherAura extends AbstractWitherMove {
@@ -95,7 +96,7 @@ public class MoveWitherAura extends AbstractWitherMove {
 
                 for (int j = 0; j < SKULLS_PER_SEGMENT; j++)
                 {
-                    float randomAngle = wither.bb().nextFloat() * (MAX_ANGLE_FORWARD + MAX_ANGLE_BACKWARDS) - MAX_ANGLE_BACKWARDS;
+                    float randomAngle = MantlePlugin.random.nextFloat() * (MAX_ANGLE_FORWARD + MAX_ANGLE_BACKWARDS) - MAX_ANGLE_BACKWARDS;
 
                     float vectorFixer;
                     float rad;

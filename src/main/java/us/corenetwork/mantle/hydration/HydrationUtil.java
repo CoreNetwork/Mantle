@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.hydration;
 
 import java.util.Map.Entry;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -10,16 +11,20 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.hydration.CachedDrainConfig.WorldLayer;
 
 public class HydrationUtil {
-	public static void updateScoreboard(String player, int hydrationLevel)
+	public static void updateScoreboard(String player, PlayerData playerData)
 	{
-		if (hydrationLevel >= 100)
+		if (playerData.hydrationLevel >= 100 && !playerData.recentlyDrained)
 		{
 			CoreScoreboardManager.setPlayerStat(player, HydrationSettings.SCOREBOARD_LINE.string(), null);
-		}
+            CoreScoreboardManager.setPlayerStat(player, ChatColor.COLOR_CHAR + "7Sat.", null);
+        }
 		else
 		{
-			CoreScoreboardManager.setPlayerStat(player, HydrationSettings.SCOREBOARD_LINE.string(), hydrationLevel);
-		}
+			CoreScoreboardManager.setPlayerStat(player, HydrationSettings.SCOREBOARD_LINE.string(), (int) playerData.hydrationLevel);
+            CoreScoreboardManager.setPlayerStat(player, ChatColor.COLOR_CHAR + "7Sat.", (int) playerData.saturationLevel);
+
+        }
+
 	}
 	
 	public static void updateNegativeEffects(Player player, PlayerData playerData, WorldLayer layer)

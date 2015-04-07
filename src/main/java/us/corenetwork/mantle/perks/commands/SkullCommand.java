@@ -1,11 +1,9 @@
 package us.corenetwork.mantle.perks.commands;
 
-import java.io.IOException;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.craftbukkit.v1_8_R1.inventory.CraftItemStack;
-import org.bukkit.entity.Player;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import java.io.IOException;import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.configuration.InvalidConfigurationException;import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -57,7 +55,7 @@ public class SkullCommand extends BasePerksCommand {
 
         si.setItemMeta(skullMeta);
 
-        net.minecraft.server.v1_8_R1.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(si);
+        net.minecraft.server.v1_8_R2.ItemStack nmsStack = ItemStackUtils.getInternalNMSStack(si);
         NBTTagCompound oldTag = nmsStack.getTag();
         NBTTagCompound skullOwnerCompound = oldTag.getCompound("SkullOwner");
 

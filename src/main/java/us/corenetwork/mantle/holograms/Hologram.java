@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import net.minecraft.server.v1_8_R1.EntityArmorStand;
+import net.minecraft.server.v1_8_R2.EntityArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -250,7 +250,7 @@ public class Hologram
 
         for (String line : text)
         {
-            net.minecraft.server.v1_8_R1.World nmsWorld = ((CraftWorld) world).getHandle();
+            net.minecraft.server.v1_8_R2.World nmsWorld = ((CraftWorld) world).getHandle();
 
             EntityArmorStand armorStand = new EntityArmorStand(nmsWorld);
             armorStand.setPosition(x, y, z);
@@ -261,7 +261,7 @@ public class Hologram
 
             nmsWorld.addEntity(armorStand);
 
-            linkedEntities.add(armorStand.uniqueID);
+            linkedEntities.add(armorStand.getUniqueID());
 
             y -= 0.25;
         }

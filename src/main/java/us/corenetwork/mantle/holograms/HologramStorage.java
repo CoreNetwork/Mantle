@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_8_R1.ChunkCoordIntPair;
+import net.minecraft.server.v1_8_R2.ChunkCoordIntPair;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 

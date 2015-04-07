@@ -1,9 +1,10 @@
 package us.corenetwork.mantle.hardmode.wither;
 
-import net.minecraft.server.v1_8_R1.AxisAlignedBB;
-import net.minecraft.server.v1_8_R1.ControllerMove;
-import net.minecraft.server.v1_8_R1.EntityWither;
-import net.minecraft.server.v1_8_R1.MathHelper;
+import net.minecraft.server.v1_8_R2.AxisAlignedBB;
+import net.minecraft.server.v1_8_R2.ControllerMove;
+import net.minecraft.server.v1_8_R2.EntityWither;
+import net.minecraft.server.v1_8_R2.MathHelper;
+import us.corenetwork.mantle.MantlePlugin;
 
 /**
  * Created by Ginaf on 2014-12-10.
@@ -26,7 +27,7 @@ public class CustomMoveController extends ControllerMove{
             double d3 = d0 * d0 + d1 * d1 + d2 * d2;
 
             if (this.h-- <= 0) {
-                this.h += this.g.bb().nextInt(5) + 2;
+                this.h += MantlePlugin.random.nextInt(5) + 2;
                 d3 = (double) MathHelper.sqrt(d3);
                 if (this.b(this.b, this.c, this.d, d3)) {
                     this.g.motX += d0 / d3 * 0.1D;

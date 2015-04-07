@@ -103,16 +103,15 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.8-R0.1-SNAPSHOT</version>
+			<version>1.8.3-R0.1-SNAPSHOT</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot</artifactId>
-			<version>1.8-R0.1-SNAPSHOT</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/spigot-1.8.jar</systemPath>
-		</dependency>
+        <dependency>
+            <groupId>org.spigot</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.8.3-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
 		
 		<dependency>
 			<groupId>com.sk89q</groupId>
@@ -138,7 +137,7 @@
 		<dependency>
 			<groupId>mkremins</groupId>
 			<artifactId>fanciful</artifactId>
-			<version>0.3.1</version>
+			<version>0.3.3-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

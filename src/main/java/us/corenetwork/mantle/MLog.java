@@ -5,6 +5,11 @@ import org.bukkit.ChatColor;
 
 public class MLog {
 
+	public static void forceDebug(String text)
+	{
+		sendLog("&f[&3Mantle&f]&f "+text);
+	}
+
 	public static void debug(String text)
 	{
 		if (Settings.getBoolean(Setting.DEBUG))

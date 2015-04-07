@@ -20,6 +20,7 @@ public class PlayerData {
 	public double saturationLevel;
 	public List<Integer> deliveredMessages;
 	public boolean waitingToSave;
+    public boolean recentlyDrained;
 	
 	public static PlayerData getPlayer(UUID uuid)
 	{		

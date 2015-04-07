@@ -1,17 +1,17 @@
 package us.corenetwork.mantle.beacons;
 
 import java.lang.reflect.Field;
-import net.minecraft.server.v1_8_R1.Block;
-import net.minecraft.server.v1_8_R1.BlockContainer;
-import net.minecraft.server.v1_8_R1.BlockPosition;
-import net.minecraft.server.v1_8_R1.Blocks;
-import net.minecraft.server.v1_8_R1.CreativeModeTab;
-import net.minecraft.server.v1_8_R1.EntityHuman;
-import net.minecraft.server.v1_8_R1.EnumDirection;
-import net.minecraft.server.v1_8_R1.IBlockData;
-import net.minecraft.server.v1_8_R1.Material;
-import net.minecraft.server.v1_8_R1.TileEntity;
-import net.minecraft.server.v1_8_R1.World;
+import net.minecraft.server.v1_8_R2.Block;
+import net.minecraft.server.v1_8_R2.BlockContainer;
+import net.minecraft.server.v1_8_R2.BlockPosition;
+import net.minecraft.server.v1_8_R2.Blocks;
+import net.minecraft.server.v1_8_R2.CreativeModeTab;
+import net.minecraft.server.v1_8_R2.EntityHuman;
+import net.minecraft.server.v1_8_R2.EnumDirection;
+import net.minecraft.server.v1_8_R2.IBlockData;
+import net.minecraft.server.v1_8_R2.Material;
+import net.minecraft.server.v1_8_R2.TileEntity;
+import net.minecraft.server.v1_8_R2.World;
 
 /**
  * Clone of original Minecraft's BlockBeacon.java with TileEntity changes and interact event changed.
@@ -32,7 +32,7 @@ public class CustomBlockBeacon extends BlockContainer
         {
             Object blockData = Blocks.BEACON.getBlockData();
 
-            Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R1.BlockData");
+            Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R2.BlockStateList$BlockData");
             Field blockField = blockDataClass.getDeclaredField("a");
             blockField.setAccessible(true);
             blockField.set(blockData, this);
@@ -52,17 +52,13 @@ public class CustomBlockBeacon extends BlockContainer
     @Override
     public boolean interact(World world, BlockPosition position, IBlockData blockData, EntityHuman entityhuman, EnumDirection direction, float f, float f1, float f2)
     {
-        if (world.isStatic) {
-            return true;
-        } else {
-            CustomBeaconTileEntity tileentitybeacon = (CustomBeaconTileEntity) world.getTileEntity(position);
+        CustomBeaconTileEntity tileentitybeacon = (CustomBeaconTileEntity) world.getTileEntity(position);
 
-            if (tileentitybeacon != null) {
-                tileentitybeacon.clicked(entityhuman);
-            }
-
-            return true;
+        if (tileentitybeacon != null) {
+            tileentitybeacon.clicked(entityhuman);
         }
+
+        return true;
     }
 
     @Override
