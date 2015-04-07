@@ -36,16 +36,19 @@ public class PerksListener implements Listener
         //Color signs - Only people with signs perk can place color signs.
         if (Util.hasPermission(event.getPlayer(), "mantle.perks.advsigns"))
         {
-            Claim claim = GriefPrevention.instance.dataStore.getClaimAt(event.getBlock().getLocation(), true, null);
-            if (claim == null)
-                return; //No claim, so nope
+            if(!Util.hasPermission(event.getPlayer(), "mantle.perks.advsigns.anywhere"))
+            {
+                Claim claim = GriefPrevention.instance.dataStore.getClaimAt(event.getBlock().getLocation(), true, null);
+                if (claim == null)
+                    return; //No claim, so nope
 
-            UUID ownerID = claim.ownerID;
-            if (claim.parent != null) //is a subdivision
-                ownerID = claim.parent.ownerID;
+                UUID ownerID = claim.ownerID;
+                if (claim.parent != null) //is a subdivision
+                    ownerID = claim.parent.ownerID;
 
-            if (!event.getPlayer().getUniqueId().equals(ownerID))
-                return; //Only owner of the claim can place color signs.
+                if (!event.getPlayer().getUniqueId().equals(ownerID))
+                    return; //Only owner of the claim can place color signs.
+            }
 
             for (int i = 0; i < event.getLines().length; i++)
             {
