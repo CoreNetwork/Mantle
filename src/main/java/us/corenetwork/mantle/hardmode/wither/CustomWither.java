@@ -122,7 +122,7 @@ public class CustomWither extends EntityWither {
             gsa.set(this.goalSelector, new UnsafeList());
             gsa.set(this.targetSelector, new UnsafeList());
 
-            Field suffCounter = EntityWither.class.getDeclaredField("bo");
+            Field suffCounter = EntityWither.class.getDeclaredField("bp");
             suffCounter.setAccessible(true);
             suffCounter.getInt(this);
 
@@ -469,7 +469,7 @@ public class CustomWither extends EntityWither {
             {
 
                 //reflection to get/set value of suffocation counter
-                Field suffCounter = EntityWither.class.getDeclaredField("bo");
+                Field suffCounter = EntityWither.class.getDeclaredField("bp");
                 suffCounter.setAccessible(true);
                 int suffCount = suffCounter.getInt(this);
 
@@ -549,7 +549,7 @@ public class CustomWither extends EntityWither {
         {
 
             //reflection to get/set value of suffocation counter
-            Field suffCounter = EntityWither.class.getDeclaredField("bo");
+            Field suffCounter = EntityWither.class.getDeclaredField("bp");
             suffCounter.setAccessible(true);
             suffCounter.setInt(this, value);
         } catch (Exception e1)

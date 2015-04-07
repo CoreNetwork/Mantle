@@ -577,7 +577,7 @@ public class HardmodeListener implements Listener {
 		}
 
 		//Remove range bonuses from mobs
-		if (entity instanceof LivingEntity)
+		if (entity instanceof LivingEntity && entity.getType() != EntityType.WITHER)
 		{
 			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() //Run it 1 tick later so Minecraft sets up all bonuses to be removed first.
 			{

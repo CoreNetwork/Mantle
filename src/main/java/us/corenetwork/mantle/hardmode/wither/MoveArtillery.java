@@ -53,7 +53,8 @@ public class MoveArtillery extends AbstractWitherMove {
     @Override
     public void cleanUp()
     {
-        wither.world.removeEntity(targetEntity);
+        if(targetEntity != null)
+            wither.world.removeEntity(targetEntity);
     }
 
 
