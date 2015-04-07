@@ -14,14 +14,13 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Wither;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import us.core_network.cornel.java.ReflectionUtils;
-import us.corenetwork.mantle.util.VanillaReplacingUtil;
+import us.core_network.cornel.nms.VanillaReplacingUtil;
 
 public class NMSWitherManager {
     public static void register()
     {
         VanillaReplacingUtil.replaceMob("WitherBoss", 64, EntityWither.class, CustomWither.class);
-        }
+    }
 
     /***
      * Convert regular wither into custom villager.

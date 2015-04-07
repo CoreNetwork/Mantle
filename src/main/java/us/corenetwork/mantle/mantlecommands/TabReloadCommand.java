@@ -3,6 +3,7 @@ package us.corenetwork.mantle.mantlecommands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.perks.PerksListener;
@@ -28,7 +29,7 @@ public class TabReloadCommand extends BaseMantleCommand {
             String groupName = MantlePlugin.chat.getPrimaryGroup(onlinePlayer);
             String prefix = MantlePlugin.chat.getGroupPrefix((String) null, groupName);
 
-            String playerlistName = Util.applyColors(prefix + onlinePlayer.getName());
+            String playerlistName = Messages.applyFormattingCodes(prefix + onlinePlayer.getName());
 
             if (playerlistName.length() > 16)
                 playerlistName = playerlistName.substring(0, 16);

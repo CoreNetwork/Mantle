@@ -272,7 +272,7 @@ public class THuntManager {
 	
 	public void endHunt()
 	{
-		Messages.Multicast(THuntSettings.MESSAGE_PROGRESS_END_HUNT.string().replace("<Player>", Bukkit.getOfflinePlayer(activeHunt).getName()), onlinePlayersToMessage());
+		Messages.multicast(THuntSettings.MESSAGE_PROGRESS_END_HUNT.string().replace("<Player>", Bukkit.getOfflinePlayer(activeHunt).getName()), onlinePlayersToMessage());
 		clearChests();
 		huntParticipants.clear();
 		huntRunning = false;

@@ -7,6 +7,10 @@ import net.minecraft.server.v1_8_R2.CraftingManager;
 import net.minecraft.server.v1_8_R2.IRecipe;
 import net.minecraft.server.v1_8_R2.InventoryCrafting;
 import net.minecraft.server.v1_8_R2.ItemStack;
+import net.minecraft.server.v1_8_R2.Items;
+import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.NBTTagList;
+import net.minecraft.server.v1_8_R2.NBTTagString;
 import net.minecraft.server.v1_8_R2.TileEntityBanner;
 import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.inventory.Recipe;
@@ -112,7 +116,7 @@ public class BannerRecipeProxy implements IRecipe
     /**
      * Add gold name and lore to banner
      */
-    public static void addLoreToBanner(net.minecraft.server.v1_8_R1.ItemStack banner)
+    public static void addLoreToBanner(net.minecraft.server.v1_8_R2.ItemStack banner)
     {
         String customName = PerksUtil.GOLD_START.concat(Items.BANNER.a(banner));
 

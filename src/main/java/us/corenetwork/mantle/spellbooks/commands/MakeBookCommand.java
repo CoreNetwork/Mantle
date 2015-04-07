@@ -7,8 +7,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import net.minecraft.server.v1_8_R2.EntityItem;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
-import net.minecraft.server.v1_8_R1.NBTTagList;
-import net.minecraft.server.v1_8_R1.NBTTagString;
+import net.minecraft.server.v1_8_R2.NBTTagList;
+import net.minecraft.server.v1_8_R2.NBTTagString;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftItem;
@@ -111,7 +111,7 @@ public class MakeBookCommand extends BaseMantleCommand {
 		while (amount > 0);
 	}
 
-	private static void fixDates(net.minecraft.server.v1_8_R1.ItemStack nmsStack)
+	private static void fixDates(net.minecraft.server.v1_8_R2.ItemStack nmsStack)
 	{
 		NBTTagList lore = NbtUtils.getLore(nmsStack.getTag());
 		if (lore == null)

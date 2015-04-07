@@ -4,11 +4,14 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
+import java.io.IOException;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
 import org.bukkit.Material;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.NbtYaml;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.nanobot.commands.LoadCommand;
 
@@ -81,8 +84,19 @@ public class NetherwartProtocolListener extends PacketAdapter {
 
     public void loadConfig()
     {
-        tags.put(Material.NETHER_STALK, LoadCommand.load("netherwart"));
-        tags.put(Material.DIAMOND_HOE, LoadCommand.load("diamondhoe"));
+        try
+        {
+            tags.put(Material.NETHER_STALK, NbtYaml.loadFromFile("netherwart"));
+            tags.put(Material.DIAMOND_HOE, NbtYaml.loadFromFile("diamondhoe"));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (InvalidConfigurationException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
 

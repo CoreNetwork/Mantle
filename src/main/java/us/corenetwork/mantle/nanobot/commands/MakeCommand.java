@@ -5,6 +5,7 @@ import net.minecraft.server.v1_8_R2.ItemStack;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import us.core_network.cornel.common.MinecraftNames;
 import us.core_network.cornel.items.NbtYaml;

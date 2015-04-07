@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.IO;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.YamlUtils;
-import us.corenetwork.mantle.nanobot.NanobotUtil;
 
 public class Category {
 
@@ -228,14 +228,14 @@ public class Category {
 	
 	public ItemStack getIconSimple()
 	{
-		return NanobotUtil.replaceStringInItem(iconItem, "<UsedMax>","");
+		return ItemStackUtils.replaceStringInItem(iconItem, "<UsedMax>", "");
 	}
 
 	public ItemStack getIcon(Player player)
 	{
 		if(getDistanceRange(player) > 0)
 		{
-			return NanobotUtil.replaceStringInItem(iconItem, "<UsedMax>", getTimesFound(player) + "/" + perPlayerTotalLimit);
+			return ItemStackUtils.replaceStringInItem(iconItem, "<UsedMax>", getTimesFound(player) + "/" + perPlayerTotalLimit);
 		}
 
 		return getIconSimple();

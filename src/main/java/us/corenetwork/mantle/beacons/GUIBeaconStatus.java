@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.beacons;
 
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftHumanEntity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
