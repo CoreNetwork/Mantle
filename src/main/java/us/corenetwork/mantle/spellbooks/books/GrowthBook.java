@@ -91,6 +91,23 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 				}
 			}
 		}
+        else if (block.getType() == Material.PUMPKIN_STEM)
+        {
+            block.setData((byte) 7);
+            for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
+            {
+                final Block neighbour = block.getRelative(face);
+                if (neighbour != null && neighbour.isEmpty())
+                {
+                    Block downBlock = block.getRelative(BlockFace.DOWN);
+                    if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
+                    {
+                        neighbour.setType(Material.PUMPKIN);
+                        break;
+                    }
+                }
+            }
+        }
 		else if (block.getType() == Material.SAPLING)
 		{
 			byte data = block.getData();
