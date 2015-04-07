@@ -11,6 +11,7 @@ import net.minecraft.server.v1_8_R2.EnumParticle;
 import net.minecraft.server.v1_8_R2.Item;
 import net.minecraft.server.v1_8_R2.MinecraftKey;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R2.StatisticList;
 import net.minecraft.server.v1_8_R2.TileEntity;
 import net.minecraft.server.v1_8_R2.TileEntityBeacon;
 import net.minecraft.server.v1_8_R2.TileEntityBrewingStand;
@@ -20,6 +21,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -160,6 +162,8 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
             effectPickerGUI.openNewWindow(human.getBukkitEntity());
         else
             beaconStatusGUI.openNewWindow(human.getBukkitEntity());
+
+        ((Player) human.getBukkitEntity()).incrementStatistic(Statistic.BEACON_INTERACTION);
     }
 
     public void physics()

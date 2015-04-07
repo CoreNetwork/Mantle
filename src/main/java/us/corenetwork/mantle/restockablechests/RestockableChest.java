@@ -12,6 +12,7 @@ import java.util.UUID;
 import net.minecraft.server.v1_8_R2.BlockPosition;
 import net.minecraft.server.v1_8_R2.EnumParticle;
 import net.minecraft.server.v1_8_R2.PacketPlayOutBlockAction;
+import net.minecraft.server.v1_8_R2.StatisticList;
 import net.minecraft.server.v1_8_R2.TileEntity;
 import net.minecraft.server.v1_8_R2.TileEntityBeacon;
 import net.minecraft.server.v1_8_R2.TileEntityBrewingStand;
@@ -23,6 +24,7 @@ import net.minecraft.server.v1_8_R2.TileEntityHopper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -394,7 +396,23 @@ public class RestockableChest {
 			chestBlock.getWorld().playSound(chestBlock.getLocation(), Sound.CHEST_OPEN, 1f, 1f);
 		}
 
-		return true;
+        //Pick proper statistic to increment based on container type
+        Statistic containerStatistic = null;
+        if (getBlock().getType() == Material.TRAPPED_CHEST)
+            containerStatistic = Statistic.TRAPPED_CHEST_TRIGGERED;
+        else if (getBlock().getType() == Material.CHEST)
+            containerStatistic = Statistic.CHEST_OPENED;
+        else if (getBlock().getType() == Material.DROPPER)
+            containerStatistic = Statistic.DROPPER_INSPECTED;
+        else if (getBlock().getType() == Material.HOPPER)
+            containerStatistic = Statistic.HOPPER_INSPECTED;
+        else if (getBlock().getType() == Material.DISPENSER)
+            containerStatistic = Statistic.DISPENSER_INSPECTED;
+
+        if (containerStatistic != null)
+            player.incrementStatistic(org.bukkit.Statistic.BEACON_INTERACTION);
+
+        return true;
 	}
 
 	public static void inventoryClosed(Player player)
