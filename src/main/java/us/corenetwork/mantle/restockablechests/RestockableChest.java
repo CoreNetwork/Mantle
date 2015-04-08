@@ -797,20 +797,15 @@ public class RestockableChest {
 	}
 	
 	
-	private List<ItemStack> getItemsFromCategory(Category cat, Player player, double diminishVillage, double diminishTotal, boolean firstTimeAlways)
+	private List<ItemStack> getItemsFromCategory(Category cat, Player player, double diminishVillage, double diminishTotal, boolean fromCompass)
 	{
 		List<ItemStack> items = new ArrayList<ItemStack>();
 
 		if(cat == null)
 			return items;
 
-		int timesPicked = cat.howManyTimes(player, diminishVillage, diminishTotal);		
-		
-		if(firstTimeAlways && timesPicked == 0)
-		{
-			timesPicked = 1;
-		}
-		
+		int timesPicked = cat.howManyTimes(player, diminishVillage, diminishTotal, fromCompass);
+
 		if(timesPicked > 0)
 		{
 			updateCategoryCounterFor(cat, player, timesPicked);

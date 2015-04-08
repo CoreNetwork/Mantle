@@ -108,7 +108,7 @@ public class Category {
 		return perPlayerTotalLimit != -1;
 	}
 	
-	public int howManyTimes(Player player, double diminishVillage, double diminishTotal)
+	public int howManyTimes(Player player, double diminishVillage, double diminishTotal, boolean fromCompass)
 	{
 		int howMany = 0;
 		
@@ -122,7 +122,10 @@ public class Category {
 			else
 				break;
 		}
-		
+
+		if(fromCompass && howMany == 0)
+			howMany = 1;
+
 		int howManyLeft = howManyLeft(player);
 		
 		if(howManyLeft < howMany)
