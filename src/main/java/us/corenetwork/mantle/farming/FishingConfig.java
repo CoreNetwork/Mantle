@@ -108,8 +108,18 @@ public class FishingConfig implements Listener {
                 replace = CraftItemStack.asBukkitCopy(nmsStack);
             }
             if (selectedItem.getPenalty() > 0) {
-                itemInHand.setDurability((short) (itemInHand.getDurability() + selectedItem.getPenalty()));
-                event.getPlayer().setItemInHand(itemInHand);
+                int unbreaking = itemInHand.getEnchantmentLevel(Enchantment.DURABILITY);
+                if (unbreaking > 0) {
+                    for (int i = 0; i < selectedItem.getPenalty(); i++) {
+                        int chance = (100 / (unbreaking + 1));
+                        if (random.nextInt(100) <= chance) {
+                            itemInHand.setDurability((short) (itemInHand.getDurability() + 1));
+                        }
+                    }
+                } else {
+                    itemInHand.setDurability((short) (itemInHand.getDurability() + selectedItem.getPenalty()));
+                    event.getPlayer().setItemInHand(itemInHand);
+                }
             }
             item.setItemStack(replace);
             allowStatIncrement = true;
