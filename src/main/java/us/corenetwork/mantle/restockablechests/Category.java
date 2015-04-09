@@ -163,7 +163,7 @@ public class Category {
 
 
 
-	private boolean isUnderTheLimit(Player player)
+	public boolean isUnderTheLimit(Player player)
 	{
 		int timesFound = getTimesFound(player);
 		
@@ -192,7 +192,7 @@ public class Category {
 		return 0;
 	}
 	
-	private boolean gotAllPreReqs(Player player)
+	public boolean gotAllPreReqs(Player player)
 	{
 		if(preReqCategories.size() == 0)
 		{
