@@ -80,6 +80,7 @@ public class SmithingBook extends Spellbook {
 		Player player = event.getPlayer();
 		
 		Inventory inventory;
+        Inventory fuelInventory = player.getInventory();
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest
@@ -102,9 +103,8 @@ public class SmithingBook extends Spellbook {
         Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
         effectLoc.getWorld().playSound(effectLoc, Sound.BLAZE_HIT, 0.5f, 0.3f);
 
-        boolean anythingSmelted = smith(inventory);
-        if (inventory instanceof PlayerInventory)
-            player.updateInventory();
+        boolean anythingSmelted = smith(inventory, fuelInventory);
+        player.updateInventory();
 
         if (anythingSmelted)
             return BookFinishAction.BROADCAST_AND_CONSUME;
@@ -113,13 +113,13 @@ public class SmithingBook extends Spellbook {
     }
 
 
-    protected static boolean smith(Inventory inventory)
+    protected static boolean smith(Inventory inventory, Inventory fuelInventory)
     {
         //Get list of total fuel in inventory
         LinkedList<ItemStack> availableFuel = new LinkedList<ItemStack>();
         double totalAvailableFuel = 0;
 
-        for (ItemStack item : inventory)
+        for (ItemStack item : fuelInventory)
         {
             if (item == null || item.getType() == Material.AIR)
                 continue;
@@ -259,7 +259,7 @@ public class SmithingBook extends Spellbook {
 
             int amountToRemove = Math.min(fuelStack.getAmount(), (int) Math.ceil(totalConsumedFuel / efficiency));
 
-            InventoryUtil.removeItems(inventory, fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
+            InventoryUtil.removeItems(fuelInventory, fuelStack.getType(), fuelStack.getDurability(), amountToRemove);
 
             if (amountToRemove >= fuelStack.getAmount())
                 availableFuel.removeFirst();

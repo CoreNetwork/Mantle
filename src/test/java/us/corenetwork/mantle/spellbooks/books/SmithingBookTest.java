@@ -34,14 +34,14 @@ public class SmithingBookTest
 
         //Try smithing iron chestplate without any fuel
         testInventory.addItem(new ItemStack(Material.IRON_CHESTPLATE, 1));
-        boolean anythingSmitted = SmithingBook.smith((testInventory));
+        boolean anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertFalse(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.IRON_CHESTPLATE, testInventory.getItem(0).getType());
 
         //Try smithing iron chestplate with 1 Coal
         testInventory.addItem(new ItemStack(Material.COAL, 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.IRON_INGOT, testInventory.getItem(0).getType());
@@ -52,7 +52,7 @@ public class SmithingBookTest
         //Try smithing iron chestplate with 1/2 durability
         testInventory.addItem(new ItemStack(Material.IRON_CHESTPLATE, 1, (short) (Material.IRON_CHESTPLATE.getMaxDurability() / 2)));
         testInventory.addItem(new ItemStack(Material.COAL, 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.IRON_INGOT, testInventory.getItem(0).getType());
@@ -63,7 +63,7 @@ public class SmithingBookTest
         //Try smithing iron chestplate with 99% durability used up (generates piece of charcoal)
         testInventory.addItem(new ItemStack(Material.IRON_CHESTPLATE, 1, (short) (Material.IRON_CHESTPLATE.getMaxDurability() * 0.99)));
         testInventory.addItem(new ItemStack(Material.COAL, 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.COAL, testInventory.getItem(0).getType());
@@ -75,7 +75,7 @@ public class SmithingBookTest
         //Try smithing iron chestplate with 1% durability used up
         testInventory.addItem(new ItemStack(Material.IRON_CHESTPLATE, 1, (short) (Material.IRON_CHESTPLATE.getMaxDurability() * 0.01)));
         testInventory.addItem(new ItemStack(Material.COAL, 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.IRON_INGOT, testInventory.getItem(0).getType());
@@ -87,7 +87,7 @@ public class SmithingBookTest
         for (int i = 0; i < INVENTORY_SIZE - 1; i++)
             testInventory.addItem(new ItemStack(Material.GOLD_SWORD, 1));
         testInventory.addItem(new ItemStack(Material.COAL, INVENTORY_SIZE - 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 5, InventoryUtil.getFreeInventorySlots(testInventory));
         for (int i = 0; i < 5; i++)
@@ -96,11 +96,27 @@ public class SmithingBookTest
 
         testInventory.clear();
 
+        //Try smithing full chest of gold swords with coal in separate inventory
+        Inventory coalInventory = new CraftInventoryCustom(null, INVENTORY_SIZE);
+        for (int i = 0; i < INVENTORY_SIZE; i++)
+            testInventory.addItem(new ItemStack(Material.GOLD_SWORD, 1));
+        coalInventory.addItem(new ItemStack(Material.COAL, INVENTORY_SIZE));
+        anythingSmitted = SmithingBook.smith(testInventory, coalInventory);
+        assertTrue(anythingSmitted);
+        assertEquals(INVENTORY_SIZE - 6, InventoryUtil.getFreeInventorySlots(testInventory));
+        for (int i = 0; i < 6; i++)
+            assertEquals(Material.GOLD_NUGGET, testInventory.getItem(i).getType());
+        assertEquals(324, InventoryUtil.getAmountOfItems(testInventory, Material.GOLD_NUGGET, Short.MAX_VALUE));
+        assertEquals(INVENTORY_SIZE, InventoryUtil.getFreeInventorySlots(coalInventory));
+
+        testInventory.clear();
+
+
         //Try smithing with half stack of ingots already in
         testInventory.addItem(new ItemStack(Material.GOLD_INGOT, 32));
         testInventory.addItem(new ItemStack(Material.GOLD_BOOTS, 1));
         testInventory.addItem(new ItemStack(Material.COAL, 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.GOLD_INGOT, testInventory.getItem(0).getType());
@@ -113,7 +129,7 @@ public class SmithingBookTest
         testInventory.addItem(new ItemStack(Material.GOLD_HELMET, 1));
         testInventory.addItem(new ItemStack(Material.GOLD_SWORD, 1));
         testInventory.addItem(new ItemStack(Material.COAL, 64));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 3, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.GOLD_INGOT, testInventory.getItem(0).getType());
@@ -130,7 +146,7 @@ public class SmithingBookTest
         testInventory.addItem(new ItemStack(Material.COAL, 1, CoalType.CHARCOAL.getData()));
         testInventory.addItem(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1));
         testInventory.addItem(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1));
-        anythingSmitted = SmithingBook.smith((testInventory));
+        anythingSmitted = SmithingBook.smith(testInventory, testInventory);
         assertTrue(anythingSmitted);
         assertEquals(INVENTORY_SIZE - 1, InventoryUtil.getFreeInventorySlots(testInventory));
         assertEquals(Material.IRON_INGOT, testInventory.getItem(2).getType());
@@ -142,7 +158,7 @@ public class SmithingBookTest
         testPlayerInventory.setChestplate(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1));
         testPlayerInventory.setLeggings(new ItemStack(Material.IRON_LEGGINGS, 1));
         testPlayerInventory.setBoots(new ItemStack(Material.GOLD_BOOTS, 1));
-        anythingSmitted = SmithingBook.smith((testPlayerInventory));
+        anythingSmitted = SmithingBook.smith(testPlayerInventory, testPlayerInventory);
         assertFalse(anythingSmitted);
         assertEquals(testPlayerInventory.getSize(), InventoryUtil.getFreeInventorySlots(testPlayerInventory));
         assertEquals(Material.GOLD_HELMET, testPlayerInventory.getHelmet().getType());
