@@ -93,34 +93,46 @@ public class GrowthBook extends Spellbook {
 			block.setData((byte) 3);
 		else if (block.getType() == Material.MELON_STEM)
 		{
-			block.setData((byte) 7);
-			for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
-			{
-				final Block neighbour = block.getRelative(face);
-				if (neighbour != null && neighbour.isEmpty())
-				{
-					Block downBlock = block.getRelative(BlockFace.DOWN);
-					if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
-					{
-						neighbour.setType(Material.MELON_BLOCK);
-						break;
-					}
-				}
-			}
+            if (block.getData() < 7)
+            {
+                block.setData((byte) 7);
+            }
+            else
+            {
+                for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
+                {
+                    final Block neighbour = block.getRelative(face);
+                    if (neighbour != null && neighbour.isEmpty())
+                    {
+                        Block downBlock = block.getRelative(BlockFace.DOWN);
+                        if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
+                        {
+                            neighbour.setType(Material.MELON_BLOCK);
+                            break;
+                        }
+                    }
+                }
+            }
 		}
         else if (block.getType() == Material.PUMPKIN_STEM)
         {
-            block.setData((byte) 7);
-            for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
+            if (block.getData() < 7)
             {
-                final Block neighbour = block.getRelative(face);
-                if (neighbour != null && neighbour.isEmpty())
+                block.setData((byte) 7);
+            }
+            else
+            {
+                for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
                 {
-                    Block downBlock = block.getRelative(BlockFace.DOWN);
-                    if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
+                    final Block neighbour = block.getRelative(face);
+                    if (neighbour != null && neighbour.isEmpty())
                     {
-                        neighbour.setType(Material.PUMPKIN);
-                        break;
+                        Block downBlock = block.getRelative(BlockFace.DOWN);
+                        if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
+                        {
+                            neighbour.setType(Material.PUMPKIN);
+                            break;
+                        }
                     }
                 }
             }
