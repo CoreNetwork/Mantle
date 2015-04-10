@@ -56,7 +56,7 @@ public class WindBook extends Spellbook implements Listener {
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 49));
 
         LivingEntity mount = (LivingEntity) player.getVehicle();
-        if (mount != null && (mount instanceof Horse || mount instanceof Pig))
+        if (mount != null && mount instanceof Horse)
         {
             double baseMountSpeed = ((CraftLivingEntity) mount).getHandle().getAttributeInstance(GenericAttributes.d).getValue();
             int targetPotionLevel = (int) (Math.log(TARGET_SPEED / baseMountSpeed) / Math.log(1.2));
