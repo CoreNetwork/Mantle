@@ -2,11 +2,19 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashSet;
 import java.util.UUID;
+import net.minecraft.server.v1_8_R2.GenericAttributes;
+import net.minecraft.server.v1_8_R2.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Horse;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,10 +33,12 @@ import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
 public class WindBook extends Spellbook implements Listener {
-	private static int EFFECT_DURATION = 20 * 20;
-	//private static int HUNGER_DURATION = 20 * 5;
+	private static final int EFFECT_DURATION = 20 * 20;
+    private static final int SLOWNESS_DURATION = 10 * 20;
 
-	private HashSet<UUID> sprinting = new HashSet<UUID>(); // List of players under sprinting effect
+    private static final double TARGET_SPEED = 910.04382856092456371393; //Magic number calcualated from (base player speed * 1.2^50)
+
+	private HashSet<UUID> sprinting = new HashSet<UUID>(); // List of entities under sprinting effect
 
 	public WindBook() {
 		super("Wind");
@@ -45,6 +55,19 @@ public class WindBook extends Spellbook implements Listener {
 		
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 49));
 
+        LivingEntity mount = (LivingEntity) player.getVehicle();
+        if (mount != null && (mount instanceof Horse || mount instanceof Pig))
+        {
+            double baseMountSpeed = ((CraftLivingEntity) mount).getHandle().getAttributeInstance(GenericAttributes.d).getValue();
+            int targetPotionLevel = (int) (Math.log(TARGET_SPEED / baseMountSpeed) / Math.log(1.2));
+
+            sprinting.add(mount.getUniqueId());
+            Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(mount.getUniqueId()), EFFECT_DURATION);
+
+            mount.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, targetPotionLevel));
+
+        }
+
 		Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(uuid), EFFECT_DURATION);
 		
 		FireworkEffect effect = FireworkEffect.builder().withColor(Color.WHITE).withFade(Color.WHITE).build();
@@ -57,7 +80,6 @@ public class WindBook extends Spellbook implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerItemConsumed(PlayerItemConsumeEvent event)
 	{
-		
 		if (event.getItem().getType() == Material.MILK_BUCKET)
 		{
 			if (!sprinting.contains(event.getPlayer().getUniqueId()))
@@ -83,15 +105,23 @@ public class WindBook extends Spellbook implements Listener {
 			event.setCancelled(true); //Don't drain hunger when sprinting
 		}
 	}
-		
-	
-	private void finishSprint(Player player)
+
+	private void finishSprint(LivingEntity entity)
 	{		
-		if(sprinting.contains(player.getUniqueId()))
+		if(sprinting.contains(entity.getUniqueId()))
 		{
-			player.setFoodLevel(2);
-			player.setSaturation(0);
-			sprinting.remove(player.getUniqueId());
+            if (entity instanceof Player)
+            {
+                Player player = (Player) entity;
+                player.setFoodLevel(2);
+                player.setSaturation(0);
+            }
+            else
+            {
+                entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, SLOWNESS_DURATION, 4));
+            }
+
+			sprinting.remove(entity.getUniqueId());
 		}
 	}
 				
@@ -108,10 +138,10 @@ public class WindBook extends Spellbook implements Listener {
 		public void run() {
 			if (sprinting.contains(uuid))
 			{
-				Player player = Bukkit.getPlayer(uuid);
-				if (player != null)
+				LivingEntity entity = (LivingEntity) ((CraftServer) Bukkit.getServer()).getServer().a(uuid).getBukkitEntity();
+				if (entity != null)
 				{
-					finishSprint(player);
+					finishSprint(entity);
 				}
 
 			}
