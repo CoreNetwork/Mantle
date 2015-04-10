@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import java.util.List;
 import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,7 +26,7 @@ import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.util.InventoryUtil;
 
 
-public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiver {
+public class GrowthBook extends Spellbook {
 
 	private static final int EFFECT_AREA_HEIGHT_ABOVE_PLAYER = 31;
     private static final int EFFECT_AREA_HORIZONTAL_RADIUS = 32 / 2;
@@ -63,8 +64,24 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 
         Location raisedLocation = event.getPlayer().getLocation();
         raisedLocation.setY(raisedLocation.getY() + EFFECT_AREA_HEIGHT_ABOVE_PLAYER / 2);
-		EntityIterator.iterateEntitiesInCube(this, raisedLocation, EFFECT_AREA_HORIZONTAL_RADIUS);
-		
+
+		List<Entity> nearbyEntities = EntityIterator.getEntitiesInCube(raisedLocation, EFFECT_AREA_HORIZONTAL_RADIUS);
+		for (Entity entity : nearbyEntities)
+        {
+            if (entity instanceof Ageable)
+            {
+                Ageable ageable = (Ageable) entity;
+                if (!ageable.isAdult())
+                    ageable.setAdult();
+            }
+            else if (entity instanceof Zombie)
+            {
+                Zombie zombie = (Zombie) entity;
+                if (zombie.isBaby())
+                    zombie.setBaby(false);
+            }
+        }
+
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 
@@ -147,22 +164,6 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 				block.setTypeIdAndData(Material.SAPLING.getId(), data, false);
 		}
 		
-	}
-
-	@Override
-	public void onEntityFound(Entity entity) {
-		if (entity instanceof Ageable)
-		{
-			Ageable ageable = (Ageable) entity;
-			if (!ageable.isAdult())
-				ageable.setAdult();
-		}
-		else if (entity instanceof Zombie)
-		{
-			Zombie zombie = (Zombie) entity;
-			if (zombie.isBaby())
-				zombie.setBaby(false);
-		}
 	}
 
 	@Override

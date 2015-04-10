@@ -4,6 +4,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.spellbooks.books.AllureBook;
 import us.corenetwork.mantle.spellbooks.books.DeadweightBook;
 import us.corenetwork.mantle.spellbooks.books.DecayBook;
 import us.corenetwork.mantle.spellbooks.books.ForgingBook;
@@ -33,6 +34,8 @@ public class SpellbookManager {
 		addSpellbook(new PeddlingBook());
 		addSpellbook(new ForgingBook());
         addSpellbook(new SmithingBook());
+        addSpellbook(new AllureBook());
+
     }
 	
 	public static Spellbook getBook(String name)

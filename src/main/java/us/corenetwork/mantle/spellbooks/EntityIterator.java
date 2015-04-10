@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.spellbooks;
 
+import java.util.LinkedList;
+import java.util.List;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -7,8 +9,10 @@ import org.bukkit.entity.Entity;
 
 public class EntityIterator {
 	
-	public static void iterateEntitiesInCube(EntityIterator.EntityReceiver entityReceiver, Location center, int radius)
+	public static List<Entity> getEntitiesInCube(Location center, int radius)
 	{
+        LinkedList<Entity> list = new LinkedList<>();
+
 		center = center.getBlock().getLocation();
 
 		World world = center.getWorld();
@@ -33,14 +37,11 @@ public class EntityIterator {
 					}
 					
 					
-					entityReceiver.onEntityFound(e);
+					list.add(e);
 				}
 			}
 		}
-	}
-	
-	public static interface EntityReceiver
-	{
-		public void onEntityFound(Entity entity);	
+
+        return list;
 	}
 }
