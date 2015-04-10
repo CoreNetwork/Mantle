@@ -52,7 +52,7 @@ public class SmithingBook extends Spellbook {
         SMITHITEMS.put(new ItemStack(Material.CHAINMAIL_CHESTPLATE, 1), new ItemStack(Material.IRON_INGOT, 6));
         SMITHITEMS.put(new ItemStack(Material.CHAINMAIL_LEGGINGS, 1), new ItemStack(Material.IRON_INGOT, 5));
         SMITHITEMS.put(new ItemStack(Material.CHAINMAIL_HELMET, 1), new ItemStack(Material.IRON_INGOT, 4));
-        SMITHITEMS.put(new ItemStack(Material.CHAINMAIL_HELMET, 1), new ItemStack(Material.IRON_INGOT, 2));
+        SMITHITEMS.put(new ItemStack(Material.CHAINMAIL_BOOTS, 1), new ItemStack(Material.IRON_INGOT, 2));
         SMITHITEMS.put(new ItemStack(Material.GOLD_CHESTPLATE, 1), new ItemStack(Material.GOLD_INGOT, 5));
         SMITHITEMS.put(new ItemStack(Material.GOLD_LEGGINGS, 1), new ItemStack(Material.GOLD_INGOT, 4));
         SMITHITEMS.put(new ItemStack(Material.GOLD_HELMET, 1), new ItemStack(Material.GOLD_INGOT, 3));
