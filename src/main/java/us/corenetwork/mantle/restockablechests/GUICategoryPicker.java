@@ -106,12 +106,12 @@ public class GUICategoryPicker extends InventoryGUI {
 		{
 			//cat.gotAllPreReqs(player) && cat.isUnderTheLimit(player)
 			Player bukkitPlayer = Bukkit.getPlayer(player.getUniqueId());
-			if(!selectedCategory.gotAllPreReqs(bukkitPlayer))
+			if(!selectedCategory.gotAllPreReqs(bukkitPlayer) && selectedCategory.isRare())
 			{
 				Util.Message(RChestSettings.MESSAGE_COMPASS_CATEGORY_NOT_YET_UNLOCKED.string(), player);
 				bukkitPlayer.updateInventory();
 			}
-			else if(!selectedCategory.isUnderTheLimit(bukkitPlayer))
+			else if(!selectedCategory.isUnderTheLimit(bukkitPlayer) && selectedCategory.isRare())
 			{
 				Util.Message(RChestSettings.MESSAGE_COMPASS_CATEGORY_LOOTED_ALL.string(), player);
 				bukkitPlayer.updateInventory();
