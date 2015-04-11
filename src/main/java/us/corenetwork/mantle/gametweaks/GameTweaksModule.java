@@ -1,9 +1,12 @@
 package us.corenetwork.mantle.gametweaks;
 
 import net.minecraft.server.v1_8_R2.Block;
+import net.minecraft.server.v1_8_R2.WorldServer;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
@@ -26,9 +29,9 @@ public class GameTweaksModule extends MantleModule {
 	@Override
 	protected boolean loadModule() {
 		fixSound();
-		
+		changeSeaLevel();
 		Bukkit.getPluginManager().registerEvents(new GameTweaksListener(), MantlePlugin.instance);
-		
+
 		return true;
 	}
 	@Override
@@ -47,5 +50,13 @@ public class GameTweaksModule extends MantleModule {
 		SilentPlaceProxy.apply(Block.getByName("nether_wart"));
 		
 		MLog.info("Sound hack enabled!");
-	}	
+	}
+
+
+	public static void changeSeaLevel()
+	{
+		World world = Bukkit.getWorld("world");
+		CraftWorld craftWorld = (CraftWorld) world;
+		craftWorld.getHandle().b(63);
+	}
 }
