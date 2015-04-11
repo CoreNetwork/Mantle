@@ -104,7 +104,7 @@ public class GrowthBook extends Spellbook {
                     final Block neighbour = block.getRelative(face);
                     if (neighbour != null && neighbour.isEmpty())
                     {
-                        Block downBlock = block.getRelative(BlockFace.DOWN);
+                        Block downBlock = neighbour.getRelative(BlockFace.DOWN);
                         if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
                         {
                             neighbour.setType(Material.MELON_BLOCK);
@@ -127,7 +127,7 @@ public class GrowthBook extends Spellbook {
                     final Block neighbour = block.getRelative(face);
                     if (neighbour != null && neighbour.isEmpty())
                     {
-                        Block downBlock = block.getRelative(BlockFace.DOWN);
+                        Block downBlock = neighbour.getRelative(BlockFace.DOWN);
                         if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
                         {
                             neighbour.setType(Material.PUMPKIN);
