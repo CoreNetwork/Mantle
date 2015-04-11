@@ -56,6 +56,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -88,774 +89,658 @@ import us.corenetwork.mantle.util.ReflectionUtils;
 
 public class HardmodeListener implements Listener {
 
-	private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
-	private static Random random = new Random();
-	private Set<Zombie> reinforcementZombies = new HashSet<>();
+    private static HashSet<Byte> transparentBlocks = new HashSet<Byte>();
+    private static Random random = new Random();
+    private Set<Zombie> reinforcementZombies = new HashSet<>();
 
-	static
-	{
-		transparentBlocks.add((byte) 0);
-	}
+    static {
+        transparentBlocks.add((byte) 0);
+    }
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-	public void onEntityDamage(final EntityDamageEvent event)
-	{
-		// Do not apply anything to End or void
-		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
-			return;
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
+    public void onEntityDamage(final EntityDamageEvent event) {
+        // Do not apply anything to End or void
+        if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
+            return;
 
-		if (event instanceof EntityDamageByEntityEvent)
-		{
-			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
+        if (event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK) {
+            if (HardmodeSettings.VEHICLE_PLAYER_SYNC.bool() && event.getEntity() instanceof Player && event.getEntity().getVehicle() instanceof LivingEntity) {
+                ((LivingEntity) event.getEntity().getVehicle()).damage(event.getDamage());
+            }
+        }
 
-			Entity damager = entityEvent.getDamager();
-			Entity victim = entityEvent.getEntity();
+        if (event instanceof EntityDamageByEntityEvent) {
+            EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
 
-			// Teleporting player to the enderman
-			if (victim instanceof Enderman && damager instanceof Player && event.getCause() != DamageCause.THORNS)
-			{
-				// Only perform teleporting if enderman cannot move to the
-				// player
-				boolean canMove = EndermanTeleport.canMove(damager.getLocation(), victim.getLocation());
+            Entity damager = entityEvent.getDamager();
+            Entity victim = entityEvent.getEntity();
 
-				if (!canMove)
-				{
-					double randomChance = HardmodeSettings.ENDERMAN_TELEPORT_CHANCE.doubleNumber();
-					if (MantlePlugin.random.nextDouble() < randomChance)
-					{
-						event.setCancelled(true);
-						EndermanTeleport.teleportPlayer((Player) damager, (Enderman) victim);
+            // Teleporting player to the enderman
+            if (victim instanceof Enderman && damager instanceof Player && event.getCause() != DamageCause.THORNS) {
+                // Only perform teleporting if enderman cannot move to the
+                // player
+                boolean canMove = EndermanTeleport.canMove(damager.getLocation(), victim.getLocation());
 
-						HardmodeModule.applyDamageNode((LivingEntity) damager,
-								HardmodeSettings.ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT.string());
+                if (!canMove) {
+                    double randomChance = HardmodeSettings.ENDERMAN_TELEPORT_CHANCE.doubleNumber();
+                    if (MantlePlugin.random.nextDouble() < randomChance) {
+                        event.setCancelled(true);
+                        EndermanTeleport.teleportPlayer((Player) damager, (Enderman) victim);
 
-						return;
-					}
-				}
+                        HardmodeModule.applyDamageNode((LivingEntity) damager,
+                                HardmodeSettings.ENDERMAN_TELEPORT_APPLY_DAMAGE_EFFECT.string());
 
-			}
-			// Wither reset timer
-			else if (victim instanceof Wither
-					&& (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager).getShooter() instanceof Player))))
-			{
-				int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
-				MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
-				victim.removeMetadata("DespawningTime", MantlePlugin.instance);
-				victim.setMetadata("DespawningTime", value);
-			}
-			// Preventing minions from being damaged by wither
-			else if ((damager instanceof Wither || damager instanceof WitherSkull) && victim instanceof LivingEntity)
-			{
-				LivingEntity living = (LivingEntity) victim;
-				if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion"))
-				{
-					event.setCancelled(true);
-					return;
-				}
-			} else if (event.getEntityType() == EntityType.VILLAGER)
-			{
-				int profession = ((CraftVillager) event.getEntity()).getHandle().getProfession();
-				if (profession == 5)
-				{
-					event.setCancelled(true);
-					return;
-				}
-			} else if (damager instanceof Fireball)
-			{
-				Fireball fireball = (Fireball) damager;
-				if (fireball.getShooter() instanceof Ghast)
-				{
-					double multiplier = HardmodeSettings.GHAST_FIREBALL_DAMAGE_MULTIPLIER.doubleNumber();
-					event.setDamage(event.getDamage() * multiplier);
-				}
-			} else if (victim instanceof Spider && damager instanceof Player)
-			{
-				for (Entity e : victim.getWorld().getEntitiesByClass(Spider.class))
-				{
-					if (e.getLocation().distanceSquared(damager.getLocation()) < 48 * 48)
-					{
-						Spider spider = (Spider) e;
-						spider.setTarget((Player) damager);
-					}
-				}
-			}
+                        return;
+                    }
+                }
 
-		}
+            }
+            // Wither reset timer
+            else if (victim instanceof Wither
+                    && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager).getShooter() instanceof Player)))) {
+                int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
+                MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
+                victim.removeMetadata("DespawningTime", MantlePlugin.instance);
+                victim.setMetadata("DespawningTime", value);
+            }
+            // Preventing minions from being damaged by wither
+            else if ((damager instanceof Wither || damager instanceof WitherSkull) && victim instanceof LivingEntity) {
+                LivingEntity living = (LivingEntity) victim;
+                if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion")) {
+                    event.setCancelled(true);
+                    return;
+                }
+            } else if (event.getEntityType() == EntityType.VILLAGER) {
+                int profession = ((CraftVillager) event.getEntity()).getHandle().getProfession();
+                if (profession == 5) {
+                    event.setCancelled(true);
+                    return;
+                }
+            } else if (damager instanceof Fireball) {
+                Fireball fireball = (Fireball) damager;
+                if (fireball.getShooter() instanceof Ghast) {
+                    double multiplier = HardmodeSettings.GHAST_FIREBALL_DAMAGE_MULTIPLIER.doubleNumber();
+                    event.setDamage(event.getDamage() * multiplier);
+                }
+            } else if (victim instanceof Spider && damager instanceof Player) {
+                for (Entity e : victim.getWorld().getEntitiesByClass(Spider.class)) {
+                    if (e.getLocation().distanceSquared(damager.getLocation()) < 48 * 48) {
+                        Spider spider = (Spider) e;
+                        spider.setTarget((Player) damager);
+                    }
+                }
+            }
 
-		if (event.getEntity() instanceof Player)
-		{
-			final Player player = (Player) event.getEntity();
+        }
 
-			// Environmental damage
-			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
-			if (event.getDamage() < 0)
-			{
-				event.setCancelled(true);
-				return;
-			}
+        if (event.getEntity() instanceof Player) {
+            final Player player = (Player) event.getEntity();
 
-			// Dismount player from the horse if player shot via arrow
-			if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse)
-			{
-				player.leaveVehicle();
-			}
-		}
+            // Environmental damage
+            DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
+            if (event.getDamage() < 0) {
+                event.setCancelled(true);
+                return;
+            }
 
-		// Dismount player from the horse if horse shot via arrow
-		else if (event.getEntity() instanceof Horse)
-		{
-			Horse horse = (Horse) event.getEntity();
+            // Dismount player from the horse if player shot via arrow
+            if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse) {
+                player.leaveVehicle();
+            }
+        }
 
-			if (event.getCause() == DamageCause.PROJECTILE && horse.getPassenger() != null)
-			{
-				horse.eject();
-			}
-		}
+        // Dismount player from the horse if horse shot via arrow
+        else if (event.getEntity() instanceof Horse) {
+            Horse horse = (Horse) event.getEntity();
 
-		if (event.getCause() == DamageCause.WITHER && event.getEntity() instanceof LivingEntity)
-		{
-			LivingEntity living = (LivingEntity) event.getEntity();
-			if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion"))
-			{
-				event.setCancelled(true);
-				return;
-			}
-		}
-	}
+            if (event.getCause() == DamageCause.PROJECTILE && horse.getPassenger() != null) {
+                horse.eject();
+            }
+        }
 
-	@EventHandler(ignoreCancelled = true)
-	public void onEntityDeath(EntityDeathEvent event)
-	{
-		final LivingEntity entity = event.getEntity();
+        if (event.getCause() == DamageCause.WITHER && event.getEntity() instanceof LivingEntity) {
+            LivingEntity living = (LivingEntity) event.getEntity();
+            if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion")) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+    }
 
-		// Respawned mobs not dropping anything
-		// Mobs with name or silverfishes should not drop anything
-		if (entity.getMetadata("Respawned").size() > 0 || entity.getType() == EntityType.SILVERFISH
-				|| (entity.getCustomName() != null && HardmodeSettings.NAMED_MOBS_NO_DROP.stringList().contains(entity.getCustomName())))
-		{
-			event.getDrops().clear();
-			event.setDroppedExp(0);
-			entity.getEquipment().clear();
-		}
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDeath(EntityDeathEvent event) {
+        final LivingEntity entity = event.getEntity();
 
-		if (event.getEntity() instanceof Animals)
-		{
-			if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
-			{
-				Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
+        // Respawned mobs not dropping anything
+        // Mobs with name or silverfishes should not drop anything
+        if (entity.getMetadata("Respawned").size() > 0 || entity.getType() == EntityType.SILVERFISH
+                || (entity.getCustomName() != null && HardmodeSettings.NAMED_MOBS_NO_DROP.stringList().contains(entity.getCustomName()))) {
+            event.getDrops().clear();
+            event.setDroppedExp(0);
+            entity.getEquipment().clear();
+        }
 
-				if(lastDamager instanceof Projectile)
-				{
-					ProjectileSource shooter = ((Projectile) lastDamager).getShooter();
-					if(shooter instanceof Player)
-					{
-						lastDamager = (Player) shooter;
-					}
-				}
+        if (event.getEntity() instanceof Animals) {
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
+                Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
 
-				try
-				{
-					Field nmsEntityField = CraftEntity.class.getDeclaredField("entity");
-					nmsEntityField.setAccessible(true);
-					for (Entity e : event.getEntity().getWorld().getEntitiesByClass(Animals.class))
-					{
-						if (e.getType() != event.getEntity().getType()
-								|| e.getLocation().distanceSquared(event.getEntity().getLocation()) > 25 * 25)
-						{
-							continue;
-						}
-						try
-						{
-							EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
-							if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R2.EntityLiving)
-							{
-								net.minecraft.server.v1_8_R2.EntityLiving el = (net.minecraft.server.v1_8_R2.EntityLiving) nmsEntityField
-										.get(lastDamager);
-								creature.b(el);
-							}
+                if (lastDamager instanceof Projectile) {
+                    ProjectileSource shooter = ((Projectile) lastDamager).getShooter();
+                    if (shooter instanceof Player) {
+                        lastDamager = (Player) shooter;
+                    }
+                }
 
-						} catch (IllegalAccessException e1)
-						{
-							e1.printStackTrace();
-						}
-					}
-				} catch (NoSuchFieldException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
+                try {
+                    Field nmsEntityField = CraftEntity.class.getDeclaredField("entity");
+                    nmsEntityField.setAccessible(true);
+                    for (Entity e : event.getEntity().getWorld().getEntitiesByClass(Animals.class)) {
+                        if (e.getType() != event.getEntity().getType()
+                                || e.getLocation().distanceSquared(event.getEntity().getLocation()) > 25 * 25) {
+                            continue;
+                        }
+                        try {
+                            EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
+                            if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R2.EntityLiving) {
+                                net.minecraft.server.v1_8_R2.EntityLiving el = (net.minecraft.server.v1_8_R2.EntityLiving) nmsEntityField
+                                        .get(lastDamager);
+                                creature.b(el);
+                            }
 
-		// Only drop magma cream when biggest slime is killed
-		if (event.getEntityType() == EntityType.MAGMA_CUBE)
-		{
-			event.getDrops().clear();
+                        } catch (IllegalAccessException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-			MagmaCube cube = (MagmaCube) event.getEntity();
-			if (cube.getSize() == 4 && MantlePlugin.random.nextBoolean())
-				event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, 1));
-		}
+        // Only drop magma cream when biggest slime is killed
+        if (event.getEntityType() == EntityType.MAGMA_CUBE) {
+            event.getDrops().clear();
 
-		if(event.getEntityType() == EntityType.WITHER)
-		{
-			Player killer = event.getEntity().getKiller();
+            MagmaCube cube = (MagmaCube) event.getEntity();
+            if (cube.getSize() == 4 && MantlePlugin.random.nextBoolean())
+                event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, 1));
+        }
 
-			if(killer != null)
-			{
-				//MLog.debug(killer.getInventory().getContents().length + "");
-				for(ItemStack stack : killer.getInventory().getContents())
-				{
-					if(stack.getType() == Material.AIR || (stack.getType() == Material.NETHER_STAR && stack.getAmount() < stack.getMaxStackSize()))
-					{
-						killer.getInventory().addItem(new ItemStack(Material.NETHER_STAR, 1));
-						event.getDrops().clear();
-						return;
-					}
-				}
-			}
-		}
-	}
+        if (event.getEntityType() == EntityType.WITHER) {
+            Player killer = event.getEntity().getKiller();
 
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
-	{
-		Entity entity = event.getRightClicked();
-		if (entity == null)
-			return;
+            if (killer != null) {
+                //MLog.debug(killer.getInventory().getContents().length + "");
+                for (ItemStack stack : killer.getInventory().getContents()) {
+                    if (stack.getType() == Material.AIR || (stack.getType() == Material.NETHER_STAR && stack.getAmount() < stack.getMaxStackSize())) {
+                        killer.getInventory().addItem(new ItemStack(Material.NETHER_STAR, 1));
+                        event.getDrops().clear();
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
-		ItemStack handItem = event.getPlayer().getItemInHand();
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        Entity entity = event.getRightClicked();
+        if (entity == null)
+            return;
 
-		if (entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER && handItem != null
-				&& handItem.getType() == Material.BUCKET)
-		{
-			event.setCancelled(true);
-			event.getPlayer().updateInventory();
-			Util.Message(HardmodeSettings.MESSAGE_NO_MILKING_NETHER.string(), event.getPlayer());
-			return;
-		}
-	}
+        ItemStack handItem = event.getPlayer().getItemInHand();
 
-	@EventHandler(ignoreCancelled = true)
-	public void onBlockBreak(BlockBreakEvent event)
-	{
-		final Block block = event.getBlock();
+        if (entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER && handItem != null
+                && handItem.getType() == Material.BUCKET) {
+            event.setCancelled(true);
+            event.getPlayer().updateInventory();
+            Util.Message(HardmodeSettings.MESSAGE_NO_MILKING_NETHER.string(), event.getPlayer());
+            return;
+        }
+    }
 
-		//Quartz drop increase
-		if (event.getBlock().getType() == Material.QUARTZ_ORE)
-		{
-			ItemStack itemInHand = event.getPlayer().getItemInHand();
-			if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
-				return;
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        final Block block = event.getBlock();
+
+        //Quartz drop increase
+        if (event.getBlock().getType() == Material.QUARTZ_ORE) {
+            ItemStack itemInHand = event.getPlayer().getItemInHand();
+            if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
+                return;
 
             net.minecraft.server.v1_8_R2.ItemStack nmsItemInHand = NanobotUtil.getInternalNMSStack(itemInHand);
 
-			event.setCancelled(true); //Cancel drop vanilla
-			block.setType(Material.AIR);
+            event.setCancelled(true); //Cancel drop vanilla
+            block.setType(Material.AIR);
 
-			boolean canToolBreak = itemInHand != null && nmsItemInHand.b(Blocks.QUARTZ_ORE);
-			if (!canToolBreak)
-				return;
+            boolean canToolBreak = itemInHand != null && nmsItemInHand.b(Blocks.QUARTZ_ORE);
+            if (!canToolBreak)
+                return;
 
-			int fortuneLevel = itemInHand.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
+            int fortuneLevel = itemInHand.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
 
-			int min = 1;
-			int max = 3;
-			switch (fortuneLevel)
-			{
-				case 1:
-					min = 2;
-					max = 5;
-					break;
-				case 2:
-					min = 3;
-					max = 6;
-					break;
-				case 3:
-					min = 5;
-					max = 8;
-					break;
-			}
+            int min = 1;
+            int max = 3;
+            switch (fortuneLevel) {
+                case 1:
+                    min = 2;
+                    max = 5;
+                    break;
+                case 2:
+                    min = 3;
+                    max = 6;
+                    break;
+                case 3:
+                    min = 5;
+                    max = 8;
+                    break;
+            }
 
-			int amountDropped = min + MantlePlugin.random.nextInt(max - min + 1);
-			block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), new ItemStack(Material.QUARTZ, amountDropped));
+            int amountDropped = min + MantlePlugin.random.nextInt(max - min + 1);
+            block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), new ItemStack(Material.QUARTZ, amountDropped));
 
-			//Drop experience
-			int expToDrop = 2 + MantlePlugin.random.nextInt(4); //Drop 2-5 EXP
-			while (expToDrop > 0)
-			{
-				int value = EntityExperienceOrb.getOrbValue(expToDrop); //Which experience orb size should I spawn
-				expToDrop -= value;
+            //Drop experience
+            int expToDrop = 2 + MantlePlugin.random.nextInt(4); //Drop 2-5 EXP
+            while (expToDrop > 0) {
+                int value = EntityExperienceOrb.getOrbValue(expToDrop); //Which experience orb size should I spawn
+                expToDrop -= value;
 
-				ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.EXPERIENCE_ORB);
-				orb.setExperience(value);
-			}
+                ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawnEntity(Util.getLocationInBlockCenter(block), EntityType.EXPERIENCE_ORB);
+                orb.setExperience(value);
+            }
 
             //Damage pickaxe
             nmsItemInHand.damage(1, ((CraftPlayer) event.getPlayer()).getHandle());
-		}
+        }
 
 
+    }
 
+    @EventHandler(ignoreCancelled = true)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        final Block block = event.getBlock();
 
+        // Prevent wither building
+        if (block.getType() == Material.SKULL && block.getY() >= 60 && block.getWorld().getEnvironment() == Environment.NETHER) {
+            Block centerSkull = null;
+            BlockFace oneSkullDirection = null;
 
-	}
+            for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH}) {
+                Block neighbour = block.getRelative(face);
+                if (neighbour.getType() == Material.SKULL) {
+                    oneSkullDirection = face;
 
-	@EventHandler(ignoreCancelled = true)
-	public void onBlockPlace(BlockPlaceEvent event)
-	{
-		final Block block = event.getBlock();
+                    if (neighbour.getRelative(face).getType() == Material.SKULL) {
+                        centerSkull = neighbour;
+                        break;
+                    } else if (block.getRelative(face.getOppositeFace()).getType() == Material.SKULL) {
+                        centerSkull = block;
+                        break;
+                    }
+                }
+            }
 
-		// Prevent wither building
-		if (block.getType() == Material.SKULL && block.getY() >= 60 && block.getWorld().getEnvironment() == Environment.NETHER)
-		{
-			Block centerSkull = null;
-			BlockFace oneSkullDirection = null;
+            if (centerSkull != null) {
+                Block belowCenter = centerSkull.getRelative(BlockFace.DOWN);
 
-			for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
-			{
-				Block neighbour = block.getRelative(face);
-				if (neighbour.getType() == Material.SKULL)
-				{
-					oneSkullDirection = face;
+                if (belowCenter.getType() == Material.SOUL_SAND
+                        && belowCenter.getRelative(oneSkullDirection).getType() == Material.SOUL_SAND
+                        && belowCenter.getRelative(oneSkullDirection.getOppositeFace()).getType() == Material.SOUL_SAND
+                        && belowCenter.getRelative(BlockFace.DOWN).getType() == Material.SOUL_SAND) {
+                    Util.Message(HardmodeSettings.MESSAGE_NO_WITHER_SURFACE.string(), event.getPlayer());
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        }
+    }
 
-					if (neighbour.getRelative(face).getType() == Material.SKULL)
-					{
-						centerSkull = neighbour;
-						break;
-					} else if (block.getRelative(face.getOppositeFace()).getType() == Material.SKULL)
-					{
-						centerSkull = block;
-						break;
-					}
-				}
-			}
+    @EventHandler(ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
+        if (event.getSpawnReason() == SpawnReason.SPAWNER) //Do not modify any mobs spawned by mob spawners
+            return;
 
-			if (centerSkull != null)
-			{
-				Block belowCenter = centerSkull.getRelative(BlockFace.DOWN);
+        final LivingEntity entity = event.getEntity();
 
-				if (belowCenter.getType() == Material.SOUL_SAND
-						&& belowCenter.getRelative(oneSkullDirection).getType() == Material.SOUL_SAND
-						&& belowCenter.getRelative(oneSkullDirection.getOppositeFace()).getType() == Material.SOUL_SAND
-						&& belowCenter.getRelative(BlockFace.DOWN).getType() == Material.SOUL_SAND)
-				{
-					Util.Message(HardmodeSettings.MESSAGE_NO_WITHER_SURFACE.string(), event.getPlayer());
-					event.setCancelled(true);
-					return;
-				}
-			}
-		}
-	}
-
-	@EventHandler(ignoreCancelled = true)
-	public void onCreatureSpawn(CreatureSpawnEvent event)
-	{
-		if (event.getSpawnReason() == SpawnReason.SPAWNER) //Do not modify any mobs spawned by mob spawners
-			return;
-
-		final LivingEntity entity = event.getEntity();
-
-		// Prevent spawning on some nether mobs if there is not enough light
-		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER
-				&& event.getEntityType() != EntityType.BLAZE && event.getEntityType() != EntityType.MAGMA_CUBE
-				&& event.getEntityType() != EntityType.GHAST)
-		{
-			if (event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
-			{
-				event.setCancelled(true);
-				return;
-			}
-		}
-
-
-		if (entity.getType() == EntityType.ZOMBIE)
-		{
-			//Fix door breaking
-			if (random.nextDouble() < HardmodeSettings.ZOMBIE_DOOR_BREAKING_CHANCE.doubleNumber())
-			{
-				Zombie zombie = (Zombie) event.getEntity();
-				EntityZombie nmsZombie = ((CraftZombie) zombie).getHandle();
-
-				nmsZombie.a(true);
-			}
-		}
-
-
-		// Wither timer & replacement
-		if (event.getEntityType() == EntityType.WITHER)
-		{
-			GriefPreventionHandler.enableExplosions(event.getLocation().getWorld());
-
-			if (!NMSWitherManager.isCustomWither(entity))
-			{
-				Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
-					@Override
-					public void run()
-					{
-						CustomWither customWither = NMSWitherManager.convert((Wither) entity);
-						customWither.n();
-					}
-				});
-			}
-			int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
-			MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
-			entity.setMetadata("DespawningTime", value);
-
-		}
-		// Pigmen spawning adjust
-		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
-		{
-			if (event.getSpawnReason() == SpawnReason.JOCKEY)
-			{
-				event.setCancelled(true);
-				return;
-			}
-
-			HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
-
-			entity.getEquipment().clear();
-
-			boolean hasSword = MantlePlugin.random.nextDouble() < HardmodeSettings.PIGMEN_SWORD_CHANCE.doubleNumber();
-			if (hasSword)
-			{
-				entity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD, 1));
-			}
-		}
-		else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS)
-		{
-			if (entity instanceof Zombie && HardmodeSettings.REINFORCEMENTS_ENABLED.bool())
-			{
-				reinforcementZombies.add((Zombie) entity);
-			}
-		}
-		else if (event.getSpawnReason() == SpawnReason.MOUNT)
-		{
-			event.setCancelled(true);
-			return;
-		}
-        else if (entity.getType() == EntityType.SQUID)
-        {
-            Material spawnBlockMaterial = event.getLocation().getBlock().getType();
-            if (spawnBlockMaterial == Material.LAVA || spawnBlockMaterial == Material.STATIONARY_LAVA)
-            {
+        // Prevent spawning on some nether mobs if there is not enough light
+        if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER
+                && event.getEntityType() != EntityType.BLAZE && event.getEntityType() != EntityType.MAGMA_CUBE
+                && event.getEntityType() != EntityType.GHAST) {
+            if (event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer()) {
                 event.setCancelled(true);
                 return;
             }
         }
 
-		// assign spiders a random potion effect
-		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER)
-		{
-			// clear vanilla effects so there aren't multiple on a spider in
-			// rare cases.
-			for (PotionEffectType type : PotionEffectType.values())
-			{
-				if (type != null && event.getEntity().hasPotionEffect(type))
-				{
-					event.getEntity().removePotionEffect(type);
-				}
-			}
-			int sel = random.nextInt(3);
-			PotionEffectType type = null;
-			switch (sel)
-			{
-			case 0:
-				type = PotionEffectType.SPEED;
-				break;
-			case 1:
-				type = PotionEffectType.INVISIBILITY;
-				break;
-			case 2:
-				type = PotionEffectType.REGENERATION;
-				break;
-			case 3:
-				type = PotionEffectType.INCREASE_DAMAGE;
-				break;
-			}
 
-			event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 0));
-		}
+        if (entity.getType() == EntityType.ZOMBIE) {
+            //Fix door breaking
+            if (random.nextDouble() < HardmodeSettings.ZOMBIE_DOOR_BREAKING_CHANCE.doubleNumber()) {
+                Zombie zombie = (Zombie) event.getEntity();
+                EntityZombie nmsZombie = ((CraftZombie) zombie).getHandle();
 
-		//Remove range bonuses from mobs
-		if (entity instanceof LivingEntity && entity.getType() != EntityType.WITHER)
-		{
-			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() //Run it 1 tick later so Minecraft sets up all bonuses to be removed first.
-			{
-				@Override
-				public void run()
-				{
-					EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
-					AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
-					if (attribute != null)
-					{
-						Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
-						Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
-						Map mapE = (Map) ReflectionUtils.get(attribute, "e"); //Map that contains bonuses (?)
+                nmsZombie.a(true);
+            }
+        }
 
-						for (int i = 0; i < 3; i++)
-						{
-							((HashSet) mapC.get(i)).clear();
-						}
 
-						mapD.clear();
-						mapE.clear();
+        // Wither timer & replacement
+        if (event.getEntityType() == EntityType.WITHER) {
+            GriefPreventionHandler.enableExplosions(event.getLocation().getWorld());
 
-						ReflectionUtils.set(attribute, "g", true); //Set dirty flag so attribute value will be recalculate
-					}
-				}
-			});
+            if (!NMSWitherManager.isCustomWither(entity)) {
+                Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
+                    @Override
+                    public void run() {
+                        CustomWither customWither = NMSWitherManager.convert((Wither) entity);
+                        customWither.n();
+                    }
+                });
+            }
+            int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
+            MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
+            entity.setMetadata("DespawningTime", value);
 
-		}
-	}
+        }
+        // Pigmen spawning adjust
+        else if (event.getEntityType() == EntityType.PIG_ZOMBIE) {
+            if (event.getSpawnReason() == SpawnReason.JOCKEY) {
+                event.setCancelled(true);
+                return;
+            }
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onEntityPortal(EntityPortalEvent event)
-	{
-		if (event.getEntityType() == EntityType.HORSE)
-		{
-			String id = event.getEntity().getUniqueId().toString();
+            HardmodeModule.applyDamageNode(entity, HardmodeSettings.APPLY_DAMAGE_NODE_ON_PIGMEN_SPAWN.string());
 
-			AttributeInstance attributes = ((EntityInsentient) ((CraftLivingEntity) event.getEntity()).getHandle())
-					.getAttributeInstance(GenericAttributes.d);
+            entity.getEquipment().clear();
 
-			if (event.getTo().getWorld().getEnvironment() == Environment.NETHER)
-			{
-				// Horse slowing down disabled
-				// double originalSpeed = attributes.getValue();
-				// HorseSpeed.setOriginalHorseSpeed(id, originalSpeed);
+            boolean hasSword = MantlePlugin.random.nextDouble() < HardmodeSettings.PIGMEN_SWORD_CHANCE.doubleNumber();
+            if (hasSword) {
+                entity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD, 1));
+            }
+        } else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS) {
+            if (entity instanceof Zombie && HardmodeSettings.REINFORCEMENTS_ENABLED.bool()) {
+                reinforcementZombies.add((Zombie) entity);
+            }
+        } else if (event.getSpawnReason() == SpawnReason.MOUNT) {
+            event.setCancelled(true);
+            return;
+        } else if (entity.getType() == EntityType.SQUID) {
+            Material spawnBlockMaterial = event.getLocation().getBlock().getType();
+            if (spawnBlockMaterial == Material.LAVA || spawnBlockMaterial == Material.STATIONARY_LAVA) {
+                event.setCancelled(true);
+                return;
+            }
+        }
 
-				// attributes.setValue(HardmodeSettings.NETHER_HORSE_SPEED.doubleNumber());
-			} else
-			{
-				double value = HorseSpeed.getOriginalHorseSpeed(id);
-				if (value >= 0)
-				{
-					attributes.setValue(value);
-				}
-			}
-		}
-	}
+        // assign spiders a random potion effect
+        if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER) {
+            // clear vanilla effects so there aren't multiple on a spider in
+            // rare cases.
+            for (PotionEffectType type : PotionEffectType.values()) {
+                if (type != null && event.getEntity().hasPotionEffect(type)) {
+                    event.getEntity().removePotionEffect(type);
+                }
+            }
+            int sel = random.nextInt(3);
+            PotionEffectType type = null;
+            switch (sel) {
+                case 0:
+                    type = PotionEffectType.SPEED;
+                    break;
+                case 1:
+                    type = PotionEffectType.INVISIBILITY;
+                    break;
+                case 2:
+                    type = PotionEffectType.REGENERATION;
+                    break;
+                case 3:
+                    type = PotionEffectType.INCREASE_DAMAGE;
+                    break;
+            }
 
-	@EventHandler(ignoreCancelled = true)
-	public void onEntityTarget(EntityTargetEvent event)
-	{
-		Entity entity = event.getEntity();
-		Entity target = event.getTarget();
+            event.getEntity().addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, 0));
+        }
 
-		if (event.getEntityType() == EntityType.GHAST)
-		{
-			TargetReason reason = event.getReason();
-			if (reason == TargetReason.CLOSEST_PLAYER || reason == TargetReason.RANDOM_TARGET)
-			{
-				int distanceSquared = Util.flatDistanceSquared(entity.getLocation(), target.getLocation());
-				if (distanceSquared > HardmodeSettings.GHAST_MAXIMUM_ATTACK_RANGE.integer())
-				{
-					event.setCancelled(true);
-					return;
-				}
-			}
-		} else if (event.getEntity() instanceof Zombie && reinforcementZombies.contains(event.getEntity())
-				&& event.getTarget() instanceof Player && event.getReason() == TargetReason.REINFORCEMENT_TARGET && event.getEntity().getTicksLived() <= 30)
-		{
-			Zombie zombie = (Zombie) event.getEntity();
-			Vector newDistance = zombie.getLocation().subtract(target.getLocation()).toVector().normalize()
-					.multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
-			//Vector newDistance = event.getTarget().getLocation().subtract(zombie.getLocation()).toVector().normalize()
-			//		.multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
+        //Remove range bonuses from mobs
+        if (entity instanceof LivingEntity && entity.getType() != EntityType.WITHER) {
+            Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() //Run it 1 tick later so Minecraft sets up all bonuses to be removed first.
+            {
+                @Override
+                public void run() {
+                    EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
+                    AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
+                    if (attribute != null) {
+                        Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
+                        Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
+                        Map mapE = (Map) ReflectionUtils.get(attribute, "e"); //Map that contains bonuses (?)
 
-			Location newLocation = event.getTarget().getLocation().add(newDistance);
-			newLocation.setY(newLocation.getWorld().getHighestBlockYAt(newLocation) + 1d);
+                        for (int i = 0; i < 3; i++) {
+                            ((HashSet) mapC.get(i)).clear();
+                        }
 
-			zombie.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
-			reinforcementZombies.remove(zombie);
-		} else if (reinforcementZombies.contains(event.getEntity())) {
+                        mapD.clear();
+                        mapE.clear();
+
+                        ReflectionUtils.set(attribute, "g", true); //Set dirty flag so attribute value will be recalculate
+                    }
+                }
+            });
+
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityPortal(EntityPortalEvent event) {
+        if (event.getEntityType() == EntityType.HORSE) {
+            String id = event.getEntity().getUniqueId().toString();
+
+            AttributeInstance attributes = ((EntityInsentient) ((CraftLivingEntity) event.getEntity()).getHandle())
+                    .getAttributeInstance(GenericAttributes.d);
+
+            if (event.getTo().getWorld().getEnvironment() == Environment.NETHER) {
+                // Horse slowing down disabled
+                // double originalSpeed = attributes.getValue();
+                // HorseSpeed.setOriginalHorseSpeed(id, originalSpeed);
+
+                // attributes.setValue(HardmodeSettings.NETHER_HORSE_SPEED.doubleNumber());
+            } else {
+                double value = HorseSpeed.getOriginalHorseSpeed(id);
+                if (value >= 0) {
+                    attributes.setValue(value);
+                }
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityTarget(EntityTargetEvent event) {
+        Entity entity = event.getEntity();
+        Entity target = event.getTarget();
+
+        if (event.getEntityType() == EntityType.GHAST) {
+            TargetReason reason = event.getReason();
+            if (reason == TargetReason.CLOSEST_PLAYER || reason == TargetReason.RANDOM_TARGET) {
+                int distanceSquared = Util.flatDistanceSquared(entity.getLocation(), target.getLocation());
+                if (distanceSquared > HardmodeSettings.GHAST_MAXIMUM_ATTACK_RANGE.integer()) {
+                    event.setCancelled(true);
+                    return;
+                }
+            }
+        } else if (event.getEntity() instanceof Zombie && reinforcementZombies.contains(event.getEntity())
+                && event.getTarget() instanceof Player && event.getReason() == TargetReason.REINFORCEMENT_TARGET && event.getEntity().getTicksLived() <= 30) {
+            Zombie zombie = (Zombie) event.getEntity();
+            Vector newDistance = zombie.getLocation().subtract(target.getLocation()).toVector().normalize()
+                    .multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
+            //Vector newDistance = event.getTarget().getLocation().subtract(zombie.getLocation()).toVector().normalize()
+            //		.multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
+
+            Location newLocation = event.getTarget().getLocation().add(newDistance);
+            newLocation.setY(newLocation.getWorld().getHighestBlockYAt(newLocation) + 1d);
+
+            zombie.teleport(newLocation, PlayerTeleportEvent.TeleportCause.PLUGIN);
+            reinforcementZombies.remove(zombie);
+        } else if (reinforcementZombies.contains(event.getEntity())) {
             reinforcementZombies.remove(event.getEntity());
         }
     }
 
-	@EventHandler(ignoreCancelled = true)
-	public void onZombieBreakDoor(EntityBreakDoorEvent event)
-	{
-		Block doorBlock = event.getBlock();
+    @EventHandler(ignoreCancelled = true)
+    public void onZombieBreakDoor(EntityBreakDoorEvent event) {
+        Block doorBlock = event.getBlock();
 
-		Block bottomBlock = event.getBlock().getRelative(BlockFace.DOWN);
-		if (bottomBlock.getType() == Material.WOODEN_DOOR)
-			doorBlock = bottomBlock;
+        Block bottomBlock = event.getBlock().getRelative(BlockFace.DOWN);
+        if (bottomBlock.getType() == Material.WOODEN_DOOR)
+            doorBlock = bottomBlock;
 
-		doorBlock.setData((byte) ((byte) doorBlock.getData() | (byte) 0x4), true);
-		doorBlock.getWorld().playSound(doorBlock.getLocation(), Sound.DOOR_OPEN, 1f, 1f);
+        doorBlock.setData((byte) ((byte) doorBlock.getData() | (byte) 0x4), true);
+        doorBlock.getWorld().playSound(doorBlock.getLocation(), Sound.DOOR_OPEN, 1f, 1f);
 
-		event.setCancelled(true);
-	}
+        event.setCancelled(true);
+    }
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onEntityDamageEntity(EntityDamageEvent event)
-	{
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityDamageEntity(EntityDamageEvent event) {
 
-		double damage = event.getDamage();
-		double origDamage = event.getFinalDamage();
-		HandlerList list = event.getHandlers();
-		if (event.getEntity().getType() == EntityType.SKELETON && event.getEntity().getWorld().getEnvironment() == Environment.NETHER)
-		{
-			if (event.getCause() == DamageCause.THORNS)
-			{
-				event.setCancelled(true);
-			}
-		}
-	}
+        double damage = event.getDamage();
+        double origDamage = event.getFinalDamage();
+        HandlerList list = event.getHandlers();
+        if (event.getEntity().getType() == EntityType.SKELETON && event.getEntity().getWorld().getEnvironment() == Environment.NETHER) {
+            if (event.getCause() == DamageCause.THORNS) {
+                event.setCancelled(true);
+            }
+        }
+    }
 
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onEntityPrime(ExplosionPrimeEvent event)
-	{
-		//spawn minions only if customSkull & spawningMinions == true
-		if (event.getEntityType() == EntityType.WITHER_SKULL)
-		{
-			CraftWitherSkull cws = (CraftWitherSkull) event.getEntity();
-			if(!(cws.getHandle() instanceof CustomWitherSkull))
-				return;
-			CustomWitherSkull customSkull = (CustomWitherSkull) cws.getHandle();
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    public void onEntityPrime(ExplosionPrimeEvent event) {
+        //spawn minions only if customSkull & spawningMinions == true
+        if (event.getEntityType() == EntityType.WITHER_SKULL) {
+            CraftWitherSkull cws = (CraftWitherSkull) event.getEntity();
+            if (!(cws.getHandle() instanceof CustomWitherSkull))
+                return;
+            CustomWitherSkull customSkull = (CustomWitherSkull) cws.getHandle();
 
-			if(customSkull.shouldSpawnMinions)
-			{
+            if (customSkull.shouldSpawnMinions) {
 
-				final Location location = event.getEntity().getLocation();
+                final Location location = event.getEntity().getLocation();
 
-				Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 
-					@Override
-					public void run()
-					{
-						int amount = MantlePlugin.random.nextInt(2);
+                    @Override
+                    public void run() {
+                        int amount = MantlePlugin.random.nextInt(2);
 
-						//TODO Remove
-						//Testing is a pain with all them minions around
-						amount = 2;
+                        //TODO Remove
+                        //Testing is a pain with all them minions around
+                        amount = 2;
 
-						for (int i = 0; i < amount; i++)
-						{
-							Block spawningBlock = location.getBlock();
-							if (spawningBlock.getType().isOccluding())
-								continue;
-							Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
-							if (aboveBlock.getType().isOccluding())
-								continue;
+                        for (int i = 0; i < amount; i++) {
+                            Block spawningBlock = location.getBlock();
+                            if (spawningBlock.getType().isOccluding())
+                                continue;
+                            Block aboveBlock = spawningBlock.getRelative(BlockFace.UP);
+                            if (aboveBlock.getType().isOccluding())
+                                continue;
 
-                            if(!NetherSpawner.canSpawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM))
-                            {
+                            if (!NetherSpawner.canSpawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM)) {
                                 continue;
                             }
 
                             Skeleton minion = NetherSpawner.spawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM);
-							if (minion == null)
-								continue;
+                            if (minion == null)
+                                continue;
 
-							minion.setHealth(HardmodeSettings.WITHER_MINION_HEALTH.doubleNumber());
+                            minion.setHealth(HardmodeSettings.WITHER_MINION_HEALTH.doubleNumber());
 
-							minion.setCustomName("Wither Minion");
-							minion.setCustomNameVisible(false);
+                            minion.setCustomName("Wither Minion");
+                            minion.setCustomNameVisible(false);
 
-						}
-					}
-				}, 5); // Spawn minions after 5 ticks to ensure they won't be hit by
-				// explosion
-			}
-		} else if (event.getEntityType() == EntityType.WITHER)
-		{
-			event.setFire(true);
-			event.setRadius(HardmodeSettings.WITHER_EXPLOSION_RADIUS.integer());
+                        }
+                    }
+                }, 5); // Spawn minions after 5 ticks to ensure they won't be hit by
+                // explosion
+            }
+        } else if (event.getEntityType() == EntityType.WITHER) {
+            event.setFire(true);
+            event.setRadius(HardmodeSettings.WITHER_EXPLOSION_RADIUS.integer());
 
-			// Clear up some obsidian.
-			Location wither = event.getEntity().getLocation();
-			Block witherBlock = wither.getBlock();
-			for (int x = -8; x <= 8; x++)
-			{
-				for (int y = -8; y <= 8; y++)
-				{
-					for (int z = -8; z <= 8; z++)
-					{
+            // Clear up some obsidian.
+            Location wither = event.getEntity().getLocation();
+            Block witherBlock = wither.getBlock();
+            for (int x = -8; x <= 8; x++) {
+                for (int y = -8; y <= 8; y++) {
+                    for (int z = -8; z <= 8; z++) {
 
-						Block nBlock = witherBlock.getRelative(x, y, z);
-						if (nBlock == null
-								|| !(nBlock.getType() == Material.OBSIDIAN || nBlock.getType() == Material.ENDER_CHEST
-										|| nBlock.getType() == Material.ANVIL || nBlock.getType() == Material.ENCHANTMENT_TABLE))
-							continue;
+                        Block nBlock = witherBlock.getRelative(x, y, z);
+                        if (nBlock == null
+                                || !(nBlock.getType() == Material.OBSIDIAN || nBlock.getType() == Material.ENDER_CHEST
+                                || nBlock.getType() == Material.ANVIL || nBlock.getType() == Material.ENCHANTMENT_TABLE))
+                            continue;
 
-						int range = (int) nBlock.getLocation().distanceSquared(wither);
-						if (range > 32 * 32)
-							continue;
+                        int range = (int) nBlock.getLocation().distanceSquared(wither);
+                        if (range > 32 * 32)
+                            continue;
 
-						if (MantlePlugin.random.nextInt(32 * 32 * 100 / 20) > range)
-						{
-							nBlock.breakNaturally(new ItemStack(Material.AIR));
-						}
-					}
-				}
-			}
-		} else if (event.getEntityType() == EntityType.FIREBALL)
-		{
-			Fireball fireball = (Fireball) event.getEntity();
-			if (fireball.getShooter() instanceof Ghast)
-			{
-				double multiplier = HardmodeSettings.GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER.doubleNumber();
-				event.setRadius((float) (event.getRadius() * multiplier));
-			}
-		}
-	}
+                        if (MantlePlugin.random.nextInt(32 * 32 * 100 / 20) > range) {
+                            nBlock.breakNaturally(new ItemStack(Material.AIR));
+                        }
+                    }
+                }
+            }
+        } else if (event.getEntityType() == EntityType.FIREBALL) {
+            Fireball fireball = (Fireball) event.getEntity();
+            if (fireball.getShooter() instanceof Ghast) {
+                double multiplier = HardmodeSettings.GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER.doubleNumber();
+                event.setRadius((float) (event.getRadius() * multiplier));
+            }
+        }
+    }
 
-	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onEntityExplode(EntityExplodeEvent event)
-	{
-		if (event.getEntity() == null)
-		{
-			return;
-		}
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (event.getEntity() == null) {
+            return;
+        }
 
-		if (event.getEntityType() == EntityType.WITHER)
-		{
-			event.setYield(0);
-		}
-	}
+        if (event.getEntityType() == EntityType.WITHER) {
+            event.setYield(0);
+        }
+    }
 
-	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onChunkUnload(ChunkUnloadEvent event)
-	{
-		// Kill wither when chunk unloads to prevent exploits
-		for (Entity e : event.getChunk().getEntities())
-		{
-			if (e.getType() == EntityType.WITHER)
-			{
-				e.remove();
-				return;
-			}
-		}
-	}
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onChunkUnload(ChunkUnloadEvent event) {
+        // Kill wither when chunk unloads to prevent exploits
+        for (Entity e : event.getChunk().getEntities()) {
+            if (e.getType() == EntityType.WITHER) {
+                e.remove();
+                return;
+            }
+        }
+    }
 
-	@EventHandler(ignoreCancelled = true)
-	public void onPlayerDeath(PlayerDeathEvent event)
-	{
-		Player player = event.getEntity();
-		String worldName = player.getWorld().getName();
+    @EventHandler(ignoreCancelled = true)
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        String worldName = player.getWorld().getName();
 
-		if (HardmodeSettings.NO_DEATH_DROPS_EXPERIENCE.stringList().contains(worldName))
-		{
-			event.setDroppedExp(0);
-		}
+        if (HardmodeSettings.NO_DEATH_DROPS_EXPERIENCE.stringList().contains(worldName)) {
+            event.setDroppedExp(0);
+        }
 
-		if (HardmodeSettings.NO_DEATH_DROPS_ITEMS.stringList().contains(worldName))
-		{
-			event.getDrops().clear();
-		}
+        if (HardmodeSettings.NO_DEATH_DROPS_ITEMS.stringList().contains(worldName)) {
+            event.getDrops().clear();
+        }
 
-	}
+    }
 
-	@EventHandler(ignoreCancelled = true)
-	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
-	{
-		Entity damager = event.getDamager();
-		Entity damaged = event.getEntity();
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
+        Entity damaged = event.getEntity();
 
-		//Display mob range when hit - used for debugging - disabled
+        //Display mob range when hit - used for debugging - disabled
 //		if (damager instanceof Player)
 //		{
 //			EntityLiving nmsEntity = ((CraftLivingEntity) damaged).getHandle();
@@ -873,61 +758,81 @@ public class HardmodeListener implements Listener {
 //			}
 //		}
 
-		if(damaged instanceof Player)
-		{
-			if(damager instanceof  Wither)
-			{
-				if(((CraftWither) damager).getHandle() instanceof  CustomWither)
-				{
-					CustomWither customWither = (CustomWither) (((CraftWither) damager).getHandle());
-					if (customWither.shouldKnockback())
-					{
-						Location loc = damaged.getLocation();
-						double diffX = loc.getX() - customWither.locX;
-						double diffZ = loc.getZ() - customWither.locZ;
+        if (damaged instanceof Player) {
+            Player player = (Player) damaged;
+            if (damager instanceof Wither) {
+                if (((CraftWither) damager).getHandle() instanceof CustomWither) {
+                    CustomWither customWither = (CustomWither) (((CraftWither) damager).getHandle());
+                    if (customWither.shouldKnockback()) {
+                        Location loc = damaged.getLocation();
+                        double diffX = loc.getX() - customWither.locX;
+                        double diffZ = loc.getZ() - customWither.locZ;
 
-						Vector vec = new Vector(diffX,0, diffZ);
-						vec = vec.normalize();
-						vec = vec.setY(MathHelper.sqrt(vec.getX() * vec.getX() + vec.getZ() * vec.getZ()));
-						vec.normalize();
-						vec = vec.multiply(customWither.KNOCKBACK_POWER);
-						damaged.setVelocity(vec);
-					}
-				}
-			}
-			else
-			//off for now, coz weird shit is happenign
-			if(damager instanceof WitherSkull && false)
-			{
-				if(((CraftWitherSkull)damager).getHandle() instanceof CustomWitherSkull)
-				{
-					CustomWitherSkull cws = (CustomWitherSkull) (((CraftWitherSkull) damager).getHandle());
-					if(cws.shooter != null)
-					{
-						if(cws.shooter instanceof CustomWither)
-						{
-							CustomWither customWither = (CustomWither) cws.shooter;
+                        Vector vec = new Vector(diffX, 0, diffZ);
+                        vec = vec.normalize();
+                        vec = vec.setY(MathHelper.sqrt(vec.getX() * vec.getX() + vec.getZ() * vec.getZ()));
+                        vec.normalize();
+                        vec = vec.multiply(customWither.KNOCKBACK_POWER);
+                        damaged.setVelocity(vec);
+                    }
+                }
+            } else
+                //off for now, coz weird shit is happenign
+                if (damager instanceof WitherSkull && false) {
+                    if (((CraftWitherSkull) damager).getHandle() instanceof CustomWitherSkull) {
+                        CustomWitherSkull cws = (CustomWitherSkull) (((CraftWitherSkull) damager).getHandle());
+                        if (cws.shooter != null) {
+                            if (cws.shooter instanceof CustomWither) {
+                                CustomWither customWither = (CustomWither) cws.shooter;
 
-							//TODO oh god copypasta, remove that
-							if (customWither.shouldKnockback())
-							{
-								Location loc = damaged.getLocation();
-								double diffX = loc.getX() - customWither.locX;
-								double diffZ = loc.getZ() - customWither.locZ;
+                                //TODO oh god copypasta, remove that
+                                if (customWither.shouldKnockback()) {
+                                    Location loc = damaged.getLocation();
+                                    double diffX = loc.getX() - customWither.locX;
+                                    double diffZ = loc.getZ() - customWither.locZ;
 
-								Vector vec = new Vector(diffX, MathHelper.sqrt(diffX * diffX + diffZ * diffZ), diffZ);
-								vec = vec.normalize();
-								vec = vec.multiply(customWither.KNOCKBACK_POWER);
-								damaged.setVelocity(vec);
-							}
-						}
+                                    Vector vec = new Vector(diffX, MathHelper.sqrt(diffX * diffX + diffZ * diffZ), diffZ);
+                                    vec = vec.normalize();
+                                    vec = vec.multiply(customWither.KNOCKBACK_POWER);
+                                    damaged.setVelocity(vec);
+                                }
+                            }
 
-					}
-				}
-			}
+                        }
+                    }
+                }
 
-		}
+            if (HardmodeSettings.VEHICLE_PLAYER_SYNC.bool() && player.getVehicle() instanceof LivingEntity) {
+                if (!(damager instanceof Skeleton)) {
+                    LivingEntity vehicle = (LivingEntity) player.getVehicle();
+                    vehicle.damage(event.getDamage(), damager);
+                }
+            }
 
-	}
+        }
+
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityCombust(EntityCombustEvent event) {
+        if (!HardmodeSettings.VEHICLE_PLAYER_SYNC.bool()) {
+            return;
+        }
+        if (event.getEntity() instanceof Player) {
+            if (event.getEntity().getVehicle() instanceof LivingEntity) {
+                LivingEntity vehicle = (LivingEntity) event.getEntity().getVehicle();
+                if (vehicle.getFireTicks() < event.getDuration()) {
+                    vehicle.setFireTicks(event.getDuration());
+                }
+            }
+        } else {
+            if (event.getEntity().getPassenger() instanceof Player) {
+                if (event.getEntity().getPassenger().getFireTicks() < event.getDuration()) {
+                    event.getEntity().getPassenger().setFireTicks(event.getDuration());
+                }
+            }
+        }
+    }
 }
+
 

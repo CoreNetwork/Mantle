@@ -151,7 +151,8 @@ public enum HardmodeSettings {
     ANIMALS_ENABLE_AI_NERF("Animals.EnableAINerf", true),
 
     REINFORCEMENTS_DISTANCE("Reinforcements.Distance", 10),
-    REINFORCEMENTS_ENABLED("Reinforcements.Enabled", false);
+    REINFORCEMENTS_ENABLED("Reinforcements.Enabled", false),
+    VEHICLE_PLAYER_SYNC("VehiclePlayerSync", true);
 	
 	protected String string;
 	protected Object def;
