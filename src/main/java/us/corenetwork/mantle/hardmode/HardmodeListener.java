@@ -31,6 +31,7 @@ import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWitherSkull;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftZombie;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -803,7 +804,7 @@ public class HardmodeListener implements Listener {
                 }
 
             if (HardmodeSettings.VEHICLE_PLAYER_SYNC.bool() && player.getVehicle() instanceof LivingEntity) {
-                if (!(damager instanceof Skeleton)) {
+                if (!(damager instanceof Arrow)) {
                     LivingEntity vehicle = (LivingEntity) player.getVehicle();
                     vehicle.damage(event.getDamage(), damager);
                 }
