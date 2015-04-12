@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
@@ -36,7 +37,7 @@ public class WindBook extends Spellbook implements Listener {
 	private static final int EFFECT_DURATION = 20 * 20;
     private static final int SLOWNESS_DURATION = 10 * 20;
 
-    private static final double TARGET_SPEED = 910.04382856092456371393; //Magic number calcualated from (base player speed * 1.2^50)
+    private static final double TARGET_SPEED = 1.404; //Magic number calcualated from (base player speed * (1 + 0.2 * 49))
 
 	private HashSet<UUID> sprinting = new HashSet<UUID>(); // List of entities under sprinting effect
 
@@ -52,20 +53,21 @@ public class WindBook extends Spellbook implements Listener {
 		UUID uuid = player.getUniqueId();
 		
 		sprinting.add(uuid);
-		
+
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 49));
+
+
 
         LivingEntity mount = (LivingEntity) player.getVehicle();
         if (mount != null && mount instanceof Horse)
         {
             double baseMountSpeed = ((CraftLivingEntity) mount).getHandle().getAttributeInstance(GenericAttributes.d).getValue();
-            int targetPotionLevel = (int) (Math.log(TARGET_SPEED / baseMountSpeed) / Math.log(1.2));
+            int targetPotionLevel = (int) (((TARGET_SPEED / baseMountSpeed) - 1) / 0.2);
 
             sprinting.add(mount.getUniqueId());
             Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(mount.getUniqueId()), EFFECT_DURATION);
 
             mount.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, targetPotionLevel));
-
         }
 
 		Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(uuid), EFFECT_DURATION);
