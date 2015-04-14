@@ -1,6 +1,8 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.ClaimsMode;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -17,6 +19,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
+import us.corenetwork.core.claims.BlockWorker;
+import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
@@ -72,28 +76,13 @@ public class DecayBook extends Spellbook {
 				return BookFinishAction.NOTHING;
 			}
 			
-			boolean removeGrass = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS;
-			
-			//Decay world around
-			Block baseBlock = player.getLocation().getBlock();
 
-            for (int x = -EFFECT_AREA_HORIZONTAL_RADIUS; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
-            {
-                for (int y = -1; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER; y++) //Blocks from one block below player to 31 blocks above are affected.
-                {
-                    for (int z = -EFFECT_AREA_HORIZONTAL_RADIUS; z <= EFFECT_AREA_HORIZONTAL_RADIUS; z++)
-					{
-						Block block = baseBlock.getRelative(x, y, z);
-						
-						if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2) || block.getType() == Material.HUGE_MUSHROOM_1 || block.getType() == Material.HUGE_MUSHROOM_2)
-							block.breakNaturally();
-						else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
-							block.setType(Material.AIR);
-						else if (block.getType() == Material.GRASS && removeGrass)
-							block.setType(Material.DIRT);
-					}
-				}
-			}
+			//Decay world around
+            boolean removeGrass = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS;
+            Block baseBlock = player.getLocation().getBlock();
+
+            DecayBookWoker decayBookWoker = new DecayBookWoker(baseBlock, removeGrass);
+            ClaimsModule.instance.pool.addWorker(decayBookWoker);
 			
 			removeWoolColors(player.getInventory());
 			player.updateInventory();
@@ -107,7 +96,7 @@ public class DecayBook extends Spellbook {
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 	
-	private void removeWoolColors(Inventory inventory)
+	private static void removeWoolColors(Inventory inventory)
 	{
 		for (int i = 0; i < inventory.getSize(); i++)
 		{
@@ -127,4 +116,88 @@ public class DecayBook extends Spellbook {
 	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return BookFinishAction.NOTHING;
 	}
+
+    private static class DecayBookWoker extends BlockWorker
+    {
+        private int x;
+        private int y;
+        private int z;
+
+        private Block startBlock;
+        private boolean removeGrass;
+
+        public DecayBookWoker(Block startBlock, boolean removeGrass)
+        {
+            this.startBlock = startBlock;
+            this.removeGrass = removeGrass;
+        }
+
+        @Override
+        public void init()
+        {
+            x = -EFFECT_AREA_HORIZONTAL_RADIUS;
+            y = -1;
+            z = -EFFECT_AREA_HORIZONTAL_RADIUS;
+        }
+
+        @Override
+        public void onDone()
+        {
+
+        }
+
+        @Override
+        public long getTaskSize()
+        {
+            //X and Z size = RADIUS * 2 + 1 block for player position
+            // Y size = height above player + 1 block for player position + 1 block for one layer below player
+            return (EFFECT_AREA_HORIZONTAL_RADIUS * 2 + 1) * (EFFECT_AREA_HORIZONTAL_RADIUS * 2 + 1) * (EFFECT_AREA_HEIGHT_ABOVE_PLAYER + 2);
+        }
+
+        @Override
+        public long work(long amountToWork)
+        {
+            Bukkit.broadcastMessage("work " + amountToWork);
+            int worked = 0;
+
+            outmost: for (; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
+            {
+                for (; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER + 1; y++)
+                {
+                    if (y > EFFECT_AREA_HEIGHT_ABOVE_PLAYER)
+                    {
+                        y = -1;
+                        break;
+                    }
+
+                    for (; z <= EFFECT_AREA_HORIZONTAL_RADIUS + 1; z++)
+                    {
+                        if (z > EFFECT_AREA_HORIZONTAL_RADIUS)
+                        {
+                            z = -EFFECT_AREA_HORIZONTAL_RADIUS;
+                            break;
+                        }
+
+                        worked++;
+
+                        Block block = startBlock.getRelative(x, y, z);
+
+                        if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2) || block.getType() == Material.HUGE_MUSHROOM_1 || block.getType() == Material.HUGE_MUSHROOM_2)
+                            block.breakNaturally();
+                        else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
+                            block.setType(Material.AIR);
+                        else if (removeGrass && block.getType() == Material.GRASS)
+                            block.setType(Material.DIRT);
+
+                        if (worked >= amountToWork)
+                        {
+                            break  outmost;
+                        }
+                    }
+                }
+            }
+
+            return worked;
+        }
+    }
 }
