@@ -157,7 +157,6 @@ public class DecayBook extends Spellbook {
         @Override
         public long work(long amountToWork)
         {
-            Bukkit.broadcastMessage("work " + amountToWork);
             int worked = 0;
 
             outmost: for (; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)

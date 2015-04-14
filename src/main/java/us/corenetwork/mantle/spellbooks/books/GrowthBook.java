@@ -2,6 +2,7 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.List;
 import net.minecraft.server.v1_8_R2.EnumParticle;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,6 +18,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
+import us.corenetwork.core.claims.BlockWorker;
+import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
@@ -50,17 +53,8 @@ public class GrowthBook extends Spellbook {
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		Block baseBlock = event.getPlayer().getLocation().getBlock();
-		for (int x = -EFFECT_AREA_HORIZONTAL_RADIUS; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
-		{
-			for (int y = -1; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER; y++) //Blocks from one block below player to 31 blocks above are affected.
-			{
-				for (int z = -EFFECT_AREA_HORIZONTAL_RADIUS; z <= EFFECT_AREA_HORIZONTAL_RADIUS; z++)
-				{
-					Block block = baseBlock.getRelative(x, y, z);
-					processBlock(block);
-				}
-			}
-		}
+        GrowthBookWoker growthBookWoker = new GrowthBookWoker(baseBlock);
+        ClaimsModule.instance.pool.addWorker(growthBookWoker);
 
         Location raisedLocation = event.getPlayer().getLocation();
         raisedLocation.setY(raisedLocation.getY() + EFFECT_AREA_HEIGHT_ABOVE_PLAYER / 2);
@@ -85,7 +79,7 @@ public class GrowthBook extends Spellbook {
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 
-	private void processBlock(Block block)
+	private static void processBlock(Block block)
 	{
 		if (block.getType() == Material.CROPS || block.getType() == Material.CARROT || block.getType() == Material.POTATO)
 			block.setData((byte) 7);
@@ -178,7 +172,84 @@ public class GrowthBook extends Spellbook {
 		
 	}
 
-	@Override
+    private static class GrowthBookWoker extends BlockWorker
+    {
+        private int x;
+        private int y;
+        private int z;
+
+        private Block startBlock;
+
+        public GrowthBookWoker(Block startBlock)
+        {
+            this.startBlock = startBlock;
+        }
+
+        @Override
+        public void init()
+        {
+            x = -EFFECT_AREA_HORIZONTAL_RADIUS;
+            y = -1;
+            z = -EFFECT_AREA_HORIZONTAL_RADIUS;
+        }
+
+        @Override
+        public void onDone()
+        {
+
+        }
+
+        @Override
+        public long getTaskSize()
+        {
+            //X and Z size = RADIUS * 2 + 1 block for player position
+            // Y size = height above player + 1 block for player position + 1 block for one layer below player
+            return (EFFECT_AREA_HORIZONTAL_RADIUS * 2 + 1) * (EFFECT_AREA_HORIZONTAL_RADIUS * 2 + 1) * (EFFECT_AREA_HEIGHT_ABOVE_PLAYER + 2);
+        }
+
+        @Override
+        public long work(long amountToWork)
+        {
+            int worked = 0;
+
+            outmost: for (; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
+            {
+                for (; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER + 1; y++)
+                {
+                    if (y > EFFECT_AREA_HEIGHT_ABOVE_PLAYER)
+                    {
+                        y = -1;
+                        break;
+                    }
+
+                    for (; z <= EFFECT_AREA_HORIZONTAL_RADIUS + 1; z++)
+                    {
+                        if (z > EFFECT_AREA_HORIZONTAL_RADIUS)
+                        {
+                            z = -EFFECT_AREA_HORIZONTAL_RADIUS;
+                            break;
+                        }
+
+                        worked++;
+
+                        Block block = startBlock.getRelative(x, y, z);
+
+                        processBlock(block);
+
+                        if (worked >= amountToWork)
+                        {
+                            break  outmost;
+                        }
+                    }
+                }
+            }
+
+            return worked;
+        }
+    }
+
+
+    @Override
 	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return BookFinishAction.NOTHING;
 	}
