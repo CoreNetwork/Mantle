@@ -122,10 +122,8 @@ public class PruningBook extends Spellbook {
             player.updateInventory();
 		}
 
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.OLIVE).withFade(Color.OLIVE).build();
 		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);			
-		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);		
+		effectLoc.getWorld().playSound(effectLoc, Sound.SHEEP_SHEAR, 1f, 2f);
 		
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
