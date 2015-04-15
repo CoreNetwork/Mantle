@@ -9,6 +9,7 @@ import us.corenetwork.mantle.spellbooks.books.DeadweightBook;
 import us.corenetwork.mantle.spellbooks.books.DecayBook;
 import us.corenetwork.mantle.spellbooks.books.ForgingBook;
 import us.corenetwork.mantle.spellbooks.books.FusingBook;
+import us.corenetwork.mantle.spellbooks.books.GrazingBook;
 import us.corenetwork.mantle.spellbooks.books.GrowthBook;
 import us.corenetwork.mantle.spellbooks.books.PeddlingBook;
 import us.corenetwork.mantle.spellbooks.books.PruningBook;
@@ -37,7 +38,7 @@ public class SpellbookManager {
         addSpellbook(new SmithingBook());
         addSpellbook(new AllureBook());
         addSpellbook(new PruningBook());
-
+        addSpellbook(new GrazingBook());
     }
 	
 	public static Spellbook getBook(String name)
