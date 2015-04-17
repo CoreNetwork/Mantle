@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -64,6 +66,7 @@ public class FusingBook extends Spellbook {
 		Player player = event.getPlayer();
 		
 		Inventory inventory;
+        Location effectLoc;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest
@@ -77,10 +80,12 @@ public class FusingBook extends Spellbook {
 			
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
+            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
 		}
 		else
 		{
 			inventory = player.getInventory();
+            effectLoc = player.getEyeLocation();
 		}
 		
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
@@ -142,10 +147,8 @@ public class FusingBook extends Spellbook {
 		
 		if (inventory.getType() == InventoryType.PLAYER)
 			player.updateInventory();
-		
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.SILVER).withFade(Color.SILVER).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
+
+        ParticleLibrary.broadcastParticleRing(EnumParticle.CRIT, effectLoc, 2);
 		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
 		
 		if (fusedSomething)

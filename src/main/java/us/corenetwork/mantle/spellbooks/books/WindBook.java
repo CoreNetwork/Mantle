@@ -2,6 +2,7 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashSet;
 import java.util.UUID;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import net.minecraft.server.v1_8_R2.GenericAttributes;
 import net.minecraft.server.v1_8_R2.MinecraftServer;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -56,8 +58,6 @@ public class WindBook extends Spellbook implements Listener {
 
 		player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, EFFECT_DURATION, 49));
 
-
-
         LivingEntity mount = (LivingEntity) player.getVehicle();
         if (mount != null && mount instanceof Horse)
         {
@@ -71,10 +71,8 @@ public class WindBook extends Spellbook implements Listener {
         }
 
 		Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(uuid), EFFECT_DURATION);
-		
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.WHITE).withFade(Color.WHITE).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
+
+        ParticleLibrary.broadcastParticleRing(EnumParticle.EXPLOSION_NORMAL, player.getEyeLocation(), 2);
 
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}

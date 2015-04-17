@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import me.ryanhamshire.GriefPrevention.Claim;
 import net.minecraft.server.v1_8_R2.EntityVillager;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import net.minecraft.server.v1_8_R2.Items;
 import net.minecraft.server.v1_8_R2.MerchantRecipe;
 import net.minecraft.server.v1_8_R2.MerchantRecipeList;
@@ -22,6 +23,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.spellbooks.Spellbook;
@@ -149,11 +151,10 @@ public class PeddlingBook extends Spellbook {
 			targetAmount -= stackAmount;
 		}
 		
-		Color effectColor = Color.fromRGB(0xcd5cab);
-		FireworkEffect effect = FireworkEffect.builder().withColor(effectColor).withFade(effectColor).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
-		event.getPlayer().playSound(effectLoc, Sound.VILLAGER_YES, 1.0f, 1.0f);
+		Location effectLoc = entity.getLocation();
+        effectLoc.setY(effectLoc.getY() + 1);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.CRIT_MAGIC, effectLoc, 2);
+        event.getPlayer().playSound(effectLoc, Sound.VILLAGER_YES, 1.0f, 1.0f);
 		
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 

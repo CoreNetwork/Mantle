@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.server.v1_8_R2.EntityExperienceOrb;
 import net.minecraft.server.v1_8_R2.EntityHuman;
 import net.minecraft.server.v1_8_R2.EntityItem;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import net.minecraft.server.v1_8_R2.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -23,6 +24,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.MantlePlugin;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
@@ -75,6 +77,8 @@ public class AllureBook extends Spellbook {
         showerContents.player = player;
 
         Bukkit.getScheduler().runTask(MantlePlugin.instance, new PlayerShower(showerContents));
+
+        ParticleLibrary.broadcastParticleRing(EnumParticle.CRIT, player.getEyeLocation(), 2);
 
         return BookFinishAction.BROADCAST_AND_CONSUME;
 	}

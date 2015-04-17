@@ -2,6 +2,7 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.ClaimsMode;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -22,6 +23,7 @@ import org.bukkit.material.Wool;
 import us.corenetwork.core.claims.BlockWorker;
 import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -88,11 +90,9 @@ public class DecayBook extends Spellbook {
 			player.updateInventory();
 		}
 
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.OLIVE).withFade(Color.OLIVE).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);			
-		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);		
-		
+        Location effectLoc = player.getEyeLocation();
+        ParticleLibrary.broadcastParticleRing(EnumParticle.SPELL_WITCH, effectLoc, 2);
+		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 	

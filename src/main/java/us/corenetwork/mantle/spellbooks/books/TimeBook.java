@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.nanobot.NanobotUtil;
 import us.corenetwork.mantle.spellbooks.Spellbook;
@@ -35,10 +37,7 @@ public class TimeBook extends Spellbook {
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		curPlayer = event.getPlayer();
 
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(curPlayer.getEyeLocation(), 2);
-
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.BLUE).withFade(Color.BLUE).build();
-		Util.showFirework(effectLoc, effect);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.ENCHANTMENT_TABLE, curPlayer.getEyeLocation(), 2);
 				
 		for (int i = 0; i < curPlayer.getInventory().getSize() + 4; i++)
 		{

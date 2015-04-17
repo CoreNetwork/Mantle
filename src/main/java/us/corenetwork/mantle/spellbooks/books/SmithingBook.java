@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.CoalType;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -26,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -81,6 +83,7 @@ public class SmithingBook extends Spellbook {
 		
 		Inventory inventory;
         Inventory fuelInventory = player.getInventory();
+        Location effectLoc;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest
@@ -94,13 +97,15 @@ public class SmithingBook extends Spellbook {
 			
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
+            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
 		}
 		else
 		{
 			inventory = player.getInventory();
+            effectLoc = player.getEyeLocation();
 		}
 
-        Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.FLAME, effectLoc, 2);
         effectLoc.getWorld().playSound(effectLoc, Sound.BLAZE_HIT, 0.5f, 0.3f);
 
         boolean anythingSmelted = smith(inventory, fuelInventory);

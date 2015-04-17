@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import me.ryanhamshire.GriefPrevention.Claim;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import org.bukkit.Chunk;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import us.corenetwork.mantle.GriefPreventionHandler;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.netherspawning.NetherSpawner;
 import us.corenetwork.mantle.slimespawning.IgnoredSlimeChunks;
@@ -70,11 +72,10 @@ public class UnslimingBook extends Spellbook {
 		{
 			Util.Message(settings.getString(SETTING_MESSAGE_NOT_SLIME_CHUNK), player);
 		}
-		
-		Color slimeColor = Color.fromRGB(0x8bbb79);
-		FireworkEffect effect = FireworkEffect.builder().withColor(slimeColor).withFade(slimeColor).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
+
+
+        Location effectLoc = player.getEyeLocation();
+        ParticleLibrary.broadcastParticleRing(EnumParticle.SLIME, effectLoc, 2);
 		effectLoc.getWorld().playSound(effectLoc, Sound.SLIME_WALK2, 2f, 1f);
 		
 		if (slimeChunk)

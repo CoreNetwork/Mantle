@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
+import net.minecraft.server.v1_8_R2.EnumParticle;
 import net.minecraft.server.v1_8_R2.RecipesFurnace;
 import org.bukkit.CoalType;
 import org.bukkit.Color;
@@ -24,6 +25,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -87,7 +89,9 @@ public class ForgingBook extends Spellbook {
 	@Override
 	public BookFinishAction onActivate(SpellbookItem spellbookItem, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		
+
+        Location effectLoc;
+
 		Inventory inventory;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
@@ -101,10 +105,12 @@ public class ForgingBook extends Spellbook {
 
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
+            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
 		}
 		else
 		{
 			inventory = player.getInventory();
+            effectLoc = player.getEyeLocation();
 		}	
 		
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
@@ -259,10 +265,8 @@ public class ForgingBook extends Spellbook {
 		}
 		
 		player.updateInventory();
-				
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.ORANGE).withFade(Color.ORANGE).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
+
+        ParticleLibrary.broadcastParticleRing(EnumParticle.FLAME, effectLoc, 2);
 		effectLoc.getWorld().playSound(effectLoc, Sound.FIRE, 1f, 1f);
 		
 		if (anythingSmelted)
