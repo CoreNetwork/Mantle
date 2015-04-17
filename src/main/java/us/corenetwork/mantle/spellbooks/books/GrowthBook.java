@@ -2,7 +2,6 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.List;
 import net.minecraft.server.v1_8_R2.EnumParticle;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -17,16 +16,12 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
-import org.bukkit.util.Vector;
 import us.corenetwork.core.claims.BlockWorker;
 import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.ParticleLibrary;
-import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
-import us.corenetwork.mantle.spellbooks.SpellbookUtil;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class GrowthBook extends Spellbook {
@@ -46,10 +41,14 @@ public class GrowthBook extends Spellbook {
 
 		Player player = event.getPlayer();
         
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
-		Vector direction = event.getPlayer().getLocation().getDirection();
+		Location effectLoc = player.getEyeLocation();
+      //  effectLoc.setY(effectLoc.getY() + 1);
+        //;SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
+		//
+		// Vector direction = event.getPlayer().getLocation().getDirection();
 
-		ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10, null);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.VILLAGER_HAPPY, effectLoc, 2);
+		//ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10, null);
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		Block baseBlock = event.getPlayer().getLocation().getBlock();
