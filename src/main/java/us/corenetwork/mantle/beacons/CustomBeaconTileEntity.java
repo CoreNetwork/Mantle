@@ -145,7 +145,12 @@ public class CustomBeaconTileEntity extends TileEntityBeacon
         if (fuelParticleTicksLeft > 0 && activeEffect != null)
         {
             ItemStack fuel = activeEffect.getFuelIcon();
-            ParticleLibrary.broadcastParticle(EnumParticle.ITEM_CRACK, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
+
+            if (fuel.getType().isBlock())
+                ParticleLibrary.broadcastParticle(EnumParticle.BLOCK_DUST, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
+            else
+                ParticleLibrary.broadcastParticle(EnumParticle.ITEM_CRACK, getCenterLocation(), 0.5f, 0.5f, 0.5f, 0, 20, new int[] {fuel.getTypeId(), fuel.getDurability()});
+
             fuelParticleTicksLeft--;
         }
 
