@@ -102,6 +102,9 @@ public class PruningBook extends Spellbook {
                     if (sheep.isSheared())
                         continue;
 
+                    if (!sheep.isAdult())
+                        continue;
+
                     DyeColor sheepColor = sheep.getColor();
 
                     int amountToDrop = 1 + MantlePlugin.random.nextInt(3);
