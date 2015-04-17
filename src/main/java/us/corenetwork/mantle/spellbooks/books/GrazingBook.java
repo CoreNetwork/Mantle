@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import net.minecraft.server.v1_8_R2.EntityAgeable;
 import net.minecraft.server.v1_8_R2.EntityAnimal;
+import net.minecraft.server.v1_8_R2.EntityHorse;
 import net.minecraft.server.v1_8_R2.EntityHuman;
 import net.minecraft.server.v1_8_R2.EntityLiving;
 import net.minecraft.server.v1_8_R2.EntityPlayer;
@@ -30,6 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -122,6 +124,9 @@ public class GrazingBook extends Spellbook
             return false;
 
         if (animal.isInLove())
+            return false;
+
+        if (animal instanceof EntityHorse && !((EntityHorse) animal).isTame())
             return false;
 
         //Only animals with Age = 0 can breed (breeding timeout)
