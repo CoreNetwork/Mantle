@@ -1,5 +1,7 @@
 package us.corenetwork.mantle.hardmode;
 
+import org.bukkit.entity.Wither;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,7 +23,9 @@ public enum HardmodeSettings {
     BABY_ZOMBIE_CHECK_INTERVAL("BabyZombies.CheckInterval", 20),
     BABY_ZOMBIE_BURN_TICKS("BabyZombies.BurnTicks", 30),
 
+	WITHER_BOX_UNDER_SIZE("Wither.BoxSizeUnderExplosion", 30),
 	WITHER_MIN_SPAWNING_Y("Wither.MinSpawningY", 20),
+	WITHER_MAX_SPAWNING_Y("Wither.MaxSpawningY", 20),
 	WITHER_DESPAWNING_Y("Wither.DespawningY", 60),
 	WITHER_TIMEOUT("Wither.DespawningTimeoutSeconds", 120),
 	WITHER_MINION_HEALTH("Wither.MinionHealth", 4),

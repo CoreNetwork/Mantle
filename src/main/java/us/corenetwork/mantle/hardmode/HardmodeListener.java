@@ -363,7 +363,10 @@ public class HardmodeListener implements Listener {
         final Block block = event.getBlock();
 
         // Prevent wither building
-        if (block.getType() == Material.SKULL && block.getY() >= 60 && block.getWorld().getEnvironment() == Environment.NETHER) {
+        if (block.getType() == Material.SKULL
+                && (block.getY() >= HardmodeSettings.WITHER_MAX_SPAWNING_Y.integer()
+                || block.getY() <= HardmodeSettings.WITHER_MIN_SPAWNING_Y.integer())
+                && block.getWorld().getEnvironment() == Environment.NETHER) {
             Block centerSkull = null;
             BlockFace oneSkullDirection = null;
 
@@ -633,8 +636,6 @@ public class HardmodeListener implements Listener {
                     public void run() {
                         int amount = MantlePlugin.random.nextInt(2);
 
-                        //TODO Remove
-                        //Testing is a pain with all them minions around
                         amount = 2;
 
                         for (int i = 0; i < amount; i++) {
