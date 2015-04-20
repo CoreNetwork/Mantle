@@ -75,7 +75,7 @@ public class UnslimingBook extends Spellbook {
 
 
         Location effectLoc = player.getEyeLocation();
-        ParticleLibrary.broadcastParticleRing(EnumParticle.SLIME, effectLoc, 2);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.SLIME, player.getEyeLocation(), 2, Math.PI / 12, 5);
 		effectLoc.getWorld().playSound(effectLoc, Sound.SLIME_WALK2, 2f, 1f);
 		
 		if (slimeChunk)

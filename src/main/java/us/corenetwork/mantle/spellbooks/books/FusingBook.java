@@ -67,6 +67,8 @@ public class FusingBook extends Spellbook {
 		
 		Inventory inventory;
         Location effectLoc;
+        boolean blockEffect;
+
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest
@@ -81,11 +83,13 @@ public class FusingBook extends Spellbook {
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
             effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            blockEffect = true;
 		}
 		else
 		{
 			inventory = player.getInventory();
             effectLoc = player.getEyeLocation();
+            blockEffect = false;
 		}
 		
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
@@ -148,8 +152,12 @@ public class FusingBook extends Spellbook {
 		if (inventory.getType() == InventoryType.PLAYER)
 			player.updateInventory();
 
-        ParticleLibrary.broadcastParticleRing(EnumParticle.CRIT, effectLoc, 2);
-		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
+        if (blockEffect)
+            ParticleLibrary.broadcastParticle(EnumParticle.CRIT, effectLoc, 0.5f, 0.5f, 0.5f, 0, 200, null);
+        else
+            ParticleLibrary.broadcastParticle(EnumParticle.CRIT, SpellbookUtil.getPointInFrontOfPlayer(effectLoc, 0.3), 0.3f, 0.3f, 0.3f, 0, 30, null);
+
+        effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
 		
 		if (fusedSomething)
 			return BookFinishAction.BROADCAST_AND_CONSUME;

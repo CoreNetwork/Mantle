@@ -91,6 +91,7 @@ public class ForgingBook extends Spellbook {
 		Player player = event.getPlayer();
 
         Location effectLoc;
+        boolean blockEffect;
 
 		Inventory inventory;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
@@ -106,11 +107,13 @@ public class ForgingBook extends Spellbook {
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
             effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            blockEffect = true;
 		}
 		else
 		{
 			inventory = player.getInventory();
             effectLoc = player.getEyeLocation();
+            blockEffect = false;
 		}	
 		
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
@@ -266,7 +269,11 @@ public class ForgingBook extends Spellbook {
 		
 		player.updateInventory();
 
-        ParticleLibrary.broadcastParticleRing(EnumParticle.FLAME, effectLoc, 2);
+        if (blockEffect)
+            ParticleLibrary.broadcastParticle(EnumParticle.FLAME, effectLoc, 0.5f, 0.5f, 0.5f, 0, 200, null);
+        else
+            ParticleLibrary.broadcastParticle(EnumParticle.FLAME, SpellbookUtil.getPointInFrontOfPlayer(effectLoc, 0.3), 0.3f, 0.3f, 0.3f, 0, 30, null);
+
 		effectLoc.getWorld().playSound(effectLoc, Sound.FIRE, 1f, 1f);
 		
 		if (anythingSmelted)

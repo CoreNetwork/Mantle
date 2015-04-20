@@ -37,7 +37,7 @@ public class TimeBook extends Spellbook {
 	public BookFinishAction onActivate(SpellbookItem item, PlayerInteractEvent event) {
 		curPlayer = event.getPlayer();
 
-        ParticleLibrary.broadcastParticleRing(EnumParticle.ENCHANTMENT_TABLE, curPlayer.getEyeLocation(), 2);
+        ParticleLibrary.broadcastParticle(EnumParticle.ENCHANTMENT_TABLE, SpellbookUtil.getPointInFrontOfPlayer(curPlayer.getEyeLocation(), 0.3), 0.3f, 0.3f, 0.3f, 0, 30, null);
 				
 		for (int i = 0; i < curPlayer.getInventory().getSize() + 4; i++)
 		{

@@ -29,6 +29,7 @@ import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
+import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
 public class AllureBook extends Spellbook {
@@ -78,7 +79,7 @@ public class AllureBook extends Spellbook {
 
         Bukkit.getScheduler().runTask(MantlePlugin.instance, new PlayerShower(showerContents));
 
-        ParticleLibrary.broadcastParticleRing(EnumParticle.CRIT, player.getEyeLocation(), 2);
+        ParticleLibrary.broadcastParticle(EnumParticle.CRIT, SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 0.3), 0.3f, 0.3f, 0.3f, 0, 30, null);
 
         return BookFinishAction.BROADCAST_AND_CONSUME;
 	}

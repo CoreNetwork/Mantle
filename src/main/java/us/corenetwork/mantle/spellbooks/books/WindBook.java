@@ -72,7 +72,7 @@ public class WindBook extends Spellbook implements Listener {
 
 		Bukkit.getScheduler().runTaskLater(MantlePlugin.instance, new SprintingTimer(uuid), EFFECT_DURATION);
 
-        ParticleLibrary.broadcastParticleRing(EnumParticle.EXPLOSION_NORMAL, player.getEyeLocation(), 2);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.EXPLOSION_NORMAL, player.getEyeLocation(), 2, Math.PI / 12, 5);
 
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}

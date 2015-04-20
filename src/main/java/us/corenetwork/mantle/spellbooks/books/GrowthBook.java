@@ -42,7 +42,7 @@ public class GrowthBook extends Spellbook {
 		Player player = event.getPlayer();
         
 		Location effectLoc = player.getEyeLocation();
-        ParticleLibrary.broadcastParticleRing(EnumParticle.VILLAGER_HAPPY, effectLoc, 2);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.VILLAGER_HAPPY, player.getEyeLocation(), 2, Math.PI / 12, 5);
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		Block baseBlock = event.getPlayer().getLocation().getBlock();

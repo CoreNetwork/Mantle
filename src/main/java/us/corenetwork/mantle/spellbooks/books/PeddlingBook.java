@@ -152,8 +152,8 @@ public class PeddlingBook extends Spellbook {
 		}
 		
 		Location effectLoc = entity.getLocation();
-        effectLoc.setY(effectLoc.getY() + 1);
-        ParticleLibrary.broadcastParticleRing(EnumParticle.CRIT_MAGIC, effectLoc, 2);
+        effectLoc.setY(effectLoc.getY() + 1.5);
+        ParticleLibrary.broadcastParticle(EnumParticle.CRIT_MAGIC, effectLoc, 0.3f, 0.3f, 0.3f, 0, 30, null);
         event.getPlayer().playSound(effectLoc, Sound.VILLAGER_YES, 1.0f, 1.0f);
 		
 		return BookFinishAction.BROADCAST_AND_CONSUME;

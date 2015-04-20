@@ -11,14 +11,14 @@ import us.corenetwork.mantle.util.ReflectionUtils;
 public class ParticleLibrary
 {
 
-    public static void broadcastParticleRing(EnumParticle particle, Location location, int haloRadius)
+    public static void broadcastParticleRing(EnumParticle particle, Location location, double haloRadius, double groupSpacing, int particlesPerGroup)
     {
-        for (double angle = 0; angle < Math.PI * 2; angle += Math.PI / 12)
+        for (double angle = 0; angle < Math.PI * 2; angle += groupSpacing)
         {
             double particleX = location.getX() + haloRadius * Math.cos(angle);
             double particleZ = location.getZ() + haloRadius * Math.sin(angle);
 
-            broadcastParticle(particle, new Location(location.getWorld(), particleX, location.getY(), particleZ), 0, 0, 0, 0, 2, null);
+            broadcastParticle(particle, new Location(location.getWorld(), particleX, location.getY(), particleZ), 0.25f, 0.5f, 0.25f, 0, particlesPerGroup, null);
         }
     }
 

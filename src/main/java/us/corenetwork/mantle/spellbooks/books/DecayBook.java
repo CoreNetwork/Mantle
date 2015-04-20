@@ -91,7 +91,7 @@ public class DecayBook extends Spellbook {
 		}
 
         Location effectLoc = player.getEyeLocation();
-        ParticleLibrary.broadcastParticleRing(EnumParticle.SPELL_WITCH, effectLoc, 2);
+        ParticleLibrary.broadcastParticleRing(EnumParticle.SPELL_WITCH, player.getEyeLocation(), 2, Math.PI / 12, 5);
 		effectLoc.getWorld().playSound(effectLoc, Sound.SKELETON_DEATH, 1f, 1f);
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
