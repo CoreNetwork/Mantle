@@ -2,11 +2,11 @@ package us.corenetwork.mantle.hardmode;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.EntityWitch;
-import net.minecraft.server.v1_8_R2.PathfinderGoal;
-import net.minecraft.server.v1_8_R2.PathfinderGoalArrowAttack;
-import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.EntityWitch;
+import net.minecraft.server.v1_8_R3.PathfinderGoal;
+import net.minecraft.server.v1_8_R3.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_8_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R3.World;
 import us.corenetwork.mantle.util.ReflectionUtils;
 
 /**
@@ -20,7 +20,7 @@ public class CustomWitch extends EntityWitch
     {
         try
         {
-            pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R2.PathfinderGoalSelector$PathfinderGoalSelectorItem");
+            pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R3.PathfinderGoalSelector$PathfinderGoalSelectorItem");
         }
         catch (ClassNotFoundException e1)
         {

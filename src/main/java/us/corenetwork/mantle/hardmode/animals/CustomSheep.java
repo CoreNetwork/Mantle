@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.hardmode.animals;
 
-import net.minecraft.server.v1_8_R2.EntitySheep;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.EntitySheep;
+import net.minecraft.server.v1_8_R3.World;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
 public class CustomSheep extends EntitySheep

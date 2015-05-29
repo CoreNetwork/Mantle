@@ -2,20 +2,20 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.LinkedList;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.EntityExperienceOrb;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EntityItem;
-import net.minecraft.server.v1_8_R2.EnumParticle;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.EntityItem;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWolf;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWolf;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
@@ -123,7 +123,7 @@ public class AllureBook extends Spellbook {
             {
                 ItemStack firstItem = contents.stacksToDrop.peekFirst();
 
-                net.minecraft.server.v1_8_R2.ItemStack singleItem = CraftItemStack.asNMSCopy(firstItem);
+                net.minecraft.server.v1_8_R3.ItemStack singleItem = CraftItemStack.asNMSCopy(firstItem);
                 singleItem.count = 1;
 
                 NotCombiningItem item = new NotCombiningItem(((CraftWorld) dropLocation.getWorld()).getHandle(), dropLocation.getX(), dropLocation.getY(), dropLocation.getZ());

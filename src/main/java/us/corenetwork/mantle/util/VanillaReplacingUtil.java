@@ -2,8 +2,8 @@ package us.corenetwork.mantle.util;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.server.v1_8_R2.BiomeBase;
-import net.minecraft.server.v1_8_R2.EntityTypes;
+import net.minecraft.server.v1_8_R3.BiomeBase;
+import net.minecraft.server.v1_8_R3.EntityTypes;
 
 /**
  * Util for replacing vanilla stuff with our stuff (like entities or blocks)

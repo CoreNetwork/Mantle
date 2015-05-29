@@ -1,6 +1,6 @@
 name: Mantle
 main: us.corenetwork.mantle.MantlePlugin
-version: 1.2.0
+version: 1.4.0
 author: matejdro
 depend: [GriefPrevention, Core]
 softdepend: [WorldGuard, ProtocolLib]

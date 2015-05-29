@@ -1,8 +1,9 @@
 package us.corenetwork.mantle;
 
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftHumanEntity;
 
 /**
  * Created by Matej on 15.12.2014.

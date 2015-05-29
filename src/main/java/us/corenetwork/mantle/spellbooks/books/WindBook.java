@@ -2,17 +2,17 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.HashSet;
 import java.util.UUID;
-import net.minecraft.server.v1_8_R2.EnumParticle;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.MinecraftServer;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.MinecraftServer;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_8_R2.CraftServer;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.LivingEntity;
@@ -61,7 +61,7 @@ public class WindBook extends Spellbook implements Listener {
         LivingEntity mount = (LivingEntity) player.getVehicle();
         if (mount != null && mount instanceof Horse)
         {
-            double baseMountSpeed = ((CraftLivingEntity) mount).getHandle().getAttributeInstance(GenericAttributes.d).getValue();
+            double baseMountSpeed = ((CraftLivingEntity) mount).getHandle().getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).getValue();
             int targetPotionLevel = (int) (((TARGET_SPEED / baseMountSpeed) - 1) / 0.2);
 
             sprinting.add(mount.getUniqueId());

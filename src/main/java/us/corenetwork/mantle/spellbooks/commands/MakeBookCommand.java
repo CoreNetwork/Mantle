@@ -1,12 +1,12 @@
 package us.corenetwork.mantle.spellbooks.commands;
 
 import java.util.HashMap;
-import net.minecraft.server.v1_8_R2.EntityItem;
-import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.EntityItem;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftItem;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -62,7 +62,7 @@ public class MakeBookCommand extends BaseMantleCommand {
 			int stackAmount = Math.min(amount, 64);
 			ItemStack stack = new ItemStack(Material.BOOK, stackAmount);
 			
-			net.minecraft.server.v1_8_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+			net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
 			nmsStack.setTag(newTag);
 			stack = CraftItemStack.asCraftMirror(nmsStack);
 

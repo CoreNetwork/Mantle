@@ -1,6 +1,6 @@
 package us.corenetwork.mantle.hardmode.wither;
 
-import net.minecraft.server.v1_8_R2.PathfinderGoal;
+import net.minecraft.server.v1_8_R3.PathfinderGoal;
 import us.corenetwork.mantle.MLog;
 
 public abstract class AbstractWitherMove extends PathfinderGoal {

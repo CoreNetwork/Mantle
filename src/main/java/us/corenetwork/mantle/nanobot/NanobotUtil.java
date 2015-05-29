@@ -11,16 +11,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.NBTReadLimiter;
-import net.minecraft.server.v1_8_R2.NBTTagCompound;
-import net.minecraft.server.v1_8_R2.NBTTagList;
-import net.minecraft.server.v1_8_R2.NBTTagString;
+import net.minecraft.server.v1_8_R3.NBTReadLimiter;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.NBTTagList;
+import net.minecraft.server.v1_8_R3.NBTTagString;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.GrassSpecies;
 import org.bukkit.Material;
 import org.bukkit.TreeSpecies;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.TexturedMaterial;
@@ -213,7 +213,7 @@ public class NanobotUtil {
 	/*
 		Extracts NBT tags from the item as byte array
 	 */
-	public static byte[] getNBT(net.minecraft.server.v1_8_R2.ItemStack stack)
+	public static byte[] getNBT(net.minecraft.server.v1_8_R3.ItemStack stack)
 	{
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream dataOutput = new DataOutputStream(byteStream);
@@ -254,7 +254,7 @@ public class NanobotUtil {
 	/*
 		Loads NBT tags from byte array and inserts it into provided ItemStack.
 	 */
-	public static void loadNBT(byte[] nbt, net.minecraft.server.v1_8_R2.ItemStack stack)
+	public static void loadNBT(byte[] nbt, net.minecraft.server.v1_8_R3.ItemStack stack)
 	{
 		if (nbt == null || nbt.length == 0)
 			return;
@@ -283,7 +283,7 @@ public class NanobotUtil {
 	/*
 		Get NMS item stack from CraftItemStack. This is much faster than CraftItemStack.asNMSCopy() as it just retrieves internal variable rather than rebuilding whole NMS stack from scratch.
 	 */
-	public static net.minecraft.server.v1_8_R2.ItemStack getInternalNMSStack(ItemStack bukkitStack)
+	public static net.minecraft.server.v1_8_R3.ItemStack getInternalNMSStack(ItemStack bukkitStack)
 	{
 		if (!(bukkitStack instanceof CraftItemStack))
 			return null;
@@ -293,7 +293,7 @@ public class NanobotUtil {
 			Field handleField = CraftItemStack.class.getDeclaredField("handle");
 			handleField.setAccessible(true);
 
-			return (net.minecraft.server.v1_8_R2.ItemStack) handleField.get(bukkitStack);
+			return (net.minecraft.server.v1_8_R3.ItemStack) handleField.get(bukkitStack);
 		}
 		catch (Exception e)
 		{
@@ -310,7 +310,7 @@ public class NanobotUtil {
 		if (!(bukkitStack instanceof CraftItemStack))
 			return false;
 
-		net.minecraft.server.v1_8_R2.ItemStack nmsStack = getInternalNMSStack((CraftItemStack) bukkitStack);
+		net.minecraft.server.v1_8_R3.ItemStack nmsStack = getInternalNMSStack((CraftItemStack) bukkitStack);
 		if (!nmsStack.hasTag())
 			return false;
 
@@ -322,7 +322,7 @@ public class NanobotUtil {
 	 * @param nmsStack Stack to get name from.
 	 * @return Custom name or <b>null</b> if not set.
 	 */
-	public static String getStackName(net.minecraft.server.v1_8_R2.ItemStack nmsStack)
+	public static String getStackName(net.minecraft.server.v1_8_R3.ItemStack nmsStack)
 	{
 		if (nmsStack == null)
 			return null;

@@ -1,15 +1,15 @@
 package us.corenetwork.mantle.animalspawning;
 
-import net.minecraft.server.v1_8_R2.AttributeInstance;
-import net.minecraft.server.v1_8_R2.EntityInsentient;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
+import net.minecraft.server.v1_8_R3.AttributeInstance;
+import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Horse;
@@ -166,7 +166,7 @@ public class AnimalSpawner {
 		else
 			horse.setJumpStrength(0.4 + MantlePlugin.random.nextInt(2) * 0.2 + MantlePlugin.random.nextInt(2) * 0.2 + CorePlugin.random.nextInt(2)* 0.2);
 
-		AttributeInstance attributes = ((EntityInsentient)((CraftLivingEntity)horse).getHandle()).getAttributeInstance(GenericAttributes.d);
+		AttributeInstance attributes = ((EntityInsentient)((CraftLivingEntity)horse).getHandle()).getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
         		
 		if (horse.getVariant() == Variant.DONKEY || horse.getVariant() == Variant.MULE)
 			attributes.setValue(0.1);

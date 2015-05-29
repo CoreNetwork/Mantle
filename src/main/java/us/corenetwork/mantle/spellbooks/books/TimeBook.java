@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;

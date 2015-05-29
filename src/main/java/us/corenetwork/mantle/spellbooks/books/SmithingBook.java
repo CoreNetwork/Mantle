@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
-import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.CoalType;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

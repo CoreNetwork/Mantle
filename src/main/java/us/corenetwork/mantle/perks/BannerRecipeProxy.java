@@ -2,13 +2,13 @@ package us.corenetwork.mantle.perks;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.Blocks;
-import net.minecraft.server.v1_8_R2.CraftingManager;
-import net.minecraft.server.v1_8_R2.IRecipe;
-import net.minecraft.server.v1_8_R2.InventoryCrafting;
-import net.minecraft.server.v1_8_R2.ItemStack;
-import net.minecraft.server.v1_8_R2.TileEntityBanner;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.Blocks;
+import net.minecraft.server.v1_8_R3.CraftingManager;
+import net.minecraft.server.v1_8_R3.IRecipe;
+import net.minecraft.server.v1_8_R3.InventoryCrafting;
+import net.minecraft.server.v1_8_R3.ItemStack;
+import net.minecraft.server.v1_8_R3.TileEntityBanner;
+import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.inventory.Recipe;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.util.ReflectionUtils;
@@ -86,7 +86,7 @@ public class BannerRecipeProxy implements IRecipe
         {
             IRecipe recipe = iterator.next();
 
-            if (recipe.getClass().getName().equals("net.minecraft.server.v1_8_R2.RecipesBanner$DuplicateRecipe"))
+            if (recipe.getClass().getName().equals("net.minecraft.server.v1_8_R3.RecipesBanner$DuplicateRecipe"))
             {
                 original = recipe;
                 iterator.remove();

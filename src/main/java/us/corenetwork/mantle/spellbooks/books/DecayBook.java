@@ -2,7 +2,7 @@ package us.corenetwork.mantle.spellbooks.books;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.ClaimsMode;
-import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;

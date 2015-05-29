@@ -1,9 +1,9 @@
 package us.corenetwork.mantle.hardmode.wither;
 
-import net.minecraft.server.v1_8_R2.AxisAlignedBB;
-import net.minecraft.server.v1_8_R2.ControllerMove;
-import net.minecraft.server.v1_8_R2.EntityWither;
-import net.minecraft.server.v1_8_R2.MathHelper;
+import net.minecraft.server.v1_8_R3.AxisAlignedBB;
+import net.minecraft.server.v1_8_R3.ControllerMove;
+import net.minecraft.server.v1_8_R3.EntityWither;
+import net.minecraft.server.v1_8_R3.MathHelper;
 import us.corenetwork.mantle.MantlePlugin;
 
 /**

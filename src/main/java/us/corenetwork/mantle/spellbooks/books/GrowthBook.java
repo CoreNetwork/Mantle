@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.spellbooks.books;
 
 import java.util.List;
-import net.minecraft.server.v1_8_R2.EnumParticle;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;

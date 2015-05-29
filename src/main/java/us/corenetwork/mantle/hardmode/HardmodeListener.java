@@ -5,16 +5,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import net.minecraft.server.v1_8_R2.AttributeInstance;
-import net.minecraft.server.v1_8_R2.AttributeModifiable;
-import net.minecraft.server.v1_8_R2.Blocks;
-import net.minecraft.server.v1_8_R2.EntityCreature;
-import net.minecraft.server.v1_8_R2.EntityExperienceOrb;
-import net.minecraft.server.v1_8_R2.EntityInsentient;
-import net.minecraft.server.v1_8_R2.EntityLiving;
-import net.minecraft.server.v1_8_R2.EntityZombie;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.MathHelper;
+import net.minecraft.server.v1_8_R3.AttributeInstance;
+import net.minecraft.server.v1_8_R3.AttributeModifiable;
+import net.minecraft.server.v1_8_R3.Blocks;
+import net.minecraft.server.v1_8_R3.EntityCreature;
+import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
+import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.EntityZombie;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,13 +22,13 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftVillager;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWither;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWitherSkull;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWither;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWitherSkull;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftZombie;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -242,8 +242,8 @@ public class HardmodeListener implements Listener {
                         }
                         try {
                             EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
-                            if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R2.EntityLiving) {
-                                net.minecraft.server.v1_8_R2.EntityLiving el = (net.minecraft.server.v1_8_R2.EntityLiving) nmsEntityField
+                            if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R3.EntityLiving) {
+                                net.minecraft.server.v1_8_R3.EntityLiving el = (net.minecraft.server.v1_8_R3.EntityLiving) nmsEntityField
                                         .get(lastDamager);
                                 creature.b(el);
                             }
@@ -310,7 +310,7 @@ public class HardmodeListener implements Listener {
             if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
                 return;
 
-            net.minecraft.server.v1_8_R2.ItemStack nmsItemInHand = NanobotUtil.getInternalNMSStack(itemInHand);
+            net.minecraft.server.v1_8_R3.ItemStack nmsItemInHand = NanobotUtil.getInternalNMSStack(itemInHand);
 
             event.setCancelled(true); //Cancel drop vanilla
             block.setType(Material.AIR);
@@ -513,7 +513,7 @@ public class HardmodeListener implements Listener {
                 @Override
                 public void run() {
                     EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
-                    AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
+                    AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
                     if (attribute != null) {
                         Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
                         Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
@@ -540,7 +540,7 @@ public class HardmodeListener implements Listener {
             String id = event.getEntity().getUniqueId().toString();
 
             AttributeInstance attributes = ((EntityInsentient) ((CraftLivingEntity) event.getEntity()).getHandle())
-                    .getAttributeInstance(GenericAttributes.d);
+                    .getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
 
             if (event.getTo().getWorld().getEnvironment() == Environment.NETHER) {
                 // Horse slowing down disabled

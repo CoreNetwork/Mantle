@@ -1,7 +1,7 @@
 package us.corenetwork.mantle.util;
 
-import net.minecraft.server.v1_8_R2.Item;
-import net.minecraft.server.v1_8_R2.MobEffectList;
+import net.minecraft.server.v1_8_R3.Item;
+import net.minecraft.server.v1_8_R3.MobEffectList;
 
 /**
  * Created by Matej on 2.12.2014.
@@ -10,7 +10,7 @@ public class MinecraftNames
 {
     public static Integer getEnchantmentId(String name)
     {
-        net.minecraft.server.v1_8_R2.Enchantment nmsEnchantment = net.minecraft.server.v1_8_R2.Enchantment.getByName(name);
+        net.minecraft.server.v1_8_R3.Enchantment nmsEnchantment = net.minecraft.server.v1_8_R3.Enchantment.getByName(name);
         if (nmsEnchantment == null)
             return null;
 
@@ -28,7 +28,7 @@ public class MinecraftNames
 
     public static Integer getPotionEffectId(String name)
     {
-        MobEffectList effect = net.minecraft.server.v1_8_R2.MobEffectList.b(name);
+        MobEffectList effect = net.minecraft.server.v1_8_R3.MobEffectList.b(name);
         if (effect == null)
             return null;
 

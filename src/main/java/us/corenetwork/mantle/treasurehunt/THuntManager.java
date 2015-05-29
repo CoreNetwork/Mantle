@@ -10,14 +10,14 @@ import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
-import net.minecraft.server.v1_8_R2.EntityItem;
+import net.minecraft.server.v1_8_R3.EntityItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.World.Environment;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftItem;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftItem;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;

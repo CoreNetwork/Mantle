@@ -25,7 +25,7 @@ import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemFactory;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemFactory;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;

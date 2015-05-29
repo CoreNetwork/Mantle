@@ -1,12 +1,12 @@
 package us.corenetwork.mantle.gametweaks;
 
-import net.minecraft.server.v1_8_R2.Block;
-import net.minecraft.server.v1_8_R2.WorldServer;
+import net.minecraft.server.v1_8_R3.Block;
+import net.minecraft.server.v1_8_R3.WorldServer;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantleModule;
 import us.corenetwork.mantle.MantlePlugin;
