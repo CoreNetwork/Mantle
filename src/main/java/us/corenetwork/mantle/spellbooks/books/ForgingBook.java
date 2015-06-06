@@ -7,14 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
-import net.minecraft.server.v1_8_R2.RecipesFurnace;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.RecipesFurnace;
 import org.bukkit.CoalType;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -25,10 +24,10 @@ import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
-import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 import us.core_network.cornel.items.InventoryUtil;
 
@@ -44,7 +43,7 @@ public class ForgingBook extends Spellbook {
 		//Get all recipes from vanilla furnaces
 		for (Object recipeO : RecipesFurnace.getInstance().recipes.entrySet())
 		{
-			Entry<net.minecraft.server.v1_8_R2.ItemStack, net.minecraft.server.v1_8_R2.ItemStack> recipe = (Entry<net.minecraft.server.v1_8_R2.ItemStack, net.minecraft.server.v1_8_R2.ItemStack>) recipeO;
+			Entry<net.minecraft.server.v1_8_R3.ItemStack, net.minecraft.server.v1_8_R3.ItemStack> recipe = (Entry<net.minecraft.server.v1_8_R3.ItemStack, net.minecraft.server.v1_8_R3.ItemStack>) recipeO;
 			FORGEITEMS.put(CraftItemStack.asCraftMirror(recipe.getKey()), CraftItemStack.asCraftMirror(recipe.getValue()));
 		}
 		
@@ -88,7 +87,10 @@ public class ForgingBook extends Spellbook {
 	@Override
 	public BookFinishAction onActivate(SpellbookItem spellbookItem, PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		
+
+        Location effectLoc;
+        boolean blockEffect;
+
 		Inventory inventory;
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
@@ -102,10 +104,14 @@ public class ForgingBook extends Spellbook {
 
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
+            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            blockEffect = true;
 		}
 		else
 		{
 			inventory = player.getInventory();
+            effectLoc = player.getEyeLocation();
+            blockEffect = false;
 		}	
 		
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
@@ -260,10 +266,12 @@ public class ForgingBook extends Spellbook {
 		}
 		
 		player.updateInventory();
-				
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.ORANGE).withFade(Color.ORANGE).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
+
+        if (blockEffect)
+            ParticleLibrary.broadcastParticle(EnumParticle.FLAME, effectLoc, 0.5f, 0.5f, 0.5f, 0, 200, null);
+        else
+            ParticleLibrary.broadcastParticle(EnumParticle.FLAME, SpellbookUtil.getPointInFrontOfPlayer(effectLoc, 0.3), 0.3f, 0.3f, 0.3f, 0, 30, null);
+
 		effectLoc.getWorld().playSound(effectLoc, Sound.FIRE, 1f, 1f);
 		
 		if (anythingSmelted)

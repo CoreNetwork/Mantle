@@ -4,11 +4,9 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketEvent;
-import java.io.IOException;
-import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.Material;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.items.NbtYaml;
@@ -72,7 +70,7 @@ public class NetherwartProtocolListener extends PacketAdapter {
             Field handleField = CraftItemStack.class.getDeclaredField("handle");
             handleField.setAccessible(true);
             //Add blank enchantment tag
-            net.minecraft.server.v1_8_R2.ItemStack nmsStack = (net.minecraft.server.v1_8_R2.ItemStack) handleField.get(stack);
+            net.minecraft.server.v1_8_R3.ItemStack nmsStack = (net.minecraft.server.v1_8_R3.ItemStack) handleField.get(stack);
             nmsStack.setTag(nbtTag);
 
         }

@@ -4,7 +4,7 @@ package us.corenetwork.mantle.hardmode.wither;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.MathHelper;
+import net.minecraft.server.v1_8_R3.MathHelper;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 

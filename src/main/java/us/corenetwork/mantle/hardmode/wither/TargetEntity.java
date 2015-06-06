@@ -1,8 +1,8 @@
 package us.corenetwork.mantle.hardmode.wither;
 
-import net.minecraft.server.v1_8_R2.DamageSource;
-import net.minecraft.server.v1_8_R2.EntityArmorStand;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.DamageSource;
+import net.minecraft.server.v1_8_R3.EntityArmorStand;
+import net.minecraft.server.v1_8_R3.World;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 

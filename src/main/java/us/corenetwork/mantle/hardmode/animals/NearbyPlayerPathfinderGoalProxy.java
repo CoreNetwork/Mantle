@@ -2,14 +2,15 @@ package us.corenetwork.mantle.hardmode.animals;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.EntityInsentient;
-import net.minecraft.server.v1_8_R2.PathfinderGoal;
-import net.minecraft.server.v1_8_R2.PathfinderGoalBreed;
-import net.minecraft.server.v1_8_R2.PathfinderGoalEatTile;
-import net.minecraft.server.v1_8_R2.PathfinderGoalFloat;
-import net.minecraft.server.v1_8_R2.PathfinderGoalPanic;
-import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R2.PathfinderGoalTempt;
+
+import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.PathfinderGoal;
+import net.minecraft.server.v1_8_R3.PathfinderGoalBreed;
+import net.minecraft.server.v1_8_R3.PathfinderGoalEatTile;
+import net.minecraft.server.v1_8_R3.PathfinderGoalFloat;
+import net.minecraft.server.v1_8_R3.PathfinderGoalPanic;
+import net.minecraft.server.v1_8_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R3.PathfinderGoalTempt;
 import us.core_network.cornel.java.ReflectionUtils;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
@@ -101,7 +102,7 @@ public class NearbyPlayerPathfinderGoalProxy extends PathfinderGoal
         Class pathfinderGoalSelectorItemClass = null;
         try
         {
-            pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R2.PathfinderGoalSelector$PathfinderGoalSelectorItem");
+            pathfinderGoalSelectorItemClass = Class.forName("net.minecraft.server.v1_8_R3.PathfinderGoalSelector$PathfinderGoalSelectorItem");
         } catch (ClassNotFoundException e)
         {
             e.printStackTrace();

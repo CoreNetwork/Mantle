@@ -1,8 +1,8 @@
 package us.corenetwork.mantle.hardmode;
 
 import java.lang.reflect.Field;
-import net.minecraft.server.v1_8_R2.IRangedEntity;
-import net.minecraft.server.v1_8_R2.PathfinderGoalArrowAttack;
+import net.minecraft.server.v1_8_R3.IRangedEntity;
+import net.minecraft.server.v1_8_R3.PathfinderGoalArrowAttack;
 
 /**
  * Custom CustomPathfinderGoalArrowAttack that divides initial delay between targeting and shooting first projectile by specific amount

@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -91,7 +93,7 @@ public class GUICategoryPicker extends InventoryGUI
     		{
     			setItem(j-9, nopeItem);
     			setItem(j, c.getIcon(player));
-    			categoryPositions.put(i, c);
+    			categoryPositions.put(j, c);
     			setItem(j+9, nopeItem);
     			j--;
     		}
@@ -104,7 +106,22 @@ public class GUICategoryPicker extends InventoryGUI
 		Category selectedCategory = categoryPositions.get(slot);
 		if(selectedCategory != null)
 		{
-			selectChestForPlayerCategory(player, selectedCategory);
+			//cat.gotAllPreReqs(player) && cat.isUnderTheLimit(player)
+			Player bukkitPlayer = Bukkit.getPlayer(player.getUniqueId());
+			if(!selectedCategory.gotAllPreReqs(bukkitPlayer) && selectedCategory.isRare())
+			{
+				Util.Message(RChestSettings.MESSAGE_COMPASS_CATEGORY_NOT_YET_UNLOCKED.string(), player);
+				bukkitPlayer.updateInventory();
+			}
+			else if(!selectedCategory.isUnderTheLimit(bukkitPlayer) && selectedCategory.isRare())
+			{
+				Util.Message(RChestSettings.MESSAGE_COMPASS_CATEGORY_LOOTED_ALL.string(), player);
+				bukkitPlayer.updateInventory();
+			}
+			else
+			{
+				selectChestForPlayerCategory(player, selectedCategory);
+			}
 			player.closeInventory();
 		}
 		

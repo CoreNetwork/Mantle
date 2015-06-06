@@ -1,12 +1,12 @@
 package us.corenetwork.mantle.hardmode;
 
 import java.util.List;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EntityPigZombie;
-import net.minecraft.server.v1_8_R2.PathfinderGoalHurtByTarget;
-import net.minecraft.server.v1_8_R2.PathfinderGoalNearestAttackableTarget;
-import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.EntityPigZombie;
+import net.minecraft.server.v1_8_R3.PathfinderGoalHurtByTarget;
+import net.minecraft.server.v1_8_R3.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.server.v1_8_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R3.World;
 import us.core_network.cornel.java.ReflectionUtils;
 
 /**

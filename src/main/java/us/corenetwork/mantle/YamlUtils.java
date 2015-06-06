@@ -2,10 +2,10 @@ package us.corenetwork.mantle;
 
 import java.io.IOException;
 import java.util.Map;
-import net.minecraft.server.v1_8_R2.NBTTagCompound;
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;import org.bukkit.inventory.ItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import us.core_network.cornel.common.MinecraftNames;
@@ -79,7 +79,7 @@ public class YamlUtils
 
             if (newTag != null)
             {
-                net.minecraft.server.v1_8_R2.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
+                net.minecraft.server.v1_8_R3.ItemStack nmsStack = CraftItemStack.asNMSCopy(stack);
                 nmsStack.setTag(newTag);
                 stack = CraftItemStack.asCraftMirror(nmsStack);
             }

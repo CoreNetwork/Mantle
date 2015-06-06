@@ -2,19 +2,19 @@ package us.corenetwork.mantle.netherspawning;
 
 import java.lang.reflect.Field;
 import java.util.Random;
-import net.minecraft.server.v1_8_R2.EntityInsentient;
-import net.minecraft.server.v1_8_R2.EntitySkeleton;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.PathfinderGoal;
-import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.EntitySkeleton;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.PathfinderGoal;
+import net.minecraft.server.v1_8_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftSkeleton;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSkeleton;
 import org.bukkit.entity.Blaze;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -134,7 +134,7 @@ public class NetherSpawner {
 			e.printStackTrace();
 		}
 
-		nmsSkeleton.getAttributeInstance(GenericAttributes.e).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
+		nmsSkeleton.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(NetherSpawningSettings.WITHER_SKELETON_STRENGTH.doubleNumber());
 		nmsSkeleton.setLocation(block.getX() + 0.5, block.getY(), block.getZ() + 0.5, 0f, 0f);
 		
 		if (reason == SpawnReason.NATURAL)
@@ -147,7 +147,7 @@ public class NetherSpawner {
         if (bowSkeleton)
             skeleton.getEquipment().setItemInHand(new ItemStack(Material.BOW));
 
-        nmsSkeleton.getAttributeInstance(GenericAttributes.d).setValue(NetherSpawningSettings.WITHER_SKELETON_NORMAL_SPEED.doubleNumber());
+        nmsSkeleton.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(NetherSpawningSettings.WITHER_SKELETON_NORMAL_SPEED.doubleNumber());
 
         return skeleton;
 	}

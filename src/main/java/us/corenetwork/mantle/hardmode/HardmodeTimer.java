@@ -2,7 +2,7 @@ package us.corenetwork.mantle.hardmode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWither;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWither;
 import org.bukkit.entity.Wither;
 import org.bukkit.metadata.MetadataValue;
 import us.corenetwork.mantle.MantlePlugin;

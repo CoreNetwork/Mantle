@@ -9,18 +9,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.server.v1_8_R2.BlockPosition;
-import net.minecraft.server.v1_8_R2.EnumParticle;
-import net.minecraft.server.v1_8_R2.PacketPlayOutBlockAction;
-import net.minecraft.server.v1_8_R2.StatisticList;
-import net.minecraft.server.v1_8_R2.TileEntity;
-import net.minecraft.server.v1_8_R2.TileEntityBeacon;
-import net.minecraft.server.v1_8_R2.TileEntityBrewingStand;
-import net.minecraft.server.v1_8_R2.TileEntityChest;
-import net.minecraft.server.v1_8_R2.TileEntityDispenser;
-import net.minecraft.server.v1_8_R2.TileEntityDropper;
-import net.minecraft.server.v1_8_R2.TileEntityFurnace;
-import net.minecraft.server.v1_8_R2.TileEntityHopper;
+import net.minecraft.server.v1_8_R3.BlockPosition;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.PacketPlayOutBlockAction;
+import net.minecraft.server.v1_8_R3.StatisticList;
+import net.minecraft.server.v1_8_R3.TileEntity;
+import net.minecraft.server.v1_8_R3.TileEntityBeacon;
+import net.minecraft.server.v1_8_R3.TileEntityBrewingStand;
+import net.minecraft.server.v1_8_R3.TileEntityChest;
+import net.minecraft.server.v1_8_R3.TileEntityDispenser;
+import net.minecraft.server.v1_8_R3.TileEntityDropper;
+import net.minecraft.server.v1_8_R3.TileEntityFurnace;
+import net.minecraft.server.v1_8_R3.TileEntityHopper;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -30,11 +30,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventory;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventoryCustom;
-import org.bukkit.craftbukkit.v1_8_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryCustom;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -384,7 +384,7 @@ public class RestockableChest {
 		//Chest animation
 		if (currentAmountOfOpened < 2 && (chestBlock.getType() == Material.CHEST || chestBlock.getType() == Material.TRAPPED_CHEST))
 		{
-			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(new BlockPosition(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ()), net.minecraft.server.v1_8_R2.Block.getById(chestBlock.getTypeId()), 1, 1);
+			PacketPlayOutBlockAction chestOpenPacket = new PacketPlayOutBlockAction(new BlockPosition(chestBlock.getX(), chestBlock.getY(), chestBlock.getZ()), net.minecraft.server.v1_8_R3.Block.getById(chestBlock.getTypeId()), 1, 1);
 
 			List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 			nearbyEntities.add(player);
@@ -445,7 +445,7 @@ public class RestockableChest {
 				//Chest animation
 				if (currentAmountOfOpened < 1 && (chest.chestBlock.getType() == Material.CHEST  || chest.chestBlock.getType() == Material.TRAPPED_CHEST))
 				{
-					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(new BlockPosition(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ()), net.minecraft.server.v1_8_R2.Block.getById(chest.chestBlock.getTypeId()), 1, 0);
+					PacketPlayOutBlockAction chestClosePacket = new PacketPlayOutBlockAction(new BlockPosition(chest.chestBlock.getX(), chest.chestBlock.getY(), chest.chestBlock.getZ()), net.minecraft.server.v1_8_R3.Block.getById(chest.chestBlock.getTypeId()), 1, 0);
 					
 					List<Entity> nearbyEntities = player.getNearbyEntities(20, 20, 20);
 					nearbyEntities.add(player);
@@ -800,20 +800,15 @@ public class RestockableChest {
 	}
 	
 	
-	private List<ItemStack> getItemsFromCategory(Category cat, Player player, double diminishVillage, double diminishTotal, boolean firstTimeAlways)
+	private List<ItemStack> getItemsFromCategory(Category cat, Player player, double diminishVillage, double diminishTotal, boolean fromCompass)
 	{
 		List<ItemStack> items = new ArrayList<ItemStack>();
 
 		if(cat == null)
 			return items;
 
-		int timesPicked = cat.howManyTimes(player, diminishVillage, diminishTotal);		
-		
-		if(firstTimeAlways && timesPicked == 0)
-		{
-			timesPicked = 1;
-		}
-		
+		int timesPicked = cat.howManyTimes(player, diminishVillage, diminishTotal, fromCompass);
+
 		if(timesPicked > 0)
 		{
 			updateCategoryCounterFor(cat, player, timesPicked);
@@ -1180,7 +1175,7 @@ public class RestockableChest {
 			field.setAccessible(true);
 
 			Object internalInv = field.get(customInv);
-			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_8_R2.inventory.CraftInventoryCustom$MinecraftInventory");
+			Class<?> internalInvClass = Class.forName("org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventoryCustom$MinecraftInventory");
 
 			field = internalInvClass.getDeclaredField("type");
 			field.setAccessible(true);

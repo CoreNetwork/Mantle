@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import me.ryanhamshire.GriefPrevention.Claim;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.FireworkEffect;
@@ -21,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
+import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
@@ -65,6 +67,9 @@ public class FusingBook extends Spellbook {
 		Player player = event.getPlayer();
 		
 		Inventory inventory;
+        Location effectLoc;
+        boolean blockEffect;
+
 		if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && Util.isInventoryContainer(event.getClickedBlock().getTypeId()))
 		{
 			//Check for claim if clicking on chest
@@ -78,10 +83,14 @@ public class FusingBook extends Spellbook {
 			
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
+            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            blockEffect = true;
 		}
 		else
 		{
 			inventory = player.getInventory();
+            effectLoc = player.getEyeLocation();
+            blockEffect = false;
 		}
 		
 		int freeInventorySlots = InventoryUtil.getFreeInventorySlots(inventory);
@@ -143,11 +152,13 @@ public class FusingBook extends Spellbook {
 		
 		if (inventory.getType() == InventoryType.PLAYER)
 			player.updateInventory();
-		
-		FireworkEffect effect = FireworkEffect.builder().withColor(Color.SILVER).withFade(Color.SILVER).build();
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(player.getEyeLocation(), 2);
-		Util.showFirework(effectLoc, effect);
-		effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
+
+        if (blockEffect)
+            ParticleLibrary.broadcastParticle(EnumParticle.CRIT, effectLoc, 0.5f, 0.5f, 0.5f, 0, 200, null);
+        else
+            ParticleLibrary.broadcastParticle(EnumParticle.CRIT, SpellbookUtil.getPointInFrontOfPlayer(effectLoc, 0.3), 0.3f, 0.3f, 0.3f, 0, 30, null);
+
+        effectLoc.getWorld().playSound(effectLoc, Sound.ANVIL_USE, 1f, 2f);
 		
 		if (fusedSomething)
 			return BookFinishAction.BROADCAST_AND_CONSUME;

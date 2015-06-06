@@ -5,24 +5,35 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.server.v1_8_R2.Block;
-import net.minecraft.server.v1_8_R2.BlockPosition;
-import net.minecraft.server.v1_8_R2.Blocks;
-import net.minecraft.server.v1_8_R2.DamageSource;
-import net.minecraft.server.v1_8_R2.Entity;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EntityLiving;
-import net.minecraft.server.v1_8_R2.EntityWither;
-import net.minecraft.server.v1_8_R2.EnumParticle;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.Material;
-import net.minecraft.server.v1_8_R2.MathHelper;
-import net.minecraft.server.v1_8_R2.PathfinderGoalSelector;
-import net.minecraft.server.v1_8_R2.World;
+
+import com.sk89q.worldedit.BlockVector;
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.managers.storage.StorageException;
+import com.sk89q.worldguard.protection.regions.ProtectedCuboidRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import net.minecraft.server.v1_8_R3.Block;
+import net.minecraft.server.v1_8_R3.BlockPosition;
+import net.minecraft.server.v1_8_R3.Blocks;
+import net.minecraft.server.v1_8_R3.DamageSource;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.EntityWither;
+import net.minecraft.server.v1_8_R3.EnumParticle;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.Material;
+import net.minecraft.server.v1_8_R3.MathHelper;
+import net.minecraft.server.v1_8_R3.PathfinderGoalSelector;
+import net.minecraft.server.v1_8_R3.World;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.craftbukkit.v1_8_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R2.util.UnsafeList;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.util.UnsafeList;
+import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.hardmode.HardmodeSettings;
 
@@ -399,6 +410,8 @@ public class CustomWither extends EntityWither {
         }
     }
 
+
+    private static String regionId;
     //Entity tick - removed some stuff from original
     protected void E()
     {
@@ -408,10 +421,17 @@ public class CustomWither extends EntityWither {
         if (inSpawningPhase)
         {
             i = this.cl() - 1;
+
+            if(i == 1)
+            {
+                regionId = createWorldGuardRegionUnderWither();
+            }
             if (i <= 0)
             {
                 this.world.createExplosion(this, this.locX, this.locY + (double) this.getHeadHeight(), this.locZ, 7.0F, false, this.world.getGameRules().getBoolean("mobGriefing"));
                 this.world.a(1013, new BlockPosition(this), 0);
+                removeRegionUnderWither(regionId);
+
                 inSpawningPhase = false;
             }
 
@@ -541,6 +561,51 @@ public class CustomWither extends EntityWither {
             changeAmountsOnNumOfPlayers(targetList.size());
         }
         updateShield();
+    }
+
+    private String createWorldGuardRegionUnderWither()
+    {
+        WorldGuardPlugin wg = (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+        RegionManager manager = wg.getRegionManager(bukkitWorld);
+
+        int halfSize = HardmodeSettings.WITHER_BOX_UNDER_SIZE.integer() / 2;
+
+        Location firstPoint = new Location(bukkitWorld, this.locX - halfSize, this.locY - halfSize, this.locZ - halfSize);
+        Location secondPoint = new Location(bukkitWorld, this.locX + halfSize, this.locY - 2, this.locZ + halfSize);
+        BlockVector firstVector = new BlockVector(firstPoint.getX(), firstPoint.getY(), firstPoint.getZ());
+        BlockVector secondVector = new BlockVector(secondPoint.getX(), secondPoint.getY(), secondPoint.getZ());
+
+        ProtectedRegion region = new ProtectedCuboidRegion("UnderWither"+getUniqueID().toString(), firstVector, secondVector);
+        region.setFlag(DefaultFlag.OTHER_EXPLOSION, StateFlag.State.DENY);
+        region.setFlag(DefaultFlag.CREEPER_EXPLOSION, StateFlag.State.DENY);
+        region.setFlag(DefaultFlag.GHAST_FIREBALL, StateFlag.State.DENY);
+        region.setFlag(DefaultFlag.ENDERDRAGON_BLOCK_DAMAGE, StateFlag.State.DENY);
+
+        manager.addRegion(region);
+        try
+        {
+            manager.save();
+        } catch (StorageException e1)
+        {
+            e1.printStackTrace();
+        }
+
+        return region.getId();
+    }
+
+    private void removeRegionUnderWither(String regionId)
+    {
+        WorldGuardPlugin wg = (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
+        RegionManager manager = wg.getRegionManager(bukkitWorld);
+
+        manager.removeRegion(regionId);
+        try
+        {
+            manager.save();
+        } catch (StorageException e1)
+        {
+            e1.printStackTrace();
+        }
     }
 
     public void setSuffCounter(int value)

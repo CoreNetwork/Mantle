@@ -5,16 +5,16 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import net.minecraft.server.v1_8_R2.AttributeInstance;
-import net.minecraft.server.v1_8_R2.AttributeModifiable;
-import net.minecraft.server.v1_8_R2.Blocks;
-import net.minecraft.server.v1_8_R2.EntityCreature;
-import net.minecraft.server.v1_8_R2.EntityExperienceOrb;
-import net.minecraft.server.v1_8_R2.EntityInsentient;
-import net.minecraft.server.v1_8_R2.EntityLiving;
-import net.minecraft.server.v1_8_R2.EntityZombie;
-import net.minecraft.server.v1_8_R2.GenericAttributes;
-import net.minecraft.server.v1_8_R2.MathHelper;
+import net.minecraft.server.v1_8_R3.AttributeInstance;
+import net.minecraft.server.v1_8_R3.AttributeModifiable;
+import net.minecraft.server.v1_8_R3.Blocks;
+import net.minecraft.server.v1_8_R3.EntityCreature;
+import net.minecraft.server.v1_8_R3.EntityExperienceOrb;
+import net.minecraft.server.v1_8_R3.EntityInsentient;
+import net.minecraft.server.v1_8_R3.EntityLiving;
+import net.minecraft.server.v1_8_R3.EntityZombie;
+import net.minecraft.server.v1_8_R3.GenericAttributes;
+import net.minecraft.server.v1_8_R3.MathHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -22,15 +22,16 @@ import org.bukkit.Sound;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftVillager;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWither;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftWitherSkull;
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftZombie;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftVillager;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWither;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftWitherSkull;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftZombie;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Enderman;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -56,6 +57,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.event.entity.EntityBreakDoorEvent;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
@@ -94,37 +96,37 @@ public class HardmodeListener implements Listener {
 	private static Random random = new Random();
 	private Set<Zombie> reinforcementZombies = new HashSet<>();
 
-	static
-	{
+    static {
 		transparentBlocks.add((byte) 0);
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
-	public void onEntityDamage(final EntityDamageEvent event)
-	{
+    public void onEntityDamage(final EntityDamageEvent event) {
 		// Do not apply anything to End or void
 		if (event.getCause() == DamageCause.VOID || event.getEntity().getWorld().getEnvironment() == Environment.THE_END)
 			return;
 
-		if (event instanceof EntityDamageByEntityEvent)
-		{
+        if (event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK) {
+            if (HardmodeSettings.VEHICLE_PLAYER_SYNC.bool() && event.getEntity() instanceof Player && event.getEntity().getVehicle() instanceof LivingEntity) {
+                ((LivingEntity) event.getEntity().getVehicle()).damage(event.getDamage());
+            }
+        }
+
+        if (event instanceof EntityDamageByEntityEvent) {
 			EntityDamageByEntityEvent entityEvent = (EntityDamageByEntityEvent) event;
 
 			Entity damager = entityEvent.getDamager();
 			Entity victim = entityEvent.getEntity();
 
 			// Teleporting player to the enderman
-			if (victim instanceof Enderman && damager instanceof Player && event.getCause() != DamageCause.THORNS)
-			{
+            if (victim instanceof Enderman && damager instanceof Player && event.getCause() != DamageCause.THORNS) {
 				// Only perform teleporting if enderman cannot move to the
 				// player
 				boolean canMove = EndermanTeleport.canMove(damager.getLocation(), victim.getLocation());
 
-				if (!canMove)
-				{
+                if (!canMove) {
 					double randomChance = HardmodeSettings.ENDERMAN_TELEPORT_CHANCE.doubleNumber();
-					if (MantlePlugin.random.nextDouble() < randomChance)
-					{
+                    if (MantlePlugin.random.nextDouble() < randomChance) {
 						event.setCancelled(true);
 						EndermanTeleport.teleportPlayer((Player) damager, (Enderman) victim);
 
@@ -138,44 +140,34 @@ public class HardmodeListener implements Listener {
 			}
 			// Wither reset timer
 			else if (victim instanceof Wither
-					&& (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager).getShooter() instanceof Player))))
-			{
+                    && (damager instanceof Player || (damager instanceof Projectile && (((Projectile) damager).getShooter() instanceof Player)))) {
 				int newTime = (int) (System.currentTimeMillis() / 1000 + HardmodeSettings.WITHER_TIMEOUT.integer());
 				MetadataValue value = new FixedMetadataValue(MantlePlugin.instance, newTime);
 				victim.removeMetadata("DespawningTime", MantlePlugin.instance);
 				victim.setMetadata("DespawningTime", value);
 			}
 			// Preventing minions from being damaged by wither
-			else if ((damager instanceof Wither || damager instanceof WitherSkull) && victim instanceof LivingEntity)
-			{
+            else if ((damager instanceof Wither || damager instanceof WitherSkull) && victim instanceof LivingEntity) {
 				LivingEntity living = (LivingEntity) victim;
-				if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion"))
-				{
+                if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion")) {
 					event.setCancelled(true);
 					return;
 				}
-			} else if (event.getEntityType() == EntityType.VILLAGER)
-			{
+            } else if (event.getEntityType() == EntityType.VILLAGER) {
 				int profession = ((CraftVillager) event.getEntity()).getHandle().getProfession();
-				if (profession == 5)
-				{
+                if (profession == 5) {
 					event.setCancelled(true);
 					return;
 				}
-			} else if (damager instanceof Fireball)
-			{
+            } else if (damager instanceof Fireball) {
 				Fireball fireball = (Fireball) damager;
-				if (fireball.getShooter() instanceof Ghast)
-				{
+                if (fireball.getShooter() instanceof Ghast) {
 					double multiplier = HardmodeSettings.GHAST_FIREBALL_DAMAGE_MULTIPLIER.doubleNumber();
 					event.setDamage(event.getDamage() * multiplier);
 				}
-			} else if (victim instanceof Spider && damager instanceof Player)
-			{
-				for (Entity e : victim.getWorld().getEntitiesByClass(Spider.class))
-				{
-					if (e.getLocation().distanceSquared(damager.getLocation()) < 48 * 48)
-					{
+            } else if (victim instanceof Spider && damager instanceof Player) {
+                for (Entity e : victim.getWorld().getEntitiesByClass(Spider.class)) {
+                    if (e.getLocation().distanceSquared(damager.getLocation()) < 48 * 48) {
 						Spider spider = (Spider) e;
 						spider.setTarget((Player) damager);
 					}
@@ -184,41 +176,34 @@ public class HardmodeListener implements Listener {
 
 		}
 
-		if (event.getEntity() instanceof Player)
-		{
+        if (event.getEntity() instanceof Player) {
 			final Player player = (Player) event.getEntity();
 
 			// Environmental damage
 			DamageNodeParser.parseDamageEvent(event, HardmodeModule.instance.config);
-			if (event.getDamage() < 0)
-			{
+            if (event.getDamage() < 0) {
 				event.setCancelled(true);
 				return;
 			}
 
 			// Dismount player from the horse if player shot via arrow
-			if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse)
-			{
+            if (event.getCause() == DamageCause.PROJECTILE && player.isInsideVehicle() && player.getVehicle() instanceof Horse) {
 				player.leaveVehicle();
 			}
 		}
 
 		// Dismount player from the horse if horse shot via arrow
-		else if (event.getEntity() instanceof Horse)
-		{
+        else if (event.getEntity() instanceof Horse) {
 			Horse horse = (Horse) event.getEntity();
 
-			if (event.getCause() == DamageCause.PROJECTILE && horse.getPassenger() != null)
-			{
+            if (event.getCause() == DamageCause.PROJECTILE && horse.getPassenger() != null) {
 				horse.eject();
 			}
 		}
 
-		if (event.getCause() == DamageCause.WITHER && event.getEntity() instanceof LivingEntity)
-		{
+        if (event.getCause() == DamageCause.WITHER && event.getEntity() instanceof LivingEntity) {
 			LivingEntity living = (LivingEntity) event.getEntity();
-			if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion"))
-			{
+            if (living.getCustomName() != null && living.getCustomName().equalsIgnoreCase("Wither Minion")) {
 				event.setCancelled(true);
 				return;
 			}
@@ -226,71 +211,57 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onEntityDeath(EntityDeathEvent event)
-	{
+    public void onEntityDeath(EntityDeathEvent event) {
 		final LivingEntity entity = event.getEntity();
 
 		// Respawned mobs not dropping anything
 		// Mobs with name or silverfishes should not drop anything
 		if (entity.getMetadata("Respawned").size() > 0 || entity.getType() == EntityType.SILVERFISH
-				|| (entity.getCustomName() != null && HardmodeSettings.NAMED_MOBS_NO_DROP.stringList().contains(entity.getCustomName())))
-		{
+                || (entity.getCustomName() != null && HardmodeSettings.NAMED_MOBS_NO_DROP.stringList().contains(entity.getCustomName()))) {
 			event.getDrops().clear();
 			event.setDroppedExp(0);
 			entity.getEquipment().clear();
 		}
 
-		if (event.getEntity() instanceof Animals)
-		{
-			if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent)
-			{
+        if (event.getEntity() instanceof Animals) {
+            if (event.getEntity().getLastDamageCause() instanceof EntityDamageByEntityEvent) {
 				Entity lastDamager = ((EntityDamageByEntityEvent) event.getEntity().getLastDamageCause()).getDamager();
 
-				if(lastDamager instanceof Projectile)
-				{
+                if (lastDamager instanceof Projectile) {
 					ProjectileSource shooter = ((Projectile) lastDamager).getShooter();
-					if(shooter instanceof Player)
-					{
+                    if (shooter instanceof Player) {
 						lastDamager = (Player) shooter;
 					}
 				}
 
-				try
-				{
+                try {
 					Field nmsEntityField = CraftEntity.class.getDeclaredField("entity");
 					nmsEntityField.setAccessible(true);
-					for (Entity e : event.getEntity().getWorld().getEntitiesByClass(Animals.class))
-					{
+                    for (Entity e : event.getEntity().getWorld().getEntitiesByClass(Animals.class)) {
 						if (e.getType() != event.getEntity().getType()
-								|| e.getLocation().distanceSquared(event.getEntity().getLocation()) > 25 * 25)
-						{
+                                || e.getLocation().distanceSquared(event.getEntity().getLocation()) > 25 * 25) {
 							continue;
 						}
-						try
-						{
+                        try {
 							EntityCreature creature = (EntityCreature) nmsEntityField.get(e);
-							if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R2.EntityLiving)
-							{
-								net.minecraft.server.v1_8_R2.EntityLiving el = (net.minecraft.server.v1_8_R2.EntityLiving) nmsEntityField
+                            if (nmsEntityField.get(lastDamager) instanceof net.minecraft.server.v1_8_R3.EntityLiving) {
+                                net.minecraft.server.v1_8_R3.EntityLiving el = (net.minecraft.server.v1_8_R3.EntityLiving) nmsEntityField
 										.get(lastDamager);
 								creature.b(el);
 							}
 
-						} catch (IllegalAccessException e1)
-						{
+                        } catch (IllegalAccessException e1) {
 							e1.printStackTrace();
 						}
 					}
-				} catch (NoSuchFieldException e)
-				{
+                } catch (NoSuchFieldException e) {
 					e.printStackTrace();
 				}
 			}
 		}
 
 		// Only drop magma cream when biggest slime is killed
-		if (event.getEntityType() == EntityType.MAGMA_CUBE)
-		{
+        if (event.getEntityType() == EntityType.MAGMA_CUBE) {
 			event.getDrops().clear();
 
 			MagmaCube cube = (MagmaCube) event.getEntity();
@@ -298,17 +269,13 @@ public class HardmodeListener implements Listener {
 				event.getDrops().add(new ItemStack(Material.MAGMA_CREAM, 1));
 		}
 
-		if(event.getEntityType() == EntityType.WITHER)
-		{
+        if (event.getEntityType() == EntityType.WITHER) {
 			Player killer = event.getEntity().getKiller();
 
-			if(killer != null)
-			{
+            if (killer != null) {
 				//MLog.debug(killer.getInventory().getContents().length + "");
-				for(ItemStack stack : killer.getInventory().getContents())
-				{
-					if(stack.getType() == Material.AIR || (stack.getType() == Material.NETHER_STAR && stack.getAmount() < stack.getMaxStackSize()))
-					{
+                for (ItemStack stack : killer.getInventory().getContents()) {
+                    if (stack.getType() == Material.AIR || (stack.getType() == Material.NETHER_STAR && stack.getAmount() < stack.getMaxStackSize())) {
 						killer.getInventory().addItem(new ItemStack(Material.NETHER_STAR, 1));
 						event.getDrops().clear();
 						return;
@@ -319,8 +286,7 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onPlayerInteractEntity(PlayerInteractEntityEvent event)
-	{
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 		Entity entity = event.getRightClicked();
 		if (entity == null)
 			return;
@@ -328,8 +294,7 @@ public class HardmodeListener implements Listener {
 		ItemStack handItem = event.getPlayer().getItemInHand();
 
 		if (entity.getType() == EntityType.COW && entity.getWorld().getEnvironment() == Environment.NETHER && handItem != null
-				&& handItem.getType() == Material.BUCKET)
-		{
+                && handItem.getType() == Material.BUCKET) {
 			event.setCancelled(true);
 			event.getPlayer().updateInventory();
             Messages.send(HardmodeSettings.MESSAGE_NO_MILKING_NETHER.string(), event.getPlayer());
@@ -338,18 +303,16 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onBlockBreak(BlockBreakEvent event)
-	{
+    public void onBlockBreak(BlockBreakEvent event) {
 		final Block block = event.getBlock();
 
 		//Quartz drop increase
-		if (event.getBlock().getType() == Material.QUARTZ_ORE)
-		{
+        if (event.getBlock().getType() == Material.QUARTZ_ORE) {
 			ItemStack itemInHand = event.getPlayer().getItemInHand();
 			if (itemInHand != null && itemInHand.containsEnchantment(Enchantment.SILK_TOUCH)) //Do not modify drop if player has silk touch
 				return;
 
-            net.minecraft.server.v1_8_R2.ItemStack nmsItemInHand = ItemStackUtils.getInternalNMSStack(itemInHand);
+            net.minecraft.server.v1_8_R3.ItemStack nmsItemInHand = ItemStackUtils.getInternalNMSStack(itemInHand);
 
 			event.setCancelled(true); //Cancel drop vanilla
 			block.setType(Material.AIR);
@@ -362,8 +325,7 @@ public class HardmodeListener implements Listener {
 
 			int min = 1;
 			int max = 3;
-			switch (fortuneLevel)
-			{
+            switch (fortuneLevel) {
 				case 1:
 					min = 2;
 					max = 5;
@@ -383,8 +345,7 @@ public class HardmodeListener implements Listener {
 
 			//Drop experience
 			int expToDrop = 2 + MantlePlugin.random.nextInt(4); //Drop 2-5 EXP
-			while (expToDrop > 0)
-			{
+            while (expToDrop > 0) {
 				int value = EntityExperienceOrb.getOrbValue(expToDrop); //Which experience orb size should I spawn
 				expToDrop -= value;
 
@@ -397,50 +358,42 @@ public class HardmodeListener implements Listener {
 		}
 
 
-
-
-
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onBlockPlace(BlockPlaceEvent event)
-	{
+    public void onBlockPlace(BlockPlaceEvent event) {
 		final Block block = event.getBlock();
 
 		// Prevent wither building
-		if (block.getType() == Material.SKULL && block.getY() >= 60 && block.getWorld().getEnvironment() == Environment.NETHER)
-		{
+        if (block.getType() == Material.SKULL
+                && (block.getY() >= HardmodeSettings.WITHER_MAX_SPAWNING_Y.integer()
+                || block.getY() <= HardmodeSettings.WITHER_MIN_SPAWNING_Y.integer())
+                && block.getWorld().getEnvironment() == Environment.NETHER) {
 			Block centerSkull = null;
 			BlockFace oneSkullDirection = null;
 
-			for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
-			{
+            for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH}) {
 				Block neighbour = block.getRelative(face);
-				if (neighbour.getType() == Material.SKULL)
-				{
+                if (neighbour.getType() == Material.SKULL) {
 					oneSkullDirection = face;
 
-					if (neighbour.getRelative(face).getType() == Material.SKULL)
-					{
+                    if (neighbour.getRelative(face).getType() == Material.SKULL) {
 						centerSkull = neighbour;
 						break;
-					} else if (block.getRelative(face.getOppositeFace()).getType() == Material.SKULL)
-					{
+                    } else if (block.getRelative(face.getOppositeFace()).getType() == Material.SKULL) {
 						centerSkull = block;
 						break;
 					}
 				}
 			}
 
-			if (centerSkull != null)
-			{
+            if (centerSkull != null) {
 				Block belowCenter = centerSkull.getRelative(BlockFace.DOWN);
 
 				if (belowCenter.getType() == Material.SOUL_SAND
 						&& belowCenter.getRelative(oneSkullDirection).getType() == Material.SOUL_SAND
 						&& belowCenter.getRelative(oneSkullDirection.getOppositeFace()).getType() == Material.SOUL_SAND
-						&& belowCenter.getRelative(BlockFace.DOWN).getType() == Material.SOUL_SAND)
-				{
+                        && belowCenter.getRelative(BlockFace.DOWN).getType() == Material.SOUL_SAND) {
                     Messages.send(HardmodeSettings.MESSAGE_NO_WITHER_SURFACE.string(), event.getPlayer());
 					event.setCancelled(true);
 					return;
@@ -450,8 +403,7 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onCreatureSpawn(CreatureSpawnEvent event)
-	{
+    public void onCreatureSpawn(CreatureSpawnEvent event) {
 		if (event.getSpawnReason() == SpawnReason.SPAWNER) //Do not modify any mobs spawned by mob spawners
 			return;
 
@@ -460,21 +412,17 @@ public class HardmodeListener implements Listener {
 		// Prevent spawning on some nether mobs if there is not enough light
 		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getLocation().getWorld().getEnvironment() == Environment.NETHER
 				&& event.getEntityType() != EntityType.BLAZE && event.getEntityType() != EntityType.MAGMA_CUBE
-				&& event.getEntityType() != EntityType.GHAST)
-		{
-			if (event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer())
-			{
+                && event.getEntityType() != EntityType.GHAST) {
+            if (event.getLocation().getBlock().getLightLevel() > HardmodeSettings.NETHER_MAX_SPAWN_LIGHT_LEVEL.integer()) {
 				event.setCancelled(true);
 				return;
 			}
 		}
 
 
-		if (entity.getType() == EntityType.ZOMBIE)
-		{
+        if (entity.getType() == EntityType.ZOMBIE) {
 			//Fix door breaking
-			if (random.nextDouble() < HardmodeSettings.ZOMBIE_DOOR_BREAKING_CHANCE.doubleNumber())
-			{
+            if (random.nextDouble() < HardmodeSettings.ZOMBIE_DOOR_BREAKING_CHANCE.doubleNumber()) {
 				Zombie zombie = (Zombie) event.getEntity();
 				EntityZombie nmsZombie = ((CraftZombie) zombie).getHandle();
 
@@ -484,16 +432,13 @@ public class HardmodeListener implements Listener {
 
 
 		// Wither timer & replacement
-		if (event.getEntityType() == EntityType.WITHER)
-		{
+        if (event.getEntityType() == EntityType.WITHER) {
 			GriefPreventionHandler.enableExplosions(event.getLocation().getWorld());
 
-			if (!NMSWitherManager.isCustomWither(entity))
-			{
+            if (!NMSWitherManager.isCustomWither(entity)) {
 				Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() {
 					@Override
-					public void run()
-					{
+                    public void run() {
 						CustomWither customWither = NMSWitherManager.convert((Wither) entity);
 						customWither.n();
 					}
@@ -505,10 +450,8 @@ public class HardmodeListener implements Listener {
 
 		}
 		// Pigmen spawning adjust
-		else if (event.getEntityType() == EntityType.PIG_ZOMBIE)
-		{
-			if (event.getSpawnReason() == SpawnReason.JOCKEY)
-			{
+        else if (event.getEntityType() == EntityType.PIG_ZOMBIE) {
+            if (event.getSpawnReason() == SpawnReason.JOCKEY) {
 				event.setCancelled(true);
 				return;
 			}
@@ -518,49 +461,36 @@ public class HardmodeListener implements Listener {
 			entity.getEquipment().clear();
 
 			boolean hasSword = MantlePlugin.random.nextDouble() < HardmodeSettings.PIGMEN_SWORD_CHANCE.doubleNumber();
-			if (hasSword)
-			{
+            if (hasSword) {
 				entity.getEquipment().setItemInHand(new ItemStack(Material.GOLD_SWORD, 1));
 			}
-		}
-		else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS)
-		{
-			if (entity instanceof Zombie && HardmodeSettings.REINFORCEMENTS_ENABLED.bool())
-			{
+        } else if (event.getSpawnReason() == SpawnReason.REINFORCEMENTS) {
+            if (entity instanceof Zombie && HardmodeSettings.REINFORCEMENTS_ENABLED.bool()) {
 				reinforcementZombies.add((Zombie) entity);
 			}
-		}
-		else if (event.getSpawnReason() == SpawnReason.MOUNT)
-		{
+        } else if (event.getSpawnReason() == SpawnReason.MOUNT) {
 			event.setCancelled(true);
 			return;
-		}
-        else if (entity.getType() == EntityType.SQUID)
-        {
+        } else if (entity.getType() == EntityType.SQUID) {
             Material spawnBlockMaterial = event.getLocation().getBlock().getType();
-            if (spawnBlockMaterial == Material.LAVA || spawnBlockMaterial == Material.STATIONARY_LAVA)
-            {
+            if (spawnBlockMaterial == Material.LAVA || spawnBlockMaterial == Material.STATIONARY_LAVA) {
                 event.setCancelled(true);
                 return;
             }
         }
 
 		// assign spiders a random potion effect
-		if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER)
-		{
+        if (event.getSpawnReason() == SpawnReason.NATURAL && event.getEntityType() == EntityType.SPIDER) {
 			// clear vanilla effects so there aren't multiple on a spider in
 			// rare cases.
-			for (PotionEffectType type : PotionEffectType.values())
-			{
-				if (type != null && event.getEntity().hasPotionEffect(type))
-				{
+            for (PotionEffectType type : PotionEffectType.values()) {
+                if (type != null && event.getEntity().hasPotionEffect(type)) {
 					event.getEntity().removePotionEffect(type);
 				}
 			}
 			int sel = random.nextInt(3);
 			PotionEffectType type = null;
-			switch (sel)
-			{
+            switch (sel) {
 			case 0:
 				type = PotionEffectType.SPEED;
 				break;
@@ -579,23 +509,19 @@ public class HardmodeListener implements Listener {
 		}
 
 		//Remove range bonuses from mobs
-		if (entity instanceof LivingEntity && entity.getType() != EntityType.WITHER)
-		{
+        if (entity instanceof LivingEntity && entity.getType() != EntityType.WITHER) {
 			Bukkit.getScheduler().runTask(MantlePlugin.instance, new Runnable() //Run it 1 tick later so Minecraft sets up all bonuses to be removed first.
 			{
 				@Override
-				public void run()
-				{
+                public void run() {
 					EntityLiving nmsEntity = ((CraftLivingEntity) entity).getHandle();
-					AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.b);
-					if (attribute != null)
-					{
+                    AttributeModifiable attribute = (AttributeModifiable) nmsEntity.getAttributeInstance(GenericAttributes.FOLLOW_RANGE);
+                    if (attribute != null) {
 						Map mapC = (Map) ReflectionUtils.get(attribute, "c"); //Map that contains list of modifiers based on type (add, multiply etc.)
 						Map mapD = (Map) ReflectionUtils.get(attribute, "d"); //Map that contains bonuses (?)
 						Map mapE = (Map) ReflectionUtils.get(attribute, "e"); //Map that contains bonuses (?)
 
-						for (int i = 0; i < 3; i++)
-						{
+                        for (int i = 0; i < 3; i++) {
 							((HashSet) mapC.get(i)).clear();
 						}
 
@@ -611,27 +537,22 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onEntityPortal(EntityPortalEvent event)
-	{
-		if (event.getEntityType() == EntityType.HORSE)
-		{
+    public void onEntityPortal(EntityPortalEvent event) {
+        if (event.getEntityType() == EntityType.HORSE) {
 			String id = event.getEntity().getUniqueId().toString();
 
 			AttributeInstance attributes = ((EntityInsentient) ((CraftLivingEntity) event.getEntity()).getHandle())
-					.getAttributeInstance(GenericAttributes.d);
+                    .getAttributeInstance(GenericAttributes.MOVEMENT_SPEED);
 
-			if (event.getTo().getWorld().getEnvironment() == Environment.NETHER)
-			{
+            if (event.getTo().getWorld().getEnvironment() == Environment.NETHER) {
 				// Horse slowing down disabled
 				// double originalSpeed = attributes.getValue();
 				// HorseSpeed.setOriginalHorseSpeed(id, originalSpeed);
 
 				// attributes.setValue(HardmodeSettings.NETHER_HORSE_SPEED.doubleNumber());
-			} else
-			{
+            } else {
 				double value = HorseSpeed.getOriginalHorseSpeed(id);
-				if (value >= 0)
-				{
+                if (value >= 0) {
 					attributes.setValue(value);
 				}
 			}
@@ -639,26 +560,21 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onEntityTarget(EntityTargetEvent event)
-	{
+    public void onEntityTarget(EntityTargetEvent event) {
 		Entity entity = event.getEntity();
 		Entity target = event.getTarget();
 
-		if (event.getEntityType() == EntityType.GHAST)
-		{
+        if (event.getEntityType() == EntityType.GHAST) {
 			TargetReason reason = event.getReason();
-			if (reason == TargetReason.CLOSEST_PLAYER || reason == TargetReason.RANDOM_TARGET)
-			{
+            if (reason == TargetReason.CLOSEST_PLAYER || reason == TargetReason.RANDOM_TARGET) {
 				int distanceSquared = Util.flatDistanceSquared(entity.getLocation(), target.getLocation());
-				if (distanceSquared > HardmodeSettings.GHAST_MAXIMUM_ATTACK_RANGE.integer())
-				{
+                if (distanceSquared > HardmodeSettings.GHAST_MAXIMUM_ATTACK_RANGE.integer()) {
 					event.setCancelled(true);
 					return;
 				}
 			}
 		} else if (event.getEntity() instanceof Zombie && reinforcementZombies.contains(event.getEntity())
-				&& event.getTarget() instanceof Player && event.getReason() == TargetReason.REINFORCEMENT_TARGET && event.getEntity().getTicksLived() <= 30)
-		{
+                && event.getTarget() instanceof Player && event.getReason() == TargetReason.REINFORCEMENT_TARGET && event.getEntity().getTicksLived() <= 30) {
 			Zombie zombie = (Zombie) event.getEntity();
 			Vector newDistance = zombie.getLocation().subtract(target.getLocation()).toVector().normalize()
 					.multiply(HardmodeSettings.REINFORCEMENTS_DISTANCE.doubleNumber());
@@ -676,8 +592,7 @@ public class HardmodeListener implements Listener {
     }
 
 	@EventHandler(ignoreCancelled = true)
-	public void onZombieBreakDoor(EntityBreakDoorEvent event)
-	{
+    public void onZombieBreakDoor(EntityBreakDoorEvent event) {
 		Block doorBlock = event.getBlock();
 
 		Block bottomBlock = event.getBlock().getRelative(BlockFace.DOWN);
@@ -691,16 +606,13 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onEntityDamageEntity(EntityDamageEvent event)
-	{
+    public void onEntityDamageEntity(EntityDamageEvent event) {
 
 		double damage = event.getDamage();
 		double origDamage = event.getFinalDamage();
 		HandlerList list = event.getHandlers();
-		if (event.getEntity().getType() == EntityType.SKELETON && event.getEntity().getWorld().getEnvironment() == Environment.NETHER)
-		{
-			if (event.getCause() == DamageCause.THORNS)
-			{
+        if (event.getEntity().getType() == EntityType.SKELETON && event.getEntity().getWorld().getEnvironment() == Environment.NETHER) {
+            if (event.getCause() == DamageCause.THORNS) {
 				event.setCancelled(true);
 			}
 		}
@@ -708,34 +620,27 @@ public class HardmodeListener implements Listener {
 
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onEntityPrime(ExplosionPrimeEvent event)
-	{
+    public void onEntityPrime(ExplosionPrimeEvent event) {
 		//spawn minions only if customSkull & spawningMinions == true
-		if (event.getEntityType() == EntityType.WITHER_SKULL)
-		{
+        if (event.getEntityType() == EntityType.WITHER_SKULL) {
 			CraftWitherSkull cws = (CraftWitherSkull) event.getEntity();
 			if(!(cws.getHandle() instanceof CustomWitherSkull))
 				return;
 			CustomWitherSkull customSkull = (CustomWitherSkull) cws.getHandle();
 
-			if(customSkull.shouldSpawnMinions)
-			{
+            if (customSkull.shouldSpawnMinions) {
 
 				final Location location = event.getEntity().getLocation();
 
 				Bukkit.getScheduler().scheduleSyncDelayedTask(MantlePlugin.instance, new Runnable() {
 
 					@Override
-					public void run()
-					{
+                    public void run() {
 						int amount = MantlePlugin.random.nextInt(2);
 
-						//TODO Remove
-						//Testing is a pain with all them minions around
 						amount = 2;
 
-						for (int i = 0; i < amount; i++)
-						{
+                        for (int i = 0; i < amount; i++) {
 							Block spawningBlock = location.getBlock();
 							if (spawningBlock.getType().isOccluding())
 								continue;
@@ -743,8 +648,7 @@ public class HardmodeListener implements Listener {
 							if (aboveBlock.getType().isOccluding())
 								continue;
 
-                            if(!NetherSpawner.canSpawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM))
-                            {
+                            if (!NetherSpawner.canSpawnWitherSkeleton(spawningBlock, SpawnReason.CUSTOM)) {
                                 continue;
                             }
 
@@ -762,20 +666,16 @@ public class HardmodeListener implements Listener {
 				}, 5); // Spawn minions after 5 ticks to ensure they won't be hit by
 				// explosion
 			}
-		} else if (event.getEntityType() == EntityType.WITHER)
-		{
+        } else if (event.getEntityType() == EntityType.WITHER) {
 			event.setFire(true);
 			event.setRadius(HardmodeSettings.WITHER_EXPLOSION_RADIUS.integer());
 
 			// Clear up some obsidian.
 			Location wither = event.getEntity().getLocation();
 			Block witherBlock = wither.getBlock();
-			for (int x = -8; x <= 8; x++)
-			{
-				for (int y = -8; y <= 8; y++)
-				{
-					for (int z = -8; z <= 8; z++)
-					{
+            for (int x = -8; x <= 8; x++) {
+                for (int y = -8; y <= 8; y++) {
+                    for (int z = -8; z <= 8; z++) {
 
 						Block nBlock = witherBlock.getRelative(x, y, z);
 						if (nBlock == null
@@ -787,18 +687,15 @@ public class HardmodeListener implements Listener {
 						if (range > 32 * 32)
 							continue;
 
-						if (MantlePlugin.random.nextInt(32 * 32 * 100 / 20) > range)
-						{
+                        if (MantlePlugin.random.nextInt(32 * 32 * 100 / 20) > range) {
 							nBlock.breakNaturally(new ItemStack(Material.AIR));
 						}
 					}
 				}
 			}
-		} else if (event.getEntityType() == EntityType.FIREBALL)
-		{
+        } else if (event.getEntityType() == EntityType.FIREBALL) {
 			Fireball fireball = (Fireball) event.getEntity();
-			if (fireball.getShooter() instanceof Ghast)
-			{
+            if (fireball.getShooter() instanceof Ghast) {
 				double multiplier = HardmodeSettings.GHAST_FIREBALL_BLAST_RADIUS_MULTIPLIER.doubleNumber();
 				event.setRadius((float) (event.getRadius() * multiplier));
 			}
@@ -806,27 +703,21 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-	public void onEntityExplode(EntityExplodeEvent event)
-	{
-		if (event.getEntity() == null)
-		{
+    public void onEntityExplode(EntityExplodeEvent event) {
+        if (event.getEntity() == null) {
 			return;
 		}
 
-		if (event.getEntityType() == EntityType.WITHER)
-		{
+        if (event.getEntityType() == EntityType.WITHER) {
 			event.setYield(0);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-	public void onChunkUnload(ChunkUnloadEvent event)
-	{
+    public void onChunkUnload(ChunkUnloadEvent event) {
 		// Kill wither when chunk unloads to prevent exploits
-		for (Entity e : event.getChunk().getEntities())
-		{
-			if (e.getType() == EntityType.WITHER)
-			{
+        for (Entity e : event.getChunk().getEntities()) {
+            if (e.getType() == EntityType.WITHER) {
 				e.remove();
 				return;
 			}
@@ -834,26 +725,22 @@ public class HardmodeListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onPlayerDeath(PlayerDeathEvent event)
-	{
+    public void onPlayerDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 		String worldName = player.getWorld().getName();
 
-		if (HardmodeSettings.NO_DEATH_DROPS_EXPERIENCE.stringList().contains(worldName))
-		{
+        if (HardmodeSettings.NO_DEATH_DROPS_EXPERIENCE.stringList().contains(worldName)) {
 			event.setDroppedExp(0);
 		}
 
-		if (HardmodeSettings.NO_DEATH_DROPS_ITEMS.stringList().contains(worldName))
-		{
+        if (HardmodeSettings.NO_DEATH_DROPS_ITEMS.stringList().contains(worldName)) {
 			event.getDrops().clear();
 		}
 
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event)
-	{
+    public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
 		Entity damager = event.getDamager();
 		Entity damaged = event.getEntity();
 
@@ -875,15 +762,12 @@ public class HardmodeListener implements Listener {
 //			}
 //		}
 
-		if(damaged instanceof Player)
-		{
-			if(damager instanceof  Wither)
-			{
-				if(((CraftWither) damager).getHandle() instanceof  CustomWither)
-				{
+        if (damaged instanceof Player) {
+            Player player = (Player) damaged;
+            if (damager instanceof Wither) {
+                if (((CraftWither) damager).getHandle() instanceof CustomWither) {
 					CustomWither customWither = (CustomWither) (((CraftWither) damager).getHandle());
-					if (customWither.shouldKnockback())
-					{
+                    if (customWither.shouldKnockback()) {
 						Location loc = damaged.getLocation();
 						double diffX = loc.getX() - customWither.locX;
 						double diffZ = loc.getZ() - customWither.locZ;
@@ -896,23 +780,17 @@ public class HardmodeListener implements Listener {
 						damaged.setVelocity(vec);
 					}
 				}
-			}
-			else
+            } else
 			//off for now, coz weird shit is happenign
-			if(damager instanceof WitherSkull && false)
-			{
-				if(((CraftWitherSkull)damager).getHandle() instanceof CustomWitherSkull)
-				{
+                if (damager instanceof WitherSkull && false) {
+                    if (((CraftWitherSkull) damager).getHandle() instanceof CustomWitherSkull) {
 					CustomWitherSkull cws = (CustomWitherSkull) (((CraftWitherSkull) damager).getHandle());
-					if(cws.shooter != null)
-					{
-						if(cws.shooter instanceof CustomWither)
-						{
+                        if (cws.shooter != null) {
+                            if (cws.shooter instanceof CustomWither) {
 							CustomWither customWither = (CustomWither) cws.shooter;
 
 							//TODO oh god copypasta, remove that
-							if (customWither.shouldKnockback())
-							{
+                                if (customWither.shouldKnockback()) {
 								Location loc = damaged.getLocation();
 								double diffX = loc.getX() - customWither.locX;
 								double diffZ = loc.getZ() - customWither.locZ;
@@ -928,8 +806,37 @@ public class HardmodeListener implements Listener {
 				}
 			}
 
+            if (HardmodeSettings.VEHICLE_PLAYER_SYNC.bool() && player.getVehicle() instanceof LivingEntity) {
+                if (!(damager instanceof Arrow)) {
+                    LivingEntity vehicle = (LivingEntity) player.getVehicle();
+                    vehicle.damage(event.getDamage(), damager);
 		}
+            }
 
 	}
+
 }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onEntityCombust(EntityCombustEvent event) {
+        if (!HardmodeSettings.VEHICLE_PLAYER_SYNC.bool()) {
+            return;
+        }
+        if (event.getEntity() instanceof Player) {
+            if (event.getEntity().getVehicle() instanceof LivingEntity) {
+                LivingEntity vehicle = (LivingEntity) event.getEntity().getVehicle();
+                if (vehicle.getFireTicks() < event.getDuration()) {
+                    vehicle.setFireTicks(event.getDuration());
+                }
+            }
+        } else {
+            if (event.getEntity().getPassenger() instanceof Player) {
+                if (event.getEntity().getPassenger().getFireTicks() < event.getDuration()) {
+                    event.getEntity().getPassenger().setFireTicks(event.getDuration());
+                }
+            }
+        }
+    }
+}
+
 

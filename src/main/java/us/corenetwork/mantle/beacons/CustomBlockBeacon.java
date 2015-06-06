@@ -1,17 +1,17 @@
 package us.corenetwork.mantle.beacons;
 
 import java.lang.reflect.Field;
-import net.minecraft.server.v1_8_R2.Block;
-import net.minecraft.server.v1_8_R2.BlockContainer;
-import net.minecraft.server.v1_8_R2.BlockPosition;
-import net.minecraft.server.v1_8_R2.Blocks;
-import net.minecraft.server.v1_8_R2.CreativeModeTab;
-import net.minecraft.server.v1_8_R2.EntityHuman;
-import net.minecraft.server.v1_8_R2.EnumDirection;
-import net.minecraft.server.v1_8_R2.IBlockData;
-import net.minecraft.server.v1_8_R2.Material;
-import net.minecraft.server.v1_8_R2.TileEntity;
-import net.minecraft.server.v1_8_R2.World;
+import net.minecraft.server.v1_8_R3.Block;
+import net.minecraft.server.v1_8_R3.BlockContainer;
+import net.minecraft.server.v1_8_R3.BlockPosition;
+import net.minecraft.server.v1_8_R3.Blocks;
+import net.minecraft.server.v1_8_R3.CreativeModeTab;
+import net.minecraft.server.v1_8_R3.EntityHuman;
+import net.minecraft.server.v1_8_R3.EnumDirection;
+import net.minecraft.server.v1_8_R3.IBlockData;
+import net.minecraft.server.v1_8_R3.Material;
+import net.minecraft.server.v1_8_R3.TileEntity;
+import net.minecraft.server.v1_8_R3.World;
 
 /**
  * Clone of original Minecraft's BlockBeacon.java with TileEntity changes and interact event changed.
@@ -32,7 +32,7 @@ public class CustomBlockBeacon extends BlockContainer
         {
             Object blockData = Blocks.BEACON.getBlockData();
 
-            Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R2.BlockStateList$BlockData");
+            Class blockDataClass = Class.forName("net.minecraft.server.v1_8_R3.BlockStateList$BlockData");
             Field blockField = blockDataClass.getDeclaredField("a");
             blockField.setAccessible(true);
             blockField.set(blockData, this);

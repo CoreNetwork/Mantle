@@ -1,6 +1,7 @@
 package us.corenetwork.mantle.spellbooks.books;
 
-import net.minecraft.server.v1_8_R2.EnumParticle;
+import java.util.List;
+import net.minecraft.server.v1_8_R3.EnumParticle;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -15,16 +16,15 @@ import org.bukkit.entity.Zombie;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.Tree;
-import org.bukkit.util.Vector;
+import us.corenetwork.core.claims.BlockWorker;
+import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.ParticleLibrary;
-import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
-import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 
 
-public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiver {
+public class GrowthBook extends Spellbook {
 
 	private static final int EFFECT_AREA_HEIGHT_ABOVE_PLAYER = 31;
     private static final int EFFECT_AREA_HORIZONTAL_RADIUS = 32 / 2;
@@ -41,33 +41,38 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 
 		Player player = event.getPlayer();
         
-		Location effectLoc = SpellbookUtil.getPointInFrontOfPlayer(event.getPlayer().getEyeLocation(), 2);
-		Vector direction = event.getPlayer().getLocation().getDirection();
-
-		ParticleLibrary.broadcastParticle(EnumParticle.VILLAGER_HAPPY, effectLoc, (float) (1.0 - direction.getX()), 0.5f, (float) (1.0 - direction.getZ()), 0, 10, null);
+		Location effectLoc = player.getEyeLocation();
+        ParticleLibrary.broadcastParticleRing(EnumParticle.VILLAGER_HAPPY, player.getEyeLocation(), 2, Math.PI / 12, 5);
 		event.getPlayer().playSound(effectLoc, Sound.LEVEL_UP, 1.0f, 1.0f);
 		
 		Block baseBlock = event.getPlayer().getLocation().getBlock();
-		for (int x = -EFFECT_AREA_HORIZONTAL_RADIUS; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
-		{
-			for (int y = -1; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER; y++) //Blocks from one block below player to 31 blocks above are affected.
-			{
-				for (int z = -EFFECT_AREA_HORIZONTAL_RADIUS; z <= EFFECT_AREA_HORIZONTAL_RADIUS; z++)
-				{
-					Block block = baseBlock.getRelative(x, y, z);
-					processBlock(block);
-				}
-			}
-		}
+        GrowthBookWoker growthBookWoker = new GrowthBookWoker(baseBlock);
+        ClaimsModule.instance.pool.addWorker(growthBookWoker);
 
         Location raisedLocation = event.getPlayer().getLocation();
         raisedLocation.setY(raisedLocation.getY() + EFFECT_AREA_HEIGHT_ABOVE_PLAYER / 2);
-		EntityIterator.iterateEntitiesInCube(this, raisedLocation, EFFECT_AREA_HORIZONTAL_RADIUS);
-		
+
+		List<Entity> nearbyEntities = EntityIterator.getEntitiesInCube(raisedLocation, EFFECT_AREA_HORIZONTAL_RADIUS);
+		for (Entity entity : nearbyEntities)
+		{
+            if (entity instanceof Ageable)
+			{
+                Ageable ageable = (Ageable) entity;
+                if (!ageable.isAdult())
+                    ageable.setAdult();
+            }
+            else if (entity instanceof Zombie)
+				{
+                Zombie zombie = (Zombie) entity;
+                if (zombie.isBaby())
+                    zombie.setBaby(false);
+				}
+			}
+
 		return BookFinishAction.BROADCAST_AND_CONSUME;
 	}
 
-	private void processBlock(Block block)
+	private static void processBlock(Block block)
 	{
 		if (block.getType() == Material.CROPS || block.getType() == Material.CARROT || block.getType() == Material.POTATO)
 			block.setData((byte) 7);
@@ -75,13 +80,18 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 			block.setData((byte) 3);
 		else if (block.getType() == Material.MELON_STEM)
 		{
+            if (block.getData() < 7)
+            {
 			block.setData((byte) 7);
+            }
+            else
+            {
 			for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
 			{
 				final Block neighbour = block.getRelative(face);
 				if (neighbour != null && neighbour.isEmpty())
 				{
-					Block downBlock = block.getRelative(BlockFace.DOWN);
+                        Block downBlock = neighbour.getRelative(BlockFace.DOWN);
 					if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
 					{
 						neighbour.setType(Material.MELON_BLOCK);
@@ -90,15 +100,21 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 				}
 			}
 		}
+		}
         else if (block.getType() == Material.PUMPKIN_STEM)
         {
+            if (block.getData() < 7)
+            {
             block.setData((byte) 7);
+            }
+            else
+            {
             for (BlockFace face : new BlockFace[] { BlockFace.NORTH, BlockFace.EAST, BlockFace.WEST, BlockFace.SOUTH })
             {
                 final Block neighbour = block.getRelative(face);
                 if (neighbour != null && neighbour.isEmpty())
                 {
-                    Block downBlock = block.getRelative(BlockFace.DOWN);
+                        Block downBlock = neighbour.getRelative(BlockFace.DOWN);
                     if (downBlock != null && (downBlock.getType() == Material.GRASS || downBlock.getType() == Material.DIRT || downBlock.getType() == Material.SOIL))
                     {
                         neighbour.setType(Material.PUMPKIN);
@@ -106,6 +122,7 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
                     }
                 }
             }
+        }
         }
 		else if (block.getType() == Material.SAPLING)
 		{
@@ -148,23 +165,84 @@ public class GrowthBook extends Spellbook implements EntityIterator.EntityReceiv
 		
 	}
 
+    private static class GrowthBookWoker extends BlockWorker
+    {
+        private int x;
+        private int y;
+        private int z;
+
+        private Block startBlock;
+
+        public GrowthBookWoker(Block startBlock)
+        {
+            this.startBlock = startBlock;
+        }
+
 	@Override
-	public void onEntityFound(Entity entity) {
-		if (entity instanceof Ageable)
+        public void init()
 		{
-			Ageable ageable = (Ageable) entity;
-			if (!ageable.isAdult())
-				ageable.setAdult();
+            x = -EFFECT_AREA_HORIZONTAL_RADIUS;
+            y = -1;
+            z = -EFFECT_AREA_HORIZONTAL_RADIUS;
 		}
-		else if (entity instanceof Zombie)
+
+        @Override
+        public void onDone()
 		{
-			Zombie zombie = (Zombie) entity;
-			if (zombie.isBaby())
-				zombie.setBaby(false);
+
 		}
+
+        @Override
+        public long getTaskSize()
+        {
+            //X and Z size = RADIUS * 2 + 1 block for player position
+            // Y size = height above player + 1 block for player position + 1 block for one layer below player
+            return (EFFECT_AREA_HORIZONTAL_RADIUS * 2 + 1) * (EFFECT_AREA_HORIZONTAL_RADIUS * 2 + 1) * (EFFECT_AREA_HEIGHT_ABOVE_PLAYER + 2);
 	}
 
 	@Override
+        public long work(long amountToWork)
+        {
+            int worked = 0;
+
+            outmost: for (; x <= EFFECT_AREA_HORIZONTAL_RADIUS; x++)
+            {
+                for (; y <= EFFECT_AREA_HEIGHT_ABOVE_PLAYER + 1; y++)
+                {
+                    if (y > EFFECT_AREA_HEIGHT_ABOVE_PLAYER)
+                    {
+                        y = -1;
+                        break;
+                    }
+
+                    for (; z <= EFFECT_AREA_HORIZONTAL_RADIUS + 1; z++)
+                    {
+                        if (z > EFFECT_AREA_HORIZONTAL_RADIUS)
+                        {
+                            z = -EFFECT_AREA_HORIZONTAL_RADIUS;
+                            break;
+                        }
+
+                        worked++;
+
+                        Block block = startBlock.getRelative(x, y, z);
+
+                        processBlock(block);
+
+                        if (worked >= amountToWork)
+                        {
+                            break  outmost;
+                        }
+                    }
+                }
+            }
+
+            return worked;
+        }
+    }
+
+
+    @Override
 	protected BookFinishAction onActivateEntity(SpellbookItem item, PlayerInteractEntityEvent event) {
 		return BookFinishAction.NOTHING;
 	}
