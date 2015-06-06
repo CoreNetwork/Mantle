@@ -21,13 +21,16 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.blocks.BlockUtil;
 import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.player.PlayerUtil;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
+import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 import us.core_network.cornel.items.InventoryUtil;
 
@@ -104,7 +107,7 @@ public class ForgingBook extends Spellbook {
 
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
-            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            effectLoc = BlockUtil.getLocationInBlockCenter(event.getClickedBlock());
             blockEffect = true;
 		}
 		else

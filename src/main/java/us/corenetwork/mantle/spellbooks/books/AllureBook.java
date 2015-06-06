@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.blocks.BlockUtil;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
@@ -115,7 +116,7 @@ public class AllureBook extends Spellbook {
                     dropBlock = aboveBlock;
             }
 
-            Location dropLocation = Util.getLocationInBlockCenter(dropBlock);
+            Location dropLocation = BlockUtil.getLocationInBlockCenter(dropBlock);
             contents.lastKnownLocation = dropLocation;
 
             int drops = contents.dropsPerIteration;

@@ -23,6 +23,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Leaves;
 import org.bukkit.material.Wool;
+import us.core_network.cornel.blocks.BlockUtil;
+import us.core_network.cornel.common.Messages;
 import us.corenetwork.core.claims.BlockWorker;
 import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.GriefPreventionHandler;
@@ -64,7 +66,7 @@ public class PruningBook extends Spellbook {
 			Claim claim = GriefPreventionHandler.getClaimAt(player.getLocation());
 			if (claim != null && claim.allowContainers(player) != null)
 			{
-				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+                Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
 			}
 
@@ -78,7 +80,7 @@ public class PruningBook extends Spellbook {
 			//Check for claims in effect area
 			if (GriefPreventionHandler.containsClaim(playerLoc.getWorld(), playerLoc.getBlockX() - EFFECT_AREA_HORIZONTAL_RADIUS, playerLoc.getBlockZ() - EFFECT_AREA_HORIZONTAL_RADIUS, 0, 0, EFFECT_AREA_HORIZONTAL_RADIUS * 2, false, event.getPlayer()))
 			{
-				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+                Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
 			}
 			
@@ -219,7 +221,7 @@ public class PruningBook extends Spellbook {
                             ItemStack stackToDrop = new ItemStack(block.getType(), 1, (short) (block.getData() & LEAVES_DATA_MASK));
                             block.setType(Material.AIR);
 
-                            block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), stackToDrop);
+                            block.getWorld().dropItemNaturally(BlockUtil.getLocationInBlockCenter(block), stackToDrop);
                         }
 
                         if (worked >= amountToWork)

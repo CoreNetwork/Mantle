@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.junit.Before;
 import org.junit.Test;
+import us.core_network.cornel.items.InventoryUtil;
 import us.corenetwork.mantle.test.BukkitDummy;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 import static org.junit.Assert.*;
 

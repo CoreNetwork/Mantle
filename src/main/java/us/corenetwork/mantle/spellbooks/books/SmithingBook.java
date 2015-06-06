@@ -25,6 +25,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import us.core_network.cornel.blocks.BlockUtil;
+import us.core_network.cornel.common.Messages;
+import us.core_network.cornel.items.InventoryUtil;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
 import us.corenetwork.mantle.ParticleLibrary;
@@ -33,7 +36,6 @@ import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class SmithingBook extends Spellbook {
@@ -91,14 +93,14 @@ public class SmithingBook extends Spellbook {
 			Claim claim = GriefPreventionHandler.getClaimAt(event.getClickedBlock().getLocation());
 			if (claim != null && claim.allowContainers(player) != null)
 			{
-				Util.Message(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
+				Messages.send(SpellbooksSettings.MESSAGE_NO_PERMISSION.string(), event.getPlayer());
 				return BookFinishAction.NOTHING;
 			}
 
 			
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
-            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            effectLoc = BlockUtil.getLocationInBlockCenter(event.getClickedBlock());
             blockEffect = true;
 		}
 		else

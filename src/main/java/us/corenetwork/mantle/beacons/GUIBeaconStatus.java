@@ -1,10 +1,10 @@
 package us.corenetwork.mantle.beacons;
 
-import org.bukkit.craftbukkit.v1_8_R2.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftInventory;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import us.core_network.cornel.custom.inventorygui.InventoryGUIGroup;
 import us.core_network.cornel.custom.inventorygui.SharedInventoryGUI;
 import us.core_network.cornel.items.ItemStackUtils;
 import us.corenetwork.mantle.TimeFormat;

@@ -19,6 +19,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import us.core_network.cornel.blocks.BlockUtil;
 import us.core_network.cornel.common.Messages;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MLog;
@@ -83,7 +84,7 @@ public class FusingBook extends Spellbook {
 			
 			InventoryHolder container = (InventoryHolder) event.getClickedBlock().getState();
 			inventory = container.getInventory();
-            effectLoc = Util.getLocationInBlockCenter(event.getClickedBlock());
+            effectLoc = BlockUtil.getLocationInBlockCenter(event.getClickedBlock());
             blockEffect = true;
 		}
 		else

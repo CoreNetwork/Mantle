@@ -39,6 +39,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Tree;
 import org.bukkit.util.Vector;
+import us.core_network.cornel.items.InventoryUtil;
 import us.corenetwork.core.claims.BlockWorker;
 import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.MLog;
@@ -47,7 +48,6 @@ import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
-import us.corenetwork.mantle.util.InventoryUtil;
 
 
 public class GrazingBook extends Spellbook
