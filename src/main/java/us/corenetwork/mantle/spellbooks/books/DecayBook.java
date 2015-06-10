@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import java.awt.*;
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.ClaimsMode;
 import net.minecraft.server.v1_8_R3.EnumParticle;
@@ -25,11 +26,13 @@ import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.ParticleLibrary;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.generation.WorldGuardManager;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
 import us.corenetwork.mantle.util.InventoryUtil;
+import us.corenetwork.mantle.util.RegionSet;
 
 
 public class DecayBook extends Spellbook {
@@ -82,8 +85,9 @@ public class DecayBook extends Spellbook {
 			//Decay world around
             boolean removeGrass = player.getLocation().getBlock().getRelative(BlockFace.DOWN).getType() == Material.GRASS;
             Block baseBlock = player.getLocation().getBlock();
+            RegionSet affectedWorldGuardRegions = WorldGuardManager.getRegionsInsideRectangle(player.getWorld(), new Rectangle(player.getLocation().getBlockX() - EFFECT_AREA_HORIZONTAL_RADIUS, player.getLocation().getBlockZ() - EFFECT_AREA_HORIZONTAL_RADIUS, EFFECT_AREA_HORIZONTAL_RADIUS  * 2, EFFECT_AREA_HORIZONTAL_RADIUS * 2));
 
-            DecayBookWoker decayBookWoker = new DecayBookWoker(baseBlock, removeGrass);
+            DecayBookWoker decayBookWoker = new DecayBookWoker(baseBlock, removeGrass, affectedWorldGuardRegions);
             ClaimsModule.instance.pool.addWorker(decayBookWoker);
 			
 			removeWoolColors(player.getInventory());
@@ -125,11 +129,13 @@ public class DecayBook extends Spellbook {
 
         private Block startBlock;
         private boolean removeGrass;
+        private RegionSet affectedWorldguardRegions;
 
-        public DecayBookWoker(Block startBlock, boolean removeGrass)
+        public DecayBookWoker(Block startBlock, boolean removeGrass, RegionSet affectedWorldguardRegions)
         {
             this.startBlock = startBlock;
             this.removeGrass = removeGrass;
+            this.affectedWorldguardRegions = affectedWorldguardRegions;
         }
 
         @Override
@@ -181,16 +187,20 @@ public class DecayBook extends Spellbook {
 
                         Block block = startBlock.getRelative(x, y, z);
 
-                        if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2) || block.getType() == Material.HUGE_MUSHROOM_1 || block.getType() == Material.HUGE_MUSHROOM_2)
-                            block.breakNaturally();
-                        else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
-                            block.setType(Material.AIR);
-                        else if (removeGrass && block.getType() == Material.GRASS)
-                            block.setType(Material.DIRT);
+                        if (!affectedWorldguardRegions.isInsideAnyRegion(block.getX(), block.getY(), block.getZ()))
+                        {
+                            if (block.getType() == Material.LEAVES || block.getType() == Material.YELLOW_FLOWER || block.getType() == Material.RED_ROSE || (block.getType() == Material.DOUBLE_PLANT && block.getData() != 2) || block.getType() == Material.HUGE_MUSHROOM_1 || block.getType() == Material.HUGE_MUSHROOM_2)
+                                block.breakNaturally();
+                            else if (block.getType() == Material.LONG_GRASS || (block.getType() == Material.DOUBLE_PLANT && block.getData() == 2))
+                                block.setType(Material.AIR);
+                            else if (removeGrass && block.getType() == Material.GRASS)
+                                block.setType(Material.DIRT);
+                        }
+
 
                         if (worked >= amountToWork)
                         {
-                            break  outmost;
+                            break outmost;
                         }
                     }
                 }

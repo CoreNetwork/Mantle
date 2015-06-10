@@ -1,5 +1,6 @@
 package us.corenetwork.mantle.spellbooks.books;
 
+import java.awt.*;
 import java.util.List;
 import me.ryanhamshire.GriefPrevention.Claim;
 import org.bukkit.Color;
@@ -28,11 +29,13 @@ import us.corenetwork.core.claims.ClaimsModule;
 import us.corenetwork.mantle.GriefPreventionHandler;
 import us.corenetwork.mantle.MantlePlugin;
 import us.corenetwork.mantle.Util;
+import us.corenetwork.mantle.generation.WorldGuardManager;
 import us.corenetwork.mantle.spellbooks.EntityIterator;
 import us.corenetwork.mantle.spellbooks.Spellbook;
 import us.corenetwork.mantle.spellbooks.SpellbookItem;
 import us.corenetwork.mantle.spellbooks.SpellbookUtil;
 import us.corenetwork.mantle.spellbooks.SpellbooksSettings;
+import us.corenetwork.mantle.util.RegionSet;
 
 
 public class PruningBook extends Spellbook {
@@ -86,7 +89,10 @@ public class PruningBook extends Spellbook {
 
             //Prune world around
             Block baseBlock = player.getLocation().getBlock();
-            PruneBookWoker pruneBookWoker = new PruneBookWoker(baseBlock);
+            RegionSet affectedWorldGuardRegions = WorldGuardManager.getRegionsInsideRectangle(player.getWorld(), new Rectangle(player.getLocation().getBlockX() - EFFECT_AREA_HORIZONTAL_RADIUS, player.getLocation().getBlockZ() - EFFECT_AREA_HORIZONTAL_RADIUS, EFFECT_AREA_HORIZONTAL_RADIUS * 2, EFFECT_AREA_HORIZONTAL_RADIUS * 2));
+
+            PruneBookWoker pruneBookWoker = new PruneBookWoker(baseBlock, affectedWorldGuardRegions);
+
             ClaimsModule.instance.pool.addWorker(pruneBookWoker);
 
             //Remove nearby sheep wool
@@ -159,10 +165,12 @@ public class PruningBook extends Spellbook {
         private int z;
 
         private Block startBlock;
+        private RegionSet affectedWorldGuardRegions;
 
-        public PruneBookWoker(Block startBlock)
+        public PruneBookWoker(Block startBlock, RegionSet affectedWorldGuardRegions)
         {
             this.startBlock = startBlock;
+            this.affectedWorldGuardRegions = affectedWorldGuardRegions;
         }
 
         @Override
@@ -214,12 +222,15 @@ public class PruningBook extends Spellbook {
 
                         Block block = startBlock.getRelative(x, y, z);
 
-                        if (block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2)
+                        if (!affectedWorldGuardRegions.isInsideAnyRegion(block.getX(), block.getY(), block.getZ()))
                         {
-                            ItemStack stackToDrop = new ItemStack(block.getType(), 1, (short) (block.getData() & LEAVES_DATA_MASK));
-                            block.setType(Material.AIR);
+                            if (block.getType() == Material.LEAVES || block.getType() == Material.LEAVES_2)
+                            {
+                                ItemStack stackToDrop = new ItemStack(block.getType(), 1, (short) (block.getData() & LEAVES_DATA_MASK));
+                                block.setType(Material.AIR);
 
-                            block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), stackToDrop);
+                                block.getWorld().dropItemNaturally(Util.getLocationInBlockCenter(block), stackToDrop);
+                            }
                         }
 
                         if (worked >= amountToWork)
